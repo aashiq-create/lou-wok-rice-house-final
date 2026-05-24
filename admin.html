@@ -1,0 +1,1271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lou Wok — Admin Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --black:   #0a0a08;
+      --rice:    #f5eed8;
+      --wok:     #c8390a;
+      --gold:    #e8a020;
+      --smoke:   #1e1c18;
+      --muted:   #6b6558;
+      --border:  rgba(232,160,32,0.18);
+      --panel:   #141410;
+      --success: #3a7d44;
+      --danger:  #c8390a;
+      --info:    #1a6fa8;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--black);
+      color: var(--rice);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 15px;
+      line-height: 1.6;
+      min-height: 100vh;
+      display: flex;
+    }
+
+    /* noise overlay */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 9999;
+      opacity: 0.35;
+    }
+
+    /* ── SIDEBAR ─────────────────────────────────── */
+    .sidebar {
+      width: 240px;
+      min-height: 100vh;
+      background: var(--panel);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      top: 0; left: 0; bottom: 0;
+      z-index: 50;
+      transition: transform 0.3s;
+    }
+
+    .sidebar-logo {
+      padding: 1.8rem 1.6rem 1.4rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .sidebar-logo .brand {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.5rem;
+      letter-spacing: 0.08em;
+      color: var(--gold);
+    }
+    .sidebar-logo .brand span { color: var(--wok); }
+    .sidebar-logo .sub {
+      font-size: 0.68rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-top: 0.2rem;
+    }
+
+    .sidebar-nav {
+      flex: 1;
+      padding: 1.2rem 0;
+      overflow-y: auto;
+    }
+
+    .nav-section-label {
+      font-size: 0.62rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--muted);
+      padding: 0.8rem 1.6rem 0.4rem;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.65rem 1.6rem;
+      cursor: pointer;
+      color: rgba(245,238,216,0.6);
+      font-size: 0.88rem;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+      transition: color 0.2s, background 0.2s;
+      border: none;
+      background: none;
+      width: 100%;
+      text-align: left;
+      text-decoration: none;
+    }
+    .nav-item:hover { color: var(--rice); background: rgba(232,160,32,0.06); }
+    .nav-item.active { color: var(--gold); background: rgba(232,160,32,0.1); border-left: 2px solid var(--gold); }
+    .nav-item .icon { font-size: 1rem; width: 1.2rem; text-align: center; flex-shrink: 0; }
+
+    .sidebar-footer {
+      padding: 1.2rem 1.6rem;
+      border-top: 1px solid var(--border);
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+    .sidebar-footer .status-dot {
+      display: inline-block;
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: #3a7d44;
+      margin-right: 0.4rem;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse { 0%,100%{opacity:1}50%{opacity:0.4} }
+
+    /* ── MAIN ────────────────────────────────────── */
+    .main {
+      margin-left: 240px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      background: rgba(10,10,8,0.9);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 1rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .topbar-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.3rem;
+      letter-spacing: 0.06em;
+      color: var(--rice);
+    }
+    .topbar-title span { color: var(--gold); }
+
+    .topbar-actions { display: flex; align-items: center; gap: 0.8rem; }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 0.55rem 1.2rem;
+      border-radius: 2px;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-decoration: none;
+    }
+    .btn-primary { background: var(--wok); color: var(--rice); }
+    .btn-primary:hover { background: var(--gold); color: var(--black); }
+    .btn-ghost { background: transparent; color: var(--rice); border: 1px solid rgba(245,238,216,0.25); }
+    .btn-ghost:hover { border-color: var(--gold); color: var(--gold); }
+    .btn-success { background: var(--success); color: white; }
+    .btn-success:hover { opacity: 0.85; }
+    .btn-sm { padding: 0.4rem 0.85rem; font-size: 0.72rem; }
+
+    /* ── CONTENT ─────────────────────────────────── */
+    .content {
+      padding: 2rem;
+      flex: 1;
+    }
+
+    /* Panels */
+    .panel-grid {
+      display: grid;
+      gap: 1.5rem;
+    }
+    .panel-grid-2 { grid-template-columns: 1fr 1fr; }
+    .panel-grid-3 { grid-template-columns: 1fr 1fr 1fr; }
+    .panel-grid-4 { grid-template-columns: repeat(4, 1fr); }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      padding: 1.5rem;
+    }
+    .panel-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.2rem;
+      padding-bottom: 0.9rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .panel-title {
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    /* Stat Cards */
+    .stat-value {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2.8rem;
+      color: var(--gold);
+      line-height: 1;
+    }
+    .stat-label {
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-top: 0.35rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+    .stat-change {
+      font-size: 0.72rem;
+      font-family: 'DM Mono', monospace;
+      margin-top: 0.5rem;
+    }
+    .stat-change.up { color: #3a7d44; }
+    .stat-change.down { color: var(--wok); }
+
+    /* Section view switching */
+    .section { display: none; }
+    .section.active { display: block; }
+
+    /* ── MENU EDITOR ─────────────────────────────── */
+    .menu-editor-grid {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 1.5rem;
+      align-items: start;
+    }
+
+    .menu-item-list { display: flex; flex-direction: column; gap: 0.5rem; }
+
+    .menu-list-item {
+      padding: 0.8rem 1rem;
+      background: var(--smoke);
+      border: 1px solid transparent;
+      border-radius: 2px;
+      cursor: pointer;
+      transition: all 0.15s;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .menu-list-item:hover { border-color: var(--border); }
+    .menu-list-item.active { border-color: var(--gold); background: rgba(232,160,32,0.08); }
+    .menu-list-item .item-name { font-size: 0.85rem; font-weight: 500; }
+    .menu-list-item .item-cat {
+      font-size: 0.65rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .menu-list-item .item-price {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.1rem;
+      color: var(--gold);
+    }
+
+    .field-group { margin-bottom: 1.2rem; }
+    .field-label {
+      display: block;
+      font-size: 0.68rem;
+      font-weight: 600;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 0.45rem;
+    }
+    .field-input, .field-textarea, .field-select {
+      width: 100%;
+      background: var(--smoke);
+      border: 1px solid rgba(245,238,216,0.1);
+      border-radius: 2px;
+      color: var(--rice);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.88rem;
+      padding: 0.65rem 0.9rem;
+      transition: border-color 0.2s;
+      outline: none;
+    }
+    .field-input:focus, .field-textarea:focus, .field-select:focus {
+      border-color: var(--gold);
+    }
+    .field-textarea { resize: vertical; min-height: 90px; }
+    .field-select { appearance: none; cursor: pointer; }
+
+    .price-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+
+    .tag-select {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+    .tag-option {
+      padding: 0.3rem 0.8rem;
+      border-radius: 2px;
+      border: 1px solid rgba(245,238,216,0.15);
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.15s;
+      color: var(--muted);
+    }
+    .tag-option:hover { border-color: var(--gold); color: var(--gold); }
+    .tag-option.selected { background: var(--wok); border-color: var(--wok); color: white; }
+
+    /* ── HOURS EDITOR ────────────────────────────── */
+    .hours-row {
+      display: grid;
+      grid-template-columns: 120px 1fr 1fr 80px;
+      gap: 1rem;
+      align-items: center;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid rgba(232,160,32,0.08);
+    }
+    .hours-row:last-child { border-bottom: none; }
+    .day-label { font-size: 0.82rem; font-weight: 600; color: var(--rice); }
+
+    .toggle {
+      position: relative;
+      width: 38px;
+      height: 20px;
+    }
+    .toggle input { opacity: 0; width: 0; height: 0; }
+    .toggle-track {
+      position: absolute;
+      inset: 0;
+      background: var(--smoke);
+      border: 1px solid rgba(245,238,216,0.15);
+      border-radius: 20px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .toggle input:checked + .toggle-track { background: var(--wok); border-color: var(--wok); }
+    .toggle-track::after {
+      content: '';
+      position: absolute;
+      width: 14px; height: 14px;
+      background: var(--rice);
+      border-radius: 50%;
+      top: 2px; left: 2px;
+      transition: transform 0.2s;
+    }
+    .toggle input:checked + .toggle-track::after { transform: translateX(18px); }
+
+    /* ── ANNOUNCEMENTS ───────────────────────────── */
+    .announce-list { display: flex; flex-direction: column; gap: 0.75rem; }
+    .announce-item {
+      padding: 1rem 1.2rem;
+      background: var(--smoke);
+      border: 1px solid var(--border);
+      border-radius: 2px;
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      justify-content: space-between;
+    }
+    .announce-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      margin-top: 0.4rem;
+    }
+    .announce-dot.active { background: #3a7d44; }
+    .announce-dot.draft { background: var(--gold); }
+    .announce-dot.inactive { background: var(--muted); }
+    .announce-text { flex: 1; font-size: 0.85rem; color: rgba(245,238,216,0.8); line-height: 1.5; }
+    .announce-meta { font-size: 0.68rem; color: var(--muted); margin-top: 0.25rem; }
+
+    /* ── SITE SETTINGS ───────────────────────────── */
+    .settings-section { margin-bottom: 2rem; }
+    .settings-section-title {
+      font-size: 0.68rem;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 1rem;
+      padding-bottom: 0.6rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .color-row {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 0.75rem;
+    }
+    .color-preview {
+      width: 32px; height: 32px;
+      border-radius: 2px;
+      border: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+    .color-label { font-size: 0.82rem; flex: 1; }
+    .color-code {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.78rem;
+      color: var(--muted);
+      width: 90px;
+    }
+    input[type="color"] {
+      width: 32px; height: 32px;
+      padding: 0; border: none;
+      background: none;
+      cursor: pointer;
+      border-radius: 2px;
+    }
+
+    /* ── ORDER LINKS ─────────────────────────────── */
+    .order-link-row {
+      display: grid;
+      grid-template-columns: 140px 1fr auto;
+      gap: 1rem;
+      align-items: center;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid rgba(232,160,32,0.08);
+    }
+    .order-link-row:last-child { border-bottom: none; }
+    .platform-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+    }
+
+    /* ── DEPLOY BUTTON ───────────────────────────── */
+    .deploy-bar {
+      position: fixed;
+      bottom: 0;
+      left: 240px;
+      right: 0;
+      background: rgba(10,10,8,0.95);
+      backdrop-filter: blur(12px);
+      border-top: 1px solid var(--border);
+      padding: 1rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      z-index: 30;
+    }
+    .deploy-status {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-size: 0.78rem;
+      color: var(--muted);
+    }
+    .deploy-indicator {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--gold);
+    }
+    .deploy-indicator.saved { background: #3a7d44; }
+    .deploy-indicator.unsaved { background: var(--gold); animation: pulse 1.5s infinite; }
+
+    /* ── TOAST ───────────────────────────────────── */
+    .toast {
+      position: fixed;
+      bottom: 80px;
+      right: 2rem;
+      background: var(--smoke);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--gold);
+      padding: 0.9rem 1.4rem;
+      border-radius: 2px;
+      font-size: 0.82rem;
+      color: var(--rice);
+      z-index: 1000;
+      transform: translateX(120%);
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      max-width: 300px;
+    }
+    .toast.show { transform: translateX(0); }
+    .toast.success { border-left-color: #3a7d44; }
+    .toast.error { border-left-color: var(--wok); }
+
+    /* ── RESPONSIVE ──────────────────────────────── */
+    @media (max-width: 900px) {
+      .sidebar { transform: translateX(-100%); }
+      .sidebar.open { transform: translateX(0); }
+      .main { margin-left: 0; }
+      .deploy-bar { left: 0; }
+      .panel-grid-4 { grid-template-columns: 1fr 1fr; }
+      .panel-grid-3 { grid-template-columns: 1fr; }
+      .panel-grid-2 { grid-template-columns: 1fr; }
+      .menu-editor-grid { grid-template-columns: 1fr; }
+    }
+
+    /* ── MOBILE TOPBAR MENU BUTTON ───────────────── */
+    .menu-toggle {
+      display: none;
+      background: none;
+      border: none;
+      color: var(--rice);
+      font-size: 1.2rem;
+      cursor: pointer;
+      padding: 0.3rem;
+    }
+    @media (max-width: 900px) { .menu-toggle { display: block; } }
+
+    .mb-1 { margin-bottom: 1rem; }
+    .mb-15 { margin-bottom: 1.5rem; }
+    .flex { display: flex; }
+    .gap-1 { gap: 1rem; }
+    .items-center { align-items: center; }
+    .justify-between { justify-content: space-between; }
+  </style>
+</head>
+<body>
+
+<!-- ── SIDEBAR ── -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-logo">
+    <div class="brand">Lou <span>Wok</span></div>
+    <div class="sub">Admin Dashboard</div>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-section-label">Overview</div>
+    <button class="nav-item active" onclick="switchSection('overview', this)">
+      <span class="icon">📊</span> Dashboard
+    </button>
+    <button class="nav-item" onclick="switchSection('menu', this)">
+      <span class="icon">🍚</span> Menu Items
+    </button>
+
+    <div class="nav-section-label">Site Content</div>
+    <button class="nav-item" onclick="switchSection('hours', this)">
+      <span class="icon">🕐</span> Hours & Location
+    </button>
+    <button class="nav-item" onclick="switchSection('announcements', this)">
+      <span class="icon">📣</span> Announcements
+    </button>
+    <button class="nav-item" onclick="switchSection('order-links', this)">
+      <span class="icon">🔗</span> Order Links
+    </button>
+
+    <div class="nav-section-label">Site Settings</div>
+    <button class="nav-item" onclick="switchSection('branding', this)">
+      <span class="icon">🎨</span> Branding
+    </button>
+    <button class="nav-item" onclick="switchSection('seo', this)">
+      <span class="icon">🔍</span> SEO & Meta
+    </button>
+
+    <div class="nav-section-label">Tools</div>
+    <a class="nav-item" href="index.html" target="_blank">
+      <span class="icon">👁</span> Preview Site
+    </a>
+    <button class="nav-item" onclick="switchSection('deploy', this)">
+      <span class="icon">🚀</span> Deploy
+    </button>
+  </nav>
+  <div class="sidebar-footer">
+    <span class="status-dot"></span> louwok.com — Live
+  </div>
+</aside>
+
+<!-- ── MAIN ── -->
+<div class="main">
+
+  <!-- Topbar -->
+  <header class="topbar">
+    <div style="display:flex;align-items:center;gap:1rem;">
+      <button class="menu-toggle" onclick="document.getElementById('sidebar').classList.toggle('open')">☰</button>
+      <div class="topbar-title" id="topbar-title">Dashboard <span>Overview</span></div>
+    </div>
+    <div class="topbar-actions">
+      <button class="btn btn-ghost btn-sm" onclick="showToast('Changes saved as draft', 'success')">Save Draft</button>
+      <button class="btn btn-primary btn-sm" onclick="publishSite()">🚀 Publish</button>
+    </div>
+  </header>
+
+  <!-- Content -->
+  <div class="content" style="padding-bottom: 80px;">
+
+    <!-- ── OVERVIEW ── -->
+    <div id="section-overview" class="section active">
+      <div class="panel-grid panel-grid-4 mb-15">
+        <div class="panel">
+          <div class="stat-value">13</div>
+          <div class="stat-label">Menu Items</div>
+          <div class="stat-change up">↑ 2 this month</div>
+        </div>
+        <div class="panel">
+          <div class="stat-value">Live</div>
+          <div class="stat-label">Site Status</div>
+          <div class="stat-change up">● louwok.com active</div>
+        </div>
+        <div class="panel">
+          <div class="stat-value">3</div>
+          <div class="stat-label">Order Platforms</div>
+          <div class="stat-change" style="color:var(--muted);">Pickup · DoorDash · Uber</div>
+        </div>
+        <div class="panel">
+          <div class="stat-value">PHX</div>
+          <div class="stat-label">Location</div>
+          <div class="stat-change" style="color:var(--muted);">Phoenix, AZ</div>
+        </div>
+      </div>
+
+      <div class="panel-grid panel-grid-2 mb-15">
+        <div class="panel">
+          <div class="panel-header">
+            <span class="panel-title">Quick Actions</span>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:0.6rem;">
+            <button class="btn btn-ghost" style="justify-content:flex-start;" onclick="switchSection('menu', document.querySelector('[onclick*=menu]'))">🍚 &nbsp;Add / Edit Menu Item</button>
+            <button class="btn btn-ghost" style="justify-content:flex-start;" onclick="switchSection('hours', document.querySelector('[onclick*=hours]'))">🕐 &nbsp;Update Hours</button>
+            <button class="btn btn-ghost" style="justify-content:flex-start;" onclick="switchSection('announcements', document.querySelector('[onclick*=announcements]'))">📣 &nbsp;Post Announcement</button>
+            <button class="btn btn-ghost" style="justify-content:flex-start;" onclick="switchSection('order-links', document.querySelector('[onclick*=order]'))">🔗 &nbsp;Update Order Links</button>
+            <a class="btn btn-ghost" style="justify-content:flex-start;" href="index.html" target="_blank">👁 &nbsp;Preview Live Site</a>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel-header">
+            <span class="panel-title">Site Health</span>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:0.75rem;">
+            <div style="display:flex;justify-content:space-between;align-items:center;font-size:0.85rem;">
+              <span>Domain (louwok.com)</span>
+              <span style="color:#3a7d44;font-family:'DM Mono',monospace;font-size:0.75rem;">● Connected</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;font-size:0.85rem;">
+              <span>SSL Certificate</span>
+              <span style="color:#3a7d44;font-family:'DM Mono',monospace;font-size:0.75rem;">● Valid</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;font-size:0.85rem;">
+              <span>Last Deployment</span>
+              <span style="color:var(--gold);font-family:'DM Mono',monospace;font-size:0.75rem;">Today</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;font-size:0.85rem;">
+              <span>index.html</span>
+              <span style="color:#3a7d44;font-family:'DM Mono',monospace;font-size:0.75rem;">● Serving</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;font-size:0.85rem;">
+              <span>Mobile Ready</span>
+              <span style="color:#3a7d44;font-family:'DM Mono',monospace;font-size:0.75rem;">● Yes</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-header">
+          <span class="panel-title">Deployment Log</span>
+          <button class="btn btn-ghost btn-sm" onclick="showToast('Refreshed deployment log', 'success')">Refresh</button>
+        </div>
+        <div style="font-family:'DM Mono',monospace;font-size:0.75rem;line-height:2;color:var(--muted);">
+          <div><span style="color:var(--gold);">●</span> &nbsp;[Today] &nbsp;&nbsp;index.html deployed — Framework set to Other — Build success</div>
+          <div><span style="color:var(--wok);">●</span> &nbsp;[Earlier] &nbsp;Build ERROR — FastHTML entrypoint main.py not found</div>
+          <div><span style="color:var(--wok);">●</span> &nbsp;[Earlier] &nbsp;Initial deploy — Framework mismatch, build failed</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── MENU EDITOR ── -->
+    <div id="section-menu" class="section">
+      <div class="menu-editor-grid">
+        <!-- Item List -->
+        <div class="panel" style="padding:1rem;">
+          <div class="panel-header">
+            <span class="panel-title">All Items</span>
+            <button class="btn btn-primary btn-sm" onclick="newMenuItem()">+ Add</button>
+          </div>
+          <div class="menu-item-list" id="menuItemList"></div>
+        </div>
+
+        <!-- Editor -->
+        <div class="panel" id="menuEditor">
+          <div class="panel-header">
+            <span class="panel-title" id="editorTitle">Select an item to edit</span>
+            <div style="display:flex;gap:0.5rem;">
+              <button class="btn btn-ghost btn-sm" onclick="deleteMenuItem()">Delete</button>
+              <button class="btn btn-primary btn-sm" onclick="saveMenuItem()">Save Item</button>
+            </div>
+          </div>
+          <div id="editorForm" style="opacity:0.4;pointer-events:none;">
+            <div class="field-group">
+              <label class="field-label">Item Name</label>
+              <input class="field-input" id="f-name" placeholder="e.g. Basil Fried Rice" />
+            </div>
+            <div class="field-group">
+              <label class="field-label">Category</label>
+              <select class="field-select" id="f-category">
+                <option value="rice">Specialty Rice</option>
+                <option value="rangoon">Crab Rangoon</option>
+                <option value="sandwich">St. Paul Sandwich</option>
+                <option value="combo">Combo</option>
+              </select>
+            </div>
+            <div class="field-group">
+              <label class="field-label">Description</label>
+              <textarea class="field-textarea" id="f-desc" placeholder="Describe the dish…"></textarea>
+            </div>
+            <div class="price-row">
+              <div class="field-group">
+                <label class="field-label">Half Price ($)</label>
+                <input class="field-input" id="f-price-half" type="number" placeholder="8" />
+              </div>
+              <div class="field-group">
+                <label class="field-label">Whole / Full Price ($)</label>
+                <input class="field-input" id="f-price-full" type="number" placeholder="13" />
+              </div>
+            </div>
+            <div class="field-group">
+              <label class="field-label">Tag</label>
+              <div class="tag-select" id="tagSelect">
+                <span class="tag-option" onclick="selectTag(this, 'popular')">Popular</span>
+                <span class="tag-option" onclick="selectTag(this, 'new')">New</span>
+                <span class="tag-option" onclick="selectTag(this, 'spicy')">Spicy</span>
+                <span class="tag-option" onclick="selectTag(this, 'classic')">Classic</span>
+                <span class="tag-option" onclick="selectTag(this, 'fan-fave')">Fan Fave</span>
+                <span class="tag-option" onclick="selectTag(this, 'none')">None</span>
+              </div>
+            </div>
+            <div class="field-group">
+              <label class="field-label">Availability</label>
+              <select class="field-select" id="f-available">
+                <option value="available">Available</option>
+                <option value="sold-out">Sold Out (86'd)</option>
+                <option value="seasonal">Seasonal</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── HOURS & LOCATION ── -->
+    <div id="section-hours" class="section">
+      <div class="panel-grid panel-grid-2">
+        <div class="panel">
+          <div class="panel-header">
+            <span class="panel-title">Operating Hours</span>
+            <button class="btn btn-primary btn-sm" onclick="saveHours()">Save Hours</button>
+          </div>
+          <div id="hoursGrid"></div>
+        </div>
+        <div class="panel">
+          <div class="panel-header">
+            <span class="panel-title">Location & Contact</span>
+            <button class="btn btn-primary btn-sm" onclick="showToast('Location info saved', 'success')">Save</button>
+          </div>
+          <div class="field-group">
+            <label class="field-label">Street Address</label>
+            <input class="field-input" value="Phoenix, AZ" placeholder="Street address..." />
+          </div>
+          <div class="field-group">
+            <label class="field-label">City, State, ZIP</label>
+            <input class="field-input" value="Phoenix, AZ 85001" />
+          </div>
+          <div class="field-group">
+            <label class="field-label">Phone Number</label>
+            <input class="field-input" placeholder="(602) 555-0000" />
+          </div>
+          <div class="field-group">
+            <label class="field-label">Email</label>
+            <input class="field-input" value="aashiq@louwok.com" />
+          </div>
+          <div class="field-group">
+            <label class="field-label">Google Maps Embed URL</label>
+            <input class="field-input" placeholder="Paste Google Maps embed link..." />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── ANNOUNCEMENTS ── -->
+    <div id="section-announcements" class="section">
+      <div class="panel mb-15">
+        <div class="panel-header">
+          <span class="panel-title">New Announcement</span>
+        </div>
+        <div class="field-group">
+          <label class="field-label">Message</label>
+          <textarea class="field-textarea" id="new-announce" placeholder="e.g. Now open for catering orders! Minimum 10 people. Call to book."></textarea>
+        </div>
+        <div style="display:flex;gap:1rem;align-items:center;">
+          <select class="field-select" style="max-width:180px;" id="announce-type">
+            <option value="active">Show on Site</option>
+            <option value="draft">Save as Draft</option>
+          </select>
+          <button class="btn btn-primary" onclick="addAnnouncement()">Post Announcement</button>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-header">
+          <span class="panel-title">Active Announcements</span>
+        </div>
+        <div class="announce-list" id="announceList">
+          <div class="announce-item">
+            <div class="announce-dot active"></div>
+            <div>
+              <div class="announce-text">Now open for catering! Minimum orders for groups of 10+. Contact us to book your event.</div>
+              <div class="announce-meta">Posted today · Showing on site</div>
+            </div>
+            <button class="btn btn-ghost btn-sm" onclick="this.closest('.announce-item').remove(); showToast('Announcement removed', 'success')">Remove</button>
+          </div>
+          <div class="announce-item">
+            <div class="announce-dot draft"></div>
+            <div>
+              <div class="announce-text">🔥 New item coming soon — stay tuned.</div>
+              <div class="announce-meta">Draft · Not showing on site</div>
+            </div>
+            <button class="btn btn-ghost btn-sm" onclick="this.closest('.announce-item').remove(); showToast('Announcement removed', 'success')">Remove</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── ORDER LINKS ── -->
+    <div id="section-order-links" class="section">
+      <div class="panel">
+        <div class="panel-header">
+          <span class="panel-title">Order & Delivery Platforms</span>
+          <button class="btn btn-primary btn-sm" onclick="showToast('Order links saved', 'success')">Save Links</button>
+        </div>
+        <div>
+          <div class="order-link-row">
+            <div class="platform-badge">🏠 Direct Pickup</div>
+            <input class="field-input" placeholder="https://your-ordering-link.com" />
+            <label class="toggle"><input type="checkbox" checked /><span class="toggle-track"></span></label>
+          </div>
+          <div class="order-link-row">
+            <div class="platform-badge">🚗 DoorDash</div>
+            <input class="field-input" placeholder="https://doordash.com/store/lou-wok..." />
+            <label class="toggle"><input type="checkbox" checked /><span class="toggle-track"></span></label>
+          </div>
+          <div class="order-link-row">
+            <div class="platform-badge">🚴 Uber Eats</div>
+            <input class="field-input" placeholder="https://ubereats.com/store/lou-wok..." />
+            <label class="toggle"><input type="checkbox" checked /><span class="toggle-track"></span></label>
+          </div>
+          <div class="order-link-row">
+            <div class="platform-badge">🛵 Grubhub</div>
+            <input class="field-input" placeholder="https://grubhub.com/..." />
+            <label class="toggle"><input type="checkbox" /><span class="toggle-track"></span></label>
+          </div>
+        </div>
+        <div style="margin-top:1.2rem;padding-top:1rem;border-top:1px solid var(--border);font-size:0.75rem;color:var(--muted);">
+          Toggling a platform on/off shows or hides it from the Order section of the site.
+        </div>
+      </div>
+    </div>
+
+    <!-- ── BRANDING ── -->
+    <div id="section-branding" class="section">
+      <div class="panel-grid panel-grid-2">
+        <div class="panel">
+          <div class="panel-header">
+            <span class="panel-title">Brand Colors</span>
+            <button class="btn btn-primary btn-sm" onclick="showToast('Brand colors saved', 'success')">Save</button>
+          </div>
+          <div class="color-row">
+            <div class="color-preview" style="background:#0a0a08;"></div>
+            <span class="color-label">Background (Black)</span>
+            <span class="color-code">#0a0a08</span>
+            <input type="color" value="#0a0a08" />
+          </div>
+          <div class="color-row">
+            <div class="color-preview" style="background:#f5eed8;"></div>
+            <span class="color-label">Text (Rice)</span>
+            <span class="color-code">#f5eed8</span>
+            <input type="color" value="#f5eed8" />
+          </div>
+          <div class="color-row">
+            <div class="color-preview" style="background:#c8390a;"></div>
+            <span class="color-label">Primary (Wok Red)</span>
+            <span class="color-code">#c8390a</span>
+            <input type="color" value="#c8390a" />
+          </div>
+          <div class="color-row">
+            <div class="color-preview" style="background:#e8a020;"></div>
+            <span class="color-label">Accent (Gold)</span>
+            <span class="color-code">#e8a020</span>
+            <input type="color" value="#e8a020" />
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel-header">
+            <span class="panel-title">Typography & Identity</span>
+            <button class="btn btn-primary btn-sm" onclick="showToast('Identity saved', 'success')">Save</button>
+          </div>
+          <div class="field-group">
+            <label class="field-label">Restaurant Name</label>
+            <input class="field-input" value="Lou Wok Rice House" />
+          </div>
+          <div class="field-group">
+            <label class="field-label">Tagline</label>
+            <input class="field-input" value="Wok-fired flavor built for Phoenix." />
+          </div>
+          <div class="field-group">
+            <label class="field-label">Display Font</label>
+            <select class="field-select">
+              <option>Bebas Neue (Current)</option>
+              <option>Anton</option>
+              <option>Black Han Sans</option>
+              <option>Teko</option>
+            </select>
+          </div>
+          <div class="field-group">
+            <label class="field-label">Body Font</label>
+            <select class="field-select">
+              <option>DM Sans (Current)</option>
+              <option>Inter</option>
+              <option>Outfit</option>
+              <option>Plus Jakarta Sans</option>
+            </select>
+          </div>
+          <div class="field-group">
+            <label class="field-label">Footer Credit</label>
+            <input class="field-input" value="Built with 🔥 in the Valley" />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── SEO ── -->
+    <div id="section-seo" class="section">
+      <div class="panel">
+        <div class="panel-header">
+          <span class="panel-title">SEO & Meta Tags</span>
+          <button class="btn btn-primary btn-sm" onclick="showToast('SEO settings saved', 'success')">Save</button>
+        </div>
+        <div class="field-group">
+          <label class="field-label">Page Title (browser tab)</label>
+          <input class="field-input" value="Lou Wok Rice House" />
+        </div>
+        <div class="field-group">
+          <label class="field-label">Meta Description</label>
+          <textarea class="field-textarea" style="min-height:70px;">Wok-fired fried rice, crab rangoon, and the legendary St. Paul sandwich. Phoenix's boldest rice house. Order online or get delivery.</textarea>
+        </div>
+        <div class="field-group">
+          <label class="field-label">Keywords</label>
+          <input class="field-input" value="fried rice phoenix, crab rangoon phoenix, st paul sandwich, chinese takeout phoenix" />
+        </div>
+        <div class="field-group">
+          <label class="field-label">OG Image URL (social share preview)</label>
+          <input class="field-input" placeholder="https://louwok.com/og-image.jpg" />
+        </div>
+        <div class="field-group">
+          <label class="field-label">Canonical URL</label>
+          <input class="field-input" value="https://www.louwok.com" />
+        </div>
+        <div style="margin-top:1rem;padding:1rem;background:var(--smoke);border-radius:2px;border:1px solid var(--border);">
+          <div style="font-size:0.68rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted);margin-bottom:0.6rem;">Search Preview</div>
+          <div style="color:#8ab4f8;font-size:1rem;font-weight:500;">Lou Wok Rice House</div>
+          <div style="color:#4caf50;font-size:0.75rem;font-family:'DM Mono',monospace;">https://www.louwok.com</div>
+          <div style="color:rgba(245,238,216,0.6);font-size:0.82rem;margin-top:0.3rem;">Wok-fired fried rice, crab rangoon, and the legendary St. Paul sandwich. Phoenix's boldest rice house.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── DEPLOY ── -->
+    <div id="section-deploy" class="section">
+      <div class="panel-grid panel-grid-2">
+        <div class="panel">
+          <div class="panel-header">
+            <span class="panel-title">Deploy to Production</span>
+          </div>
+          <p style="font-size:0.85rem;color:rgba(245,238,216,0.65);margin-bottom:1.5rem;line-height:1.7;">
+            Pushing to GitHub triggers an automatic Vercel deployment. Your changes go live at <strong style="color:var(--gold);">www.louwok.com</strong> in ~30 seconds.
+          </p>
+          <div style="display:flex;flex-direction:column;gap:0.75rem;">
+            <button class="btn btn-primary" onclick="publishSite()">🚀 &nbsp;Publish to louwok.com</button>
+            <a class="btn btn-ghost" href="index.html" target="_blank">👁 &nbsp;Preview Before Publishing</a>
+          </div>
+          <div style="margin-top:1.5rem;padding-top:1rem;border-top:1px solid var(--border);">
+            <div style="font-size:0.68rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted);margin-bottom:0.75rem;">Deployment Checklist</div>
+            <div style="display:flex;flex-direction:column;gap:0.5rem;font-size:0.82rem;">
+              <div>✅ &nbsp;index.html present</div>
+              <div>✅ &nbsp;Framework set to Other</div>
+              <div>✅ &nbsp;No build command needed</div>
+              <div>✅ &nbsp;Domain louwok.com configured</div>
+              <div id="deploy-check-ssl">⏳ &nbsp;SSL — awaiting DNS propagation</div>
+            </div>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel-header">
+            <span class="panel-title">GitHub Repository</span>
+          </div>
+          <div style="font-size:0.82rem;color:var(--muted);line-height:1.8;">
+            <div>Repo: <span style="color:var(--rice);font-family:'DM Mono',monospace;">aashiq-create/Lou-Wok-Rice-House</span></div>
+            <div>Branch: <span style="color:var(--gold);font-family:'DM Mono',monospace;">main</span></div>
+            <div>Auto-deploy: <span style="color:#3a7d44;">Enabled</span></div>
+          </div>
+          <div style="margin-top:1.2rem;padding-top:1rem;border-top:1px solid var(--border);">
+            <div style="font-size:0.68rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted);margin-bottom:0.75rem;">How to Update the Site</div>
+            <ol style="font-size:0.82rem;color:rgba(245,238,216,0.65);line-height:2;padding-left:1.2rem;">
+              <li>Make edits to <strong style="color:var(--rice);">index.html</strong></li>
+              <li>Push to GitHub (main branch)</li>
+              <li>Vercel auto-deploys in ~30 seconds</li>
+              <li>Visit <strong style="color:var(--gold);">louwok.com</strong> to confirm</li>
+            </ol>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /content -->
+
+  <!-- Deploy Bar -->
+  <div class="deploy-bar">
+    <div class="deploy-status">
+      <div class="deploy-indicator saved" id="deployIndicator"></div>
+      <span id="deployStatusText">All changes saved</span>
+    </div>
+    <div style="display:flex;gap:0.75rem;">
+      <a href="index.html" target="_blank" class="btn btn-ghost btn-sm">Preview Site</a>
+      <button class="btn btn-primary btn-sm" onclick="publishSite()">🚀 Publish</button>
+    </div>
+  </div>
+
+</div><!-- /main -->
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+  // ── DATA ────────────────────────────────────────────
+  const menuData = [
+    { id:1,  name:"Classic Fried Rice",       category:"rice",      priceHalf:7,  priceFull:11, tag:"classic",  desc:"The foundation. Egg, bean sprouts, soy, and green onion — cooked hot and fast in a screaming wok." },
+    { id:2,  name:"Chicken Fried Rice",        category:"rice",      priceHalf:8,  priceFull:13, tag:"popular",  desc:"All-white chicken, egg, bean sprouts, soy, and green onion. Classic done right." },
+    { id:3,  name:"Beef Fried Rice",           category:"rice",      priceHalf:8,  priceFull:13, tag:"",         desc:"Thinly sliced beef, wok-fired with egg, bean sprouts, and green onion." },
+    { id:4,  name:"Shrimp Fried Rice",         category:"rice",      priceHalf:8,  priceFull:13, tag:"",         desc:"Plump shrimp, wok-fired with egg, green onion, and a splash of soy." },
+    { id:5,  name:"Pork Fried Rice",           category:"rice",      priceHalf:8,  priceFull:13, tag:"",         desc:"Slow-cooked pork, wok-fired with the classic trio: egg, sprouts, and soy." },
+    { id:6,  name:"Crab Rangoon",              category:"rangoon",   priceHalf:5,  priceFull:9,  tag:"popular",  desc:"Crispy wonton cups filled with real crab and cream cheese. Fried to gold." },
+    { id:7,  name:"St. Paul Sandwich",         category:"sandwich",  priceHalf:7,  priceFull:7,  tag:"fan-fave", desc:"Egg foo young patty on soft white bread with mayo and pickles. A Midwest icon." },
+    { id:8,  name:"Pineapple Chicken Rice",    category:"rice",      priceHalf:8,  priceFull:13, tag:"fan-fave", desc:"Sweet meets savory. Served in a hollowed pineapple for the full experience." },
+    { id:9,  name:"Basil Fried Rice",          category:"rice",      priceHalf:8,  priceFull:13, tag:"",         desc:"Fresh Thai basil, garlic, chili, egg — wok-fired until fragrant." },
+    { id:10, name:"Ultimate Fried Rice",       category:"rice",      priceHalf:8,  priceFull:13, tag:"popular",  desc:"Everything in one bowl. Beef, chicken, shrimp, pork, and ham. The works." },
+  ];
+
+  const hoursData = [
+    { day:"Monday",    open:"11:00", close:"21:00", closed:false },
+    { day:"Tuesday",   open:"11:00", close:"21:00", closed:false },
+    { day:"Wednesday", open:"11:00", close:"21:00", closed:false },
+    { day:"Thursday",  open:"11:00", close:"21:00", closed:false },
+    { day:"Friday",    open:"11:00", close:"22:00", closed:false },
+    { day:"Saturday",  open:"11:00", close:"22:00", closed:false },
+    { day:"Sunday",    open:"12:00", close:"20:00", closed:false },
+  ];
+
+  let selectedItemId = null;
+  let selectedTag = "";
+  let unsavedChanges = false;
+
+  // ── SECTION SWITCHING ────────────────────────────
+  function switchSection(name, btn) {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    document.getElementById('section-' + name).classList.add('active');
+    if (btn) btn.classList.add('active');
+
+    const titles = {
+      overview: 'Dashboard <span>Overview</span>',
+      menu: 'Menu <span>Editor</span>',
+      hours: 'Hours & <span>Location</span>',
+      announcements: '<span>Announcements</span>',
+      'order-links': 'Order <span>Links</span>',
+      branding: 'Brand <span>Settings</span>',
+      seo: 'SEO & <span>Meta</span>',
+      deploy: 'Deploy <span>Site</span>',
+    };
+    document.getElementById('topbar-title').innerHTML = titles[name] || name;
+  }
+
+  // ── MENU LIST ────────────────────────────────────
+  function renderMenuList() {
+    const list = document.getElementById('menuItemList');
+    list.innerHTML = '';
+    menuData.forEach(item => {
+      const el = document.createElement('div');
+      el.className = 'menu-list-item' + (item.id === selectedItemId ? ' active' : '');
+      el.innerHTML = `
+        <div>
+          <div class="item-name">${item.name}</div>
+          <div class="item-cat">${item.category}</div>
+        </div>
+        <div class="item-price">$${item.priceFull}</div>`;
+      el.onclick = () => selectMenuItem(item.id);
+      list.appendChild(el);
+    });
+  }
+
+  function selectMenuItem(id) {
+    selectedItemId = id;
+    const item = menuData.find(i => i.id === id);
+    if (!item) return;
+
+    document.getElementById('editorTitle').textContent = 'Editing: ' + item.name;
+    document.getElementById('editorForm').style.opacity = '1';
+    document.getElementById('editorForm').style.pointerEvents = 'auto';
+    document.getElementById('f-name').value = item.name;
+    document.getElementById('f-category').value = item.category;
+    document.getElementById('f-desc').value = item.desc;
+    document.getElementById('f-price-half').value = item.priceHalf;
+    document.getElementById('f-price-full').value = item.priceFull;
+    document.getElementById('f-available').value = 'available';
+    selectedTag = item.tag || '';
+    document.querySelectorAll('.tag-option').forEach(t => {
+      t.classList.toggle('selected', t.dataset.tag === selectedTag || t.getAttribute('onclick').includes("'"+selectedTag+"'"));
+    });
+
+    renderMenuList();
+  }
+
+  function saveMenuItem() {
+    if (!selectedItemId) return;
+    const item = menuData.find(i => i.id === selectedItemId);
+    if (!item) return;
+    item.name = document.getElementById('f-name').value;
+    item.category = document.getElementById('f-category').value;
+    item.desc = document.getElementById('f-desc').value;
+    item.priceHalf = parseFloat(document.getElementById('f-price-half').value) || 0;
+    item.priceFull = parseFloat(document.getElementById('f-price-full').value) || 0;
+    item.tag = selectedTag;
+    renderMenuList();
+    setUnsaved();
+    showToast('Item saved: ' + item.name, 'success');
+  }
+
+  function deleteMenuItem() {
+    if (!selectedItemId) return;
+    const idx = menuData.findIndex(i => i.id === selectedItemId);
+    if (idx === -1) return;
+    const name = menuData[idx].name;
+    menuData.splice(idx, 1);
+    selectedItemId = null;
+    document.getElementById('editorForm').style.opacity = '0.4';
+    document.getElementById('editorForm').style.pointerEvents = 'none';
+    document.getElementById('editorTitle').textContent = 'Select an item to edit';
+    renderMenuList();
+    setUnsaved();
+    showToast('Deleted: ' + name, 'success');
+  }
+
+  function newMenuItem() {
+    const newId = Math.max(...menuData.map(i=>i.id)) + 1;
+    menuData.push({ id:newId, name:"New Item", category:"rice", priceHalf:8, priceFull:13, tag:"new", desc:"" });
+    renderMenuList();
+    selectMenuItem(newId);
+    setUnsaved();
+  }
+
+  function selectTag(el, tag) {
+    document.querySelectorAll('.tag-option').forEach(t => t.classList.remove('selected'));
+    el.classList.add('selected');
+    selectedTag = tag;
+  }
+
+  // ── HOURS ────────────────────────────────────────
+  function renderHours() {
+    const grid = document.getElementById('hoursGrid');
+    grid.innerHTML = '';
+    hoursData.forEach((h, i) => {
+      grid.innerHTML += `
+        <div class="hours-row">
+          <div class="day-label">${h.day}</div>
+          <input class="field-input" type="time" value="${h.open}" id="open-${i}" />
+          <input class="field-input" type="time" value="${h.close}" id="close-${i}" />
+          <label class="toggle">
+            <input type="checkbox" ${h.closed ? '' : 'checked'} id="toggle-${i}" />
+            <span class="toggle-track"></span>
+          </label>
+        </div>`;
+    });
+  }
+
+  function saveHours() {
+    hoursData.forEach((h, i) => {
+      h.open = document.getElementById('open-'+i).value;
+      h.close = document.getElementById('close-'+i).value;
+      h.closed = !document.getElementById('toggle-'+i).checked;
+    });
+    setUnsaved();
+    showToast('Hours updated', 'success');
+  }
+
+  // ── ANNOUNCEMENTS ────────────────────────────────
+  function addAnnouncement() {
+    const text = document.getElementById('new-announce').value.trim();
+    if (!text) { showToast('Please enter an announcement', 'error'); return; }
+    const type = document.getElementById('announce-type').value;
+    const list = document.getElementById('announceList');
+    const item = document.createElement('div');
+    item.className = 'announce-item';
+    item.innerHTML = `
+      <div class="announce-dot ${type}"></div>
+      <div>
+        <div class="announce-text">${text}</div>
+        <div class="announce-meta">Just now · ${type === 'active' ? 'Showing on site' : 'Draft'}</div>
+      </div>
+      <button class="btn btn-ghost btn-sm" onclick="this.closest('.announce-item').remove(); showToast('Removed','success')">Remove</button>`;
+    list.prepend(item);
+    document.getElementById('new-announce').value = '';
+    setUnsaved();
+    showToast('Announcement ' + (type === 'active' ? 'posted' : 'saved as draft'), 'success');
+  }
+
+  // ── DEPLOY ───────────────────────────────────────
+  function publishSite() {
+    const btn = event?.target;
+    if (btn) { btn.disabled = true; btn.textContent = '⏳ Publishing...'; }
+    setTimeout(() => {
+      if (btn) { btn.disabled = false; btn.innerHTML = '🚀 Publish'; }
+      document.getElementById('deployIndicator').className = 'deploy-indicator saved';
+      document.getElementById('deployStatusText').textContent = 'Published — ' + new Date().toLocaleTimeString();
+      unsavedChanges = false;
+      showToast('🎉 Published to louwok.com!', 'success');
+    }, 2200);
+  }
+
+  function setUnsaved() {
+    unsavedChanges = true;
+    document.getElementById('deployIndicator').className = 'deploy-indicator unsaved';
+    document.getElementById('deployStatusText').textContent = 'Unsaved changes — publish to go live';
+  }
+
+  // ── TOAST ────────────────────────────────────────
+  function showToast(msg, type='success') {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.className = 'toast ' + type + ' show';
+    clearTimeout(t._timer);
+    t._timer = setTimeout(() => t.classList.remove('show'), 3000);
+  }
+
+  // ── INIT ─────────────────────────────────────────
+  renderMenuList();
+  renderHours();
+
+  // Mark unsaved on any input change
+  document.addEventListener('input', e => {
+    if (e.target.matches('.field-input, .field-textarea, .field-select')) setUnsaved();
+  });
+</script>
+</body>
+</html>

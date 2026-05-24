@@ -1,0 +1,1228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lou Wok Rice House</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=Playfair+Display:ital@1&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --black:   #0a0a08;
+      --rice:    #f5eed8;
+      --wok:     #c8390a;
+      --gold:    #e8a020;
+      --smoke:   #1e1c18;
+      --muted:   #6b6558;
+      --border:  rgba(232,160,32,0.18);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--black);
+      color: var(--rice);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* ── NOISE OVERLAY ─────────────────────────── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 9999;
+      opacity: 0.4;
+    }
+
+    /* ── NAV ───────────────────────────────────── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.25rem 4vw;
+      background: rgba(10,10,8,0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-logo {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.7rem;
+      letter-spacing: 0.08em;
+      color: var(--gold);
+      text-decoration: none;
+    }
+    .nav-logo span { color: var(--wok); }
+
+    .nav-links {
+      display: flex;
+      gap: 2.5rem;
+      list-style: none;
+    }
+    .nav-links a {
+      text-decoration: none;
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--rice);
+      opacity: 0.7;
+      transition: opacity 0.2s, color 0.2s;
+    }
+    .nav-links a:hover { opacity: 1; color: var(--gold); }
+
+    .nav-cta {
+      background: var(--wok);
+      color: var(--rice) !important;
+      opacity: 1 !important;
+      padding: 0.55rem 1.4rem;
+      border-radius: 2px;
+      transition: background 0.2s !important;
+    }
+    .nav-cta:hover { background: var(--gold) !important; color: var(--black) !important; }
+
+    /* ── HERO ──────────────────────────────────── */
+    #hero {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+      padding: 0 6vw;
+      padding-top: 90px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 60% 80% at 75% 50%, rgba(200,57,10,0.12) 0%, transparent 70%),
+        radial-gradient(ellipse 40% 60% at 20% 80%, rgba(232,160,32,0.07) 0%, transparent 60%);
+    }
+
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 1.4rem;
+    }
+    .hero-eyebrow::before {
+      content: '';
+      display: block;
+      width: 2rem;
+      height: 2px;
+      background: var(--wok);
+    }
+
+    .hero-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(4.5rem, 9vw, 9rem);
+      line-height: 0.9;
+      letter-spacing: 0.02em;
+      margin-bottom: 1.8rem;
+    }
+    .hero-title .accent { color: var(--wok); }
+    .hero-title .italic {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: 0.7em;
+      color: var(--gold);
+      display: block;
+    }
+
+    .hero-sub {
+      font-size: 1.05rem;
+      color: rgba(245,238,216,0.65);
+      max-width: 400px;
+      line-height: 1.75;
+      margin-bottom: 2.5rem;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .btn-primary {
+      display: inline-block;
+      background: var(--wok);
+      color: var(--rice);
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.85rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 1rem 2.2rem;
+      border-radius: 2px;
+      transition: background 0.2s, transform 0.15s;
+    }
+    .btn-primary:hover { background: var(--gold); color: var(--black); transform: translateY(-2px); }
+
+    .btn-ghost {
+      display: inline-block;
+      border: 1px solid rgba(245,238,216,0.3);
+      color: var(--rice);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.85rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 1rem 2.2rem;
+      border-radius: 2px;
+      transition: border-color 0.2s, color 0.2s, transform 0.15s;
+    }
+    .btn-ghost:hover { border-color: var(--gold); color: var(--gold); transform: translateY(-2px); }
+
+    .hero-visual {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .hero-bowl {
+      width: min(420px, 45vw);
+      aspect-ratio: 1;
+      border-radius: 50%;
+      background: radial-gradient(circle at 40% 35%, rgba(200,57,10,0.25), var(--smoke) 70%);
+      border: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 6rem;
+      text-align: center;
+      line-height: 1;
+      position: relative;
+      animation: float 4s ease-in-out infinite;
+    }
+    .hero-bowl .bowl-label {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.75rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-top: 0.5rem;
+    }
+
+    @keyframes float {
+      0%,100% { transform: translateY(0); }
+      50%      { transform: translateY(-14px); }
+    }
+
+    .hero-badge {
+      position: absolute;
+      top: 10%;
+      right: 5%;
+      width: 90px;
+      height: 90px;
+      border-radius: 50%;
+      background: var(--wok);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 0.85rem;
+      line-height: 1.2;
+      letter-spacing: 0.06em;
+      animation: spin-slow 12s linear infinite;
+    }
+    @keyframes spin-slow { to { transform: rotate(360deg); } }
+
+    /* ── TICKER ────────────────────────────────── */
+    .ticker-wrap {
+      overflow: hidden;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      background: var(--smoke);
+      padding: 0.8rem 0;
+    }
+    .ticker {
+      display: flex;
+      gap: 4rem;
+      width: max-content;
+      animation: ticker 22s linear infinite;
+    }
+    @keyframes ticker { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+    .ticker-item {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.15rem;
+      letter-spacing: 0.1em;
+      white-space: nowrap;
+      color: var(--rice);
+      opacity: 0.5;
+    }
+    .ticker-item.hot { color: var(--wok); opacity: 1; }
+
+    /* ── SECTION BASE ──────────────────────────── */
+    section { padding: 7rem 6vw; }
+
+    .section-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 1rem;
+    }
+    .section-label::before {
+      content: '';
+      display: block;
+      width: 1.5rem;
+      height: 2px;
+      background: var(--wok);
+    }
+
+    .section-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(3rem, 6vw, 5.5rem);
+      line-height: 1;
+      letter-spacing: 0.02em;
+      margin-bottom: 1.5rem;
+    }
+
+    /* ── MENU ──────────────────────────────────── */
+    #menu { background: var(--smoke); }
+
+    .menu-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 4rem;
+      flex-wrap: wrap;
+      gap: 2rem;
+    }
+
+    .menu-intro {
+      font-size: 1rem;
+      color: rgba(245,238,216,0.6);
+      max-width: 420px;
+      line-height: 1.8;
+    }
+
+    .menu-tabs {
+      display: flex;
+      gap: 0.5rem;
+    }
+    .tab {
+      padding: 0.5rem 1.3rem;
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      background: transparent;
+      border: 1px solid var(--border);
+      color: rgba(245,238,216,0.5);
+      cursor: pointer;
+      border-radius: 2px;
+      transition: all 0.2s;
+    }
+    .tab.active, .tab:hover {
+      background: var(--wok);
+      border-color: var(--wok);
+      color: var(--rice);
+    }
+
+    .menu-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.5px;
+    }
+
+    .menu-card {
+      background: var(--black);
+      padding: 2.2rem 2rem;
+      position: relative;
+      overflow: hidden;
+      transition: background 0.3s;
+      cursor: pointer;
+    }
+    .menu-card::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 2px;
+      background: var(--wok);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.35s ease;
+    }
+    .menu-card:hover { background: var(--smoke); }
+    .menu-card:hover::after { transform: scaleX(1); }
+
+    .card-number {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 3rem;
+      line-height: 1;
+      color: rgba(200,57,10,0.15);
+      position: absolute;
+      top: 1rem; right: 1.5rem;
+    }
+
+    .card-category {
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 0.75rem;
+    }
+
+    .card-name {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.9rem;
+      letter-spacing: 0.04em;
+      line-height: 1.05;
+      margin-bottom: 0.75rem;
+      color: var(--rice);
+    }
+
+    .card-desc {
+      font-size: 0.88rem;
+      color: rgba(245,238,216,0.55);
+      line-height: 1.7;
+      margin-bottom: 1.5rem;
+    }
+
+    .card-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .card-price {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.5rem;
+      color: var(--gold);
+      letter-spacing: 0.04em;
+    }
+
+    .card-tag {
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      padding: 0.3rem 0.7rem;
+      border-radius: 2px;
+    }
+    .tag-popular { background: rgba(200,57,10,0.2); color: var(--wok); }
+    .tag-new     { background: rgba(232,160,32,0.15); color: var(--gold); }
+    .tag-classic { background: rgba(245,238,216,0.08); color: rgba(245,238,216,0.5); }
+
+    /* ── FEATURED SPLIT ────────────────────────── */
+    #featured {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      padding: 0;
+    }
+
+    .featured-visual {
+      background: linear-gradient(135deg, var(--smoke) 0%, rgba(200,57,10,0.15) 100%);
+      min-height: 580px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .featured-visual::before {
+      content: '🍚';
+      font-size: 14rem;
+      opacity: 0.12;
+      position: absolute;
+      right: -2rem;
+      bottom: -2rem;
+    }
+    .featured-big-text {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(5rem, 10vw, 10rem);
+      line-height: 0.85;
+      text-align: center;
+      color: var(--rice);
+      opacity: 0.08;
+      position: absolute;
+      letter-spacing: 0.02em;
+    }
+    .featured-icon {
+      font-size: 5rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .featured-content {
+      background: var(--smoke);
+      padding: 5rem 4rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .featured-desc {
+      font-size: 1rem;
+      color: rgba(245,238,216,0.65);
+      line-height: 1.85;
+      margin-bottom: 2rem;
+    }
+
+    .featured-details {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-bottom: 2.5rem;
+    }
+    .detail-item {
+      border-left: 2px solid var(--wok);
+      padding-left: 1rem;
+    }
+    .detail-label {
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 0.2rem;
+    }
+    .detail-value {
+      font-size: 0.9rem;
+      color: var(--rice);
+      font-weight: 500;
+    }
+
+    /* ── ABOUT STRIP ───────────────────────────── */
+    #about {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6rem;
+      align-items: center;
+    }
+
+    .about-big {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(4rem, 8vw, 7rem);
+      line-height: 0.9;
+      letter-spacing: 0.02em;
+    }
+    .about-big .line2 {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      color: var(--gold);
+      font-size: 0.65em;
+      display: block;
+    }
+    .about-big .line3 { color: var(--wok); }
+
+    .about-text {
+      font-size: 1rem;
+      color: rgba(245,238,216,0.65);
+      line-height: 1.9;
+      margin-bottom: 2rem;
+    }
+
+    .stats-row {
+      display: flex;
+      gap: 2.5rem;
+      margin-top: 2.5rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border);
+    }
+    .stat-num {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 3rem;
+      color: var(--wok);
+      line-height: 1;
+    }
+    .stat-label {
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-top: 0.3rem;
+    }
+
+    /* ── ORDER CTA ─────────────────────────────── */
+    #order {
+      background: var(--wok);
+      text-align: center;
+      padding: 6rem 6vw;
+      position: relative;
+      overflow: hidden;
+    }
+    #order::before {
+      content: 'ORDER';
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 20vw;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%,-50%);
+      color: rgba(0,0,0,0.1);
+      letter-spacing: 0.1em;
+      white-space: nowrap;
+    }
+
+    .order-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(3rem, 7vw, 6rem);
+      letter-spacing: 0.03em;
+      margin-bottom: 1rem;
+      position: relative;
+    }
+    .order-sub {
+      font-size: 1.05rem;
+      color: rgba(245,238,216,0.8);
+      margin-bottom: 2.5rem;
+      position: relative;
+    }
+    .order-buttons {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      position: relative;
+    }
+    .btn-dark {
+      display: inline-block;
+      background: var(--black);
+      color: var(--rice);
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 0.85rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      padding: 1rem 2.5rem;
+      border-radius: 2px;
+      transition: background 0.2s, transform 0.15s;
+    }
+    .btn-dark:hover { background: var(--smoke); transform: translateY(-2px); }
+    .btn-outline-dark {
+      display: inline-block;
+      border: 2px solid rgba(0,0,0,0.3);
+      color: var(--black);
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 0.85rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      padding: 1rem 2.5rem;
+      border-radius: 2px;
+      transition: all 0.2s;
+    }
+    .btn-outline-dark:hover { background: var(--black); color: var(--rice); transform: translateY(-2px); }
+
+    /* ── FOOTER ────────────────────────────────── */
+    footer {
+      background: var(--smoke);
+      border-top: 1px solid var(--border);
+      padding: 4rem 6vw 2rem;
+    }
+
+    .footer-top {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 3rem;
+      margin-bottom: 3rem;
+    }
+
+    .footer-brand {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2.2rem;
+      color: var(--gold);
+      letter-spacing: 0.08em;
+      margin-bottom: 1rem;
+    }
+    .footer-brand span { color: var(--wok); }
+    .footer-tagline {
+      font-size: 0.9rem;
+      color: rgba(245,238,216,0.45);
+      line-height: 1.7;
+      max-width: 260px;
+    }
+
+    .footer-col-title {
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 1.2rem;
+    }
+    .footer-links {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+    .footer-links a {
+      text-decoration: none;
+      font-size: 0.88rem;
+      color: rgba(245,238,216,0.45);
+      transition: color 0.2s;
+    }
+    .footer-links a:hover { color: var(--gold); }
+
+    .footer-bottom {
+      border-top: 1px solid var(--border);
+      padding-top: 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.78rem;
+      color: rgba(245,238,216,0.25);
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    /* ── RESPONSIVE ────────────────────────────── */
+    @media (max-width: 900px) {
+      #hero          { grid-template-columns: 1fr; text-align: center; }
+      #hero .hero-sub{ margin: 0 auto 2.5rem; }
+      .hero-actions  { justify-content: center; }
+      .hero-visual   { display: none; }
+      #featured      { grid-template-columns: 1fr; }
+      #about         { grid-template-columns: 1fr; gap: 3rem; }
+      .footer-top    { grid-template-columns: 1fr 1fr; }
+      .nav-links     { display: none; }
+    }
+
+    /* ── SCROLL FADE-IN ────────────────────────── */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .fade-in.visible {
+      opacity: 1;
+      transform: none;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── NAV ── -->
+  <nav>
+    <a href="#" class="nav-logo">Lou <span>Wok</span> Rice House</a>
+    <ul class="nav-links">
+      <li><a href="#menu">Menu</a></li>
+      <li><a href="#about">Our Story</a></li>
+      <li><a href="#order">Locations</a></li>
+      <li><a href="#order" class="nav-cta">Order Now</a></li>
+    </ul>
+  </nav>
+
+  <!-- ── HERO ── -->
+  <section id="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-left">
+      <div class="hero-eyebrow">Phoenix, Arizona · Est. 2025</div>
+      <h1 class="hero-title">
+        <span class="italic">bold</span>
+        WOK<br>
+        RICE<br>
+        <span class="accent">HOUSE</span>
+      </h1>
+      <p class="hero-sub">
+        Fired over high heat. Built on flavor. Lou Wok serves up
+        wok-tossed rice, crab rangoon, and the legendary St. Paul
+        sandwich — every plate made to order, every time.
+      </p>
+      <div class="hero-actions">
+        <a href="#menu" class="btn-primary">View Menu</a>
+        <a href="#order" class="btn-ghost">Order Online</a>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="hero-bowl">
+        🍚
+        <div class="bowl-label">Wok-fired daily</div>
+      </div>
+      <div class="hero-badge">HOT<br>&amp;<br>FRESH</div>
+    </div>
+  </section>
+
+  <!-- ── TICKER ── -->
+  <div class="ticker-wrap">
+    <div class="ticker">
+      <span class="ticker-item hot">🍚 Fried Rice</span>
+      <span class="ticker-item">·</span>
+      <span class="ticker-item hot">🦀 Crab Rangoon</span>
+      <span class="ticker-item">·</span>
+      <span class="ticker-item hot">🥪 St. Paul Sandwich</span>
+      <span class="ticker-item">·</span>
+      <span class="ticker-item">Wok-Fired Daily</span>
+      <span class="ticker-item">·</span>
+      <span class="ticker-item">Phoenix, AZ</span>
+      <span class="ticker-item">·</span>
+      <span class="ticker-item hot">🍚 Fried Rice</span>
+      <span class="ticker-item">·</span>
+      <span class="ticker-item hot">🦀 Crab Rangoon</span>
+      <span class="ticker-item">·</span>
+      <span class="ticker-item hot">🥪 St. Paul Sandwich</span>
+      <span class="ticker-item">·</span>
+      <span class="ticker-item">Wok-Fired Daily</span>
+      <span class="ticker-item">·</span>
+      <span class="ticker-item">Phoenix, AZ</span>
+      <span class="ticker-item">·</span>
+    </div>
+  </div>
+
+  <!-- ── MENU ── -->
+  <section id="menu">
+    <div class="menu-header fade-in">
+      <div>
+        <div class="section-label">The Menu</div>
+        <h2 class="section-title">EAT<br>GOOD</h2>
+      </div>
+      <div>
+        <p class="menu-intro">
+          Every item on the Lou Wok menu is made to order over a blazing
+          wok. Simple ingredients. Uncompromising flavor. No shortcuts.
+        </p>
+        <div class="menu-tabs" style="margin-top:1.5rem;">
+          <button class="tab active">All</button>
+          <button class="tab">Rice</button>
+          <button class="tab">Appetizers</button>
+          <button class="tab">Sandwiches</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="menu-grid">
+
+      <!-- Card 1 -->
+      <div class="menu-card fade-in" data-category="rice">
+        <div class="card-number">01</div>
+        <div class="card-category">Signature Rice</div>
+        <div class="card-name">Lou Wok<br>Fried Rice</div>
+        <p class="card-desc">
+          Our house recipe. Jasmine rice wok-tossed with egg, bean sprouts,
+          green onion, soy, and your choice of protein — chicken, shrimp,
+          beef, or tofu. <em style="color:var(--muted);font-size:0.82rem;">Egg &amp; bean sprouts included. Hold either at time of order.</em>
+        </p>
+        <div class="card-footer">
+          <div class="card-price" style="display:flex;flex-direction:column;gap:0.15rem;line-height:1.1;">
+            <span style="font-size:0.95rem;color:var(--muted);font-family:'DM Sans',sans-serif;font-weight:500;">Half&nbsp;<span style="color:var(--gold);font-family:'Bebas Neue',sans-serif;font-size:1.35rem;">$8</span></span>
+            <span style="font-size:0.95rem;color:var(--muted);font-family:'DM Sans',sans-serif;font-weight:500;">Whole&nbsp;<span style="color:var(--gold);font-family:'Bebas Neue',sans-serif;font-size:1.35rem;">$12</span></span>
+          </div>
+          <span class="card-tag tag-popular">Best Seller</span>
+        </div>
+      </div>
+
+      <!-- Card 2 -->
+      <div class="menu-card fade-in" data-category="rice">
+        <div class="card-number">02</div>
+        <div class="card-category">Signature Rice</div>
+        <div class="card-name">Spicy Garlic<br>Fried Rice</div>
+        <p class="card-desc">
+          Loaded with roasted garlic, chili oil, egg, bean sprouts, and
+          wok-charred vegetables. Heat level: bring it.
+          <em style="color:var(--muted);font-size:0.82rem;">Egg &amp; bean sprouts included. Hold either at time of order.</em>
+        </p>
+        <div class="card-footer">
+          <div class="card-price" style="display:flex;flex-direction:column;gap:0.15rem;line-height:1.1;">
+            <span style="font-size:0.95rem;color:var(--muted);font-family:'DM Sans',sans-serif;font-weight:500;">Half&nbsp;<span style="color:var(--gold);font-family:'Bebas Neue',sans-serif;font-size:1.35rem;">$8</span></span>
+            <span style="font-size:0.95rem;color:var(--muted);font-family:'DM Sans',sans-serif;font-weight:500;">Whole&nbsp;<span style="color:var(--gold);font-family:'Bebas Neue',sans-serif;font-size:1.35rem;">$13</span></span>
+          </div>
+          <span class="card-tag tag-new">New</span>
+        </div>
+      </div>
+
+      <!-- Card 3 -->
+      <div class="menu-card fade-in" data-category="rice">
+        <div class="card-number">03</div>
+        <div class="card-category">Signature Rice</div>
+        <div class="card-name">Yang Chow<br>Fried Rice</div>
+        <p class="card-desc">
+          The classic. Shrimp, BBQ pork, egg, bean sprouts, peas, and
+          carrots — all wok-tossed over high heat until every grain has
+          a little char on it. <em style="color:var(--muted);font-size:0.82rem;">Egg &amp; bean sprouts included. Hold either at time of order.</em>
+        </p>
+        <div class="card-footer">
+          <div class="card-price" style="display:flex;flex-direction:column;gap:0.15rem;line-height:1.1;">
+            <span style="font-size:0.95rem;color:var(--muted);font-family:'DM Sans',sans-serif;font-weight:500;">Half&nbsp;<span style="color:var(--gold);font-family:'Bebas Neue',sans-serif;font-size:1.35rem;">$8</span></span>
+            <span style="font-size:0.95rem;color:var(--muted);font-family:'DM Sans',sans-serif;font-weight:500;">Whole&nbsp;<span style="color:var(--gold);font-family:'Bebas Neue',sans-serif;font-size:1.35rem;">$13</span></span>
+          </div>
+          <span class="card-tag tag-classic">Classic</span>
+        </div>
+      </div>
+
+      <!-- Card 4 -->
+      <div class="menu-card fade-in" data-category="appetizers">
+        <div class="card-number">04</div>
+        <div class="card-category">Appetizer</div>
+        <div class="card-name">Crab<br>Rangoon</div>
+        <p class="card-desc">
+          Crispy wonton shells stuffed with real crab and cream cheese,
+          seasoned with green onion and garlic. Served with sweet
+          chili sauce. 6 per order.
+        </p>
+        <div class="card-footer">
+          <div class="card-price">$8</div>
+          <span class="card-tag tag-popular">Fan Fave</span>
+        </div>
+      </div>
+
+      <!-- Card 5 -->
+      <div class="menu-card fade-in" data-category="appetizers">
+        <div class="card-number">05</div>
+        <div class="card-category">Appetizer</div>
+        <div class="card-name">Crab Rangoon<br>Deluxe (12pc)</div>
+        <p class="card-desc">
+          Double the order. Double the glory. Same crispy rangoon,
+          extra dipping sauce — duck sauce and sweet chili included.
+          Perfect for the table.
+        </p>
+        <div class="card-footer">
+          <div class="card-price">$14</div>
+          <span class="card-tag tag-new">Share Plate</span>
+        </div>
+      </div>
+
+      <!-- Card 6 -->
+      <div class="menu-card fade-in" data-category="sandwiches">
+        <div class="card-number">06</div>
+        <div class="card-category">The Sandwich</div>
+        <div class="card-name">St. Paul<br>Sandwich</div>
+        <p class="card-desc">
+          A Midwest legend. Egg foo young patty on soft white bread
+          with lettuce, tomato, pickles, and mayo. Lou Wok's version
+          is pressed, golden, and fully loaded.
+        </p>
+        <div class="card-footer">
+          <div class="card-price">$10</div>
+          <span class="card-tag tag-popular">Icon</span>
+        </div>
+      </div>
+
+      <!-- Card 7 -->
+      <div class="menu-card fade-in" data-category="sandwiches">
+        <div class="card-number">07</div>
+        <div class="card-category">The Sandwich</div>
+        <div class="card-name">St. Paul<br>Deluxe</div>
+        <p class="card-desc">
+          The original, upgraded. Double egg foo young patty, extra
+          sauce, topped with wok-fried onions and peppers. Comes with
+          a half order of plain fried rice.
+        </p>
+        <div class="card-footer">
+          <div class="card-price">$14</div>
+          <span class="card-tag tag-new">Combo</span>
+        </div>
+      </div>
+
+      <!-- Card 8 -->
+      <div class="menu-card fade-in" data-category="all">
+        <div class="card-number">08</div>
+        <div class="card-category">The Combo</div>
+        <div class="card-name">Lou Wok<br>Box</div>
+        <p class="card-desc">
+          The full experience. Your choice of fried rice (half or whole),
+          3 crab rangoon, a St. Paul sandwich, and 4pc fried chicken —
+          all on one tray. This is the move.
+        </p>
+        <div class="card-footer">
+          <div class="card-price" style="display:flex; flex-direction:column; gap:0.15rem; line-height:1.1;">
+            <span style="font-size:1rem; color:var(--muted); font-family:'DM Sans',sans-serif; font-weight:500; letter-spacing:0.05em;">Half&nbsp;<span style="color:var(--gold); font-family:'Bebas Neue',sans-serif; font-size:1.4rem;">$19</span></span>
+            <span style="font-size:1rem; color:var(--muted); font-family:'DM Sans',sans-serif; font-weight:500; letter-spacing:0.05em;">Whole&nbsp;<span style="color:var(--gold); font-family:'Bebas Neue',sans-serif; font-size:1.4rem;">$24</span></span>
+          </div>
+          <span class="card-tag tag-popular">MVP</span>
+        </div>
+      </div>
+
+      <!-- ── SPECIALTY RICE (Rice tab) ── -->
+
+      <!-- Rice Card 9 -->
+      <div class="menu-card fade-in" data-category="rice">
+        <div class="card-number">09</div>
+        <div class="card-category">Specialty Rice</div>
+        <div class="card-name">Jambalaya<br>Fried Rice</div>
+        <p class="card-desc">
+          The St. Louis legend, wok-fired Lou Wok style. Andouille
+          sausage, shrimp, and chicken tossed with Cajun seasoning,
+          bell peppers, egg, bean sprouts, and jasmine rice. Southern soul meets the wok.
+          <em style="color:var(--muted);font-size:0.82rem;">Egg &amp; bean sprouts included. Hold either at time of order.</em>
+        </p>
+        <div class="card-footer">
+          <div class="card-price" style="display:flex;flex-direction:column;gap:0.15rem;line-height:1.1;">
+            <span style="font-size:0.95rem;color:var(--muted);font-family:'DM Sans',sans-serif;font-weight:500;">Half&nbsp;<span style="color:var(--gold);font-family:'Bebas Neue',sans-serif;font-size:1.35rem;">$8</span></span>
+            <span style="font-size:0.95rem;color:var(--muted);font-family:'DM Sans',sans-serif;font-weight:500;">Whole&nbsp;<span style="color:var(--gold);font-family:'Bebas Neue',sans-serif;font-size:1.35rem;">$13</span></span>
+          </div>
+          <span class="card-tag tag-popular">STL Classic</span>
+        </div>
+      </div>
+
+      <!-- Rice Card 10 -->
+      <div class="menu-card fade-in" data-category="rice">
+        <div class="card-number">10</div>
+        <div class="card-category">Specialty Rice</div>
+        <div class="card-name">Duck<br>Fried Rice</div>
+        <p class="card-desc">
+          Slow-roasted duck, wok-tossed with jasmine rice, egg, bean
+          sprouts, green onion, ginger, and a rich dark soy glaze.
+          Bold, savory, and unlike anything else on the menu.
+          <em style="color:var(--muted);font-size:0.82rem;">Egg &amp; bean sprouts included. Hold either at time of order.</em>
+        </p>
+        <div class="card-footer">
+          <div class="card-price" style="display:flex;flex-direction:column;gap:0.15rem;line-height:1.1;">
+            <span style="font-size:0.95rem;color:var(--muted);font-family:'DM Sans',sans-serif;font-weight:500;">Half&nbsp;<span style="color:var(--gold);font-family:'Bebas Neue',sans-serif;font-size:1.35rem;">$8</span></span>
+            <span style="font-size:0.95rem;color:var(--muted);font-family:'DM Sans',sans-serif;font-weight:500;">Whole&nbsp;<span style="color:var(--gold);font-family:'Bebas Neue',sans-serif;font-size:1.35rem;">$13</span></span>
+          </div>
+          <span class="card-tag tag-new">Chef's Pick</span>
+        </div>
+      </div>
+
+      <!-- Rice Card 11 -->
+      <div class="menu-card fade-in" data-category="rice">
+        <div class="card-number">11</div>
+        <div class="card-category">Specialty Rice</div>
+        <div class="card-name">Pineapple<br>Chicken Fried Rice</div>
+        <p class="card-desc">
+          Sweet meets savory. Wok-charred chicken, fresh pineapple chunks,
+          cashews, egg, bean sprouts, and a touch of fish sauce — served
+          in a hollowed pineapple for the full experience.
+          <em style="color:var(--muted);font-size:0.82rem;">Egg &amp; bean sprouts included. Hold either at time of order.</em>
+        </p>
+        <div class="card-footer">
+          <div class="card-price" style="display:flex;flex-direction:column;gap:0.15rem;line-height:1.1;">
+            <span style="font-size:0.95rem;color:var(--muted);font-family:'DM Sans',sans-serif;font-weight:500;">Half&nbsp;<span style="color:var(--gold);font-family:'Bebas Neue',sans-serif;font-size:1.35rem;">$8</span></span>
+            <span style="font-size:0.95rem;color:var(--muted);font-family:'DM Sans',sans-serif;font-weight:500;">Whole&nbsp;<span style="color:var(--gold);font-family:'Bebas Neue',sans-serif;font-size:1.35rem;">$13</span></span>
+          </div>
+          <span class="card-tag tag-popular">Fan Fave</span>
+        </div>
+      </div>
+
+      <!-- Rice Card 12 -->
+      <div class="menu-card fade-in" data-category="rice">
+        <div class="card-number">12</div>
+        <div class="card-category">Specialty Rice</div>
+        <div class="card-name">Basil<br>Fried Rice</div>
+        <p class="card-desc">
+          Fresh Thai basil, garlic, chili, egg, bean sprouts, and your
+          choice of protein — wok-fired until fragrant and slightly
+          caramelized. Clean, bold, and aromatic on every bite.
+          <em style="color:var(--muted);font-size:0.82rem;">Egg &amp; bean sprouts included. Hold either at time of order.</em>
+        </p>
+        <div class="card-footer">
+          <div class="card-price" style="display:flex;flex-direction:column;gap:0.15rem;line-height:1.1;">
+            <span style="font-size:0.95rem;color:var(--muted);font-family:'DM Sans',sans-serif;font-weight:500;">Half&nbsp;<span style="color:var(--gold);font-family:'Bebas Neue',sans-serif;font-size:1.35rem;">$8</span></span>
+            <span style="font-size:0.95rem;color:var(--muted);font-family:'DM Sans',sans-serif;font-weight:500;">Whole&nbsp;<span style="color:var(--gold);font-family:'Bebas Neue',sans-serif;font-size:1.35rem;">$13</span></span>
+          </div>
+          <span class="card-tag tag-classic">Aromatic</span>
+        </div>
+      </div>
+
+      <!-- Rice Card 13 -->
+      <div class="menu-card fade-in" data-category="rice">
+        <div class="card-number">13</div>
+        <div class="card-category">Specialty Rice</div>
+        <div class="card-name">Ultimate<br>Fried Rice</div>
+        <p class="card-desc">
+          Everything in one bowl. Beef, chicken, shrimp, pork, and ham —
+          all wok-tossed together with egg, bean sprouts, soy, and green
+          onion. The most loaded rice on the menu, period.
+          <em style="color:var(--muted);font-size:0.82rem;">Egg &amp; bean sprouts included. Hold either at time of order.</em>
+        </p>
+        <div class="card-footer">
+          <div class="card-price" style="display:flex;flex-direction:column;gap:0.15rem;line-height:1.1;">
+            <span style="font-size:0.95rem;color:var(--muted);font-family:'DM Sans',sans-serif;font-weight:500;">Half&nbsp;<span style="color:var(--gold);font-family:'Bebas Neue',sans-serif;font-size:1.35rem;">$8</span></span>
+            <span style="font-size:0.95rem;color:var(--muted);font-family:'DM Sans',sans-serif;font-weight:500;">Whole&nbsp;<span style="color:var(--gold);font-family:'Bebas Neue',sans-serif;font-size:1.35rem;">$13</span></span>
+          </div>
+          <span class="card-tag tag-popular">The Works</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── FEATURED ── -->
+  <section id="featured" style="padding:0;">
+    <div class="featured-visual">
+      <div class="featured-big-text">ST.<br>PAUL</div>
+      <div class="featured-icon">🥪</div>
+    </div>
+    <div class="featured-content fade-in">
+      <div class="section-label">Featured Item</div>
+      <h2 class="section-title">THE ST. PAUL<br>SANDWICH</h2>
+      <p class="featured-desc">
+        Born in St. Louis. Perfected at Lou Wok. The St. Paul Sandwich is
+        an egg foo young patty — crispy, savory, packed with bean sprouts
+        and scallion — served on soft white bread with all the classics.
+        It's a Midwest icon that Phoenix has been missing. Until now.
+      </p>
+      <div class="featured-details">
+        <div class="detail-item">
+          <div class="detail-label">Origin</div>
+          <div class="detail-value">St. Louis, MO</div>
+        </div>
+        <div class="detail-item">
+          <div class="detail-label">Style</div>
+          <div class="detail-value">Pressed & Golden</div>
+        </div>
+        <div class="detail-item">
+          <div class="detail-label">Bread</div>
+          <div class="detail-value">Soft White</div>
+        </div>
+        <div class="detail-item">
+          <div class="detail-label">Sauce</div>
+          <div class="detail-value">Mayo + Pickles</div>
+        </div>
+      </div>
+      <a href="#order" class="btn-primary">Order the St. Paul</a>
+    </div>
+  </section>
+
+  <!-- ── ABOUT ── -->
+  <section id="about">
+    <div class="about-left fade-in">
+      <h2 class="about-big">
+        WOK
+        <span class="line2">meets the</span>
+        <span class="line3">MIDWEST</span>
+      </h2>
+      <div class="stats-row">
+        <div>
+          <div class="stat-num">100%</div>
+          <div class="stat-label">Made to Order</div>
+        </div>
+        <div>
+          <div class="stat-num">3</div>
+          <div class="stat-label">Core Items</div>
+        </div>
+        <div>
+          <div class="stat-num">PHX</div>
+          <div class="stat-label">Base City</div>
+        </div>
+      </div>
+    </div>
+    <div class="about-right fade-in">
+      <div class="section-label">Our Story</div>
+      <p class="about-text">
+        Lou Wok Rice House was built for the transplants, the foodies,
+        the people who moved to Phoenix and couldn't find the flavors
+        they grew up with. The fried rice they had at a corner spot.
+        The crab rangoon that came with every takeout order. The St. Paul
+        sandwich they still talk about.
+      </p>
+      <p class="about-text">
+        We built Lou Wok to fill that gap — a fast, bold, unforgettable
+        rice house that brings Midwest comfort food energy to the Valley
+        of the Sun. Every plate wok-fired to order. Every time.
+      </p>
+      <a href="#menu" class="btn-primary">See the Full Menu</a>
+    </div>
+  </section>
+
+  <!-- ── ORDER CTA ── -->
+  <section id="order">
+    <div class="order-title">READY TO EAT?</div>
+    <p class="order-sub">Order online, pick up in-store, or get it delivered. Lou Wok is ready.</p>
+    <div class="order-buttons">
+      <a href="#" class="btn-dark">Order for Pickup</a>
+      <a href="#" class="btn-outline-dark">DoorDash</a>
+      <a href="#" class="btn-outline-dark">Uber Eats</a>
+    </div>
+  </section>
+
+  <!-- ── FOOTER ── -->
+  <footer>
+    <div class="footer-top">
+      <div>
+        <div class="footer-brand">Lou <span>Wok</span> Rice House</div>
+        <p class="footer-tagline">
+          Wok-fired flavor built for Phoenix. Bold rice, crispy rangoon,
+          and the legendary St. Paul sandwich.
+        </p>
+      </div>
+      <div>
+        <div class="footer-col-title">Menu</div>
+        <ul class="footer-links">
+          <li><a href="#">Fried Rice</a></li>
+          <li><a href="#">Crab Rangoon</a></li>
+          <li><a href="#">St. Paul Sandwich</a></li>
+          <li><a href="#">Combos</a></li>
+          <li><a href="#">Catering</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-col-title">Visit</div>
+        <ul class="footer-links">
+          <li><a href="#">Locations</a></li>
+          <li><a href="#">Hours</a></li>
+          <li><a href="#">Order Online</a></li>
+          <li><a href="#">Gift Cards</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-col-title">Connect</div>
+        <ul class="footer-links">
+          <li><a href="#">Instagram</a></li>
+          <li><a href="#">TikTok</a></li>
+          <li><a href="#">Facebook</a></li>
+          <li><a href="#">Contact Us</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2025 Lou Wok Rice House. Phoenix, AZ.</span>
+      <span>Built with 🔥 in the Valley</span>
+    </div>
+  </footer>
+
+  <script>
+    // Scroll fade-in
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+    // Menu tab filtering
+    const tabs = document.querySelectorAll('.tab');
+    const cards = document.querySelectorAll('.menu-card');
+
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        tabs.forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+
+        const selected = tab.textContent.trim().toLowerCase();
+
+        cards.forEach(card => {
+          const cat = card.dataset.category || 'all';
+          if (selected === 'all' || cat === selected || cat === 'all') {
+            card.style.display = '';
+          } else {
+            card.style.display = 'none';
+          }
+        });
+      });
+    });
+  </script>
+</body>
+</html>
