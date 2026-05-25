@@ -1019,6 +1019,630 @@
     @supports (-webkit-touch-callout: none) {
       body { height: -webkit-fill-available; }
     }
+
+    /* ══════════════════════════════════════════════
+       CART SYSTEM
+    ══════════════════════════════════════════════ */
+
+    /* Add to Cart button on each card */
+    .atc-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      background: var(--wok);
+      color: var(--rice);
+      border: none;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 0.6rem 1.1rem;
+      border-radius: 4px;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+      transition: background 0.2s, transform 0.1s;
+      white-space: nowrap;
+      min-height: 40px;
+    }
+    .atc-btn:hover { background: var(--gold); color: var(--black); }
+    .atc-btn:active { transform: scale(0.95); }
+    .atc-btn.in-cart { background: var(--gold); color: var(--black); }
+
+    /* Card quantity pill (shows when item in cart) */
+    .card-qty-pill {
+      display: none;
+      align-items: center;
+      gap: 0;
+      background: var(--smoke);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      overflow: hidden;
+    }
+    .card-qty-pill.show { display: flex; }
+    .qty-pill-btn {
+      width: 32px;
+      height: 32px;
+      border: none;
+      background: transparent;
+      color: var(--gold);
+      font-size: 1.1rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      -webkit-tap-highlight-color: transparent;
+      transition: background 0.15s;
+    }
+    .qty-pill-btn:hover { background: rgba(232,160,32,0.1); }
+    .qty-pill-btn:active { background: rgba(232,160,32,0.2); }
+    .qty-pill-num {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1rem;
+      color: var(--rice);
+      min-width: 24px;
+      text-align: center;
+    }
+
+    /* ── ITEM DETAIL DRAWER ── */
+    .item-drawer-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.75);
+      z-index: 300;
+      display: none;
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+    }
+    .item-drawer-overlay.show { display: block; }
+
+    .item-drawer {
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      z-index: 301;
+      background: var(--smoke);
+      border-top: 1px solid var(--border);
+      border-radius: 24px 24px 0 0;
+      max-height: 92vh;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      transform: translateY(100%);
+      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      padding-bottom: calc(2rem + var(--safe-bot));
+    }
+    .item-drawer.show { transform: translateY(0); }
+
+    .drawer-handle {
+      width: 40px; height: 4px;
+      background: rgba(245,238,216,0.15);
+      border-radius: 2px;
+      margin: 1.2rem auto 0;
+    }
+
+    .drawer-hero {
+      margin: 1.5rem 1.5rem 0;
+      background: linear-gradient(135deg, rgba(200,57,10,0.15), rgba(232,160,32,0.08));
+      border-radius: 16px;
+      height: 180px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 6rem;
+      position: relative;
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+    .drawer-hero-bg {
+      position: absolute;
+      inset: 0;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 8rem;
+      color: rgba(255,255,255,0.03);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      letter-spacing: 0.05em;
+    }
+
+    .drawer-body { padding: 1.5rem; }
+
+    .drawer-category {
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 0.4rem;
+    }
+    .drawer-name {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2.2rem;
+      letter-spacing: 0.03em;
+      line-height: 1.05;
+      margin-bottom: 0.75rem;
+    }
+    .drawer-desc {
+      font-size: 0.9rem;
+      color: rgba(245,238,216,0.6);
+      line-height: 1.75;
+      margin-bottom: 1.5rem;
+    }
+
+    /* Size selector */
+    .size-label {
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 0.75rem;
+    }
+    .size-options {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
+    }
+    .size-opt {
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      padding: 0.9rem 1rem;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+      transition: border-color 0.2s, background 0.2s;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .size-opt:active { transform: scale(0.97); }
+    .size-opt.selected {
+      border-color: var(--gold);
+      background: rgba(232,160,32,0.08);
+    }
+    .size-opt-name {
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--rice);
+    }
+    .size-opt-price {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.2rem;
+      color: var(--gold);
+    }
+    .size-opt.selected .size-opt-name { color: var(--gold); }
+
+    /* Special instructions */
+    .special-label {
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 0.75rem;
+    }
+    .special-input {
+      width: 100%;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--rice);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.88rem;
+      padding: 0.75rem 1rem;
+      resize: none;
+      height: 80px;
+      margin-bottom: 1.5rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .special-input:focus { border-color: var(--gold); }
+    .special-input::placeholder { color: var(--muted); }
+
+    /* Drawer quantity + add row */
+    .drawer-action-row {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+    }
+    .drawer-qty {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+    .drawer-qty-btn {
+      width: 44px;
+      height: 52px;
+      border: none;
+      background: transparent;
+      color: var(--gold);
+      font-size: 1.4rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      -webkit-tap-highlight-color: transparent;
+      transition: background 0.15s;
+    }
+    .drawer-qty-btn:hover { background: rgba(232,160,32,0.1); }
+    .drawer-qty-btn:active { background: rgba(232,160,32,0.2); }
+    .drawer-qty-num {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.4rem;
+      color: var(--rice);
+      min-width: 40px;
+      text-align: center;
+    }
+    .drawer-add-btn {
+      flex: 1;
+      height: 52px;
+      background: var(--wok);
+      color: var(--rice);
+      border: none;
+      border-radius: 10px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      -webkit-tap-highlight-color: transparent;
+      transition: background 0.2s, transform 0.1s;
+    }
+    .drawer-add-btn:hover { background: var(--gold); color: var(--black); }
+    .drawer-add-btn:active { transform: scale(0.98); }
+
+    /* ── FLOATING CART BAR ── */
+    .cart-bar {
+      position: fixed;
+      bottom: calc(var(--bottom-nav-height) + 0.75rem);
+      left: 1rem;
+      right: 1rem;
+      z-index: 250;
+      transform: translateY(calc(100% + 80px));
+      transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .cart-bar.show { transform: translateY(0); }
+
+    @media (min-width: 641px) {
+      .cart-bar {
+        bottom: 2rem;
+        left: 50%;
+        right: auto;
+        transform: translateX(-50%) translateY(calc(100% + 80px));
+        min-width: 380px;
+        max-width: 480px;
+      }
+      .cart-bar.show { transform: translateX(-50%) translateY(0); }
+    }
+
+    .cart-bar-inner {
+      background: var(--rice);
+      color: var(--black);
+      border-radius: 14px;
+      padding: 0.9rem 1.2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.5), 0 2px 8px rgba(200,57,10,0.3);
+      -webkit-tap-highlight-color: transparent;
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+    .cart-bar-inner:active { transform: scale(0.98); }
+    .cart-bar-inner:hover { box-shadow: 0 12px 50px rgba(0,0,0,0.6), 0 4px 12px rgba(200,57,10,0.4); }
+
+    .cart-bar-left { display: flex; align-items: center; gap: 0.75rem; }
+    .cart-bar-badge {
+      background: var(--wok);
+      color: white;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1rem;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 1;
+    }
+    .cart-bar-label {
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      color: var(--black);
+    }
+    .cart-bar-total {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.3rem;
+      color: var(--black);
+      letter-spacing: 0.04em;
+    }
+    .cart-bar-cta {
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--wok);
+    }
+
+    /* Cart bar pulse animation on add */
+    @keyframes cart-pulse {
+      0%   { box-shadow: 0 8px 40px rgba(0,0,0,0.5), 0 0 0 0 rgba(200,57,10,0.6); }
+      50%  { box-shadow: 0 8px 40px rgba(0,0,0,0.5), 0 0 0 12px rgba(200,57,10,0); }
+      100% { box-shadow: 0 8px 40px rgba(0,0,0,0.5), 0 0 0 0 rgba(200,57,10,0); }
+    }
+    .cart-bar-inner.pulse { animation: cart-pulse 0.5s ease; }
+
+    /* ── CART SHEET ── */
+    .cart-sheet-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.8);
+      z-index: 400;
+      display: none;
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+    }
+    .cart-sheet-overlay.show { display: block; }
+
+    .cart-sheet {
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      z-index: 401;
+      background: var(--black);
+      border-top: 1px solid var(--border);
+      border-radius: 24px 24px 0 0;
+      max-height: 92vh;
+      display: flex;
+      flex-direction: column;
+      transform: translateY(100%);
+      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .cart-sheet.show { transform: translateY(0); }
+
+    @media (min-width: 641px) {
+      .cart-sheet {
+        left: 50%;
+        right: auto;
+        transform: translateX(-50%) translateY(100%);
+        width: 480px;
+        border-radius: 24px 24px 0 0;
+      }
+      .cart-sheet.show { transform: translateX(-50%) translateY(0); }
+      .cart-sheet-overlay.show { display: block; }
+    }
+
+    .cart-sheet-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.5rem 1.5rem 1rem;
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+    .cart-sheet-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.8rem;
+      letter-spacing: 0.04em;
+      color: var(--gold);
+    }
+    .cart-close-btn {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.06);
+      border: none;
+      color: var(--rice);
+      font-size: 1.1rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      -webkit-tap-highlight-color: transparent;
+      transition: background 0.15s;
+    }
+    .cart-close-btn:hover { background: rgba(255,255,255,0.12); }
+
+    .cart-items-list {
+      flex: 1;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      padding: 1rem 1.5rem;
+    }
+
+    .cart-item {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1rem 0;
+      border-bottom: 1px solid rgba(232,160,32,0.08);
+      animation: slide-in 0.3s ease;
+    }
+    .cart-item:last-child { border-bottom: none; }
+    @keyframes slide-in {
+      from { opacity: 0; transform: translateX(20px); }
+      to   { opacity: 1; transform: translateX(0); }
+    }
+
+    .cart-item-emoji {
+      width: 52px; height: 52px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, rgba(200,57,10,0.15), rgba(232,160,32,0.08));
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.6rem;
+      flex-shrink: 0;
+    }
+    .cart-item-info { flex: 1; }
+    .cart-item-name {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--rice);
+      margin-bottom: 0.2rem;
+    }
+    .cart-item-meta {
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+    .cart-item-note {
+      font-size: 0.72rem;
+      color: var(--gold);
+      opacity: 0.7;
+      margin-top: 0.15rem;
+      font-style: italic;
+    }
+    .cart-item-right {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 0.5rem;
+      flex-shrink: 0;
+    }
+    .cart-item-price {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.15rem;
+      color: var(--gold);
+    }
+    .cart-item-qty {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .ciq-btn {
+      width: 30px; height: 30px;
+      border: none;
+      background: transparent;
+      color: var(--gold);
+      font-size: 1rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      -webkit-tap-highlight-color: transparent;
+      transition: background 0.15s;
+    }
+    .ciq-btn:hover { background: rgba(232,160,32,0.1); }
+    .ciq-num {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 0.95rem;
+      color: var(--rice);
+      min-width: 22px;
+      text-align: center;
+    }
+
+    /* Empty cart state */
+    .cart-empty {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 4rem 2rem;
+      text-align: center;
+    }
+    .cart-empty-icon { font-size: 4rem; margin-bottom: 1rem; opacity: 0.5; }
+    .cart-empty-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.8rem;
+      color: var(--muted);
+      margin-bottom: 0.5rem;
+    }
+    .cart-empty-sub { font-size: 0.85rem; color: var(--muted); }
+
+    /* Cart footer */
+    .cart-footer {
+      padding: 1.25rem 1.5rem calc(1.5rem + var(--safe-bot));
+      border-top: 1px solid var(--border);
+      flex-shrink: 0;
+      background: var(--black);
+    }
+    .cart-summary-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.5rem;
+      font-size: 0.85rem;
+      color: rgba(245,238,216,0.55);
+    }
+    .cart-summary-row.total {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--rice);
+      padding-top: 0.75rem;
+      margin-top: 0.5rem;
+      border-top: 1px solid var(--border);
+      margin-bottom: 1.25rem;
+    }
+    .cart-summary-row.total .amt {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.6rem;
+      color: var(--gold);
+    }
+    .checkout-btn {
+      width: 100%;
+      height: 56px;
+      background: var(--wok);
+      color: var(--rice);
+      border: none;
+      border-radius: 12px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      -webkit-tap-highlight-color: transparent;
+      transition: background 0.2s, transform 0.1s;
+      margin-bottom: 0.75rem;
+    }
+    .checkout-btn:hover { background: var(--gold); color: var(--black); }
+    .checkout-btn:active { transform: scale(0.98); }
+    .checkout-note {
+      text-align: center;
+      font-size: 0.72rem;
+      color: var(--muted);
+    }
+
+    /* Flying emoji animation */
+    .fly-emoji {
+      position: fixed;
+      font-size: 1.8rem;
+      pointer-events: none;
+      z-index: 9998;
+      animation: fly-to-cart 0.7s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    }
+    @keyframes fly-to-cart {
+      0%   { opacity: 1; transform: scale(1) translate(0,0); }
+      60%  { opacity: 1; transform: scale(0.8) translate(var(--tx), var(--ty)); }
+      100% { opacity: 0; transform: scale(0.3) translate(var(--tx), var(--ty)); }
+    }
+
+    /* Success checkmark on card after add */
+    @keyframes check-pop {
+      0%   { transform: scale(0) rotate(-10deg); opacity: 0; }
+      60%  { transform: scale(1.2) rotate(4deg); opacity: 1; }
+      100% { transform: scale(1) rotate(0); opacity: 1; }
+    }
+    .check-pop { animation: check-pop 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+
   </style>
 </head>
 <body>
@@ -1121,72 +1745,159 @@
       <div class="menu-card fade-in" data-category="rice">
         <div class="card-number">01</div>
         <div class="card-category">Signature Rice</div>
-        <div class="card-name">Classic Fried Rice</div>
-        <p class="card-desc">The foundation. Egg, bean sprouts, soy, and green onion — cooked hot and fast in a screaming wok.</p>
-        <div class="card-footer"><div class="card-price" style="display:flex;flex-direction:column;gap:0.15rem;line-height:1.1;"><span style="font-size:0.95rem;color:var(--muted);font-family:'DM Sans',sans-serif;font-weight:500;">Half&nbsp;<span style="color:var(--gold);font-family:'Bebas Neue',sans-serif;font-size:1.35rem;">$7</span></span><span style="font-size:0.95rem;color:var(--muted);font-family:'DM Sans',sans-serif;font-weight:500;">Whole&nbsp;<span style="color:var(--gold);font-family:'Bebas Neue',sans-serif;font-size:1.35rem;">$11</span></span></div><span class="card-tag tag-classic">Classic</span></div>
+        <div class="card-name">Lou Wok<br>Fried Rice</div>
+        <p class="card-desc">Our house recipe. Jasmine rice wok-tossed with egg, bean sprouts, green onion, soy, and your choice of protein — chicken, shrimp, beef, or tofu.</p>
+        <div class="card-footer">
+          <div class="card-price" style="display:flex;flex-direction:column;gap:0.15rem;line-height:1.1;">
+            <span style="font-size:0.95rem;color:var(--muted);font-family:'DM Sans',sans-serif;font-weight:500;">Half&nbsp;<span style="color:var(--gold);font-family:'Bebas Neue',sans-serif;font-size:1.35rem;">$8</span></span>
+            <span style="font-size:0.95rem;color:var(--muted);font-family:'DM Sans',sans-serif;font-weight:500;">Whole&nbsp;<span style="color:var(--gold);font-family:'Bebas Neue',sans-serif;font-size:1.35rem;">$12</span></span>
+          </div>
+          <span class="card-tag tag-popular">Best Seller</span>
+        </div>
       </div>
       <div class="menu-card fade-in" data-category="rice">
         <div class="card-number">02</div>
         <div class="card-category">Signature Rice</div>
-        <div class="card-name">Chicken Fried Rice</div>
-        <p class="card-desc">All-white chicken, egg, bean sprouts, soy, and green onion. Classic done right.</p>
-        <div class="card-footer"><div class="card-price" style="display:flex;flex-direction:column;gap:0.15rem;line-height:1.1;"><span style="font-size:0.95rem;color:var(--muted);font-family:'DM Sans',sans-serif;font-weight:500;">Half&nbsp;<span style="color:var(--gold);font-family:'Bebas Neue',sans-serif;font-size:1.35rem;">$8</span></span><span style="font-size:0.95rem;color:var(--muted);font-family:'DM Sans',sans-serif;font-weight:500;">Whole&nbsp;<span style="color:var(--gold);font-family:'Bebas Neue',sans-serif;font-size:1.35rem;">$13</span></span></div><span class="card-tag tag-popular">Best Seller</span></div>
+        <div class="card-name">Spicy Garlic<br>Fried Rice</div>
+        <p class="card-desc">Loaded with roasted garlic, chili oil, egg, bean sprouts, and wok-charred vegetables. Heat level: bring it.</p>
+        <div class="card-footer">
+          <div class="card-price" style="display:flex;flex-direction:column;gap:0.15rem;line-height:1.1;">
+            <span style="font-size:0.95rem;color:var(--muted);font-family:'DM Sans',sans-serif;font-weight:500;">Half&nbsp;<span style="color:var(--gold);font-family:'Bebas Neue',sans-serif;font-size:1.35rem;">$8</span></span>
+            <span style="font-size:0.95rem;color:var(--muted);font-family:'DM Sans',sans-serif;font-weight:500;">Whole&nbsp;<span style="color:var(--gold);font-family:'Bebas Neue',sans-serif;font-size:1.35rem;">$13</span></span>
+          </div>
+          <span class="card-tag tag-new">New</span>
+        </div>
       </div>
       <div class="menu-card fade-in" data-category="rice">
         <div class="card-number">03</div>
         <div class="card-category">Signature Rice</div>
-        <div class="card-name">Beef Fried Rice</div>
-        <p class="card-desc">Thinly sliced beef, wok-fired with egg, bean sprouts, and green onion.</p>
-        <div class="card-footer"><div class="card-price" style="display:flex;flex-direction:column;gap:0.15rem;line-height:1.1;"><span style="font-size:0.95rem;color:var(--muted);font-family:'DM Sans',sans-serif;font-weight:500;">Half&nbsp;<span style="color:var(--gold);font-family:'Bebas Neue',sans-serif;font-size:1.35rem;">$8</span></span><span style="font-size:0.95rem;color:var(--muted);font-family:'DM Sans',sans-serif;font-weight:500;">Whole&nbsp;<span style="color:var(--gold);font-family:'Bebas Neue',sans-serif;font-size:1.35rem;">$13</span></span></div></div>
+        <div class="card-name">Yang Chow<br>Fried Rice</div>
+        <p class="card-desc">The classic. Shrimp, BBQ pork, egg, bean sprouts, peas, and carrots — all wok-tossed over high heat until every grain has a little char on it.</p>
+        <div class="card-footer">
+          <div class="card-price" style="display:flex;flex-direction:column;gap:0.15rem;line-height:1.1;">
+            <span style="font-size:0.95rem;color:var(--muted);font-family:'DM Sans',sans-serif;font-weight:500;">Half&nbsp;<span style="color:var(--gold);font-family:'Bebas Neue',sans-serif;font-size:1.35rem;">$8</span></span>
+            <span style="font-size:0.95rem;color:var(--muted);font-family:'DM Sans',sans-serif;font-weight:500;">Whole&nbsp;<span style="color:var(--gold);font-family:'Bebas Neue',sans-serif;font-size:1.35rem;">$13</span></span>
+          </div>
+          <span class="card-tag tag-classic">Classic</span>
+        </div>
       </div>
-      <div class="menu-card fade-in" data-category="rice">
+      <div class="menu-card fade-in" data-category="appetizers">
         <div class="card-number">04</div>
-        <div class="card-category">Signature Rice</div>
-        <div class="card-name">Shrimp Fried Rice</div>
-        <p class="card-desc">Plump shrimp, wok-fired with egg, green onion, and a splash of soy.</p>
-        <div class="card-footer"><div class="card-price" style="display:flex;flex-direction:column;gap:0.15rem;line-height:1.1;"><span style="font-size:0.95rem;color:var(--muted);font-family:'DM Sans',sans-serif;font-weight:500;">Half&nbsp;<span style="color:var(--gold);font-family:'Bebas Neue',sans-serif;font-size:1.35rem;">$8</span></span><span style="font-size:0.95rem;color:var(--muted);font-family:'DM Sans',sans-serif;font-weight:500;">Whole&nbsp;<span style="color:var(--gold);font-family:'Bebas Neue',sans-serif;font-size:1.35rem;">$13</span></span></div></div>
-      </div>
-      <div class="menu-card fade-in" data-category="rice">
-        <div class="card-number">05</div>
-        <div class="card-category">Signature Rice</div>
-        <div class="card-name">Pork Fried Rice</div>
-        <p class="card-desc">Slow-cooked pork, wok-fired with the classic trio: egg, sprouts, and soy.</p>
-        <div class="card-footer"><div class="card-price" style="display:flex;flex-direction:column;gap:0.15rem;line-height:1.1;"><span style="font-size:0.95rem;color:var(--muted);font-family:'DM Sans',sans-serif;font-weight:500;">Half&nbsp;<span style="color:var(--gold);font-family:'Bebas Neue',sans-serif;font-size:1.35rem;">$8</span></span><span style="font-size:0.95rem;color:var(--muted);font-family:'DM Sans',sans-serif;font-weight:500;">Whole&nbsp;<span style="color:var(--gold);font-family:'Bebas Neue',sans-serif;font-size:1.35rem;">$13</span></span></div></div>
-      </div>
-      <div class="menu-card fade-in" data-category="rangoon">
-        <div class="card-number">06</div>
         <div class="card-category">Appetizer</div>
-        <div class="card-name">Crab Rangoon</div>
-        <p class="card-desc">Crispy wonton cups filled with real crab and cream cheese. Fried to gold.</p>
-        <div class="card-footer"><div class="card-price" style="display:flex;flex-direction:column;gap:0.15rem;line-height:1.1;"><span style="font-size:0.95rem;color:var(--muted);font-family:'DM Sans',sans-serif;font-weight:500;">Half&nbsp;<span style="color:var(--gold);font-family:'Bebas Neue',sans-serif;font-size:1.35rem;">$5</span></span><span style="font-size:0.95rem;color:var(--muted);font-family:'DM Sans',sans-serif;font-weight:500;">Whole&nbsp;<span style="color:var(--gold);font-family:'Bebas Neue',sans-serif;font-size:1.35rem;">$9</span></span></div><span class="card-tag tag-popular">Best Seller</span></div>
+        <div class="card-name">Crab<br>Rangoon</div>
+        <p class="card-desc">Crispy wonton shells stuffed with real crab and cream cheese, seasoned with green onion and garlic. Served with sweet chili sauce. 6 per order.</p>
+        <div class="card-footer">
+          <div class="card-price">$8</div>
+          <span class="card-tag tag-popular">Fan Fave</span>
+        </div>
       </div>
-      <div class="menu-card fade-in" data-category="sandwich">
+      <div class="menu-card fade-in" data-category="appetizers">
+        <div class="card-number">05</div>
+        <div class="card-category">Appetizer</div>
+        <div class="card-name">Crab Rangoon<br>Deluxe (12pc)</div>
+        <p class="card-desc">Double the order. Double the glory. Same crispy rangoon, extra dipping sauce — duck sauce and sweet chili included.</p>
+        <div class="card-footer">
+          <div class="card-price">$14</div>
+          <span class="card-tag tag-new">Share Plate</span>
+        </div>
+      </div>
+      <div class="menu-card fade-in" data-category="sandwiches">
+        <div class="card-number">06</div>
+        <div class="card-category">The Sandwich</div>
+        <div class="card-name">St. Paul<br>Sandwich</div>
+        <p class="card-desc">A Midwest legend. Egg foo young patty on soft white bread with lettuce, tomato, pickles, and mayo. Lou Wok's version is pressed, golden, and fully loaded.</p>
+        <div class="card-footer">
+          <div class="card-price">$10</div>
+          <span class="card-tag tag-popular">Icon</span>
+        </div>
+      </div>
+      <div class="menu-card fade-in" data-category="sandwiches">
         <div class="card-number">07</div>
         <div class="card-category">The Sandwich</div>
-        <div class="card-name">St. Paul Sandwich</div>
-        <p class="card-desc">Egg foo young patty on soft white bread with mayo and pickles. A Midwest icon.</p>
-        <div class="card-footer"><div class="card-price">$7</div><span class="card-tag tag-popular">Fan Fave</span></div>
+        <div class="card-name">St. Paul<br>Deluxe</div>
+        <p class="card-desc">The original, upgraded. Double egg foo young patty, extra sauce, topped with wok-fried onions and peppers. Comes with a half order of plain fried rice.</p>
+        <div class="card-footer">
+          <div class="card-price">$14</div>
+          <span class="card-tag tag-new">Combo</span>
+        </div>
       </div>
-      <div class="menu-card fade-in" data-category="rice">
+      <div class="menu-card fade-in" data-category="all">
         <div class="card-number">08</div>
-        <div class="card-category">Signature Rice</div>
-        <div class="card-name">Pineapple Chicken Rice</div>
-        <p class="card-desc">Sweet meets savory. Served in a hollowed pineapple for the full experience.</p>
-        <div class="card-footer"><div class="card-price" style="display:flex;flex-direction:column;gap:0.15rem;line-height:1.1;"><span style="font-size:0.95rem;color:var(--muted);font-family:'DM Sans',sans-serif;font-weight:500;">Half&nbsp;<span style="color:var(--gold);font-family:'Bebas Neue',sans-serif;font-size:1.35rem;">$8</span></span><span style="font-size:0.95rem;color:var(--muted);font-family:'DM Sans',sans-serif;font-weight:500;">Whole&nbsp;<span style="color:var(--gold);font-family:'Bebas Neue',sans-serif;font-size:1.35rem;">$13</span></span></div><span class="card-tag tag-popular">Fan Fave</span></div>
+        <div class="card-category">The Combo</div>
+        <div class="card-name">Lou Wok<br>Box</div>
+        <p class="card-desc">The full experience. Your choice of fried rice, 3 crab rangoon, a St. Paul sandwich, and 4pc fried chicken — all on one tray.</p>
+        <div class="card-footer">
+          <div class="card-price" style="display:flex;flex-direction:column;gap:0.15rem;line-height:1.1;">
+            <span style="font-size:0.95rem;color:var(--muted);font-family:'DM Sans',sans-serif;font-weight:500;">Half&nbsp;<span style="color:var(--gold);font-family:'Bebas Neue',sans-serif;font-size:1.35rem;">$19</span></span>
+            <span style="font-size:0.95rem;color:var(--muted);font-family:'DM Sans',sans-serif;font-weight:500;">Whole&nbsp;<span style="color:var(--gold);font-family:'Bebas Neue',sans-serif;font-size:1.35rem;">$24</span></span>
+          </div>
+          <span class="card-tag tag-popular">MVP</span>
+        </div>
       </div>
       <div class="menu-card fade-in" data-category="rice">
         <div class="card-number">09</div>
-        <div class="card-category">Signature Rice</div>
-        <div class="card-name">Basil Fried Rice</div>
-        <p class="card-desc">Fresh Thai basil, garlic, chili, egg — wok-fired until fragrant.</p>
-        <div class="card-footer"><div class="card-price" style="display:flex;flex-direction:column;gap:0.15rem;line-height:1.1;"><span style="font-size:0.95rem;color:var(--muted);font-family:'DM Sans',sans-serif;font-weight:500;">Half&nbsp;<span style="color:var(--gold);font-family:'Bebas Neue',sans-serif;font-size:1.35rem;">$8</span></span><span style="font-size:0.95rem;color:var(--muted);font-family:'DM Sans',sans-serif;font-weight:500;">Whole&nbsp;<span style="color:var(--gold);font-family:'Bebas Neue',sans-serif;font-size:1.35rem;">$13</span></span></div></div>
+        <div class="card-category">Specialty Rice</div>
+        <div class="card-name">Jambalaya<br>Fried Rice</div>
+        <p class="card-desc">Andouille sausage, shrimp, and chicken tossed with Cajun seasoning, bell peppers, egg, bean sprouts, and jasmine rice. Southern soul meets the wok.</p>
+        <div class="card-footer">
+          <div class="card-price" style="display:flex;flex-direction:column;gap:0.15rem;line-height:1.1;">
+            <span style="font-size:0.95rem;color:var(--muted);font-family:'DM Sans',sans-serif;font-weight:500;">Half&nbsp;<span style="color:var(--gold);font-family:'Bebas Neue',sans-serif;font-size:1.35rem;">$8</span></span>
+            <span style="font-size:0.95rem;color:var(--muted);font-family:'DM Sans',sans-serif;font-weight:500;">Whole&nbsp;<span style="color:var(--gold);font-family:'Bebas Neue',sans-serif;font-size:1.35rem;">$13</span></span>
+          </div>
+          <span class="card-tag tag-popular">STL Classic</span>
+        </div>
       </div>
       <div class="menu-card fade-in" data-category="rice">
         <div class="card-number">10</div>
-        <div class="card-category">Signature Rice</div>
-        <div class="card-name">Ultimate Fried Rice</div>
-        <p class="card-desc">Everything in one bowl. Beef, chicken, shrimp, pork, and ham. The works.</p>
-        <div class="card-footer"><div class="card-price" style="display:flex;flex-direction:column;gap:0.15rem;line-height:1.1;"><span style="font-size:0.95rem;color:var(--muted);font-family:'DM Sans',sans-serif;font-weight:500;">Half&nbsp;<span style="color:var(--gold);font-family:'Bebas Neue',sans-serif;font-size:1.35rem;">$8</span></span><span style="font-size:0.95rem;color:var(--muted);font-family:'DM Sans',sans-serif;font-weight:500;">Whole&nbsp;<span style="color:var(--gold);font-family:'Bebas Neue',sans-serif;font-size:1.35rem;">$13</span></span></div><span class="card-tag tag-popular">Best Seller</span></div>
+        <div class="card-category">Specialty Rice</div>
+        <div class="card-name">Duck<br>Fried Rice</div>
+        <p class="card-desc">Slow-roasted duck, wok-tossed with jasmine rice, egg, bean sprouts, green onion, ginger, and a rich dark soy glaze.</p>
+        <div class="card-footer">
+          <div class="card-price" style="display:flex;flex-direction:column;gap:0.15rem;line-height:1.1;">
+            <span style="font-size:0.95rem;color:var(--muted);font-family:'DM Sans',sans-serif;font-weight:500;">Half&nbsp;<span style="color:var(--gold);font-family:'Bebas Neue',sans-serif;font-size:1.35rem;">$8</span></span>
+            <span style="font-size:0.95rem;color:var(--muted);font-family:'DM Sans',sans-serif;font-weight:500;">Whole&nbsp;<span style="color:var(--gold);font-family:'Bebas Neue',sans-serif;font-size:1.35rem;">$13</span></span>
+          </div>
+          <span class="card-tag tag-new">Chef's Pick</span>
+        </div>
+      </div>
+      <div class="menu-card fade-in" data-category="rice">
+        <div class="card-number">11</div>
+        <div class="card-category">Specialty Rice</div>
+        <div class="card-name">Pineapple<br>Chicken Fried Rice</div>
+        <p class="card-desc">Sweet meets savory. Wok-charred chicken, fresh pineapple chunks, cashews, egg, bean sprouts — served in a hollowed pineapple.</p>
+        <div class="card-footer">
+          <div class="card-price" style="display:flex;flex-direction:column;gap:0.15rem;line-height:1.1;">
+            <span style="font-size:0.95rem;color:var(--muted);font-family:'DM Sans',sans-serif;font-weight:500;">Half&nbsp;<span style="color:var(--gold);font-family:'Bebas Neue',sans-serif;font-size:1.35rem;">$8</span></span>
+            <span style="font-size:0.95rem;color:var(--muted);font-family:'DM Sans',sans-serif;font-weight:500;">Whole&nbsp;<span style="color:var(--gold);font-family:'Bebas Neue',sans-serif;font-size:1.35rem;">$13</span></span>
+          </div>
+          <span class="card-tag tag-popular">Fan Fave</span>
+        </div>
+      </div>
+      <div class="menu-card fade-in" data-category="rice">
+        <div class="card-number">12</div>
+        <div class="card-category">Specialty Rice</div>
+        <div class="card-name">Basil<br>Fried Rice</div>
+        <p class="card-desc">Fresh Thai basil, garlic, chili, egg, bean sprouts, and your choice of protein — wok-fired until fragrant and slightly caramelized.</p>
+        <div class="card-footer">
+          <div class="card-price" style="display:flex;flex-direction:column;gap:0.15rem;line-height:1.1;">
+            <span style="font-size:0.95rem;color:var(--muted);font-family:'DM Sans',sans-serif;font-weight:500;">Half&nbsp;<span style="color:var(--gold);font-family:'Bebas Neue',sans-serif;font-size:1.35rem;">$8</span></span>
+            <span style="font-size:0.95rem;color:var(--muted);font-family:'DM Sans',sans-serif;font-weight:500;">Whole&nbsp;<span style="color:var(--gold);font-family:'Bebas Neue',sans-serif;font-size:1.35rem;">$13</span></span>
+          </div>
+          <span class="card-tag tag-classic">Aromatic</span>
+        </div>
+      </div>
+      <div class="menu-card fade-in" data-category="rice">
+        <div class="card-number">13</div>
+        <div class="card-category">Specialty Rice</div>
+        <div class="card-name">Ultimate<br>Fried Rice</div>
+        <p class="card-desc">Everything in one bowl. Beef, chicken, shrimp, pork, and ham — all wok-tossed together with egg, bean sprouts, soy, and green onion.</p>
+        <div class="card-footer">
+          <div class="card-price" style="display:flex;flex-direction:column;gap:0.15rem;line-height:1.1;">
+            <span style="font-size:0.95rem;color:var(--muted);font-family:'DM Sans',sans-serif;font-weight:500;">Half&nbsp;<span style="color:var(--gold);font-family:'Bebas Neue',sans-serif;font-size:1.35rem;">$8</span></span>
+            <span style="font-size:0.95rem;color:var(--muted);font-family:'DM Sans',sans-serif;font-weight:500;">Whole&nbsp;<span style="color:var(--gold);font-family:'Bebas Neue',sans-serif;font-size:1.35rem;">$13</span></span>
+          </div>
+          <span class="card-tag tag-popular">The Works</span>
+        </div>
       </div>
       <!--MENU_CARDS_END-->
     </div>
@@ -1252,13 +1963,34 @@
         <div style="font-size:0.68rem;font-weight:700;letter-spacing:0.22em;text-transform:uppercase;color:var(--gold);margin-bottom:1.5rem;">Operating Hours</div>
         <div id="hours-display" style="display:flex;flex-direction:column;gap:0;">
           <!--HOURS_ROWS_START-->
-          <div style="display:flex;justify-content:space-between;align-items:center;padding:0.9rem 0;border-bottom:1px solid rgba(232,160,32,0.1);"><span style="font-size:0.9rem;font-weight:500;color:var(--rice);">Monday</span><span style="font-size:0.9rem;color:var(--wok);">Closed</span></div>
-          <div style="display:flex;justify-content:space-between;align-items:center;padding:0.9rem 0;border-bottom:1px solid rgba(232,160,32,0.1);"><span style="font-size:0.9rem;font-weight:500;color:var(--rice);">Tuesday</span><span style="font-size:0.9rem;color:var(--wok);">Closed</span></div>
-          <div style="display:flex;justify-content:space-between;align-items:center;padding:0.9rem 0;border-bottom:1px solid rgba(232,160,32,0.1);"><span style="font-size:0.9rem;font-weight:500;color:var(--rice);">Wednesday</span><span style="font-size:0.9rem;color:var(--wok);">Closed</span></div>
-          <div style="display:flex;justify-content:space-between;align-items:center;padding:0.9rem 0;border-bottom:1px solid rgba(232,160,32,0.1);"><span style="font-size:0.9rem;font-weight:500;color:var(--rice);">Thursday</span><span style="font-size:0.9rem;color:rgba(245,238,216,0.6);">11am – 7pm</span></div>
-          <div style="display:flex;justify-content:space-between;align-items:center;padding:0.9rem 0;border-bottom:1px solid rgba(232,160,32,0.1);"><span style="font-size:0.9rem;font-weight:500;color:var(--rice);">Friday</span><span style="font-size:0.9rem;color:rgba(245,238,216,0.6);">11am – 7pm</span></div>
-          <div style="display:flex;justify-content:space-between;align-items:center;padding:0.9rem 0;border-bottom:1px solid rgba(232,160,32,0.1);"><span style="font-size:0.9rem;font-weight:500;color:var(--rice);">Saturday</span><span style="font-size:0.9rem;color:rgba(245,238,216,0.6);">11am – 7pm</span></div>
-          <div style="display:flex;justify-content:space-between;align-items:center;padding:0.9rem 0;border-bottom:1px solid rgba(232,160,32,0.1);"><span style="font-size:0.9rem;font-weight:500;color:var(--rice);">Sunday</span><span style="font-size:0.9rem;color:rgba(245,238,216,0.6);">11pm – 7pm</span></div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:0.9rem 0;border-bottom:1px solid rgba(232,160,32,0.1);">
+            <span style="font-size:0.9rem;font-weight:500;color:var(--rice);">Monday</span>
+            <span style="font-size:0.9rem;color:rgba(245,238,216,0.6);">11:00am – 9:00pm</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:0.9rem 0;border-bottom:1px solid rgba(232,160,32,0.1);">
+            <span style="font-size:0.9rem;font-weight:500;color:var(--rice);">Tuesday</span>
+            <span style="font-size:0.9rem;color:rgba(245,238,216,0.6);">11:00am – 9:00pm</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:0.9rem 0;border-bottom:1px solid rgba(232,160,32,0.1);">
+            <span style="font-size:0.9rem;font-weight:500;color:var(--rice);">Wednesday</span>
+            <span style="font-size:0.9rem;color:rgba(245,238,216,0.6);">11:00am – 9:00pm</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:0.9rem 0;border-bottom:1px solid rgba(232,160,32,0.1);">
+            <span style="font-size:0.9rem;font-weight:500;color:var(--rice);">Thursday</span>
+            <span style="font-size:0.9rem;color:rgba(245,238,216,0.6);">11:00am – 9:00pm</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:0.9rem 0;border-bottom:1px solid rgba(232,160,32,0.1);">
+            <span style="font-size:0.9rem;font-weight:500;color:var(--rice);">Friday</span>
+            <span style="font-size:0.9rem;color:rgba(245,238,216,0.6);">11:00am – 10:00pm</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:0.9rem 0;border-bottom:1px solid rgba(232,160,32,0.1);">
+            <span style="font-size:0.9rem;font-weight:500;color:var(--rice);">Saturday</span>
+            <span style="font-size:0.9rem;color:rgba(245,238,216,0.6);">11:00am – 10:00pm</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:0.9rem 0;">
+            <span style="font-size:0.9rem;font-weight:500;color:var(--rice);">Sunday</span>
+            <span style="font-size:0.9rem;color:rgba(245,238,216,0.6);">12:00pm – 8:00pm</span>
+          </div>
           <!--HOURS_ROWS_END-->
         </div>
       </div>
@@ -1384,6 +2116,66 @@
       </a>
     </div>
   </div>
+  <!-- ── ITEM DETAIL DRAWER ── -->
+  <div class="item-drawer-overlay" id="itemDrawerOverlay" onclick="closeItemDrawer()"></div>
+  <div class="item-drawer" id="itemDrawer">
+    <div class="drawer-handle"></div>
+    <div class="drawer-hero" id="drawerHero">
+      <div class="drawer-hero-bg" id="drawerHeroBg"></div>
+      <span id="drawerEmoji" style="position:relative;z-index:1;font-size:5.5rem;"></span>
+    </div>
+    <div class="drawer-body">
+      <div class="drawer-category" id="drawerCategory"></div>
+      <div class="drawer-name" id="drawerName"></div>
+      <p class="drawer-desc" id="drawerDesc"></p>
+      <div id="drawerSizeSection">
+        <div class="size-label">Choose Size</div>
+        <div class="size-options" id="drawerSizes"></div>
+      </div>
+      <div class="special-label">Special Instructions <span style="font-weight:400;text-transform:none;letter-spacing:0;font-size:0.7rem;color:var(--muted);">(optional)</span></div>
+      <textarea class="special-input" id="drawerNote" placeholder="e.g. extra spicy, no onions, extra sauce..."></textarea>
+      <div class="drawer-action-row">
+        <div class="drawer-qty">
+          <button class="drawer-qty-btn" onclick="changeDrawerQty(-1)">−</button>
+          <span class="drawer-qty-num" id="drawerQtyNum">1</span>
+          <button class="drawer-qty-btn" onclick="changeDrawerQty(1)">+</button>
+        </div>
+        <button class="drawer-add-btn" id="drawerAddBtn" onclick="addFromDrawer()">
+          <span>🛒</span> <span id="drawerAddLabel">Add to Order</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── FLOATING CART BAR ── -->
+  <div class="cart-bar" id="cartBar" onclick="openCartSheet()">
+    <div class="cart-bar-inner" id="cartBarInner">
+      <div class="cart-bar-left">
+        <div class="cart-bar-badge" id="cartBarBadge">0</div>
+        <span class="cart-bar-label">Your Order</span>
+      </div>
+      <span class="cart-bar-total" id="cartBarTotal">$0.00</span>
+      <span class="cart-bar-cta">Review →</span>
+    </div>
+  </div>
+
+  <!-- ── CART SHEET ── -->
+  <div class="cart-sheet-overlay" id="cartSheetOverlay" onclick="closeCartSheet()"></div>
+  <div class="cart-sheet" id="cartSheet">
+    <div class="cart-sheet-header">
+      <span class="cart-sheet-title">Your Order 🛒</span>
+      <button class="cart-close-btn" onclick="closeCartSheet()">✕</button>
+    </div>
+    <div class="cart-items-list" id="cartItemsList"></div>
+    <div class="cart-footer" id="cartFooter">
+      <div class="cart-summary-row"><span>Subtotal</span><span id="cartSubtotal">$0.00</span></div>
+      <div class="cart-summary-row"><span>Tax (est. 8.6%)</span><span id="cartTax">$0.00</span></div>
+      <div class="cart-summary-row total"><span>Total</span><span class="amt" id="cartTotal">$0.00</span></div>
+      <button class="checkout-btn" onclick="checkout()">🔥 Place Order — <span id="checkoutTotal">$0.00</span></button>
+      <div class="checkout-note">Pickup order · 3850 S 18th St, Phoenix AZ 85040</div>
+    </div>
+  </div>
+
 
   <script>
     // ── SCROLL FADE-IN ──────────────────────────────
@@ -1517,6 +2309,335 @@
       }
       lastScroll = current;
     }, { passive: true });
+  
+
+  // ── MENU DATA FOR CART ────────────────────────────
+  const MENU_ITEMS = [
+    { id:'01', name:'Lou Wok Fried Rice',         emoji:'🍚', cat:'Signature Rice',  desc:'Jasmine rice wok-tossed with egg, bean sprouts, green onion, soy, and your choice of protein.',  sizes:[{label:'Half',price:8},{label:'Whole',price:12}] },
+    { id:'02', name:'Spicy Garlic Fried Rice',     emoji:'🌶️', cat:'Signature Rice',  desc:'Roasted garlic, chili oil, egg, bean sprouts, and wok-charred vegetables. Heat level: bring it.',  sizes:[{label:'Half',price:8},{label:'Whole',price:13}] },
+    { id:'03', name:'Yang Chow Fried Rice',        emoji:'🍚', cat:'Signature Rice',  desc:'Shrimp, BBQ pork, egg, bean sprouts, peas, and carrots — wok-tossed over high heat.',             sizes:[{label:'Half',price:8},{label:'Whole',price:13}] },
+    { id:'04', name:'Crab Rangoon',                emoji:'🦀', cat:'Appetizer',       desc:'Crispy wonton shells stuffed with real crab and cream cheese. Served with sweet chili sauce. 6pc.', sizes:[{label:'6pc',price:8}] },
+    { id:'05', name:'Crab Rangoon Deluxe',         emoji:'🦀', cat:'Appetizer',       desc:'Double the order. Duck sauce and sweet chili included. 12pc.',                                       sizes:[{label:'12pc',price:14}] },
+    { id:'06', name:'St. Paul Sandwich',           emoji:'🥪', cat:'The Sandwich',    desc:'Egg foo young patty on soft white bread with lettuce, tomato, pickles, and mayo.',                   sizes:[{label:'Sandwich',price:10}] },
+    { id:'07', name:'St. Paul Deluxe',             emoji:'🥪', cat:'The Sandwich',    desc:'Double patty, extra sauce, wok-fried onions and peppers. Comes with half fried rice.',               sizes:[{label:'Combo',price:14}] },
+    { id:'08', name:'Lou Wok Box',                 emoji:'📦', cat:'The Combo',       desc:'Fried rice, 3 crab rangoon, St. Paul sandwich, and 4pc fried chicken. All on one tray.',             sizes:[{label:'Half',price:19},{label:'Whole',price:24}] },
+    { id:'09', name:'Jambalaya Fried Rice',        emoji:'🍚', cat:'Specialty Rice',  desc:'Andouille sausage, shrimp, and chicken with Cajun seasoning, bell peppers, egg, bean sprouts.',      sizes:[{label:'Half',price:8},{label:'Whole',price:13}] },
+    { id:'10', name:'Duck Fried Rice',             emoji:'🦆', cat:'Specialty Rice',  desc:'Slow-roasted duck, jasmine rice, egg, bean sprouts, green onion, ginger, and dark soy glaze.',       sizes:[{label:'Half',price:8},{label:'Whole',price:13}] },
+    { id:'11', name:'Pineapple Chicken Fried Rice',emoji:'🍍', cat:'Specialty Rice',  desc:'Wok-charred chicken, fresh pineapple, cashews, egg, bean sprouts — served in a hollowed pineapple.', sizes:[{label:'Half',price:8},{label:'Whole',price:13}] },
+    { id:'12', name:'Basil Fried Rice',            emoji:'🌿', cat:'Specialty Rice',  desc:'Fresh Thai basil, garlic, chili, egg, bean sprouts, and your choice of protein.',                    sizes:[{label:'Half',price:8},{label:'Whole',price:13}] },
+    { id:'13', name:'Ultimate Fried Rice',         emoji:'🍚', cat:'Specialty Rice',  desc:'Beef, chicken, shrimp, pork, and ham — all wok-tossed with egg, bean sprouts, soy, and green onion.',sizes:[{label:'Half',price:8},{label:'Whole',price:13}] },
+  ];
+
+  // ── CART STATE ─────────────────────────────────
+  let cart = []; // [{id, name, emoji, size, price, qty, note}]
+  let drawerItem = null;
+  let drawerQty = 1;
+  let drawerSelectedSize = 0;
+
+  // ── OPEN ITEM DRAWER ────────────────────────────
+  function openItemDrawer(itemId) {
+    const item = MENU_ITEMS.find(m => m.id === itemId);
+    if (!item) return;
+    drawerItem = item;
+    drawerQty = 1;
+    drawerSelectedSize = 0;
+
+    document.getElementById('drawerEmoji').textContent = item.emoji;
+    document.getElementById('drawerHeroBg').textContent = item.name.split(' ').slice(0,2).join(' ').toUpperCase();
+    document.getElementById('drawerCategory').textContent = item.cat;
+    document.getElementById('drawerName').textContent = item.name;
+    document.getElementById('drawerDesc').textContent = item.desc;
+    document.getElementById('drawerQtyNum').textContent = 1;
+    document.getElementById('drawerNote').value = '';
+
+    // Build size options
+    const sizesEl = document.getElementById('drawerSizes');
+    const sizeSection = document.getElementById('drawerSizeSection');
+    if (item.sizes.length > 1) {
+      sizeSection.style.display = 'block';
+      sizesEl.innerHTML = item.sizes.map((s, i) =>
+        `<div class="size-opt ${i===0?'selected':''}" onclick="selectSize(${i})" id="sizeOpt${i}">
+          <span class="size-opt-name">${s.label}</span>
+          <span class="size-opt-price">$${s.price}</span>
+        </div>`
+      ).join('');
+    } else {
+      sizeSection.style.display = 'none';
+    }
+
+    updateDrawerBtn();
+
+    document.getElementById('itemDrawerOverlay').classList.add('show');
+    document.getElementById('itemDrawer').classList.add('show');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeItemDrawer() {
+    document.getElementById('itemDrawerOverlay').classList.remove('show');
+    document.getElementById('itemDrawer').classList.remove('show');
+    document.body.style.overflow = '';
+  }
+
+  // Swipe down to close drawer
+  const itemDrawerEl = document.getElementById('itemDrawer');
+  let drawerStartY = 0;
+  itemDrawerEl.addEventListener('touchstart', e => { drawerStartY = e.touches[0].clientY; }, { passive: true });
+  itemDrawerEl.addEventListener('touchmove', e => {
+    if (e.touches[0].clientY - drawerStartY > 70) closeItemDrawer();
+  }, { passive: true });
+
+  function selectSize(idx) {
+    drawerSelectedSize = idx;
+    document.querySelectorAll('.size-opt').forEach((el, i) => {
+      el.classList.toggle('selected', i === idx);
+    });
+    updateDrawerBtn();
+  }
+
+  function changeDrawerQty(delta) {
+    drawerQty = Math.max(1, Math.min(10, drawerQty + delta));
+    document.getElementById('drawerQtyNum').textContent = drawerQty;
+    updateDrawerBtn();
+  }
+
+  function updateDrawerBtn() {
+    if (!drawerItem) return;
+    const size = drawerItem.sizes[drawerSelectedSize];
+    const total = size.price * drawerQty;
+    document.getElementById('drawerAddLabel').textContent =
+      'Add ' + drawerQty + ' — $' + total.toFixed(2);
+  }
+
+  function addFromDrawer() {
+    if (!drawerItem) return;
+    const size = drawerItem.sizes[drawerSelectedSize];
+    const note = document.getElementById('drawerNote').value.trim();
+    const cartId = drawerItem.id + '-' + drawerSelectedSize;
+
+    // Check if same item+size already in cart
+    const existing = cart.find(c => c.cartId === cartId && c.note === note);
+    if (existing) {
+      existing.qty += drawerQty;
+    } else {
+      cart.push({
+        cartId,
+        id: drawerItem.id,
+        name: drawerItem.name,
+        emoji: drawerItem.emoji,
+        size: size.label,
+        price: size.price,
+        qty: drawerQty,
+        note
+      });
+    }
+
+    // Flying emoji animation
+    flyEmojiToCart(drawerItem.emoji);
+
+    updateCartUI();
+    closeItemDrawer();
+
+    // Update the card button state
+    updateCardBtn(drawerItem.id);
+  }
+
+  // ── FLYING EMOJI ANIMATION ───────────────────────
+  function flyEmojiToCart(emoji) {
+    const bar = document.getElementById('cartBar');
+    const barRect = bar.getBoundingClientRect();
+    const startX = window.innerWidth / 2;
+    const startY = window.innerHeight / 2;
+    const endX = barRect.left + barRect.width / 2;
+    const endY = barRect.top + barRect.height / 2;
+
+    const el = document.createElement('div');
+    el.className = 'fly-emoji';
+    el.textContent = emoji;
+    el.style.left = startX + 'px';
+    el.style.top = startY + 'px';
+    el.style.setProperty('--tx', (endX - startX) + 'px');
+    el.style.setProperty('--ty', (endY - startY) + 'px');
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 800);
+
+    // Pulse cart bar
+    const inner = document.getElementById('cartBarInner');
+    inner.classList.remove('pulse');
+    void inner.offsetWidth;
+    inner.classList.add('pulse');
+  }
+
+  // ── UPDATE CART UI ───────────────────────────────
+  function updateCartUI() {
+    const totalQty = cart.reduce((s, c) => s + c.qty, 0);
+    const subtotal = cart.reduce((s, c) => s + c.price * c.qty, 0);
+    const tax = subtotal * 0.086;
+    const total = subtotal + tax;
+
+    // Cart bar
+    document.getElementById('cartBarBadge').textContent = totalQty;
+    document.getElementById('cartBarTotal').textContent = '$' + subtotal.toFixed(2);
+
+    // Show/hide cart bar
+    const bar = document.getElementById('cartBar');
+    if (totalQty > 0) bar.classList.add('show');
+    else bar.classList.remove('show');
+
+    // Summary
+    document.getElementById('cartSubtotal').textContent = '$' + subtotal.toFixed(2);
+    document.getElementById('cartTax').textContent = '$' + tax.toFixed(2);
+    document.getElementById('cartTotal').textContent = '$' + total.toFixed(2);
+    document.getElementById('checkoutTotal').textContent = '$' + total.toFixed(2);
+
+    // Cart items list
+    const list = document.getElementById('cartItemsList');
+    if (cart.length === 0) {
+      list.innerHTML = `<div class="cart-empty">
+        <div class="cart-empty-icon">🍚</div>
+        <div class="cart-empty-title">Your cart is empty</div>
+        <div class="cart-empty-sub">Add something delicious from the menu</div>
+      </div>`;
+      document.getElementById('cartFooter').style.display = 'none';
+    } else {
+      document.getElementById('cartFooter').style.display = '';
+      list.innerHTML = cart.map((item, idx) => `
+        <div class="cart-item" id="cartItem${idx}">
+          <div class="cart-item-emoji">${item.emoji}</div>
+          <div class="cart-item-info">
+            <div class="cart-item-name">${item.name}</div>
+            <div class="cart-item-meta">${item.size} · $${item.price.toFixed(2)} each</div>
+            ${item.note ? `<div class="cart-item-note">📝 ${item.note}</div>` : ''}
+          </div>
+          <div class="cart-item-right">
+            <div class="cart-item-price">$${(item.price * item.qty).toFixed(2)}</div>
+            <div class="cart-item-qty">
+              <button class="ciq-btn" onclick="updateCartQty(${idx}, -1)">−</button>
+              <span class="ciq-num">${item.qty}</span>
+              <button class="ciq-btn" onclick="updateCartQty(${idx}, 1)">+</button>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // Update all card buttons
+    MENU_ITEMS.forEach(m => updateCardBtn(m.id));
+  }
+
+  function updateCardBtn(itemId) {
+    const btn = document.getElementById('atcBtn-' + itemId);
+    const pill = document.getElementById('qtyPill-' + itemId);
+    if (!btn || !pill) return;
+    const totalQty = cart.filter(c => c.id === itemId).reduce((s, c) => s + c.qty, 0);
+    if (totalQty > 0) {
+      btn.style.display = 'none';
+      pill.classList.add('show');
+      document.getElementById('pillNum-' + itemId).textContent = totalQty;
+    } else {
+      btn.style.display = '';
+      pill.classList.remove('show');
+    }
+  }
+
+  function updateCartQty(idx, delta) {
+    cart[idx].qty = Math.max(0, cart[idx].qty + delta);
+    if (cart[idx].qty === 0) cart.splice(idx, 1);
+    updateCartUI();
+  }
+
+  // ── CART SHEET ───────────────────────────────────
+  function openCartSheet() {
+    document.getElementById('cartSheetOverlay').classList.add('show');
+    document.getElementById('cartSheet').classList.add('show');
+    document.body.style.overflow = 'hidden';
+    updateCartUI();
+  }
+
+  function closeCartSheet() {
+    document.getElementById('cartSheetOverlay').classList.remove('show');
+    document.getElementById('cartSheet').classList.remove('show');
+    document.body.style.overflow = '';
+  }
+
+  // Swipe down to close cart sheet
+  const cartSheetEl = document.getElementById('cartSheet');
+  let cartSheetStartY = 0;
+  cartSheetEl.addEventListener('touchstart', e => { cartSheetStartY = e.touches[0].clientY; }, { passive: true });
+  cartSheetEl.addEventListener('touchmove', e => {
+    if (e.touches[0].clientY - cartSheetStartY > 70) closeCartSheet();
+  }, { passive: true });
+
+  // ── CHECKOUT ─────────────────────────────────────
+  function checkout() {
+    if (cart.length === 0) return;
+    const subtotal = cart.reduce((s, c) => s + c.price * c.qty, 0);
+    const tax = subtotal * 0.086;
+    const total = subtotal + tax;
+    const orderSummary = cart.map(c => `${c.qty}x ${c.name} (${c.size})${c.note ? ' ['+c.note+']' : ''}`).join('\n');
+    alert(`🔥 Order Placed!\n\n${orderSummary}\n\nTotal: $${total.toFixed(2)}\n\nWe\'ll have your order ready shortly at\n3850 S 18th St, Phoenix AZ 85040\n\n(Online payment coming soon!)`);
+    cart = [];
+    updateCartUI();
+    closeCartSheet();
+  }
+
+  // ── INIT CART ON MENU CARDS ───────────────────────
+  function initCartButtons() {
+    document.querySelectorAll('.menu-card').forEach(card => {
+      const numEl = card.querySelector('.card-number');
+      if (!numEl) return;
+      const id = numEl.textContent.trim().padStart(2, '0');
+      const item = MENU_ITEMS.find(m => m.id === id);
+      if (!item) return;
+
+      // Store id on card
+      card.dataset.itemId = id;
+
+      // Get the card-footer
+      const footer = card.querySelector('.card-footer');
+      if (!footer) return;
+
+      // Create ATC button
+      const atcBtn = document.createElement('button');
+      atcBtn.className = 'atc-btn';
+      atcBtn.id = 'atcBtn-' + id;
+      atcBtn.innerHTML = '＋ Add';
+      atcBtn.onclick = (e) => { e.stopPropagation(); openItemDrawer(id); };
+
+      // Create qty pill
+      const pill = document.createElement('div');
+      pill.className = 'card-qty-pill';
+      pill.id = 'qtyPill-' + id;
+      pill.innerHTML = `
+        <button class="qty-pill-btn" onclick="event.stopPropagation();quickQtyChange('${id}',-1)">−</button>
+        <span class="qty-pill-num" id="pillNum-${id}">0</span>
+        <button class="qty-pill-btn" onclick="event.stopPropagation();openItemDrawer('${id}')">+</button>`;
+
+      footer.appendChild(atcBtn);
+      footer.appendChild(pill);
+
+      // Make whole card clickable to open drawer
+      card.style.cursor = 'pointer';
+      card.onclick = () => openItemDrawer(id);
+    });
+  }
+
+  function quickQtyChange(itemId, delta) {
+    const existing = cart.filter(c => c.id === itemId);
+    if (existing.length === 0 && delta > 0) {
+      openItemDrawer(itemId);
+      return;
+    }
+    existing.forEach(c => {
+      c.qty = Math.max(0, c.qty + delta);
+    });
+    cart = cart.filter(c => c.qty > 0);
+    updateCartUI();
+  }
+
+  // Init after DOM ready
+  initCartButtons();
+  updateCartUI();
+
   </script>
 </body>
 </html>
