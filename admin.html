@@ -1274,5 +1274,9 @@ window.addEventListener('beforeunload', e=>{
   if(unsavedChanges){ e.preventDefault(); e.returnValue=''; }
 });
 </script>
+<script>
+  window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+</script>
+<script defer src="/_vercel/insights/script.js"></script>
 </body>
 </html>
