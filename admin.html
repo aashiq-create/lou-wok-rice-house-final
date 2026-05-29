@@ -1,135 +1,859 @@
-require('dotenv').config();
-const express = require('express');
-const crypto = require('crypto');
-const nodemailer = require('nodemailer');
-const { google } = require('googleapis');
-const path = require('path');
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Lou Wok — Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css"/>
+<style>
+/* ═══════════════════════════════════════════════
+   LOU WOK DESIGN TOKENS — extracted from live site
+   theme-color: #0a0a08
+   ═══════════════════════════════════════════════ */
+:root {
+  /* Exact background stack from louwok.com */
+  --lw-bg:          #0a0a08;
+  --lw-bg-raised:   #0e0e0c;
+  --lw-bg-card:     #121210;
+  --lw-bg-input:    #0a0a08;
+  --lw-bg-hover:    #171714;
+  --lw-bg-active:   #1c1c19;
 
-const app = express();
-app.use(express.json());
+  /* Borders */
+  --lw-border:      #1e1e1b;
+  --lw-border-md:   #252521;
+  --lw-border-hi:   #2e2e29;
 
-const ADMIN_TOKEN = process.env.ADMIN_SECRET_TOKEN;
-const resetCodes = new Map();
+  /* Text — warm off-white from louwok.com body copy */
+  --lw-text:        #e8e5dc;
+  --lw-text-2:      #9e9b92;
+  --lw-text-3:      #5c5a52;
+  --lw-text-4:      #343330;
 
-// ─── Secret URL middleware ───────────────────────────────────────────
-function requireAdminToken(req, res, next) {
-  const token = req.params.token || req.headers['x-admin-token'];
-  if (!token || token !== ADMIN_TOKEN) {
-    return res.status(404).send('Not found'); // hard 404 — reveals nothing
-  }
-  next();
+  /* Accent — the warm gold from the logo/branding */
+  --lw-gold:        #c9a84c;
+  --lw-gold-hi:     #dfc068;
+  --lw-gold-lo:     #a07c2a;
+  --lw-gold-dim:    rgba(201,168,76,0.10);
+  --lw-gold-glow:   rgba(201,168,76,0.20);
+
+  /* Status */
+  --lw-green:       #3a9e62;
+  --lw-green-dim:   rgba(58,158,98,0.12);
+  --lw-red:         #c0392b;
+  --lw-red-dim:     rgba(192,57,43,0.12);
+  --lw-amber:       #c87a2a;
+  --lw-amber-dim:   rgba(200,122,42,0.12);
+  --lw-blue:        #2e6da4;
+
+  /* Typography — exact match to louwok.com */
+  --font-display:   'Bebas Neue', sans-serif;
+  --font-body:      'DM Sans', sans-serif;
+  --font-mono:      'DM Mono', monospace;
+
+  /* Radii */
+  --r-sm:  4px;
+  --r:     6px;
+  --r-lg:  10px;
+  --r-xl:  14px;
+
+  /* Shadow */
+  --shadow: 0 8px 32px rgba(0,0,0,0.6);
 }
 
-// ─── Admin panel route (secret URL) ──────────────────────────────────
-app.get('/admin/:token', requireAdminToken, (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'admin.html'));
-});
-
-// ─── Gmail transporter ───────────────────────────────────────────────
-async function getTransporter() {
-  const oauth2Client = new google.auth.OAuth2(
-    process.env.GMAIL_CLIENT_ID,
-    process.env.GMAIL_CLIENT_SECRET,
-    'https://developers.google.com/oauthplayground'
-  );
-  oauth2Client.setCredentials({
-    refresh_token: process.env.GMAIL_REFRESH_TOKEN
-  });
-  const { token } = await oauth2Client.getAccessToken();
-  return nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-      type: 'OAuth2',
-      user: process.env.GMAIL_USER,
-      clientId: process.env.GMAIL_CLIENT_ID,
-      clientSecret: process.env.GMAIL_CLIENT_SECRET,
-      refreshToken: process.env.GMAIL_REFRESH_TOKEN,
-      accessToken: token,
-    },
-  });
+/* ── Reset ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body {
+  height: 100%; overflow: hidden;
+  background: var(--lw-bg);
+  color: var(--lw-text);
+  font-family: var(--font-body);
+  font-size: 14px;
+  -webkit-font-smoothing: antialiased;
 }
 
-// ─── Password reset routes ────────────────────────────────────────────
-app.post('/auth/request-reset', async (req, res) => {
-  const { email } = req.body;
-  if (!email) return res.status(400).json({ error: 'Email required' });
+/* ══════════════════════════════
+   LAYOUT
+══════════════════════════════ */
+.shell    { display:flex; height:100vh; }
+.sidebar  { width:224px; min-width:224px; background:var(--lw-bg-raised); border-right:1px solid var(--lw-border); display:flex; flex-direction:column; transition:width .22s ease; }
+.sidebar.slim { width:52px; min-width:52px; }
+.main     { flex:1; display:flex; flex-direction:column; overflow:hidden; }
 
-  const code = crypto.randomInt(100000, 999999).toString();
-  resetCodes.set(email, { code, expiry: Date.now() + 15 * 60 * 1000 });
+/* ══════════════════════════════
+   SIDEBAR — BRAND
+══════════════════════════════ */
+.brand {
+  padding: 16px 14px 13px;
+  border-bottom: 1px solid var(--lw-border);
+  display: flex; align-items: center; gap: 10px;
+  min-height: 60px; overflow: hidden;
+}
+.brand-logo { width:32px; height:32px; flex-shrink:0; object-fit:contain; }
+.brand-copy { overflow:hidden; white-space:nowrap; }
+.brand-name {
+  font-family: var(--font-display);
+  font-size: 20px; letter-spacing: 3px;
+  color: var(--lw-gold); line-height: 1;
+  /* subtle text-shadow matching louwok.com hero */
+  text-shadow: 0 0 40px rgba(201,168,76,.25);
+}
+.brand-sub {
+  font-size: 8.5px; letter-spacing: 3.5px; text-transform: uppercase;
+  color: var(--lw-text-3); margin-top: 3px;
+  font-family: var(--font-mono);
+}
+.sidebar.slim .brand-copy,
+.sidebar.slim .nav-label,
+.sidebar.slim .nav-txt,
+.sidebar.slim .nav-badge,
+.sidebar.slim .sb-foot-txt { display: none; }
 
-  try {
-    const transporter = await getTransporter();
-    await transporter.sendMail({
-      from: `"${process.env.SITE_NAME || 'Admin'}" <${process.env.GMAIL_USER}>`,
-      to: email,
-      subject: 'Your password reset code',
-      html: `
-        <div style="font-family:sans-serif;max-width:400px;margin:0 auto">
-          <h2 style="font-size:20px;font-weight:500">Reset your password</h2>
-          <p style="color:#666">Your 6-digit code is:</p>
-          <div style="font-size:32px;font-weight:700;letter-spacing:8px;margin:16px 0">${code}</div>
-          <p style="color:#999;font-size:13px">Expires in 15 minutes. If you didn't request this, ignore this email.</p>
-        </div>`,
-    });
-    res.json({ success: true });
-  } catch (err) {
-    console.error('Gmail error:', err);
-    res.status(500).json({ error: 'Failed to send reset email' });
-  }
-});
+/* ── Nav ── */
+.nav { flex:1; padding: 10px 0; overflow-y:auto; overflow-x:hidden; }
+.nav::-webkit-scrollbar { width:2px; }
+.nav::-webkit-scrollbar-thumb { background:var(--lw-border-md); }
+.nav-grp { margin-bottom: 2px; }
+.nav-label {
+  padding: 10px 14px 3px;
+  font-size: 8px; letter-spacing: 3.5px; text-transform: uppercase;
+  color: var(--lw-text-4); font-family: var(--font-mono);
+  white-space: nowrap;
+}
+.nav-item {
+  display: flex; align-items: center; gap: 9px;
+  padding: 9px 14px; cursor: pointer;
+  color: var(--lw-text-3); font-size: 13px;
+  border-left: 2px solid transparent;
+  transition: color .12s, background .12s, border-color .12s;
+  white-space: nowrap; overflow: hidden; user-select: none;
+  position: relative;
+}
+.nav-item:hover  { background: var(--lw-bg-hover); color: var(--lw-text-2); }
+.nav-item.active {
+  background: var(--lw-bg-active);
+  color: var(--lw-gold);
+  border-left-color: var(--lw-gold);
+}
+.nav-item i { font-size: 17px; flex-shrink: 0; }
+.nav-txt { overflow:hidden; text-overflow:ellipsis; flex:1; }
+.nav-badge {
+  background: var(--lw-red); color: #fff;
+  font-size: 9px; padding: 1px 5px; border-radius: 10px;
+  font-family: var(--font-mono); flex-shrink:0;
+}
 
-app.post('/auth/verify-code', (req, res) => {
-  const { email, code } = req.body;
-  const record = resetCodes.get(email);
-  if (!record || record.code !== code || Date.now() > record.expiry) {
-    return res.status(400).json({ error: 'Invalid or expired code' });
-  }
-  res.json({ success: true });
-});
+/* ── Sidebar footer ── */
+.sb-foot {
+  border-top: 1px solid var(--lw-border);
+  padding: 11px 14px;
+  display: flex; align-items: center; gap: 8px;
+}
+.live-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--lw-green); flex-shrink: 0;
+  animation: lw-pulse 2.8s ease-in-out infinite;
+}
+@keyframes lw-pulse {
+  0%,100% { box-shadow: 0 0 0 0 rgba(58,158,98,.55); }
+  50%      { box-shadow: 0 0 0 5px rgba(58,158,98,0); }
+}
+.sb-foot-txt { font-size: 11px; color: var(--lw-text-3); font-family: var(--font-mono); white-space:nowrap; overflow:hidden; }
+.slim-btn {
+  background:none; border:none; cursor:pointer;
+  color: var(--lw-text-3); font-size:18px;
+  padding: 3px; display:flex; align-items:center;
+  transition: color .12s; flex-shrink:0; margin-left:auto;
+}
+.slim-btn:hover { color: var(--lw-text); }
 
-app.post('/auth/verify-reset', (req, res) => {
-  const { email, code, newPassword } = req.body;
-  const record = resetCodes.get(email);
-  if (!record || record.code !== code || Date.now() > record.expiry) {
-    return res.status(400).json({ error: 'Invalid or expired code' });
-  }
-  if (!newPassword || newPassword.length < 8) {
-    return res.status(400).json({ error: 'Password too short' });
-  }
-  // TODO: hash with bcrypt and save to your DB here
-  resetCodes.delete(email);
-  res.json({ success: true });
-});
+/* ══════════════════════════════
+   TOPBAR
+══════════════════════════════ */
+.topbar {
+  height: 54px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 20px; gap: 12px;
+  background: var(--lw-bg-raised);
+  border-bottom: 1px solid var(--lw-border);
+}
+.topbar-l { display:flex; align-items:center; gap:12px; min-width:0; }
+.pg-title {
+  font-family: var(--font-display);
+  font-size: 21px; letter-spacing: 2.5px; color: var(--lw-text);
+  white-space: nowrap; line-height: 1;
+}
+.pg-crumb { font-size: 10px; color: var(--lw-text-4); font-family: var(--font-mono); white-space:nowrap; }
+.topbar-r { display:flex; align-items:center; gap:8px; flex-shrink:0; }
+.dep-pill {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 11px; color: var(--lw-text-3);
+  font-family: var(--font-mono);
+  padding: 0 10px; height: 30px; border-radius: var(--r);
+  background: var(--lw-bg-active); border: 1px solid var(--lw-border-md);
+}
+.dpulse { width:6px; height:6px; border-radius:50%; flex-shrink:0; }
+.dpulse.idle     { background: var(--lw-text-3); }
+.dpulse.building { background: var(--lw-gold); animation: blink .65s ease-in-out infinite; }
+.dpulse.ready    { background: var(--lw-green); }
+.dpulse.error    { background: var(--lw-red); }
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:.1} }
 
-// ─── Deploy route (secret token required) ────────────────────────────
-app.post('/admin/deploy', requireAdminToken, async (req, res) => {
-  try {
-    const response = await fetch(process.env.VERCEL_DEPLOY_HOOK, {
-      method: 'POST'
-    });
-    const data = await response.json();
-    res.json({ success: true, deploymentId: data.job?.id });
-  } catch (err) {
-    console.error('Deploy error:', err);
-    res.status(500).json({ error: 'Deploy failed' });
-  }
-});
+/* THE publish button — gold, Bebas Neue, exact Lou Wok CTA feel */
+.btn-pub {
+  display: flex; align-items: center; gap: 7px;
+  background: var(--lw-gold);
+  color: var(--lw-bg);
+  font-family: var(--font-display);
+  font-size: 17px; letter-spacing: 2px;
+  padding: 0 18px; height: 36px;
+  border-radius: var(--r); border: none; cursor: pointer;
+  transition: background .14s, box-shadow .14s, transform .1s;
+  white-space: nowrap; line-height: 1;
+}
+.btn-pub i { font-size: 15px; margin-top: 1px; }
+.btn-pub:hover:not(:disabled) {
+  background: var(--lw-gold-hi);
+  box-shadow: 0 4px 16px var(--lw-gold-glow);
+  transform: translateY(-1px);
+}
+.btn-pub:active { transform: translateY(0); }
+.btn-pub:disabled { opacity:.35; cursor:not-allowed; transform:none; box-shadow:none; }
 
-// ─── Deploy status polling ────────────────────────────────────────────
-app.get('/admin/deploy-status/:id', requireAdminToken, async (req, res) => {
-  try {
-    const r = await fetch(
-      `https://api.vercel.com/v13/deployments/${req.params.id}`,
-      { headers: { Authorization: `Bearer ${process.env.VERCEL_TOKEN}` } }
-    );
-    const data = await r.json();
-    res.json({ state: data.readyState, url: data.url });
-  } catch (err) {
-    res.status(500).json({ error: 'Status check failed' });
-  }
-});
+/* ══════════════════════════════
+   CONTENT AREA
+══════════════════════════════ */
+.content {
+  flex:1; overflow-y:auto; padding: 18px 20px;
+  display: flex; flex-direction: column; gap: 0;
+}
+.content::-webkit-scrollbar { width: 3px; }
+.content::-webkit-scrollbar-thumb { background: var(--lw-border-md); border-radius:2px; }
 
-app.listen(process.env.PORT || 3000, () => {
-  console.log(`Server running. Admin panel at /admin/${ADMIN_TOKEN}`);
-});
-    
+/* ── Views ── */
+.view { display:none; flex-direction:column; gap:14px; animation: vfade .18s ease; }
+.view.active { display:flex; }
+@keyframes vfade { from{opacity:0;transform:translateY(5px)} to{opacity:1;transform:none} }
+
+/* ══════════════════════════════
+   CARDS
+══════════════════════════════ */
+.card {
+  background: var(--lw-bg-card);
+  border: 1px solid var(--lw-border);
+  border-radius: var(--r-lg); padding: 15px 17px;
+}
+.card-head {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 13px;
+}
+.card-title {
+  font-size: 8.5px; letter-spacing: 3px; text-transform: uppercase;
+  color: var(--lw-text-3); font-family: var(--font-mono);
+  display: flex; align-items: center; gap: 6px;
+}
+.card-title i { font-size: 14px; }
+
+/* ── Grids ── */
+.g2 { display:grid; grid-template-columns:1fr 1fr; gap:13px; }
+.g3 { display:grid; grid-template-columns:repeat(3,1fr); gap:11px; }
+.g4 { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; }
+
+/* ── Metric cards ── */
+.m-card {
+  background: var(--lw-bg-card); border: 1px solid var(--lw-border);
+  border-radius: var(--r-lg); padding: 13px 15px;
+}
+.m-label { font-size: 8.5px; letter-spacing:3px; text-transform:uppercase; color:var(--lw-text-3); font-family:var(--font-mono); margin-bottom:7px; }
+.m-val   { font-family:var(--font-display); font-size:30px; letter-spacing:1.5px; line-height:1; color:var(--lw-text); }
+.m-sub   { font-size:10px; color:var(--lw-text-3); font-family:var(--font-mono); margin-top:3px; }
+.m-up    { font-size:10px; color:var(--lw-green); margin-top:4px; }
+.m-dn    { font-size:10px; color:var(--lw-red);   margin-top:4px; }
+
+/* ══════════════════════════════
+   FORMS
+══════════════════════════════ */
+.field  { display:flex; flex-direction:column; gap:5px; margin-bottom:11px; }
+.field:last-child { margin-bottom:0; }
+.f-label {
+  font-size: 8.5px; letter-spacing: 2.5px; text-transform: uppercase;
+  color: var(--lw-text-3); font-family: var(--font-mono);
+}
+.f-input, .f-textarea, .f-select {
+  background: var(--lw-bg-input);
+  border: 1px solid var(--lw-border-md);
+  border-radius: var(--r); padding: 8px 11px;
+  font-size: 13px; color: var(--lw-text);
+  font-family: var(--font-body); outline: none;
+  transition: border-color .14s, box-shadow .14s; width: 100%;
+}
+.f-input:focus, .f-textarea:focus, .f-select:focus {
+  border-color: var(--lw-gold);
+  box-shadow: 0 0 0 3px var(--lw-gold-dim);
+}
+.f-textarea { resize:vertical; min-height:80px; line-height:1.6; }
+.f-select {
+  cursor:pointer; appearance:none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 10 10'%3E%3Cpath fill='%235c5a52' d='M5 7L1 2h8z'/%3E%3C/svg%3E");
+  background-repeat:no-repeat; background-position:right 11px center;
+}
+.f-toggle { display:flex; align-items:center; justify-content:space-between; padding:8px 0; }
+.f-toggle-label { font-size:13px; color:var(--lw-text-2); }
+.toggle {
+  width:36px; height:19px;
+  background:var(--lw-bg-active); border:1px solid var(--lw-border-md);
+  border-radius:10px; cursor:pointer; position:relative; transition:background .18s;
+}
+.toggle.on { background:var(--lw-gold); border-color:var(--lw-gold); }
+.toggle::after {
+  content:''; width:13px; height:13px;
+  background:#fff; border-radius:50%;
+  position:absolute; top:2px; left:2px;
+  transition:left .18s; box-shadow:0 1px 3px rgba(0,0,0,.4);
+}
+.toggle.on::after { left:19px; }
+
+/* ══════════════════════════════
+   BUTTONS
+══════════════════════════════ */
+.btn {
+  display:inline-flex; align-items:center; gap:6px;
+  padding:0 13px; height:32px; border-radius:var(--r); border:none;
+  cursor:pointer; font-size:12px; font-family:var(--font-body);
+  transition:background .13s, color .13s; font-weight:500;
+}
+.btn:disabled { opacity:.38; cursor:not-allowed; }
+.btn-gold    { background:var(--lw-gold); color:var(--lw-bg); }
+.btn-gold:hover:not(:disabled) { background:var(--lw-gold-hi); }
+.btn-outline { background:transparent; color:var(--lw-text-2); border:1px solid var(--lw-border-md); }
+.btn-outline:hover:not(:disabled) { background:var(--lw-bg-hover); color:var(--lw-text); border-color:var(--lw-border-hi); }
+.btn-ghost   { background:transparent; color:var(--lw-text-3); }
+.btn-ghost:hover:not(:disabled) { background:var(--lw-bg-hover); color:var(--lw-text); }
+.btn-danger  { background:var(--lw-red-dim); color:var(--lw-red); border:1px solid rgba(192,57,43,.25); }
+.btn-danger:hover:not(:disabled) { background:rgba(192,57,43,.22); }
+
+/* Inline publish button — Bebas Neue like site CTAs */
+.btn-sec-pub {
+  display:inline-flex; align-items:center; gap:6px;
+  background:var(--lw-gold); color:var(--lw-bg);
+  font-family:var(--font-display); font-size:15px; letter-spacing:1.8px;
+  padding:0 14px; height:32px; border-radius:var(--r); border:none; cursor:pointer;
+  transition:background .13s, box-shadow .13s;
+}
+.btn-sec-pub:hover:not(:disabled) { background:var(--lw-gold-hi); box-shadow:0 2px 8px var(--lw-gold-glow); }
+.btn-sec-pub:disabled { opacity:.35; cursor:not-allowed; }
+.btn-row { display:flex; align-items:center; gap:8px; margin-top:13px; flex-wrap:wrap; }
+
+/* ══════════════════════════════
+   MESSAGES / TOASTS
+══════════════════════════════ */
+.msg { font-size:11px; padding:8px 11px; border-radius:var(--r); font-family:var(--font-mono); line-height:1.5; display:none; margin-top:8px; }
+.msg.ok   { background:var(--lw-green-dim); color:var(--lw-green); border:1px solid rgba(58,158,98,.25); }
+.msg.err  { background:var(--lw-red-dim);   color:var(--lw-red);   border:1px solid rgba(192,57,43,.25); }
+.msg.info { background:var(--lw-gold-dim);  color:var(--lw-gold);  border:1px solid rgba(201,168,76,.25); }
+
+.toast {
+  position:fixed; bottom:20px; right:20px; z-index:999;
+  background:var(--lw-bg-card); border:1px solid var(--lw-border-md);
+  border-radius:var(--r-lg); padding:11px 15px;
+  display:flex; align-items:center; gap:9px;
+  font-size:13px; color:var(--lw-text);
+  box-shadow:var(--shadow);
+  transform:translateY(80px); opacity:0;
+  transition:all .28s cubic-bezier(.34,1.56,.64,1);
+  pointer-events:none; max-width:320px;
+}
+.toast.show { transform:translateY(0); opacity:1; }
+.toast i { font-size:17px; flex-shrink:0; }
+.toast.ok  i { color:var(--lw-green); }
+.toast.err i { color:var(--lw-red); }
+.toast.info i { color:var(--lw-gold); }
+
+/* ══════════════════════════════
+   DEPLOY
+══════════════════════════════ */
+.dep-card { background:var(--lw-bg-card); border:1px solid var(--lw-border); border-radius:var(--r-lg); padding:15px 17px; display:flex; flex-direction:column; gap:11px; }
+.dep-row  { display:flex; align-items:center; justify-content:space-between; font-size:13px; }
+.dep-row-lbl { color:var(--lw-text-2); }
+.dep-badge { display:inline-flex; align-items:center; gap:5px; font-size:10px; padding:2px 10px; border-radius:20px; font-family:var(--font-mono); }
+.dep-badge.idle     { background:var(--lw-bg-active); color:var(--lw-text-3); border:1px solid var(--lw-border-md); }
+.dep-badge.building { background:var(--lw-gold-dim); color:var(--lw-gold); border:1px solid rgba(201,168,76,.3); }
+.dep-badge.ready    { background:var(--lw-green-dim); color:var(--lw-green); border:1px solid rgba(58,158,98,.3); }
+.dep-badge.error    { background:var(--lw-red-dim); color:var(--lw-red); border:1px solid rgba(192,57,43,.3); }
+.prog-track { height:2px; background:var(--lw-bg-active); border-radius:2px; overflow:hidden; }
+.prog-fill  { height:100%; background:linear-gradient(90deg,var(--lw-gold-lo),var(--lw-gold),var(--lw-gold-hi)); border-radius:2px; transition:width .5s ease; width:0%; }
+.log-box {
+  background:var(--lw-bg); border:1px solid var(--lw-border);
+  border-radius:var(--r); padding:9px 11px;
+  font-family:var(--font-mono); font-size:10.5px; color:var(--lw-text-3);
+  min-height:76px; max-height:130px; overflow-y:auto; line-height:1.9;
+}
+.log-box::-webkit-scrollbar { width:2px; }
+.log-box::-webkit-scrollbar-thumb { background:var(--lw-border-md); }
+.log-ok   { color:var(--lw-green); }
+.log-warn { color:var(--lw-gold); }
+.log-ts   { color:var(--lw-text-4); }
+
+/* ══════════════════════════════
+   CHART
+══════════════════════════════ */
+.chart-wrap {
+  background:var(--lw-bg); border:1px solid var(--lw-border);
+  border-radius:var(--r); padding:10px;
+  height:108px; display:flex; align-items:flex-end; gap:3px;
+}
+.bar-col { display:flex; flex-direction:column; align-items:center; gap:3px; flex:1; }
+.bar {
+  background:linear-gradient(to top, rgba(201,168,76,.55), rgba(201,168,76,.12));
+  border-radius:2px 2px 0 0; width:100%; min-height:2px;
+  transition:height .5s ease;
+  cursor:pointer;
+}
+.bar:hover { background:linear-gradient(to top, rgba(201,168,76,.85), rgba(201,168,76,.4)); }
+.bar-lbl { font-size:8.5px; color:var(--lw-text-4); font-family:var(--font-mono); }
+
+/* ══════════════════════════════
+   SEO bars / campaign rows
+══════════════════════════════ */
+.seo-row { display:flex; align-items:center; gap:8px; font-size:12px; margin-bottom:7px; }
+.seo-lbl  { color:var(--lw-text-2); min-width:104px; }
+.seo-trk  { flex:1; height:2px; background:var(--lw-bg-active); border-radius:2px; overflow:hidden; }
+.seo-fill { height:100%; border-radius:2px; transition:width .8s ease; }
+.seo-val  { font-family:var(--font-mono); font-size:10px; color:var(--lw-text-3); min-width:26px; text-align:right; }
+
+.c-row { display:flex; align-items:center; gap:9px; padding:9px 11px; background:var(--lw-bg-hover); border-radius:var(--r); margin-bottom:5px; border:1px solid var(--lw-border); }
+.c-dot  { width:7px; height:7px; border-radius:50%; flex-shrink:0; }
+.c-name { flex:1; font-size:12px; color:var(--lw-text); }
+.c-stat { font-family:var(--font-mono); font-size:10px; color:var(--lw-text-2); min-width:52px; text-align:right; }
+.c-badge { font-size:8.5px; padding:2px 7px; border-radius:10px; font-family:var(--font-mono); }
+.c-badge.on  { background:var(--lw-green-dim); color:var(--lw-green); border:1px solid rgba(58,158,98,.25); }
+.c-badge.off { background:var(--lw-bg-active); color:var(--lw-text-3); border:1px solid var(--lw-border-md); }
+
+/* ══════════════════════════════
+   MENU / ORDERS / PROMOS rows
+══════════════════════════════ */
+.row-item { display:flex; align-items:center; gap:9px; padding:9px 11px; background:var(--lw-bg-hover); border-radius:var(--r); margin-bottom:5px; border:1px solid var(--lw-border); }
+.row-item:last-child { margin-bottom:0; }
+.ri-name  { flex:1; font-size:13px; color:var(--lw-text); font-weight:500; }
+.ri-price { font-family:var(--font-mono); font-size:12px; color:var(--lw-gold); }
+.ri-acts  { display:flex; gap:5px; }
+.o-row    { display:flex; align-items:center; gap:9px; padding:7px 11px; border-bottom:1px solid var(--lw-border); font-size:12px; }
+.o-row:last-child { border-bottom:none; }
+.o-row:nth-child(even) { background:var(--lw-bg-hover); }
+.o-id   { font-family:var(--font-mono); color:var(--lw-text-3); min-width:52px; font-size:10px; }
+.o-name { flex:1; color:var(--lw-text); }
+.o-amt  { font-family:var(--font-mono); color:var(--lw-gold); min-width:55px; text-align:right; }
+.o-badge { font-size:8.5px; padding:2px 7px; border-radius:10px; font-family:var(--font-mono); min-width:58px; text-align:center; }
+.o-badge.new  { background:rgba(46,109,164,.15); color:#5da2d5; border:1px solid rgba(46,109,164,.25); }
+.o-badge.prep { background:var(--lw-gold-dim); color:var(--lw-gold); border:1px solid rgba(201,168,76,.25); }
+.o-badge.done { background:var(--lw-green-dim); color:var(--lw-green); border:1px solid rgba(58,158,98,.25); }
+
+/* ── Hours ── */
+.h-row { display:flex; align-items:center; gap:9px; padding:7px 0; border-bottom:1px solid var(--lw-border); }
+.h-row:last-child { border-bottom:none; }
+.h-day  { font-size:12px; color:var(--lw-text-2); min-width:88px; }
+.h-inp  { background:var(--lw-bg); border:1px solid var(--lw-border-md); border-radius:var(--r-sm); padding:4px 9px; font-size:11px; color:var(--lw-text); font-family:var(--font-mono); width:92px; outline:none; }
+.h-inp:focus { border-color:var(--lw-gold); }
+.h-sep  { color:var(--lw-text-4); font-size:10px; }
+
+/* ── Upload zone ── */
+.upload-z {
+  border:1px dashed var(--lw-border-md); border-radius:var(--r);
+  padding:18px; text-align:center; cursor:pointer;
+  color:var(--lw-text-3); font-size:11px;
+  transition:border-color .14s, background .14s;
+}
+.upload-z:hover { border-color:var(--lw-gold); background:var(--lw-gold-dim); color:var(--lw-gold); }
+.upload-z i { font-size:22px; display:block; margin-bottom:5px; }
+.prev-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(72px,1fr)); gap:7px; margin-top:9px; }
+.prev-img  { width:100%; aspect-ratio:1; object-fit:cover; border-radius:var(--r); border:1px solid var(--lw-border); }
+
+/* ── Hist rows ── */
+.hist-row { display:flex; align-items:center; justify-content:space-between; padding:5px 9px; border-radius:var(--r-sm); font-size:11px; }
+.hist-row:nth-child(odd) { background:var(--lw-bg-hover); }
+
+/* ── Tabs ── */
+.tab-bar { display:flex; gap:2px; background:var(--lw-bg-active); padding:3px; border-radius:var(--r); align-self:flex-start; margin-bottom:12px; }
+.tab { padding:4px 13px; font-size:11px; border:none; background:transparent; color:var(--lw-text-3); border-radius:var(--r-sm); cursor:pointer; font-family:var(--font-body); transition:all .13s; }
+.tab.on { background:var(--lw-bg-card); color:var(--lw-gold); border:1px solid var(--lw-border-md); }
+
+/* ── Divider ── */
+.div { height:1px; background:var(--lw-border); margin:12px 0; }
+
+/* ── Reset code inputs ── */
+.code-row { display:flex; gap:6px; }
+.code-dig {
+  width:37px; height:43px; text-align:center;
+  font-size:19px; font-weight:500;
+  background:var(--lw-bg); border:1px solid var(--lw-border-md);
+  border-radius:var(--r); color:var(--lw-text);
+  font-family:var(--font-mono); outline:none;
+  transition:border-color .14s;
+}
+.code-dig:focus { border-color:var(--lw-gold); box-shadow:0 0 0 3px var(--lw-gold-dim); }
+</style>
+</head>
+<body>
+
+<!-- Toast notification -->
+<div class="toast" id="toast">
+  <i id="toast-ic" class="ti ti-circle-check"></i>
+  <span id="toast-tx">Saved</span>
+</div>
+
+<div class="shell">
+
+<!-- ══════════════════════════════
+     SIDEBAR
+══════════════════════════════ -->
+<aside class="sidebar" id="sb">
+  <div class="brand">
+    <!-- Real Lou Wok logo from live site -->
+    <img class="brand-logo" alt="Lou Wok"
+      src="data:image/png;base64,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" 
+      onerror="this.style.display='none'"/>
+    <div class="brand-copy">
+      <div class="brand-name">LOU WOK</div>
+      <div class="brand-sub">Admin Console</div>
+    </div>
+  </div>
+
+  <nav class="nav">
+    <div class="nav-grp">
+      <div class="nav-label">Overview</div>
+      <div class="nav-item active" onclick="goNav('dashboard',this)"><i class="ti ti-layout-dashboard"></i><span class="nav-txt">Dashboard</span></div>
+      <div class="nav-item" onclick="goNav('orders',this)"><i class="ti ti-shopping-bag"></i><span class="nav-txt">Orders</span><span class="nav-badge">3</span></div>
+    </div>
+    <div class="nav-grp">
+      <div class="nav-label">Content</div>
+      <div class="nav-item" onclick="goNav('menu',this)"><i class="ti ti-bowl"></i><span class="nav-txt">Menu</span></div>
+      <div class="nav-item" onclick="goNav('hours',this)"><i class="ti ti-clock"></i><span class="nav-txt">Hours &amp; Info</span></div>
+      <div class="nav-item" onclick="goNav('media',this)"><i class="ti ti-photo"></i><span class="nav-txt">Media</span></div>
+      <div class="nav-item" onclick="goNav('promos',this)"><i class="ti ti-discount"></i><span class="nav-txt">Promos</span></div>
+    </div>
+    <div class="nav-grp">
+      <div class="nav-label">Site</div>
+      <div class="nav-item" onclick="goNav('seo',this)"><i class="ti ti-search"></i><span class="nav-txt">SEO</span></div>
+      <div class="nav-item" onclick="goNav('announce',this)"><i class="ti ti-speakerphone"></i><span class="nav-txt">Announcements</span></div>
+      <div class="nav-item" onclick="goNav('deploy',this)"><i class="ti ti-rocket"></i><span class="nav-txt">Deploy</span></div>
+    </div>
+    <div class="nav-grp">
+      <div class="nav-label">Account</div>
+      <div class="nav-item" onclick="goNav('settings',this)"><i class="ti ti-settings"></i><span class="nav-txt">Settings</span></div>
+      <div class="nav-item" onclick="goNav('reset',this)"><i class="ti ti-lock"></i><span class="nav-txt">Password Reset</span></div>
+    </div>
+  </nav>
+
+  <div class="sb-foot">
+    <span class="live-dot"></span>
+    <span class="sb-foot-txt">louwok.com · live</span>
+    <button class="slim-btn" id="slim-btn" onclick="toggleSlim()" title="Collapse"><i class="ti ti-layout-sidebar-left-collapse" id="slim-ic"></i></button>
+  </div>
+</aside>
+
+<!-- ══════════════════════════════
+     MAIN
+══════════════════════════════ -->
+<div class="main">
+
+  <!-- Topbar -->
+  <header class="topbar">
+    <div class="topbar-l">
+      <span class="pg-title" id="pg-title">DASHBOARD</span>
+      <span class="pg-crumb" id="pg-crumb">louwok.com / admin</span>
+    </div>
+    <div class="topbar-r">
+      <div class="dep-pill">
+        <span class="dpulse idle" id="top-pulse"></span>
+        <span id="top-status">Idle</span>
+      </div>
+      <button class="btn-pub" id="top-pub" onclick="publish()">
+        <i class="ti ti-rocket"></i>PUBLISH LIVE
+      </button>
+    </div>
+  </header>
+
+  <!-- Content -->
+  <main class="content">
+
+    <!-- ─────────────────── DASHBOARD ─────────────────── -->
+    <div class="view active" id="view-dashboard">
+      <div class="g4">
+        <div class="m-card"><div class="m-label">Page Views</div><div class="m-val">2,841</div><div class="m-sub">last 7 days</div><div class="m-up">↑ 12.4% vs prior week</div></div>
+        <div class="m-card"><div class="m-label">Orders Today</div><div class="m-val">6</div><div class="m-sub">online orders</div><div class="m-up">↑ 2 vs yesterday</div></div>
+        <div class="m-card"><div class="m-label">Avg Order</div><div class="m-val">$18</div><div class="m-sub">per transaction</div><div class="m-up">↑ $1.20</div></div>
+        <div class="m-card"><div class="m-label">Google Rating</div><div class="m-val">4.8<span style="font-size:16px">★</span></div><div class="m-sub">156 reviews</div><div class="m-up">↑ 2 new this week</div></div>
+      </div>
+      <div class="g2">
+        <div class="card">
+          <div class="card-head"><div class="card-title"><i class="ti ti-chart-bar"></i>Traffic — 7 Days</div></div>
+          <div class="chart-wrap" id="dash-chart"></div>
+        </div>
+        <div class="card">
+          <div class="card-head"><div class="card-title"><i class="ti ti-activity"></i>Recent Activity</div></div>
+          <div style="display:flex;flex-direction:column;gap:9px">
+            <div style="display:flex;gap:8px;align-items:flex-start"><span style="font-family:var(--font-mono);color:var(--lw-text-4);font-size:10px;flex-shrink:0;margin-top:1px">2m</span><span style="font-size:12px;color:var(--lw-text-2)">New order #1042 — Fried Rice x2, Rangoon x6</span></div>
+            <div style="display:flex;gap:8px;align-items:flex-start"><span style="font-family:var(--font-mono);color:var(--lw-text-4);font-size:10px;flex-shrink:0;margin-top:1px">9m</span><span style="font-size:12px;color:var(--lw-text-2)">Menu saved — St Paul Sandwich updated</span></div>
+            <div style="display:flex;gap:8px;align-items:flex-start"><span style="font-family:var(--font-mono);color:var(--lw-text-4);font-size:10px;flex-shrink:0;margin-top:1px">1h</span><span style="font-size:12px;color:var(--lw-text-2)">Deploy published — all regions live</span></div>
+            <div style="display:flex;gap:8px;align-items:flex-start"><span style="font-family:var(--font-mono);color:var(--lw-text-4);font-size:10px;flex-shrink:0;margin-top:1px">3h</span><span style="font-size:12px;color:var(--lw-text-2)">★★★★★ "Best fried rice in Phoenix"</span></div>
+            <div style="display:flex;gap:8px;align-items:flex-start"><span style="font-family:var(--font-mono);color:var(--lw-text-4);font-size:10px;flex-shrink:0;margin-top:1px">5h</span><span style="font-size:12px;color:var(--lw-text-2)">Hours updated — Sunday close changed</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="g3">
+        <div class="card">
+          <div class="card-head"><div class="card-title"><i class="ti ti-device-mobile"></i>Devices</div></div>
+          <div class="seo-row"><div class="seo-lbl">Mobile</div><div class="seo-trk"><div class="seo-fill" style="width:68%;background:var(--lw-gold)"></div></div><div class="seo-val">68%</div></div>
+          <div class="seo-row"><div class="seo-lbl">Desktop</div><div class="seo-trk"><div class="seo-fill" style="width:26%;background:var(--lw-text-3)"></div></div><div class="seo-val">26%</div></div>
+          <div class="seo-row"><div class="seo-lbl">Tablet</div><div class="seo-trk"><div class="seo-fill" style="width:6%;background:var(--lw-text-4)"></div></div><div class="seo-val">6%</div></div>
+        </div>
+        <div class="card">
+          <div class="card-head"><div class="card-title"><i class="ti ti-map-pin"></i>Top Cities</div></div>
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <div style="display:flex;justify-content:space-between;font-size:12px"><span style="color:var(--lw-text-2)">Phoenix</span><span style="font-family:var(--font-mono);color:var(--lw-gold)">58%</span></div>
+            <div style="display:flex;justify-content:space-between;font-size:12px"><span style="color:var(--lw-text-2)">Scottsdale</span><span style="font-family:var(--font-mono);color:var(--lw-text-3)">14%</span></div>
+            <div style="display:flex;justify-content:space-between;font-size:12px"><span style="color:var(--lw-text-2)">Tempe</span><span style="font-family:var(--font-mono);color:var(--lw-text-3)">11%</span></div>
+            <div style="display:flex;justify-content:space-between;font-size:12px"><span style="color:var(--lw-text-2)">Mesa</span><span style="font-family:var(--font-mono);color:var(--lw-text-3)">9%</span></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-head"><div class="card-title"><i class="ti ti-rocket"></i>Last Deploy</div></div>
+          <div style="font-size:12px;line-height:1.9">
+            <div style="color:var(--lw-text-2)">Status: <span style="color:var(--lw-green);font-family:var(--font-mono)">Ready ✓</span></div>
+            <div id="dash-pub-time" style="color:var(--lw-text-2)">Published: <span style="color:var(--lw-text-3)">—</span></div>
+            <div style="color:var(--lw-text-2)">Target: <span style="color:var(--lw-text-3);font-family:var(--font-mono)">louwok.com</span></div>
+          </div>
+          <div class="btn-row"><button class="btn-sec-pub" onclick="publish()"><i class="ti ti-rocket" style="font-size:14px"></i>PUBLISH NOW</button></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─────────────────── ORDERS ─────────────────── -->
+    <div class="view" id="view-orders">
+      <div class="g3">
+        <div class="m-card"><div class="m-label">Today</div><div class="m-val">6</div><div class="m-sub">orders placed</div></div>
+        <div class="m-card"><div class="m-label">Revenue</div><div class="m-val">$108</div><div class="m-sub">today total</div></div>
+        <div class="m-card"><div class="m-label">Pending</div><div class="m-val">3</div><div class="m-sub">need prep</div></div>
+      </div>
+      <div class="card">
+        <div class="card-head"><div class="card-title"><i class="ti ti-shopping-bag"></i>Live Orders</div><button class="btn btn-outline" style="height:27px;font-size:11px" onclick="toast('Orders refreshed','info')"><i class="ti ti-refresh" style="font-size:12px"></i>Refresh</button></div>
+        <div class="o-row"><span class="o-id">#1042</span><span class="o-name">Fried Rice x2, Crab Rangoon x6</span><span class="o-amt">$24.50</span><span class="o-badge new">New</span></div>
+        <div class="o-row"><span class="o-id">#1041</span><span class="o-name">St Paul Sandwich, Egg Roll</span><span class="o-amt">$16.00</span><span class="o-badge prep">Prepping</span></div>
+        <div class="o-row"><span class="o-id">#1040</span><span class="o-name">Lo Mein x2, Spring Rolls x4</span><span class="o-amt">$29.00</span><span class="o-badge prep">Prepping</span></div>
+        <div class="o-row"><span class="o-id">#1039</span><span class="o-name">Fried Rice, Wings</span><span class="o-amt">$18.75</span><span class="o-badge done">Done</span></div>
+        <div class="o-row"><span class="o-id">#1038</span><span class="o-name">Combo Plate x2</span><span class="o-amt">$19.50</span><span class="o-badge done">Done</span></div>
+        <div class="btn-row"><button class="btn btn-outline"><i class="ti ti-download"></i>Export CSV</button></div>
+      </div>
+    </div>
+
+    <!-- ─────────────────── MENU ─────────────────── -->
+    <div class="view" id="view-menu">
+      <div class="card">
+        <div class="card-head"><div class="card-title"><i class="ti ti-bowl"></i>Menu Items</div><button class="btn btn-outline" style="height:27px;font-size:11px" onclick="openMenuEdit(null)"><i class="ti ti-plus" style="font-size:13px"></i>Add Item</button></div>
+        <div id="menu-list">
+          <div class="row-item"><span class="ri-name">St. Louis Fried Rice</span><span class="ri-price">$12.99</span><div class="ri-acts"><button class="btn btn-ghost" style="height:26px;padding:0 7px" onclick="openMenuEdit(this.closest('.row-item'))"><i class="ti ti-edit" style="font-size:13px"></i></button><button class="btn btn-danger" style="height:26px;padding:0 7px" onclick="delItem(this)"><i class="ti ti-trash" style="font-size:13px"></i></button></div></div>
+          <div class="row-item"><span class="ri-name">Crab Rangoon (6pc)</span><span class="ri-price">$7.99</span><div class="ri-acts"><button class="btn btn-ghost" style="height:26px;padding:0 7px" onclick="openMenuEdit(this.closest('.row-item'))"><i class="ti ti-edit" style="font-size:13px"></i></button><button class="btn btn-danger" style="height:26px;padding:0 7px" onclick="delItem(this)"><i class="ti ti-trash" style="font-size:13px"></i></button></div></div>
+          <div class="row-item"><span class="ri-name">St. Paul Sandwich</span><span class="ri-price">$9.99</span><div class="ri-acts"><button class="btn btn-ghost" style="height:26px;padding:0 7px" onclick="openMenuEdit(this.closest('.row-item'))"><i class="ti ti-edit" style="font-size:13px"></i></button><button class="btn btn-danger" style="height:26px;padding:0 7px" onclick="delItem(this)"><i class="ti ti-trash" style="font-size:13px"></i></button></div></div>
+          <div class="row-item"><span class="ri-name">Lo Mein</span><span class="ri-price">$11.99</span><div class="ri-acts"><button class="btn btn-ghost" style="height:26px;padding:0 7px" onclick="openMenuEdit(this.closest('.row-item'))"><i class="ti ti-edit" style="font-size:13px"></i></button><button class="btn btn-danger" style="height:26px;padding:0 7px" onclick="delItem(this)"><i class="ti ti-trash" style="font-size:13px"></i></button></div></div>
+          <div class="row-item"><span class="ri-name">Egg Rolls (3pc)</span><span class="ri-price">$5.99</span><div class="ri-acts"><button class="btn btn-ghost" style="height:26px;padding:0 7px" onclick="openMenuEdit(this.closest('.row-item'))"><i class="ti ti-edit" style="font-size:13px"></i></button><button class="btn btn-danger" style="height:26px;padding:0 7px" onclick="delItem(this)"><i class="ti ti-trash" style="font-size:13px"></i></button></div></div>
+          <div class="row-item"><span class="ri-name">Wings (8pc)</span><span class="ri-price">$10.99</span><div class="ri-acts"><button class="btn btn-ghost" style="height:26px;padding:0 7px" onclick="openMenuEdit(this.closest('.row-item'))"><i class="ti ti-edit" style="font-size:13px"></i></button><button class="btn btn-danger" style="height:26px;padding:0 7px" onclick="delItem(this)"><i class="ti ti-trash" style="font-size:13px"></i></button></div></div>
+        </div>
+      </div>
+      <div class="card" id="menu-form" style="display:none">
+        <div class="card-head"><div class="card-title"><i class="ti ti-edit"></i><span id="menu-form-title">Edit Item</span></div><button class="btn btn-ghost" style="height:26px;padding:0 7px" onclick="closeMenuForm()"><i class="ti ti-x"></i></button></div>
+        <div class="g2"><div class="field"><div class="f-label">Name</div><input class="f-input" id="mi-name" placeholder="e.g. Fried Rice"/></div><div class="field"><div class="f-label">Price</div><input class="f-input" id="mi-price" placeholder="$0.00"/></div></div>
+        <div class="field"><div class="f-label">Description</div><textarea class="f-textarea" id="mi-desc" placeholder="Short description…"></textarea></div>
+        <div class="field"><div class="f-label">Category</div><select class="f-select" id="mi-cat"><option>Rice</option><option>Appetizers</option><option>Sandwiches</option><option>Noodles</option><option>Wings</option><option>Drinks</option></select></div>
+        <div class="f-toggle"><span class="f-toggle-label">Available</span><div class="toggle on" id="mi-avail" onclick="this.classList.toggle('on')"></div></div>
+        <div id="menu-msg" class="msg"></div>
+        <div class="btn-row">
+          <button class="btn-sec-pub" onclick="saveMenuItem()"><i class="ti ti-check" style="font-size:13px"></i>SAVE ITEM</button>
+          <button class="btn-sec-pub" onclick="saveAndPublish('menu')" style="background:var(--lw-gold-hi)"><i class="ti ti-rocket" style="font-size:13px"></i>SAVE &amp; PUBLISH</button>
+          <button class="btn btn-outline" onclick="closeMenuForm()">Cancel</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─────────────────── HOURS & INFO ─────────────────── -->
+    <div class="view" id="view-hours">
+      <div class="g2">
+        <div class="card">
+          <div class="card-head"><div class="card-title"><i class="ti ti-clock"></i>Hours of Operation</div></div>
+          <div id="hours-tbl">
+            <div class="h-row"><span class="h-day">Monday</span><input class="h-inp" value="11:00 AM"/><span class="h-sep">–</span><input class="h-inp" value="9:00 PM"/></div>
+            <div class="h-row"><span class="h-day">Tuesday</span><input class="h-inp" value="11:00 AM"/><span class="h-sep">–</span><input class="h-inp" value="9:00 PM"/></div>
+            <div class="h-row"><span class="h-day">Wednesday</span><input class="h-inp" value="11:00 AM"/><span class="h-sep">–</span><input class="h-inp" value="9:00 PM"/></div>
+            <div class="h-row"><span class="h-day">Thursday</span><input class="h-inp" value="11:00 AM"/><span class="h-sep">–</span><input class="h-inp" value="9:00 PM"/></div>
+            <div class="h-row"><span class="h-day">Friday</span><input class="h-inp" value="11:00 AM"/><span class="h-sep">–</span><input class="h-inp" value="10:00 PM"/></div>
+            <div class="h-row"><span class="h-day">Saturday</span><input class="h-inp" value="11:00 AM"/><span class="h-sep">–</span><input class="h-inp" value="10:00 PM"/></div>
+            <div class="h-row"><span class="h-day">Sunday</span><input class="h-inp" value="12:00 PM"/><span class="h-sep">–</span><input class="h-inp" value="8:00 PM"/></div>
+          </div>
+          <div id="hours-msg" class="msg"></div>
+          <div class="btn-row">
+            <button class="btn-sec-pub" onclick="saveHours()"><i class="ti ti-check" style="font-size:13px"></i>SAVE HOURS</button>
+            <button class="btn-sec-pub" onclick="saveAndPublish('hours')" style="background:var(--lw-gold-hi)"><i class="ti ti-rocket" style="font-size:13px"></i>SAVE &amp; PUBLISH</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-head"><div class="card-title"><i class="ti ti-map-pin"></i>Restaurant Info</div></div>
+          <div class="field"><div class="f-label">Name</div><input class="f-input" value="Lou Wok Rice House"/></div>
+          <div class="field"><div class="f-label">Address</div><input class="f-input" value="Phoenix, AZ"/></div>
+          <div class="field"><div class="f-label">Phone</div><input class="f-input" placeholder="(602) 555-0000"/></div>
+          <div class="field"><div class="f-label">Email</div><input class="f-input" placeholder="info@louwok.com"/></div>
+          <div class="field"><div class="f-label">Order Link</div><input class="f-input" placeholder="https://order.louwok.com"/></div>
+          <div class="f-toggle"><span class="f-toggle-label">Online Ordering</span><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
+          <div class="f-toggle"><span class="f-toggle-label">Pickup Available</span><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
+          <div class="f-toggle"><span class="f-toggle-label">Delivery Available</span><div class="toggle" onclick="this.classList.toggle('on')"></div></div>
+          <div class="btn-row">
+            <button class="btn-sec-pub" onclick="toast('Info saved','ok')"><i class="ti ti-check" style="font-size:13px"></i>SAVE INFO</button>
+            <button class="btn-sec-pub" onclick="saveAndPublish('info')" style="background:var(--lw-gold-hi)"><i class="ti ti-rocket" style="font-size:13px"></i>SAVE &amp; PUBLISH</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─────────────────── MEDIA ─────────────────── -->
+    <div class="view" id="view-media">
+      <div class="card">
+        <div class="card-head"><div class="card-title"><i class="ti ti-photo"></i>Site Images</div></div>
+        <div class="field"><div class="f-label">Hero Image</div><div class="upload-z" onclick="document.getElementById('f-hero').click()"><i class="ti ti-cloud-upload"></i>Click to upload hero image<br><span style="font-size:9px">PNG, JPG, WebP — max 4 MB</span></div><input type="file" id="f-hero" accept="image/*" style="display:none" onchange="prevImg(this,'prev-hero')"/><div id="prev-hero" class="prev-grid"></div></div>
+        <div class="field"><div class="f-label">Menu Photos</div><div class="upload-z" onclick="document.getElementById('f-menu').click()"><i class="ti ti-cloud-upload"></i>Upload menu item photos — multiple OK</div><input type="file" id="f-menu" accept="image/*" multiple style="display:none" onchange="prevImg(this,'prev-menu')"/><div id="prev-menu" class="prev-grid"></div></div>
+        <div class="field"><div class="f-label">OG / Social Image</div><div class="upload-z" onclick="document.getElementById('f-og').click()"><i class="ti ti-cloud-upload"></i>1200 × 630 px recommended</div><input type="file" id="f-og" accept="image/*" style="display:none" onchange="prevImg(this,'prev-og')"/><div id="prev-og" class="prev-grid"></div></div>
+        <div class="btn-row">
+          <button class="btn-sec-pub" onclick="toast('Media saved','ok')"><i class="ti ti-check" style="font-size:13px"></i>SAVE MEDIA</button>
+          <button class="btn-sec-pub" onclick="saveAndPublish('media')" style="background:var(--lw-gold-hi)"><i class="ti ti-rocket" style="font-size:13px"></i>SAVE &amp; PUBLISH</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─────────────────── PROMOS ─────────────────── -->
+    <div class="view" id="view-promos">
+      <div class="card">
+        <div class="card-head"><div class="card-title"><i class="ti ti-discount"></i>Promo Codes</div><button class="btn btn-outline" style="height:27px;font-size:11px" onclick="showPromoForm()"><i class="ti ti-plus" style="font-size:13px"></i>New Promo</button></div>
+        <div id="promo-list">
+          <div class="row-item"><span class="ri-name" style="font-family:var(--font-mono);font-size:13px">WELCOME10</span><span class="ri-price">10% off</span><span style="font-size:10px;color:var(--lw-text-3);font-family:var(--font-mono)">42 uses</span><div class="ri-acts"><button class="btn btn-danger" style="height:26px;padding:0 7px" onclick="delItem(this)"><i class="ti ti-trash" style="font-size:13px"></i></button></div></div>
+          <div class="row-item"><span class="ri-name" style="font-family:var(--font-mono);font-size:13px">STLRIBS</span><span class="ri-price">$5 off $25+</span><span style="font-size:10px;color:var(--lw-text-3);font-family:var(--font-mono)">18 uses</span><div class="ri-acts"><button class="btn btn-danger" style="height:26px;padding:0 7px" onclick="delItem(this)"><i class="ti ti-trash" style="font-size:13px"></i></button></div></div>
+          <div class="row-item"><span class="ri-name" style="font-family:var(--font-mono);font-size:13px">FREEEGG</span><span class="ri-price">Free egg roll</span><span style="font-size:10px;color:var(--lw-text-3);font-family:var(--font-mono)">7 uses</span><div class="ri-acts"><button class="btn btn-danger" style="height:26px;padding:0 7px" onclick="delItem(this)"><i class="ti ti-trash" style="font-size:13px"></i></button></div></div>
+        </div>
+        <div id="promo-form" style="display:none;padding-top:13px;margin-top:13px;border-top:1px solid var(--lw-border)">
+          <div class="g2"><div class="field"><div class="f-label">Code</div><input class="f-input" id="pc-code" placeholder="SAVE15"/></div><div class="field"><div class="f-label">Discount</div><input class="f-input" id="pc-disc" placeholder="15% off"/></div></div>
+          <div class="field"><div class="f-label">Expiry</div><input class="f-input" id="pc-exp" type="date"/></div>
+          <div class="btn-row">
+            <button class="btn-sec-pub" onclick="savePromo()"><i class="ti ti-plus" style="font-size:13px"></i>ADD PROMO</button>
+            <button class="btn-sec-pub" onclick="saveAndPublish('promos')" style="background:var(--lw-gold-hi)"><i class="ti ti-rocket" style="font-size:13px"></i>SAVE &amp; PUBLISH</button>
+            <button class="btn btn-outline" onclick="hidePromoForm()">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─────────────────── SEO ─────────────────── -->
+    <div class="view" id="view-seo">
+      <div class="g2">
+        <div class="card">
+          <div class="card-head"><div class="card-title"><i class="ti ti-search"></i>Meta Tags</div></div>
+          <div class="field"><div class="f-label">Page Title</div><input class="f-input" value="Lou Wok Rice House — Phoenix, AZ"/></div>
+          <div class="field"><div class="f-label">Meta Description</div><textarea class="f-textarea" style="min-height:66px">St. Louis-style fried rice, crab rangoon, and the legendary St. Paul sandwich — now in Phoenix, AZ. Lou Wok brings North STL rice house flavor to the Valley.</textarea></div>
+          <div class="field"><div class="f-label">OG Title</div><input class="f-input" value="Lou Wok Rice House — Phoenix, AZ"/></div>
+          <div class="field"><div class="f-label">Keywords</div><input class="f-input" value="fried rice phoenix, crab rangoon, st paul sandwich, lou wok"/></div>
+          <div class="btn-row">
+            <button class="btn-sec-pub" onclick="toast('SEO saved','ok')"><i class="ti ti-check" style="font-size:13px"></i>SAVE SEO</button>
+            <button class="btn-sec-pub" onclick="saveAndPublish('seo')" style="background:var(--lw-gold-hi)"><i class="ti ti-rocket" style="font-size:13px"></i>SAVE &amp; PUBLISH</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-head"><div class="card-title"><i class="ti ti-chart-line"></i>SEO Health</div></div>
+          <div class="seo-row"><div class="seo-lbl">Performance</div><div class="seo-trk"><div class="seo-fill" style="width:91%;background:var(--lw-green)"></div></div><div class="seo-val">91</div></div>
+          <div class="seo-row"><div class="seo-lbl">Accessibility</div><div class="seo-trk"><div class="seo-fill" style="width:88%;background:var(--lw-green)"></div></div><div class="seo-val">88</div></div>
+          <div class="seo-row"><div class="seo-lbl">Best Practices</div><div class="seo-trk"><div class="seo-fill" style="width:78%;background:var(--lw-gold)"></div></div><div class="seo-val">78</div></div>
+          <div class="seo-row"><div class="seo-lbl">SEO Score</div><div class="seo-trk"><div class="seo-fill" style="width:87%;background:var(--lw-green)"></div></div><div class="seo-val">87</div></div>
+          <div class="div"></div>
+          <div style="font-size:8.5px;letter-spacing:2.5px;text-transform:uppercase;color:var(--lw-text-3);font-family:var(--font-mono);margin-bottom:8px">Search Rankings</div>
+          <div style="display:flex;flex-direction:column;gap:5px">
+            <div style="display:flex;justify-content:space-between;font-size:12px"><span style="color:var(--lw-text-2)">lou wok phoenix</span><span style="font-family:var(--font-mono);color:var(--lw-green)">#1</span></div>
+            <div style="display:flex;justify-content:space-between;font-size:12px"><span style="color:var(--lw-text-2)">st louis fried rice phoenix</span><span style="font-family:var(--font-mono);color:var(--lw-green)">#2</span></div>
+            <div style="display:flex;justify-content:space-between;font-size:12px"><span style="color:var(--lw-text-2)">crab rangoon phoenix</span><span style="font-family:var(--font-mono);color:var(--lw-gold)">#4</span></div>
+            <div style="display:flex;justify-content:space-between;font-size:12px"><span style="color:var(--lw-text-2)">st paul sandwich phoenix</span><span style="font-family:var(--font-mono);color:var(--lw-gold)">#6</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─────────────────── ANNOUNCEMENTS ─────────────────── -->
+    <div class="view" id="view-announce">
+      <div class="g2">
+        <div class="card">
+          <div class="card-head"><div class="card-title"><i class="ti ti-speakerphone"></i>Site Banner</div></div>
+          <div class="f-toggle" style="margin-bottom:10px"><span class="f-toggle-label">Show Banner</span><div class="toggle" id="banner-tog" onclick="this.classList.toggle('on')"></div></div>
+          <div class="field"><div class="f-label">Message</div><input class="f-input" placeholder="e.g. Now open Sundays! 🎉 Order online for pickup."/></div>
+          <div class="field"><div class="f-label">Style</div><select class="f-select"><option>Gold (brand)</option><option>Red (urgent)</option><option>Green (promo)</option></select></div>
+          <div class="btn-row">
+            <button class="btn-sec-pub" onclick="toast('Banner saved','ok')"><i class="ti ti-check" style="font-size:13px"></i>SAVE</button>
+            <button class="btn-sec-pub" onclick="saveAndPublish('banner')" style="background:var(--lw-gold-hi)"><i class="ti ti-rocket" style="font-size:13px"></i>SAVE &amp; PUBLISH</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-head"><div class="card-title"><i class="ti ti-calendar"></i>Special Hours</div></div>
+          <div class="field"><div class="f-label">Date</div><input class="f-input" type="date"/></div>
+          <div class="g2"><div class="field"><div class="f-label">Open</div><input class="f-input" placeholder="12:00 PM"/></div><div class="field"><div class="f-label">Close</div><input class="f-input" placeholder="Closed"/></div></div>
+          <div class="field"><div class="f-label">Note</div><input class="f-input" placeholder="e.g. Christmas Eve — closing early"/></div>
+          <div class="btn-row">
+            <button class="btn-sec-pub" onclick="toast('Special hours saved','ok')"><i class="ti ti-plus" style="font-size:13px"></i>ADD</button>
+            <button class="btn-sec-pub" onclick="saveAndPublish('special')" style="background:var(--lw-gold-hi)"><i class="ti ti-rocket" style="font-size:13px"></i>SAVE &amp; PUBLISH</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─────────────────── DEPLOY ─────────────────── -->
+    <div class="view" id="view-deploy">
+      <div class="dep-card">
+        <div class="card-title" style="margin-bottom:2px"><i class="ti ti-rocket"></i>Publish to Production</div>
+        <div class="dep-row"><span class="dep-row-lbl">Status</span><span class="dep-badge idle" id="dep-badge"><span class="dpulse idle" id="dep-pulse"></span><span id="dep-badge-txt">Idle</span></span></div>
+        <div style="display:flex;flex-direction:column;gap:4px"><div class="dep-row"><span class="dep-row-lbl">Progress</span><span id="dep-pct" style="font-size:10px;font-family:var(--font-mono);color:var(--lw-text-3)">—</span></div><div class="prog-track"><div class="prog-fill" id="dep-prog"></div></div></div>
+        <div class="dep-row"><span class="dep-row-lbl">Last published</span><span id="dep-last" style="font-size:11px;font-family:var(--font-mono);color:var(--lw-text-3)">Never</span></div>
+        <div class="dep-row"><span class="dep-row-lbl">Target</span><span style="font-size:10px;font-family:var(--font-mono);color:var(--lw-text-3)">louwok.com → Vercel edge · all regions</span></div>
+        <div class="log-box" id="dep-log"><span style="color:var(--lw-text-4)">Awaiting deploy…</span></div>
+        <div id="dep-msg" class="msg"></div>
+        <div class="btn-row">
+          <button class="btn-pub" id="dep-btn" onclick="publish()"><i class="ti ti-rocket"></i>PUBLISH LIVE NOW</button>
+          <button class="btn btn-outline" onclick="document.getElementById('dep-log').innerHTML='<span style=\'color:var(--lw-text-4)\'>Log cleared.</span>'"><i class="ti ti-eraser"></i>Clear</button>
+        </div>
+      </div>
+      <div class="card"><div class="card-head"><div class="card-title"><i class="ti ti-history"></i>Deploy History</div></div><div id="dep-hist"><span style="font-size:11px;color:var(--lw-text-3);font-family:var(--font-mono)">No deploys yet.</span></div></div>
+    </div>
+
+    <!-- ─────────────────── SETTINGS ─────────────────── -->
+    <div class="view" id="view-settings">
+      <div class="g2">
+        <div class="card">
+          <div class="card-head"><div class="card-title"><i class="ti ti-palette"></i>Theme</div></div>
+          <div class="field"><div class="f-label">Accent Color</div><input class="f-input" type="color" value="#c9a84c" style="height:38px;cursor:pointer"/></div>
+          <div class="f-toggle"><span class="f-toggle-label">Dark Mode</span><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
+          <div class="f-toggle"><span class="f-toggle-label">Show Banner</span><div class="toggle" onclick="this.classList.toggle('on')"></div></div>
+          <div class="btn-row">
+            <button class="btn-sec-pub" onclick="toast('Settings saved','ok')"><i class="ti ti-check" style="font-size:13px"></i>SAVE</button>
+            <button class="btn-sec-pub" onclick="saveAndPublish('settings')" style="background:var(--lw-gold-hi)"><i class="ti ti-rocket" style="font-size:13px"></i>SAVE &amp; PUBLISH</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-head"><div class="card-title"><i class="ti ti-plug"></i>Integrations</div></div>
+          <div class="field"><div class="f-label">GA4 Measurement ID</div><input class="f-input" value="G-KN8SKS7118"/></div>
+          <div class="field"><div class="f-label">Google Maps API Key</div><input class="f-input" placeholder="AIza…"/></div>
+          <div class="field"><div class="f-label">Order Platform URL</div><input class="f-input" placeholder="https://…"/></div>
+          <div class="field"><div class="f-label">Vercel Deploy Hook</div><input class="f-input" placeholder="https://api.vercel.com/…"/></div>
+          <div class="btn-row"><button class="btn-sec-pub" onclick="toast('Integrations saved','ok')"><i class="ti ti-check" style="font-size:13px"></i>SAVE</button></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─────────────────── RESET ─────────────────── -->
+    <div class="view" id="view-reset">
+      <div class="g2">
+        <div class="card">
+          <div class="card-head"><div class="card-title"><i class="ti ti-mail"></i>Password Reset</div></div>
+          <div id="rs0">
+            <div class="field"><div class="f-label">Email Address</div><input class="f-input" id="rs-email" type="email" placeholder="user@louwok.com"/></div>
+            <div id="rs-msg0" class="msg"></div>
+            <div class="btn-row"><butto
