@@ -1684,70 +1684,81 @@ async function pubSite() {
   const entry = {time:new Date().toLocaleTimeString(),ok:false,msg:''};
   PL.unshift(entry); if(PL.length>20) PL.pop();
 
-  // Helper: XHR-based request (works on all browsers including Safari file://)
-  function xhrReq(method, url, headers, body) {
-    return new Promise(function(ok,err) {
+  // XHR helper — works in all browsers including Safari on file://
+  function ghReq(method, path, body) {
+    return new Promise(function(resolve, reject) {
       var r = new XMLHttpRequest();
-      r.open(method, url, true);
-      Object.keys(headers).forEach(k => r.setRequestHeader(k, headers[k]));
+      r.open(method, 'https://api.github.com/repos/'+GH_OWNER+'/'+GH_REPO+path, true);
+      r.setRequestHeader('Authorization', 'token '+tok);
+      r.setRequestHeader('Accept', 'application/vnd.github.v3+json');
+      if (body) r.setRequestHeader('Content-Type', 'application/json');
       r.timeout = 30000;
       r.onload = function() {
         if (r.status >= 200 && r.status < 300) {
-          try { ok(JSON.parse(r.responseText)); } catch(e) { ok({}); }
+          try { resolve(JSON.parse(r.responseText)); } catch(e) { resolve({}); }
         } else {
-          var msg = 'HTTP '+r.status;
-          try { msg = JSON.parse(r.responseText).message || msg; } catch(e){}
-          if (r.status===401) msg = 'Token invalid or expired — re-enter in Deploy tab';
-          if (r.status===403) msg = 'Token missing repo permission';
-          if (r.status===404) msg = 'File not found in repo';
-          if (r.status===422) msg = 'SHA mismatch — try publishing again';
-          err(new Error(msg));
+          var msg = 'HTTP ' + r.status;
+          try { msg = JSON.parse(r.responseText).message || msg; } catch(e) {}
+          if (r.status === 401) msg = 'Token invalid or expired — go to Deploy tab and re-enter your token';
+          if (r.status === 403) msg = 'Token missing repo permission — regenerate with repo scope';
+          if (r.status === 404) msg = 'File not found — check repo name in Deploy tab';
+          reject(new Error(msg));
         }
       };
-      r.onerror = () => err(new Error('Network error — check internet connection'));
-      r.ontimeout = () => err(new Error('Request timed out — try again'));
+      r.onerror   = function() { reject(new Error('Network error — check internet connection')); };
+      r.ontimeout = function() { reject(new Error('Request timed out — try again')); };
       r.send(body ? JSON.stringify(body) : null);
     });
+  }
+
+  // Attempt commit with up to 2 retries on SHA mismatch (422)
+  async function attemptCommit(encoded, attempt) {
+    attempt = attempt || 1;
+    setDep('pub', 'Fetching latest SHA (attempt '+attempt+')...');
+
+    // Always fetch a FRESH SHA immediately before committing
+    var shaData = await ghReq('GET', '/contents/'+GH_FILE+'?ref='+GH_BRANCH+'&t='+Date.now(), null);
+    var currentSha = shaData.sha;
+
+    setDep('pub', 'Committing to GitHub...');
+    try {
+      var result = await ghReq('PUT', '/contents/'+GH_FILE, {
+        message: 'Admin publish — ' + new Date().toLocaleString() + ' | ' + MD.length + ' items',
+        content:  encoded,
+        sha:      currentSha,
+        branch:   GH_BRANCH
+      });
+      return result;
+    } catch(e) {
+      // 422 = SHA mismatch — another commit happened between our GET and PUT
+      // Retry automatically up to 2 times
+      if (e.message && (e.message.indexOf('does not match') !== -1 || e.message.indexOf('SHA') !== -1 || e.message.indexOf('422') !== -1) && attempt < 3) {
+        setDep('pub', 'SHA changed — retrying ('+(attempt+1)+'/3)...');
+        await new Promise(function(r){ setTimeout(r, 800); }); // wait 800ms
+        return attemptCommit(encoded, attempt + 1);
+      }
+      throw e;
+    }
   }
 
   return new Promise(async function(res, rej) {
     try {
       const content = buildIdx();
       if (!content) throw new Error('Failed to build index.html — check template');
-
       const encoded = btoa(unescape(encodeURIComponent(content)));
-      const GH_HEADERS = {
-        'Authorization': 'token ' + tok,
-        'Accept': 'application/vnd.github.v3+json',
-      };
 
-      setDep('pub','Fetching current file SHA...');
-      const shaData = await xhrReq('GET',
-        'https://api.github.com/repos/'+GH_OWNER+'/'+GH_REPO+'/contents/'+GH_FILE+'?ref='+GH_BRANCH,
-        GH_HEADERS, null
-      );
+      var commitData = await attemptCommit(encoded, 1);
+      var commitSha = commitData.commit && commitData.commit.sha
+        ? commitData.commit.sha.slice(0,8) : 'ok';
 
-      setDep('pub','Committing to GitHub...');
-      const commitData = await xhrReq('PUT',
-        'https://api.github.com/repos/'+GH_OWNER+'/'+GH_REPO+'/contents/'+GH_FILE,
-        Object.assign({}, GH_HEADERS, {'Content-Type':'application/json'}),
-        {
-          message: 'Admin publish — ' + new Date().toLocaleString() + ' | ' + MD.length + ' items',
-          content: encoded,
-          sha: shaData.sha,
-          branch: GH_BRANCH
-        }
-      );
-
-      const commitSha = commitData.commit && commitData.commit.sha ? commitData.commit.sha.slice(0,8) : 'ok';
       unsaved = false;
       setDep('saved','✅ Published ('+commitSha+') — louwok.com live in ~30s');
       setFab('saved');
-      const ls = document.getElementById('lsaved');
+      var ls = document.getElementById('lsaved');
       if (ls) ls.textContent = 'Published ' + new Date().toLocaleTimeString();
-      entry.ok = true;
+      entry.ok  = true;
       entry.msg = 'Commit ' + commitSha + ' — ' + MD.length + ' items';
-      addLog('PUBLISH', MD.length + ' items → commit ' + commitSha);
+      addLog('PUBLISH', MD.length + ' items → ' + commitSha);
       toast('🎉 Published! Vercel deploying now (~30s)','s');
       renderLog();
       document.querySelectorAll('[onclick*="pubSite"]').forEach(b=>{b.disabled=false;b.innerHTML='🚀 Publish';});
@@ -1756,7 +1767,7 @@ async function pubSite() {
       setDep('unsaved','❌ Publish failed — '+e.message);
       setFab('err');
       entry.msg = e.message;
-      toast('❌ Publish failed: '+e.message,'e');
+      toast('❌ '+e.message,'e');
       renderLog();
       document.querySelectorAll('[onclick*="pubSite"]').forEach(b=>{b.disabled=false;b.innerHTML='🚀 Publish';});
       rej(e);
