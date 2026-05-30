@@ -964,7 +964,7 @@ body::before{
 <div class="toast" id="toast"></div>
 
 <!-- CONFIRM MODAL -->
-<div class="moverlay" id="modal">
+<div class="moverlay" id="modal" style="display:none;">
   <div class="mbox">
     <div class="mic" id="m-ic">🗑️</div>
     <div class="mtt" id="m-tt">Are you sure?</div>
@@ -1374,14 +1374,28 @@ function saveItemSilent() {
   item.em=document.getElementById('e-em').value||'🍚';
 }
 function delItem() {
-  if(!selId) return; const idx=MD.findIndex(i=>i.id===selId); if(idx<0) return;
-  openMod('Delete "'+MD[idx].name+'"?','Removes it from the live menu permanently.','Delete',()=>{
-    MD.splice(idx,1); selId=null;
-    document.getElementById('eform').style.opacity='0.3';
-    document.getElementById('eform').style.pointerEvents='none';
-    document.getElementById('etitle').textContent='Select an item';
-    renderMenuList(); toast('Deleted — publishing...','s'); pubSite();
-  });
+  if (!selId) { toast('Select an item first','e'); return; }
+  const idx = MD.findIndex(i => i.id === selId);
+  if (idx < 0) { toast('Item not found','e'); return; }
+  const itemName = MD[idx].name;
+  const itemId   = MD[idx].id;
+  openMod(
+    'Delete "' + itemName + '"?',
+    'This removes it from the live menu permanently.',
+    'Delete',
+    function() {
+      const removeIdx = MD.findIndex(i => i.id === itemId);
+      if (removeIdx >= 0) MD.splice(removeIdx, 1);
+      selId = null;
+      const ef = document.getElementById('eform');
+      if (ef) { ef.style.opacity='0.3'; ef.style.pointerEvents='none'; }
+      const et = document.getElementById('etitle');
+      if (et) et.textContent = 'Select an item';
+      renderMenuList();
+      toast('✅ "' + itemName + '" deleted — publishing...', 's');
+      pubSite();
+    }
+  );
 }
 function newItem() {
   const id=MD.length?Math.max(...MD.map(i=>i.id))+1:1;
@@ -1736,9 +1750,26 @@ function toast(msg, type='s') {
   clearTimeout(t._t); t._t=setTimeout(()=>t.classList.remove('on'),3500);
 }
 let _mcb=null;
-function openMod(tt,msg,lbl,cb) { document.getElementById('m-tt').textContent=tt; document.getElementById('m-mm').textContent=msg; document.getElementById('m-ok').textContent=lbl||'Confirm'; _mcb=cb; document.getElementById('modal').classList.add('on'); }
-function runMod() { closeMod(); if(_mcb){_mcb();_mcb=null;} }
-function closeMod() { document.getElementById('modal').classList.remove('on'); _mcb=null; }
+function openMod(tt, msg, lbl, cb) {
+  const m = document.getElementById('modal');
+  if (!m) return;
+  document.getElementById('m-tt').textContent = tt;
+  document.getElementById('m-mm').textContent = msg;
+  document.getElementById('m-ok').textContent = lbl || 'Confirm';
+  _mcb = cb;
+  m.style.display = 'flex';
+  m.classList.add('on');
+}
+function runMod() {
+  const cb = _mcb;
+  closeMod();
+  if (typeof cb === 'function') cb();
+}
+function closeMod() {
+  const m = document.getElementById('modal');
+  if (m) { m.classList.remove('on'); m.style.display='none'; }
+  _mcb = null;
+}
 
 // ═══════════════════════════════════════════════
 //  INIT
