@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Lou Wok Rice House</title>
+  <title>Lou Wok Rice House — Phoenix, AZ</title>
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=Playfair+Display:ital@1&display=swap" rel="stylesheet" />
   <style>
     :root {
@@ -994,7 +994,203 @@
 
     <div class="menu-grid">
     <!--MENU_CARDS_START-->
-    <!--MENU_CARDS_END-->
+    <div class="menu-card" data-cat="rice" data-id="01">
+      
+      <div class="card-number">01</div>
+      <div class="card-category">Signature Rice</div>
+      <div class="card-name">🍚 Lou Wok Fried Rice</div>
+      <div class="card-desc">Jasmine rice wok-tossed with egg, bean sprouts, green onion, soy, and your choice of protein.</div>
+      <div class="card-footer">
+        <div class="card-price"><span style="opacity:0.65;font-size:0.8em;">Half $8</span> · <span>$12</span></div><span class="card-tag tag-popular">Best Seller</span>
+        <div class="card-actions">
+          <button class="btn-atc" id="atcB01" onclick="openDrawer('01')">Add to Order</button>
+          <div class="qty-pill" id="qpB01"><button onclick="qkQty('01',-1)">−</button><span class="qp-num">0</span><button onclick="qkQty('01',1)">+</button></div>
+        </div>
+      </div>
+    </div>
+    <div class="menu-card" data-cat="rice" data-id="02">
+      
+      <div class="card-number">02</div>
+      <div class="card-category">Signature Rice</div>
+      <div class="card-name">🌶️ Spicy Garlic Fried Rice</div>
+      <div class="card-desc">Roasted garlic, chili oil, egg, bean sprouts, and wok-charred vegetables. Heat level: bring it.</div>
+      <div class="card-footer">
+        <div class="card-price"><span style="opacity:0.65;font-size:0.8em;">Half $8</span> · <span>$13</span></div><span class="card-tag tag-new">New</span>
+        <div class="card-actions">
+          <button class="btn-atc" id="atcB02" onclick="openDrawer('02')">Add to Order</button>
+          <div class="qty-pill" id="qpB02"><button onclick="qkQty('02',-1)">−</button><span class="qp-num">0</span><button onclick="qkQty('02',1)">+</button></div>
+        </div>
+      </div>
+    </div>
+    <div class="menu-card" data-cat="rice" data-id="03">
+      
+      <div class="card-number">03</div>
+      <div class="card-category">Signature Rice</div>
+      <div class="card-name">🍚 Yang Chow Fried Rice</div>
+      <div class="card-desc">Shrimp, BBQ pork, egg, bean sprouts, peas, and carrots — wok-tossed over high heat.</div>
+      <div class="card-footer">
+        <div class="card-price"><span style="opacity:0.65;font-size:0.8em;">Half $8</span> · <span>$13</span></div><span class="card-tag tag-classic">Classic</span>
+        <div class="card-actions">
+          <button class="btn-atc" id="atcB03" onclick="openDrawer('03')">Add to Order</button>
+          <div class="qty-pill" id="qpB03"><button onclick="qkQty('03',-1)">−</button><span class="qp-num">0</span><button onclick="qkQty('03',1)">+</button></div>
+        </div>
+      </div>
+    </div>
+    <div class="menu-card" data-cat="appetizers" data-id="04">
+      
+      <div class="card-number">04</div>
+      <div class="card-category">Appetizer</div>
+      <div class="card-name">🦀 Crab Rangoon</div>
+      <div class="card-desc">Crispy wonton shells stuffed with real crab and cream cheese. Served with sweet chili sauce. 6pc.</div>
+      <div class="card-footer">
+        <div class="card-price">$8</div><span class="card-tag tag-popular">Best Seller</span>
+        <div class="card-actions">
+          <button class="btn-atc" id="atcB04" onclick="openDrawer('04')">Add to Order</button>
+          <div class="qty-pill" id="qpB04"><button onclick="qkQty('04',-1)">−</button><span class="qp-num">0</span><button onclick="qkQty('04',1)">+</button></div>
+        </div>
+      </div>
+    </div>
+    <div class="menu-card" data-cat="appetizers" data-id="05">
+      
+      <div class="card-number">05</div>
+      <div class="card-category">Appetizer</div>
+      <div class="card-name">🦀 Crab Rangoon Deluxe</div>
+      <div class="card-desc">Double order with duck sauce and sweet chili. 12pc.</div>
+      <div class="card-footer">
+        <div class="card-price">$14</div><span class="card-tag tag-new">New</span>
+        <div class="card-actions">
+          <button class="btn-atc" id="atcB05" onclick="openDrawer('05')">Add to Order</button>
+          <div class="qty-pill" id="qpB05"><button onclick="qkQty('05',-1)">−</button><span class="qp-num">0</span><button onclick="qkQty('05',1)">+</button></div>
+        </div>
+      </div>
+    </div>
+    <div class="menu-card" data-cat="sandwiches" data-id="06">
+      
+      <div class="card-number">06</div>
+      <div class="card-category">The Sandwich</div>
+      <div class="card-name">🥪 St. Paul Sandwich</div>
+      <div class="card-desc">Egg foo young patty on soft white bread with lettuce, tomato, pickles, and mayo. A Midwest legend.</div>
+      <div class="card-footer">
+        <div class="card-price">$10</div><span class="card-tag tag-popular">Best Seller</span>
+        <div class="card-actions">
+          <button class="btn-atc" id="atcB06" onclick="openDrawer('06')">Add to Order</button>
+          <div class="qty-pill" id="qpB06"><button onclick="qkQty('06',-1)">−</button><span class="qp-num">0</span><button onclick="qkQty('06',1)">+</button></div>
+        </div>
+      </div>
+    </div>
+    <div class="menu-card" data-cat="sandwiches" data-id="07">
+      
+      <div class="card-number">07</div>
+      <div class="card-category">The Sandwich</div>
+      <div class="card-name">🥪 St. Paul Deluxe</div>
+      <div class="card-desc">Double patty, extra sauce, wok-fried onions and peppers. Comes with half fried rice.</div>
+      <div class="card-footer">
+        <div class="card-price">$14</div><span class="card-tag tag-new">New</span>
+        <div class="card-actions">
+          <button class="btn-atc" id="atcB07" onclick="openDrawer('07')">Add to Order</button>
+          <div class="qty-pill" id="qpB07"><button onclick="qkQty('07',-1)">−</button><span class="qp-num">0</span><button onclick="qkQty('07',1)">+</button></div>
+        </div>
+      </div>
+    </div>
+    <div class="menu-card" data-cat="combos" data-id="08">
+      
+      <div class="card-number">08</div>
+      <div class="card-category">The Combo</div>
+      <div class="card-name">📦 Lou Wok Box</div>
+      <div class="card-desc">Fried rice, 3 crab rangoon, St. Paul sandwich, and 4pc fried chicken. One tray.</div>
+      <div class="card-footer">
+        <div class="card-price"><span style="opacity:0.65;font-size:0.8em;">Half $19</span> · <span>$24</span></div><span class="card-tag tag-popular">Best Seller</span>
+        <div class="card-actions">
+          <button class="btn-atc" id="atcB08" onclick="openDrawer('08')">Add to Order</button>
+          <div class="qty-pill" id="qpB08"><button onclick="qkQty('08',-1)">−</button><span class="qp-num">0</span><button onclick="qkQty('08',1)">+</button></div>
+        </div>
+      </div>
+    </div>
+    <div class="menu-card" data-cat="specialty" data-id="09">
+      
+      <div class="card-number">09</div>
+      <div class="card-category">Specialty Rice</div>
+      <div class="card-name">🍚 Jambalaya Fried Rice</div>
+      <div class="card-desc">Andouille sausage, shrimp, chicken, Cajun seasoning, bell peppers, egg, bean sprouts.</div>
+      <div class="card-footer">
+        <div class="card-price"><span style="opacity:0.65;font-size:0.8em;">Half $8</span> · <span>$13</span></div><span class="card-tag tag-popular">Best Seller</span>
+        <div class="card-actions">
+          <button class="btn-atc" id="atcB09" onclick="openDrawer('09')">Add to Order</button>
+          <div class="qty-pill" id="qpB09"><button onclick="qkQty('09',-1)">−</button><span class="qp-num">0</span><button onclick="qkQty('09',1)">+</button></div>
+        </div>
+      </div>
+    </div>
+    <div class="menu-card" data-cat="specialty" data-id="10">
+      
+      <div class="card-number">10</div>
+      <div class="card-category">Specialty Rice</div>
+      <div class="card-name">🦆 Duck Fried Rice</div>
+      <div class="card-desc">Slow-roasted duck, jasmine rice, egg, bean sprouts, green onion, ginger, dark soy glaze.</div>
+      <div class="card-footer">
+        <div class="card-price"><span style="opacity:0.65;font-size:0.8em;">Half $8</span> · <span>$13</span></div><span class="card-tag tag-new">New</span>
+        <div class="card-actions">
+          <button class="btn-atc" id="atcB10" onclick="openDrawer('10')">Add to Order</button>
+          <div class="qty-pill" id="qpB10"><button onclick="qkQty('10',-1)">−</button><span class="qp-num">0</span><button onclick="qkQty('10',1)">+</button></div>
+        </div>
+      </div>
+    </div>
+    <div class="menu-card" data-cat="specialty" data-id="11">
+      
+      <div class="card-number">11</div>
+      <div class="card-category">Specialty Rice</div>
+      <div class="card-name">🍍 Pineapple Chicken Fr. Rice</div>
+      <div class="card-desc">Wok-charred chicken, fresh pineapple, cashews, egg, bean sprouts — served in a hollowed pineapple.</div>
+      <div class="card-footer">
+        <div class="card-price"><span style="opacity:0.65;font-size:0.8em;">Half $8</span> · <span>$13</span></div><span class="card-tag tag-popular">Best Seller</span>
+        <div class="card-actions">
+          <button class="btn-atc" id="atcB11" onclick="openDrawer('11')">Add to Order</button>
+          <div class="qty-pill" id="qpB11"><button onclick="qkQty('11',-1)">−</button><span class="qp-num">0</span><button onclick="qkQty('11',1)">+</button></div>
+        </div>
+      </div>
+    </div>
+    <div class="menu-card" data-cat="specialty" data-id="12">
+      
+      <div class="card-number">12</div>
+      <div class="card-category">Specialty Rice</div>
+      <div class="card-name">🌿 Basil Fried Rice</div>
+      <div class="card-desc">Fresh Thai basil, garlic, chili, egg, bean sprouts, and your choice of protein.</div>
+      <div class="card-footer">
+        <div class="card-price"><span style="opacity:0.65;font-size:0.8em;">Half $8</span> · <span>$13</span></div><span class="card-tag tag-classic">Classic</span>
+        <div class="card-actions">
+          <button class="btn-atc" id="atcB12" onclick="openDrawer('12')">Add to Order</button>
+          <div class="qty-pill" id="qpB12"><button onclick="qkQty('12',-1)">−</button><span class="qp-num">0</span><button onclick="qkQty('12',1)">+</button></div>
+        </div>
+      </div>
+    </div>
+    <div class="menu-card" data-cat="specialty" data-id="13">
+      
+      <div class="card-number">13</div>
+      <div class="card-category">Specialty Rice</div>
+      <div class="card-name">🍚 Ultimate Fried Rice</div>
+      <div class="card-desc">Beef, chicken, shrimp, pork, and ham — all wok-tossed with egg, bean sprouts, soy, green onion.</div>
+      <div class="card-footer">
+        <div class="card-price"><span style="opacity:0.65;font-size:0.8em;">Half $8</span> · <span>$13</span></div><span class="card-tag tag-popular">Best Seller</span>
+        <div class="card-actions">
+          <button class="btn-atc" id="atcB13" onclick="openDrawer('13')">Add to Order</button>
+          <div class="qty-pill" id="qpB13"><button onclick="qkQty('13',-1)">−</button><span class="qp-num">0</span><button onclick="qkQty('13',1)">+</button></div>
+        </div>
+      </div>
+    </div>
+    <div class="menu-card" data-cat="appetizers" data-id="14">
+      
+      <div class="card-number">14</div>
+      <div class="card-category">Appetizer</div>
+      <div class="card-name">🍗 STL-Style Fried Chicken</div>
+      <div class="card-desc">Bone-in fried chicken with a thin, shatteringly crispy batter — straight from the North St. Louis playbook. 4pc per order.</div>
+      <div class="card-footer">
+        <div class="card-price">$10</div><span class="card-tag tag-popular">Best Seller</span>
+        <div class="card-actions">
+          <button class="btn-atc" id="atcB14" onclick="openDrawer('14')">Add to Order</button>
+          <div class="qty-pill" id="qpB14"><button onclick="qkQty('14',-1)">−</button><span class="qp-num">0</span><button onclick="qkQty('14',1)">+</button></div>
+        </div>
+      </div>
+    </div>
+  <!--MENU_CARDS_END-->
     </div>
   </section>
 
@@ -1121,13 +1317,13 @@
         <!-- Full week list -->
         <div class="hours-week" id="hours-week">
           <!--HOURS_ROWS_START-->
-          <div class="hr-row"><span class="hr-day">Monday</span><span class="hr-time">11am – 9pm</span></div>
-          <div class="hr-row"><span class="hr-day">Tuesday</span><span class="hr-time">11am – 9pm</span></div>
-          <div class="hr-row"><span class="hr-day">Wednesday</span><span class="hr-time">11am – 9pm</span></div>
-          <div class="hr-row"><span class="hr-day">Thursday</span><span class="hr-time">11am – 9pm</span></div>
-          <div class="hr-row"><span class="hr-day">Friday</span><span class="hr-time">11am – 10pm</span></div>
-          <div class="hr-row"><span class="hr-day">Saturday</span><span class="hr-time">11am – 10pm</span></div>
-          <div class="hr-row"><span class="hr-day">Sunday</span><span class="hr-time">12pm – 8pm</span></div>
+          <div class="hr-row"><span class="hr-day">Monday</span><span style="color:var(--muted);">Closed</span></div>
+          <div class="hr-row"><span class="hr-day">Tuesday</span><span style="color:var(--muted);">Closed</span></div>
+          <div class="hr-row"><span class="hr-day">Wednesday</span><span style="color:var(--muted);">Closed</span></div>
+          <div class="hr-row"><span class="hr-day">Thursday</span><span>11am – 9pm</span></div>
+          <div class="hr-row"><span class="hr-day">Friday</span><span>11am – 10pm</span></div>
+          <div class="hr-row"><span class="hr-day">Saturday</span><span>11am – 10pm</span></div>
+          <div class="hr-row"><span class="hr-day">Sunday</span><span>12pm – 8pm</span></div>
           <!--HOURS_ROWS_END-->
         </div>
       </div>
