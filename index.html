@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Lou Wok Rice House — Phoenix, AZ</title>
+  <title>Lou Wok Rice House</title>
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=Playfair+Display:ital@1&display=swap" rel="stylesheet" />
   <style>
     :root {
@@ -718,6 +718,187 @@
       opacity: 1;
       transform: none;
     }
+  
+    /* ── HOURS ─────────────────────────────────── */
+    .hr-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.7rem 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.9rem;
+    }
+    .hr-row:last-child { border-bottom: none; }
+    .hr-day { font-weight: 600; color: var(--rice); }
+    .hr-time { color: var(--gold); font-family: 'DM Mono', monospace; font-size: 0.85rem; }
+    .hr-time.closed { color: var(--muted); }
+    
+  
+    /* ── HOURS SECTION ─────────────────────────────── */
+    #hours {
+      background: var(--black);
+      border-top: 1px solid var(--border);
+    }
+    .hours-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      min-height: 520px;
+    }
+    .hours-left {
+      padding: 5rem 6vw;
+      border-right: 1px solid var(--border);
+    }
+    .hours-right {
+      padding: 5rem 6vw;
+      background: var(--smoke);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    /* Day tabs */
+    .hours-tabs {
+      display: flex;
+      gap: 0.3rem;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+    }
+    .htab {
+      padding: 0.4rem 0.85rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      background: transparent;
+      border: 1px solid var(--border);
+      color: rgba(245,238,216,0.45);
+      cursor: pointer;
+      border-radius: 2px;
+      transition: all 0.2s;
+      font-family: 'DM Sans', sans-serif;
+    }
+    .htab:hover { color: var(--rice); border-color: rgba(245,238,216,0.3); }
+    .htab.active {
+      background: var(--wok);
+      border-color: var(--wok);
+      color: var(--rice);
+    }
+    .htab.today-tab {
+      border-color: var(--gold);
+      color: var(--gold);
+    }
+    .htab.today-tab.active {
+      background: var(--gold);
+      border-color: var(--gold);
+      color: var(--black);
+    }
+
+    /* Active day display */
+    .hours-today {
+      margin-bottom: 2.5rem;
+      padding: 1.5rem;
+      background: var(--smoke);
+      border: 1px solid var(--border);
+      border-radius: 2px;
+    }
+    .htd-day {
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 0.4rem;
+    }
+    .htd-time {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2.2rem;
+      letter-spacing: 0.04em;
+      color: var(--gold);
+      line-height: 1;
+    }
+    .htd-time.closed-time { color: var(--muted); }
+    .htd-status {
+      font-size: 0.78rem;
+      margin-top: 0.35rem;
+      font-weight: 600;
+    }
+    .htd-status.open-now { color: #4caf50; }
+    .htd-status.closed-now { color: var(--wok); }
+
+    /* Full week list */
+    .hours-week { display: flex; flex-direction: column; }
+    .hr-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.6rem 0;
+      border-bottom: 1px solid rgba(232,160,32,0.1);
+      font-size: 0.88rem;
+      transition: background 0.15s;
+    }
+    .hr-row:last-child { border-bottom: none; }
+    .hr-row.today-row { background: rgba(232,160,32,0.06); margin: 0 -0.5rem; padding: 0.6rem 0.5rem; }
+    .hr-day { font-weight: 600; color: var(--rice); }
+    .hr-day.today-label { color: var(--gold); }
+    .hr-time { color: rgba(245,238,216,0.6); font-family: 'DM Mono', monospace; font-size: 0.82rem; }
+    .hr-time.closed { color: var(--muted); }
+
+    /* Location side */
+    .hours-address { margin-bottom: 2rem; }
+    .addr-name {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.6rem;
+      letter-spacing: 0.04em;
+      color: var(--gold);
+      margin-bottom: 0.4rem;
+    }
+    .addr-street, .addr-city {
+      font-size: 1rem;
+      color: rgba(245,238,216,0.65);
+      line-height: 1.6;
+    }
+    .hours-map-placeholder {
+      flex: 1;
+      min-height: 180px;
+      max-height: 220px;
+      background: rgba(200,57,10,0.08);
+      border: 1px solid var(--border);
+      border-radius: 2px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .hours-map-placeholder::before {
+      content: 'PHOENIX';
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 4rem;
+      color: rgba(200,57,10,0.08);
+      position: absolute;
+      letter-spacing: 0.1em;
+    }
+    .map-pin { font-size: 2.5rem; position: relative; z-index: 1; }
+    .map-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-top: 0.5rem;
+      position: relative; z-index: 1;
+    }
+    .hours-dir-btn { display: inline-block; margin-bottom: 1rem; font-size: 0.82rem; padding: 0.85rem 1.75rem; }
+    .hours-note { font-size: 0.78rem; color: var(--muted); }
+
+    @media (max-width: 900px) {
+      .hours-layout { grid-template-columns: 1fr; }
+      .hours-left { border-right: none; border-bottom: 1px solid var(--border); padding: 3rem 6vw; }
+      .hours-right { padding: 3rem 6vw; }
+    }
+
   </style>
 </head>
 <body>
@@ -728,7 +909,7 @@
     <ul class="nav-links">
       <li><a href="#menu">Menu</a></li>
       <li><a href="#about">Our Story</a></li>
-      <li><a href="#order">Locations</a></li>
+      <li><a href="#hours">Hours</a></li><li><a href="#order">Order</a></li>
       <li><a href="#order" class="nav-cta">Order Now</a></li>
     </ul>
   </nav>
@@ -812,249 +993,8 @@
     </div>
 
     <div class="menu-grid">
-
-      <!-- Card 1 -->
-      <div class="menu-card fade-in" data-category="rice">
-        <div class="card-number">01</div>
-        <div class="card-category">Signature Rice</div>
-        <div class="card-name">Lou Wok<br>Fried Rice</div>
-        <p class="card-desc">
-          Our house recipe. Jasmine rice wok-tossed with egg, bean sprouts,
-          green onion, soy, and your choice of protein — chicken, shrimp,
-          beef, or tofu. <em style="color:var(--muted);font-size:0.82rem;">Egg &amp; bean sprouts included. Hold either at time of order.</em>
-        </p>
-        <div class="card-footer">
-          <div class="card-price" style="display:flex;flex-direction:column;gap:0.15rem;line-height:1.1;">
-            <span style="font-size:0.95rem;color:var(--muted);font-family:'DM Sans',sans-serif;font-weight:500;">Half&nbsp;<span style="color:var(--gold);font-family:'Bebas Neue',sans-serif;font-size:1.35rem;">$8</span></span>
-            <span style="font-size:0.95rem;color:var(--muted);font-family:'DM Sans',sans-serif;font-weight:500;">Whole&nbsp;<span style="color:var(--gold);font-family:'Bebas Neue',sans-serif;font-size:1.35rem;">$12</span></span>
-          </div>
-          <span class="card-tag tag-popular">Best Seller</span>
-        </div>
-      </div>
-
-      <!-- Card 2 -->
-      <div class="menu-card fade-in" data-category="rice">
-        <div class="card-number">02</div>
-        <div class="card-category">Signature Rice</div>
-        <div class="card-name">Spicy Garlic<br>Fried Rice</div>
-        <p class="card-desc">
-          Loaded with roasted garlic, chili oil, egg, bean sprouts, and
-          wok-charred vegetables. Heat level: bring it.
-          <em style="color:var(--muted);font-size:0.82rem;">Egg &amp; bean sprouts included. Hold either at time of order.</em>
-        </p>
-        <div class="card-footer">
-          <div class="card-price" style="display:flex;flex-direction:column;gap:0.15rem;line-height:1.1;">
-            <span style="font-size:0.95rem;color:var(--muted);font-family:'DM Sans',sans-serif;font-weight:500;">Half&nbsp;<span style="color:var(--gold);font-family:'Bebas Neue',sans-serif;font-size:1.35rem;">$8</span></span>
-            <span style="font-size:0.95rem;color:var(--muted);font-family:'DM Sans',sans-serif;font-weight:500;">Whole&nbsp;<span style="color:var(--gold);font-family:'Bebas Neue',sans-serif;font-size:1.35rem;">$13</span></span>
-          </div>
-          <span class="card-tag tag-new">New</span>
-        </div>
-      </div>
-
-      <!-- Card 3 -->
-      <div class="menu-card fade-in" data-category="rice">
-        <div class="card-number">03</div>
-        <div class="card-category">Signature Rice</div>
-        <div class="card-name">Yang Chow<br>Fried Rice</div>
-        <p class="card-desc">
-          The classic. Shrimp, BBQ pork, egg, bean sprouts, peas, and
-          carrots — all wok-tossed over high heat until every grain has
-          a little char on it. <em style="color:var(--muted);font-size:0.82rem;">Egg &amp; bean sprouts included. Hold either at time of order.</em>
-        </p>
-        <div class="card-footer">
-          <div class="card-price" style="display:flex;flex-direction:column;gap:0.15rem;line-height:1.1;">
-            <span style="font-size:0.95rem;color:var(--muted);font-family:'DM Sans',sans-serif;font-weight:500;">Half&nbsp;<span style="color:var(--gold);font-family:'Bebas Neue',sans-serif;font-size:1.35rem;">$8</span></span>
-            <span style="font-size:0.95rem;color:var(--muted);font-family:'DM Sans',sans-serif;font-weight:500;">Whole&nbsp;<span style="color:var(--gold);font-family:'Bebas Neue',sans-serif;font-size:1.35rem;">$13</span></span>
-          </div>
-          <span class="card-tag tag-classic">Classic</span>
-        </div>
-      </div>
-
-      <!-- Card 4 -->
-      <div class="menu-card fade-in" data-category="appetizers">
-        <div class="card-number">04</div>
-        <div class="card-category">Appetizer</div>
-        <div class="card-name">Crab<br>Rangoon</div>
-        <p class="card-desc">
-          Crispy wonton shells stuffed with real crab and cream cheese,
-          seasoned with green onion and garlic. Served with sweet
-          chili sauce. 6 per order.
-        </p>
-        <div class="card-footer">
-          <div class="card-price">$8</div>
-          <span class="card-tag tag-popular">Fan Fave</span>
-        </div>
-      </div>
-
-      <!-- Card 5 -->
-      <div class="menu-card fade-in" data-category="appetizers">
-        <div class="card-number">05</div>
-        <div class="card-category">Appetizer</div>
-        <div class="card-name">Crab Rangoon<br>Deluxe (12pc)</div>
-        <p class="card-desc">
-          Double the order. Double the glory. Same crispy rangoon,
-          extra dipping sauce — duck sauce and sweet chili included.
-          Perfect for the table.
-        </p>
-        <div class="card-footer">
-          <div class="card-price">$14</div>
-          <span class="card-tag tag-new">Share Plate</span>
-        </div>
-      </div>
-
-      <!-- Card 6 -->
-      <div class="menu-card fade-in" data-category="sandwiches">
-        <div class="card-number">06</div>
-        <div class="card-category">The Sandwich</div>
-        <div class="card-name">St. Paul<br>Sandwich</div>
-        <p class="card-desc">
-          A Midwest legend. Egg foo young patty on soft white bread
-          with lettuce, tomato, pickles, and mayo. Lou Wok's version
-          is pressed, golden, and fully loaded.
-        </p>
-        <div class="card-footer">
-          <div class="card-price">$10</div>
-          <span class="card-tag tag-popular">Icon</span>
-        </div>
-      </div>
-
-      <!-- Card 7 -->
-      <div class="menu-card fade-in" data-category="sandwiches">
-        <div class="card-number">07</div>
-        <div class="card-category">The Sandwich</div>
-        <div class="card-name">St. Paul<br>Deluxe</div>
-        <p class="card-desc">
-          The original, upgraded. Double egg foo young patty, extra
-          sauce, topped with wok-fried onions and peppers. Comes with
-          a half order of plain fried rice.
-        </p>
-        <div class="card-footer">
-          <div class="card-price">$14</div>
-          <span class="card-tag tag-new">Combo</span>
-        </div>
-      </div>
-
-      <!-- Card 8 -->
-      <div class="menu-card fade-in" data-category="combos">
-        <div class="card-number">08</div>
-        <div class="card-category">Combo</div>
-        <div class="card-name">Lou Wok<br>Box</div>
-        <p class="card-desc">
-          The full experience. Your choice of fried rice (half or whole),
-          3 crab rangoon, a St. Paul sandwich, and 4pc fried chicken —
-          all on one tray. This is the move.
-        </p>
-        <div class="card-footer">
-          <div class="card-price" style="display:flex; flex-direction:column; gap:0.15rem; line-height:1.1;">
-            <span style="font-size:1rem; color:var(--muted); font-family:'DM Sans',sans-serif; font-weight:500; letter-spacing:0.05em;">Half&nbsp;<span style="color:var(--gold); font-family:'Bebas Neue',sans-serif; font-size:1.4rem;">$19</span></span>
-            <span style="font-size:1rem; color:var(--muted); font-family:'DM Sans',sans-serif; font-weight:500; letter-spacing:0.05em;">Whole&nbsp;<span style="color:var(--gold); font-family:'Bebas Neue',sans-serif; font-size:1.4rem;">$24</span></span>
-          </div>
-          <span class="card-tag tag-popular">MVP</span>
-        </div>
-      </div>
-
-      <!-- ── SPECIALTY RICE (Rice tab) ── -->
-
-      <!-- Rice Card 9 -->
-      <div class="menu-card fade-in" data-category="rice">
-        <div class="card-number">09</div>
-        <div class="card-category">Specialty Rice</div>
-        <div class="card-name">Jambalaya<br>Fried Rice</div>
-        <p class="card-desc">
-          The St. Louis legend, wok-fired Lou Wok style. Andouille
-          sausage, shrimp, and chicken tossed with Cajun seasoning,
-          bell peppers, egg, bean sprouts, and jasmine rice. Southern soul meets the wok.
-          <em style="color:var(--muted);font-size:0.82rem;">Egg &amp; bean sprouts included. Hold either at time of order.</em>
-        </p>
-        <div class="card-footer">
-          <div class="card-price" style="display:flex;flex-direction:column;gap:0.15rem;line-height:1.1;">
-            <span style="font-size:0.95rem;color:var(--muted);font-family:'DM Sans',sans-serif;font-weight:500;">Half&nbsp;<span style="color:var(--gold);font-family:'Bebas Neue',sans-serif;font-size:1.35rem;">$8</span></span>
-            <span style="font-size:0.95rem;color:var(--muted);font-family:'DM Sans',sans-serif;font-weight:500;">Whole&nbsp;<span style="color:var(--gold);font-family:'Bebas Neue',sans-serif;font-size:1.35rem;">$13</span></span>
-          </div>
-          <span class="card-tag tag-popular">STL Classic</span>
-        </div>
-      </div>
-
-      <!-- Rice Card 10 -->
-      <div class="menu-card fade-in" data-category="rice">
-        <div class="card-number">10</div>
-        <div class="card-category">Specialty Rice</div>
-        <div class="card-name">Duck<br>Fried Rice</div>
-        <p class="card-desc">
-          Slow-roasted duck, wok-tossed with jasmine rice, egg, bean
-          sprouts, green onion, ginger, and a rich dark soy glaze.
-          Bold, savory, and unlike anything else on the menu.
-          <em style="color:var(--muted);font-size:0.82rem;">Egg &amp; bean sprouts included. Hold either at time of order.</em>
-        </p>
-        <div class="card-footer">
-          <div class="card-price" style="display:flex;flex-direction:column;gap:0.15rem;line-height:1.1;">
-            <span style="font-size:0.95rem;color:var(--muted);font-family:'DM Sans',sans-serif;font-weight:500;">Half&nbsp;<span style="color:var(--gold);font-family:'Bebas Neue',sans-serif;font-size:1.35rem;">$8</span></span>
-            <span style="font-size:0.95rem;color:var(--muted);font-family:'DM Sans',sans-serif;font-weight:500;">Whole&nbsp;<span style="color:var(--gold);font-family:'Bebas Neue',sans-serif;font-size:1.35rem;">$13</span></span>
-          </div>
-          <span class="card-tag tag-new">Chef's Pick</span>
-        </div>
-      </div>
-
-      <!-- Rice Card 11 -->
-      <div class="menu-card fade-in" data-category="rice">
-        <div class="card-number">11</div>
-        <div class="card-category">Specialty Rice</div>
-        <div class="card-name">Pineapple<br>Chicken Fried Rice</div>
-        <p class="card-desc">
-          Sweet meets savory. Wok-charred chicken, fresh pineapple chunks,
-          cashews, egg, bean sprouts, and a touch of fish sauce — served
-          in a hollowed pineapple for the full experience.
-          <em style="color:var(--muted);font-size:0.82rem;">Egg &amp; bean sprouts included. Hold either at time of order.</em>
-        </p>
-        <div class="card-footer">
-          <div class="card-price" style="display:flex;flex-direction:column;gap:0.15rem;line-height:1.1;">
-            <span style="font-size:0.95rem;color:var(--muted);font-family:'DM Sans',sans-serif;font-weight:500;">Half&nbsp;<span style="color:var(--gold);font-family:'Bebas Neue',sans-serif;font-size:1.35rem;">$8</span></span>
-            <span style="font-size:0.95rem;color:var(--muted);font-family:'DM Sans',sans-serif;font-weight:500;">Whole&nbsp;<span style="color:var(--gold);font-family:'Bebas Neue',sans-serif;font-size:1.35rem;">$13</span></span>
-          </div>
-          <span class="card-tag tag-popular">Fan Fave</span>
-        </div>
-      </div>
-
-      <!-- Rice Card 12 -->
-      <div class="menu-card fade-in" data-category="rice">
-        <div class="card-number">12</div>
-        <div class="card-category">Specialty Rice</div>
-        <div class="card-name">Basil<br>Fried Rice</div>
-        <p class="card-desc">
-          Fresh Thai basil, garlic, chili, egg, bean sprouts, and your
-          choice of protein — wok-fired until fragrant and slightly
-          caramelized. Clean, bold, and aromatic on every bite.
-          <em style="color:var(--muted);font-size:0.82rem;">Egg &amp; bean sprouts included. Hold either at time of order.</em>
-        </p>
-        <div class="card-footer">
-          <div class="card-price" style="display:flex;flex-direction:column;gap:0.15rem;line-height:1.1;">
-            <span style="font-size:0.95rem;color:var(--muted);font-family:'DM Sans',sans-serif;font-weight:500;">Half&nbsp;<span style="color:var(--gold);font-family:'Bebas Neue',sans-serif;font-size:1.35rem;">$8</span></span>
-            <span style="font-size:0.95rem;color:var(--muted);font-family:'DM Sans',sans-serif;font-weight:500;">Whole&nbsp;<span style="color:var(--gold);font-family:'Bebas Neue',sans-serif;font-size:1.35rem;">$13</span></span>
-          </div>
-          <span class="card-tag tag-classic">Aromatic</span>
-        </div>
-      </div>
-
-      <!-- Rice Card 13 -->
-      <div class="menu-card fade-in" data-category="rice">
-        <div class="card-number">13</div>
-        <div class="card-category">Specialty Rice</div>
-        <div class="card-name">Ultimate<br>Fried Rice</div>
-        <p class="card-desc">
-          Everything in one bowl. Beef, chicken, shrimp, pork, and ham —
-          all wok-tossed together with egg, bean sprouts, soy, and green
-          onion. The most loaded rice on the menu, period.
-          <em style="color:var(--muted);font-size:0.82rem;">Egg &amp; bean sprouts included. Hold either at time of order.</em>
-        </p>
-        <div class="card-footer">
-          <div class="card-price" style="display:flex;flex-direction:column;gap:0.15rem;line-height:1.1;">
-            <span style="font-size:0.95rem;color:var(--muted);font-family:'DM Sans',sans-serif;font-weight:500;">Half&nbsp;<span style="color:var(--gold);font-family:'Bebas Neue',sans-serif;font-size:1.35rem;">$8</span></span>
-            <span style="font-size:0.95rem;color:var(--muted);font-family:'DM Sans',sans-serif;font-weight:500;">Whole&nbsp;<span style="color:var(--gold);font-family:'Bebas Neue',sans-serif;font-size:1.35rem;">$13</span></span>
-          </div>
-          <span class="card-tag tag-popular">The Works</span>
-        </div>
-      </div>
-
+    <!--MENU_CARDS_START-->
+    <!--MENU_CARDS_END-->
     </div>
   </section>
 
@@ -1080,7 +1020,9 @@
         </div>
         <div class="detail-item">
           <div class="detail-label">Style</div>
-          <div class="detail-value">Pressed & Golden</div>
+   
+
+       <div class="detail-value">Pressed & Golden</div>
         </div>
         <div class="detail-item">
           <div class="detail-label">Bread</div>
@@ -1148,7 +1090,68 @@
   </section>
 
   <!-- ── FOOTER ── -->
-  <footer>
+  
+  <!-- HOURS & LOCATION -->
+  <section id="hours">
+    <div class="hours-layout">
+
+      <!-- LEFT: Hours by day with tab selector -->
+      <div class="hours-left">
+        <div class="section-label">Hours</div>
+        <h2 class="section-title" style="margin-bottom:1.75rem;">WHEN<br><span style="color:var(--wok);">WE'RE</span><br>OPEN</h2>
+
+        <!-- Day tabs -->
+        <div class="hours-tabs" id="hours-tabs">
+          <button class="htab active" data-day="0">Mon</button>
+          <button class="htab" data-day="1">Tue</button>
+          <button class="htab" data-day="2">Wed</button>
+          <button class="htab" data-day="3">Thu</button>
+          <button class="htab" data-day="4">Fri</button>
+          <button class="htab" data-day="5">Sat</button>
+          <button class="htab" data-day="6">Sun</button>
+        </div>
+
+        <!-- Active day display -->
+        <div class="hours-today" id="hours-today">
+          <div class="htd-day" id="htd-day">Monday</div>
+          <div class="htd-time" id="htd-time">11am – 9pm</div>
+          <div class="htd-status" id="htd-status"></div>
+        </div>
+
+        <!-- Full week list -->
+        <div class="hours-week" id="hours-week">
+          <!--HOURS_ROWS_START-->
+          <div class="hr-row"><span class="hr-day">Monday</span><span class="hr-time">11am – 9pm</span></div>
+          <div class="hr-row"><span class="hr-day">Tuesday</span><span class="hr-time">11am – 9pm</span></div>
+          <div class="hr-row"><span class="hr-day">Wednesday</span><span class="hr-time">11am – 9pm</span></div>
+          <div class="hr-row"><span class="hr-day">Thursday</span><span class="hr-time">11am – 9pm</span></div>
+          <div class="hr-row"><span class="hr-day">Friday</span><span class="hr-time">11am – 10pm</span></div>
+          <div class="hr-row"><span class="hr-day">Saturday</span><span class="hr-time">11am – 10pm</span></div>
+          <div class="hr-row"><span class="hr-day">Sunday</span><span class="hr-time">12pm – 8pm</span></div>
+          <!--HOURS_ROWS_END-->
+        </div>
+      </div>
+
+      <!-- RIGHT: Location + map pin -->
+      <div class="hours-right">
+        <div class="section-label">Location</div>
+        <div class="hours-address">
+          <div class="addr-name">Lou Wok Rice House</div>
+          <div class="addr-street">3850 South 18th Street</div>
+          <div class="addr-city">Phoenix, AZ 85040</div>
+        </div>
+        <div class="hours-map-placeholder">
+          <div class="map-pin">📍</div>
+          <div class="map-label">Phoenix, AZ</div>
+        </div>
+        <a href="https://maps.google.com/?q=3850+S+18th+St,+Phoenix,+AZ+85040" target="_blank" class="btn-primary hours-dir-btn">Get Directions →</a>
+        <div class="hours-note">Walk-ins welcome. Carryout available.</div>
+      </div>
+
+    </div>
+  </section>
+
+<footer>
     <div class="footer-top">
       <div>
         <div class="footer-brand">Lou <span>Wok</span> Rice House</div>
@@ -1171,7 +1174,7 @@
         <div class="footer-col-title">Visit</div>
         <ul class="footer-links">
           <li><a href="#">Locations</a></li>
-          <li><a href="#">Hours</a></li>
+          <li><a href="#hours">Hours</a></li>
           <li><a href="#">Order Online</a></li>
           <li><a href="#">Gift Cards</a></li>
         </ul>
@@ -1679,4 +1682,93 @@ function qkQty(id,d){
 
 initCart();
 updCartUI();
+
+  // ── HOURS TAB INTERACTIVITY ─────────────────────────────────────────────
+  (function initHoursTabs() {
+    var tabs = document.querySelectorAll('.htab');
+    if (!tabs.length) return;
+
+    var now       = new Date();
+    var todayIdx  = (now.getDay() + 6) % 7; // Mon=0 ... Sun=6
+    var nowMins   = now.getHours() * 60 + now.getMinutes();
+
+    // Mark today's tab
+    tabs.forEach(function(t) {
+      if (parseInt(t.dataset.day) === todayIdx) t.classList.add('today-tab');
+    });
+
+    function showDay(dayIdx) {
+      tabs.forEach(function(t) { t.classList.toggle('active', parseInt(t.dataset.day) === dayIdx); });
+
+      var rows = document.querySelectorAll('#hours-week .hr-row');
+      rows.forEach(function(r, i) {
+        r.classList.toggle('today-row', i === todayIdx);
+        var dl = r.querySelector('.hr-day');
+        if (dl) dl.classList.toggle('today-label', i === todayIdx);
+      });
+
+      // Update the featured display
+      var row = rows[dayIdx];
+      if (!row) return;
+      var dayEl  = document.getElementById('htd-day');
+      var timeEl = document.getElementById('htd-time');
+      var statEl = document.getElementById('htd-status');
+      var days   = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+      if (dayEl) dayEl.textContent = days[dayIdx];
+
+      var timeText = row.querySelector('.hr-time');
+      var isClosed = timeText && timeText.classList.contains('closed');
+      var timeStr  = timeText ? timeText.textContent.trim() : '';
+
+      if (timeEl) {
+        timeEl.textContent = isClosed ? 'Closed' : timeStr;
+        timeEl.className = 'htd-time' + (isClosed ? ' closed-time' : '');
+      }
+
+      if (statEl && dayIdx === todayIdx) {
+        if (isClosed) {
+          statEl.textContent = 'Closed today';
+          statEl.className = 'htd-status closed-now';
+        } else {
+          // Parse open/close times
+          var parts = timeStr.split('–');
+          function parseMins(s) {
+            if (!s) return 0;
+            s = s.trim().toLowerCase();
+            var pm = s.indexOf('pm') !== -1;
+            var am = s.indexOf('am') !== -1;
+            s = s.replace(/[apm]/g,'').trim();
+            var hp = s.split(':');
+            var h = parseInt(hp[0]); var m = parseInt(hp[1]||0);
+            if (pm && h !== 12) h += 12;
+            if (am && h === 12) h = 0;
+            return h * 60 + m;
+          }
+          var openM  = parseMins(parts[0]);
+          var closeM = parseMins(parts[1]);
+          var openNow = nowMins >= openM && nowMins < closeM;
+          if (openNow) {
+            var minsLeft = closeM - nowMins;
+            var closing  = minsLeft <= 60 ? ' · Closes in ' + minsLeft + 'min' : '';
+            statEl.textContent = '● Open now' + closing;
+            statEl.className = 'htd-status open-now';
+          } else {
+            statEl.textContent = '● Closed now';
+            statEl.className = 'htd-status closed-now';
+          }
+        }
+      } else if (statEl) {
+        statEl.textContent = '';
+      }
+    }
+
+    tabs.forEach(function(t) {
+      t.onclick = function() { showDay(parseInt(t.dataset.day)); };
+    });
+
+    // Show today on load
+    showDay(todayIdx);
+  })();
+
+
 </script>
