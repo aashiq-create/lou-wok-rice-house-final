@@ -1605,10 +1605,7 @@ function buildIdx() {
       <div class="card-desc">${item.desc}</div>
       <div class="card-footer">
         ${price}${th}
-        <div class="card-actions">
-          <button class="btn-atc" id="atcB${num}" onclick="openDrawer('${num}')">Add to Order</button>
-          <div class="qty-pill" id="qpB${num}"><button onclick="qkQty('${num}',-1)">−</button><span class="qp-num">0</span><button onclick="qkQty('${num}',1)">+</button></div>
-        </div>
+
       </div>
     </div>`;
   }).join('\n');
