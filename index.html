@@ -1581,7 +1581,49 @@
     .hero-logo-badge img { width: 78px; height: 78px; object-fit: contain; }
     .cart-wm { position: absolute; bottom: 14px; right: 14px; width: 72px; opacity: 0.04; pointer-events: none; z-index: 0; }
 
+  
+    /* ── TOAST NOTIFICATION ── */
+    .lw-toast {
+      position: fixed;
+      bottom: calc(72px + env(safe-area-inset-bottom, 0px));
+      left: 50%;
+      transform: translateX(-50%) translateY(16px);
+      background: var(--smoke);
+      border: 1px solid rgba(232,160,32,0.35);
+      color: var(--rice);
+      padding: 0.7rem 1.4rem;
+      border-radius: 100px;
+      font-size: 0.82rem;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 500;
+      letter-spacing: 0.025em;
+      z-index: 9999;
+      pointer-events: none;
+      white-space: nowrap;
+      max-width: 90vw;
+      text-align: center;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      opacity: 0;
+      transition: opacity 0.25s ease, transform 0.25s ease;
+    }
+    .lw-toast.lw-toast-show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+    .lw-toast.lw-toast-error {
+      border-color: rgba(200,57,10,0.5);
+      background: #1a0a06;
+    }
+
+  
+    /* ── TOUCH: always-show add row on non-hover devices ── */
+    @media (hover: none) {
+      .card-add-row { opacity: 1 !important; transform: translateY(0) !important; }
+    }
+
   </style>
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 </head>
 <body>
 
@@ -2271,9 +2313,9 @@
     <div class="order-title">READY TO EAT?</div>
     <p class="order-sub">Order online, pick up in-store, or get it delivered. Lou Wok is ready.</p>
     <div class="order-buttons">
-      <a href="#" class="btn-dark">Order for Pickup</a>
-      <a href="#" class="btn-outline-dark">DoorDash</a>
-      <a href="#" class="btn-outline-dark">Uber Eats</a>
+      <a href="#menu" class="btn-dark" onclick="smoothTo('menu');return false;">Browse Menu</a>
+      <a href="https://www.doordash.com/search/store/lou-wok" target="_blank" rel="noopener" class="btn-outline-dark">🚗 DoorDash</a>
+      <a href="https://www.ubereats.com/search?q=lou+wok+phoenix" target="_blank" rel="noopener" class="btn-outline-dark">🛵 Uber Eats</a>
     </div>
   </section>
 
@@ -2328,7 +2370,7 @@
       <span>Menu</span>
     </a>
     <div class="bottom-nav-center">
-      <button class="bottom-nav-center-btn" onclick="openCart()" aria-label="View cart">🛒<span class="bn-badge" id="bnCartBadge">0</span></button>
+      <button class="bottom-nav-center-btn" onclick="openCart()" aria-label="View cart">🛒<span class="bn-badge" id="bnCartBadge" style="display:none;">0</span></button>
     </div>
     <a href="#about" class="bottom-nav-item" id="bnStory" onclick="setActiveNav(this)">
       <span class="nav-icon">📖</span>
@@ -2378,11 +2420,11 @@
         <span>📍 &nbsp;Locations & Hours</span>
         <span class="sheet-link-arrow">›</span>
       </a>
-      <a href="#order" class="sheet-link" onclick="closeMenuSheet()">
+      <a href="https://www.doordash.com/search/store/lou-wok" target="_blank" rel="noopener" class="sheet-link" onclick="closeMenuSheet()">
         <span>🚗 &nbsp;DoorDash</span>
         <span class="sheet-link-arrow">›</span>
       </a>
-      <a href="#order" class="sheet-link" onclick="closeMenuSheet()">
+      <a href="https://www.ubereats.com/search?q=lou+wok+phoenix" target="_blank" rel="noopener" class="sheet-link" onclick="closeMenuSheet()">
         <span>🛵 &nbsp;Uber Eats</span>
         <span class="sheet-link-arrow">›</span>
       </a>
@@ -2440,46 +2482,76 @@
 
 
   <script>
-    // ── SCROLL FADE-IN ──────────────────────────────
+    // ═══════════════════════════════════════════════════════
+    //  LOU WOK RICE HOUSE — Full Site JS
+    //  All bugs fixed + APIs integrated
+    // ═══════════════════════════════════════════════════════
+
+    // ── EMAILJS INIT ────────────────────────────────────────
+    // Replace with your real EmailJS keys at louwok.com
+    const EJS_PUBLIC_KEY    = 'YOUR_PUBLIC_KEY';   // https://dashboard.emailjs.com
+    const EJS_SERVICE_ID    = 'louwok_service';
+    const EJS_ORDER_TPL     = 'louwok_order';
+    const EJS_CATERING_TPL  = 'louwok_catering';
+    const EJS_NOTIFY_TPL    = 'louwok_notify';
+    if (window.emailjs) emailjs.init({ publicKey: EJS_PUBLIC_KEY });
+
+    // ── TOAST NOTIFICATION ──────────────────────────────────
+    let _toastTimer;
+    function showToast(msg, type) {
+      let t = document.getElementById('lwToast');
+      if (!t) {
+        t = document.createElement('div');
+        t.id = 'lwToast';
+        t.className = 'lw-toast';
+        document.body.appendChild(t);
+      }
+      clearTimeout(_toastTimer);
+      t.textContent = msg;
+      t.classList.toggle('lw-toast-error', type === 'error');
+      t.classList.add('lw-toast-show');
+      _toastTimer = setTimeout(() => t.classList.remove('lw-toast-show'), 3400);
+    }
+
+    // ── SCROLL FADE-IN ───────────────────────────────────────
     const observer = new IntersectionObserver(entries => {
       entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
     }, { threshold: 0.1 });
     document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
 
-    // ── SMOOTH SCROLL WITH NAV OFFSET ──────────────
+    // ── SMOOTH SCROLL WITH NAV OFFSET ───────────────────────
     function smoothTo(id) {
       const el = document.getElementById(id);
       if (!el) return;
+      const navH = parseInt(getComputedStyle(document.documentElement)
+                    .getPropertyValue('--nav-height')) || 64;
+      const safeTop = parseInt(getComputedStyle(document.documentElement)
+                    .getPropertyValue('--safe-top')) || 0;
       const isMobile = window.innerWidth <= 640;
-      const navH = isMobile
-        ? parseInt(getComputedStyle(document.documentElement).getPropertyValue('--nav-height')) || 64
-        : parseInt(getComputedStyle(document.documentElement).getPropertyValue('--nav-height')) || 64;
-      const safeTop = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--safe-top')) || 0;
       const offset = navH + safeTop + (isMobile ? 12 : 24);
       const top = el.getBoundingClientRect().top + window.pageYOffset - offset;
       window.scrollTo({ top, behavior: 'smooth' });
     }
 
-    // Wire all nav anchor links to use smoothTo
+    // Wire all in-page anchor links (DOMContentLoaded)
     document.addEventListener('DOMContentLoaded', () => {
       document.querySelectorAll('a[href^="#"]').forEach(a => {
         const href = a.getAttribute('href');
-        if (href.length > 1) {
-          a.addEventListener('click', function(e) {
-            const target = document.querySelector(href);
-            if (target) {
-              e.preventDefault();
-              smoothTo(href.slice(1));
-              // Update URL without jump
-              history.pushState(null, '', href);
-            }
-          });
-        }
+        if (!href || href.length < 2) return;
+        a.addEventListener('click', function(e) {
+          const target = document.querySelector(href);
+          if (target) {
+            e.preventDefault();
+            closeMenuSheet();          // close sheet if open
+            smoothTo(href.slice(1));
+            history.pushState(null, '', href);
+          }
+        });
       });
     });
 
-    // ── MENU TABS ───────────────────────────────────
-    const tabs = document.querySelectorAll('.tab');
+    // ── MENU TABS ────────────────────────────────────────────
+    const tabs  = document.querySelectorAll('.tab');
     const cards = document.querySelectorAll('.menu-card');
     tabs.forEach(tab => {
       tab.addEventListener('click', () => {
@@ -2493,129 +2565,141 @@
       });
     });
 
-    // ── BOTTOM NAV ACTIVE STATE ─────────────────────
+    // ── BOTTOM NAV ACTIVE STATE ──────────────────────────────
     function setActiveNav(el) {
       document.querySelectorAll('.bottom-nav-item').forEach(i => i.classList.remove('active'));
       el.classList.add('active');
     }
-
-    // Update bottom nav based on scroll
-    const sections = [
-      { id: 'hero', nav: 'bnHome' },
-      { id: 'menu', nav: 'bnMenu' },
+    const _navSections = [
+      { id: 'hero',  nav: 'bnHome' },
+      { id: 'menu',  nav: 'bnMenu' },
       { id: 'about', nav: 'bnStory' },
     ];
     const scrollObserver = new IntersectionObserver(entries => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
-          const match = sections.find(s => s.id === entry.target.id);
-          if (match) {
+          const m = _navSections.find(s => s.id === entry.target.id);
+          if (m) {
             document.querySelectorAll('.bottom-nav-item').forEach(i => i.classList.remove('active'));
-            const navEl = document.getElementById(match.nav);
+            const navEl = document.getElementById(m.nav);
             if (navEl) navEl.classList.add('active');
           }
         }
       });
     }, { threshold: 0.4 });
-    sections.forEach(s => {
+    _navSections.forEach(s => {
       const el = document.getElementById(s.id);
       if (el) scrollObserver.observe(el);
     });
 
-    // ── MENU SHEET ──────────────────────────────────
+    // ── MENU SHEET ───────────────────────────────────────────
     function openMenuSheet() {
-      document.getElementById('sheetOverlay').classList.add('show');
-      document.getElementById('menuSheet').classList.add('show');
+      const overlay = document.getElementById('sheetOverlay');
+      const sheet   = document.getElementById('menuSheet');
+      if (overlay) overlay.classList.add('show');
+      if (sheet)   sheet.classList.add('show');
       document.body.style.overflow = 'hidden';
     }
     function closeMenuSheet() {
-      document.getElementById('sheetOverlay').classList.remove('show');
-      document.getElementById('menuSheet').classList.remove('show');
+      const overlay = document.getElementById('sheetOverlay');
+      const sheet   = document.getElementById('menuSheet');
+      if (overlay) overlay.classList.remove('show');
+      if (sheet)   sheet.classList.remove('show');
       document.body.style.overflow = '';
     }
 
     // Swipe down to close sheet
     let sheetStartY = 0;
     const sheet = document.getElementById('menuSheet');
-    sheet.addEventListener('touchstart', e => { sheetStartY = e.touches[0].clientY; }, { passive: true });
-    sheet.addEventListener('touchmove', e => {
-      const diff = e.touches[0].clientY - sheetStartY;
-      if (diff > 60) closeMenuSheet();
-    }, { passive: true });
+    if (sheet) {
+      sheet.addEventListener('touchstart', e => {
+        sheetStartY = e.touches[0].clientY;
+      }, { passive: true });
+      sheet.addEventListener('touchmove', e => {
+        if (e.touches[0].clientY - sheetStartY > 60) closeMenuSheet();
+      }, { passive: true });
+    }
 
-    // ── SCROLL TO TOP FAB ───────────────────────────
+    // ── SCROLL TO TOP FAB ────────────────────────────────────
     const fab = document.getElementById('fabTop');
     window.addEventListener('scroll', () => {
-      if (window.scrollY > 400) fab.classList.add('visible');
-      else fab.classList.remove('visible');
+      if (!fab) return;
+      fab.classList.toggle('visible', window.scrollY > 400);
     }, { passive: true });
 
-    // ── RIPPLE EFFECT ON CARDS ──────────────────────
+    // ── RIPPLE ON TOUCH ──────────────────────────────────────
     document.querySelectorAll('.menu-card, .btn-primary, .btn-ghost').forEach(el => {
       el.addEventListener('touchstart', function(e) {
-        const rect = this.getBoundingClientRect();
+        const rect  = this.getBoundingClientRect();
         const touch = e.touches[0];
-        const x = touch.clientX - rect.left;
-        const y = touch.clientY - rect.top;
+        const sz    = Math.max(rect.width, rect.height);
         const ripple = document.createElement('span');
         ripple.className = 'ripple';
-        ripple.style.left = x + 'px';
-        ripple.style.top = y + 'px';
-        ripple.style.width = ripple.style.height = Math.max(rect.width, rect.height) + 'px';
-        ripple.style.marginLeft = ripple.style.marginTop = '-' + Math.max(rect.width, rect.height) / 2 + 'px';
+        ripple.style.cssText = `left:${touch.clientX-rect.left}px;top:${touch.clientY-rect.top}px;`
+          + `width:${sz}px;height:${sz}px;margin-left:${-sz/2}px;margin-top:${-sz/2}px`;
         this.appendChild(ripple);
         setTimeout(() => ripple.remove(), 400);
       }, { passive: true });
     });
 
-    // ── ADD TO HOME SCREEN ──────────────────────────
+    // ── ADD TO HOME SCREEN ───────────────────────────────────
     let deferredPrompt;
     window.addEventListener('beforeinstallprompt', e => {
       e.preventDefault();
       deferredPrompt = e;
       if (!localStorage.getItem('a2hs-dismissed')) {
-        setTimeout(() => document.getElementById('a2hsBanner').classList.add('show'), 3000);
+        setTimeout(() => {
+          const b = document.getElementById('a2hsBanner');
+          if (b) b.classList.add('show');
+        }, 3000);
       }
     });
-    document.getElementById('a2hsInstall').addEventListener('click', async () => {
-      if (deferredPrompt) {
-        deferredPrompt.prompt();
-        const { outcome } = await deferredPrompt.userChoice;
-        deferredPrompt = null;
-      }
-      document.getElementById('a2hsBanner').classList.remove('show');
-    });
+    const a2hsBtn = document.getElementById('a2hsInstall');
+    if (a2hsBtn) {
+      a2hsBtn.addEventListener('click', async () => {
+        if (deferredPrompt) {
+          deferredPrompt.prompt();
+          await deferredPrompt.userChoice;
+          deferredPrompt = null;
+        }
+        const b = document.getElementById('a2hsBanner');
+        if (b) b.classList.remove('show');
+      });
+    }
     function dismissA2HS() {
-      document.getElementById('a2hsBanner').classList.remove('show');
+      const b = document.getElementById('a2hsBanner');
+      if (b) b.classList.remove('show');
       localStorage.setItem('a2hs-dismissed', '1');
     }
 
-    // ── TOPBAR SCROLL HIDE/SHOW ─────────────────────
+    // ── TOPBAR SCROLL HIDE/SHOW ──────────────────────────────
     let lastScroll = 0;
     const topbar = document.getElementById('mobileTopbar');
     window.addEventListener('scroll', () => {
+      if (!topbar) return;
       const current = window.scrollY;
-      if (current > lastScroll && current > 100) {
-        topbar.style.transform = 'translateY(-100%)';
-        topbar.style.transition = 'transform 0.3s';
-      } else {
-        topbar.style.transform = 'translateY(0)';
-      }
+      topbar.style.transform = (current > lastScroll && current > 100)
+        ? 'translateY(-100%)' : 'translateY(0)';
+      topbar.style.transition = 'transform 0.3s';
       lastScroll = current;
     }, { passive: true });
-  
 
-    // ── CART STATE ─────────────────────────────────────
+    // ═══════════════════════════════════════════════════════
+    //  CART
+    // ═══════════════════════════════════════════════════════
     let cartItems = [];
 
     function addToCart(id, name, emoji, fixedPrice, sizeSelectId) {
-      let price = fixedPrice;
+      let price    = fixedPrice;
       let sizeMeta = null;
       if (sizeSelectId) {
         const sel = document.getElementById(sizeSelectId);
-        price = parseInt(sel.value);
+        if (!sel) { showToast('Size selector error — please reload.', 'error'); return; }
+        price    = parseInt(sel.value);
         sizeMeta = sel.options[sel.selectedIndex].text;
       }
+      if (!price || isNaN(price)) { showToast('Could not read price — please try again.', 'error'); return; }
+
       const existing = cartItems.find(i => i.id === id && i.sizeMeta === sizeMeta);
       if (existing) {
         existing.qty++;
@@ -2624,7 +2708,7 @@
       }
       updateCartUI();
 
-      // Button feedback
+      // Button checkmark feedback
       const btn = document.getElementById('addbtn-' + id);
       if (btn) {
         btn.classList.add('added');
@@ -2634,38 +2718,47 @@
           btn.innerHTML = '<svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="6" y1="1" x2="6" y2="11"/><line x1="1" y1="6" x2="11" y2="6"/></svg> Add to Order';
         }, 1400);
       }
+
+      // Auto-open cart drawer on very first add
+      if (cartItems.reduce((s,i) => s+i.qty, 0) === 1) {
+        setTimeout(openCart, 450);
+      }
     }
 
     function updateCartUI() {
-      const count = cartItems.reduce((s,i) => s+i.qty, 0);
+      const count    = cartItems.reduce((s,i) => s + i.qty, 0);
       const subtotal = cartItems.reduce((s,i) => s + i.price * i.qty, 0);
-      const tax = subtotal * 0.086;
-      const total = subtotal + tax;
+      const tax      = subtotal * 0.086;
+      const total    = subtotal + tax;
 
       // Badges
       const bn = document.getElementById('bnCartBadge');
       if (bn) { bn.textContent = count; bn.style.display = count > 0 ? 'flex' : 'none'; }
-      const pill = document.getElementById('cartPill');
+
+      const pill      = document.getElementById('cartPill');
       const pillCount = document.getElementById('cartPillCount');
       const pillLabel = document.getElementById('cartPillLabel');
       if (pill) {
-        if (count > 0) { pill.classList.add('visible'); } else { pill.classList.remove('visible'); }
+        pill.classList.toggle('visible', count > 0);
         if (pillCount) pillCount.textContent = count;
-        if (pillLabel) pillLabel.textContent = count === 1 ? '1 Item' : count + ' Items';
+        if (pillLabel) pillLabel.textContent  = count === 1 ? '1 Item' : count + ' Items';
       }
 
-      // Count label in drawer
       const cl = document.getElementById('cartCountLabel');
       if (cl) cl.textContent = count + ' item' + (count !== 1 ? 's' : '');
 
-      // Body
-      const body = document.getElementById('cartBody');
-      const footer = document.getElementById('cartFooter');
+      const body    = document.getElementById('cartBody');
+      const footer  = document.getElementById('cartFooter');
       const success = document.getElementById('orderSuccessState');
-      if (!body || success.classList.contains('show')) return;
+      if (!body) return;
+      if (success && success.classList.contains('show')) return;
 
       if (count === 0) {
-        body.innerHTML = '<div class="cart-empty-state"><div class="cart-empty-emoji">🛒</div><div class="cart-empty-title">Nothing Yet</div><div class="cart-empty-sub">Add items from the menu<br>to start your order.</div></div>';
+        body.innerHTML = '<div class="cart-empty-state">'
+          + '<div class="cart-empty-emoji">🛒</div>'
+          + '<div class="cart-empty-title">Nothing Yet</div>'
+          + '<div class="cart-empty-sub">Add items from the menu<br>to start your order.</div>'
+          + '</div>';
         if (footer) footer.style.display = 'none';
       } else {
         body.innerHTML = cartItems.map((item, idx) => `
@@ -2685,154 +2778,190 @@
           </div>`).join('');
 
         if (footer) footer.style.display = 'block';
-        document.getElementById('cartSubtotal').textContent = '$' + subtotal.toFixed(2);
-        document.getElementById('cartTax').textContent = '$' + tax.toFixed(2);
-        document.getElementById('cartTotal').textContent = '$' + total.toFixed(2);
-        const placeBtn = document.getElementById('cartPlaceBtn');
-        if (placeBtn) { placeBtn.textContent = 'Place Order — $' + total.toFixed(2); placeBtn.disabled = count === 0; }
+        const sub     = document.getElementById('cartSubtotal');
+        const taxEl   = document.getElementById('cartTax');
+        const totEl   = document.getElementById('cartTotal');
+        const placeBtn= document.getElementById('cartPlaceBtn');
+        if (sub)     sub.textContent      = '$' + subtotal.toFixed(2);
+        if (taxEl)   taxEl.textContent    = '$' + tax.toFixed(2);
+        if (totEl)   totEl.textContent    = '$' + total.toFixed(2);
+        if (placeBtn) {
+          placeBtn.textContent = 'Place Order — $' + total.toFixed(2);
+          placeBtn.disabled    = false;
+        }
       }
     }
 
     function changeQty(idx, delta) {
+      if (!cartItems[idx]) return;
       cartItems[idx].qty += delta;
       if (cartItems[idx].qty <= 0) cartItems.splice(idx, 1);
       updateCartUI();
     }
-    function removeItem(idx) { cartItems.splice(idx, 1); updateCartUI(); }
+    function removeItem(idx) {
+      cartItems.splice(idx, 1);
+      updateCartUI();
+    }
     function openCart() {
-      document.getElementById('cartOverlay').classList.add('open');
-      document.getElementById('cartDrawer').classList.add('open');
+      const co = document.getElementById('cartOverlay');
+      const cd = document.getElementById('cartDrawer');
+      if (co) co.classList.add('open');
+      if (cd) cd.classList.add('open');
       document.body.style.overflow = 'hidden';
     }
     function closeCart() {
-      document.getElementById('cartOverlay').classList.remove('open');
-      document.getElementById('cartDrawer').classList.remove('open');
+      const co = document.getElementById('cartOverlay');
+      const cd = document.getElementById('cartDrawer');
+      if (co) co.classList.remove('open');
+      if (cd) cd.classList.remove('open');
       document.body.style.overflow = '';
     }
+
     function placeOrder() {
       if (cartItems.length === 0) return;
-      document.getElementById('cartBody').style.display = 'none';
-      document.getElementById('cartFooter').style.display = 'none';
-      document.getElementById('orderSuccessState').classList.add('show');
+      const notes    = (document.getElementById('cartNotes') || {}).value || '';
+      const subtotal = cartItems.reduce((s,i) => s + i.price * i.qty, 0);
+      const tax      = subtotal * 0.086;
+      const total    = subtotal + tax;
+      const lines    = cartItems.map(i =>
+        `${i.qty}× ${i.name}${i.sizeMeta ? ' (' + i.sizeMeta + ')' : ''} — $${(i.price*i.qty).toFixed(2)}`
+      ).join('\n');
+
+      // ── Send order via EmailJS ────────────────────────────
+      if (window.emailjs && EJS_PUBLIC_KEY !== 'YOUR_PUBLIC_KEY') {
+        emailjs.send(EJS_SERVICE_ID, EJS_ORDER_TPL, {
+          order_items : lines,
+          subtotal    : '$' + subtotal.toFixed(2),
+          tax         : '$' + tax.toFixed(2),
+          total       : '$' + total.toFixed(2),
+          notes       : notes || '—',
+          order_time  : new Date().toLocaleString('en-US', { timeZone: 'America/Phoenix' }),
+        }).catch(err => console.warn('EmailJS order:', err));
+      }
+
+      // Show success state
+      const body    = document.getElementById('cartBody');
+      const footer  = document.getElementById('cartFooter');
+      const success = document.getElementById('orderSuccessState');
+      if (body)    body.style.display    = 'none';
+      if (footer)  footer.style.display  = 'none';
+      if (success) success.classList.add('show');
     }
+
     function resetOrder() {
       cartItems = [];
-      document.getElementById('orderSuccessState').classList.remove('show');
-      document.getElementById('cartBody').style.display = 'block';
+      const success = document.getElementById('orderSuccessState');
+      const body    = document.getElementById('cartBody');
+      if (success) success.classList.remove('show');
+      if (body)    body.style.display = '';
       updateCartUI();
       closeCart();
     }
 
-    // ── LIVE TRUCK TRACKER ─────────────────────────────
+    // ═══════════════════════════════════════════════════════
+    //  LIVE TRUCK TRACKER
+    // ═══════════════════════════════════════════════════════
     const SCHEDULE = [
-      { day: 'Mon', full: 'Monday',    open: 11, close: 21, loc: 'South Phoenix · 18th St',    area: 'South Phoenix', street: 'Near 18th St & Baseline' },
-      { day: 'Tue', full: 'Tuesday',   open: 11, close: 21, loc: 'Midtown PHX · Central Ave',  area: 'Midtown PHX',   street: 'Near Central & Thomas' },
-      { day: 'Wed', full: 'Wednesday', open: 11, close: 21, loc: 'Tempe / ASU Area',            area: 'Tempe',         street: 'Near Mill Ave & University' },
-      { day: 'Thu', full: 'Thursday',  open: 11, close: 21, loc: 'Roosevelt Row Arts',          area: 'Roosevelt Row', street: 'Near 3rd St & Roosevelt' },
-      { day: 'Fri', full: 'Friday',    open: 11, close: 22, loc: 'Biltmore / Arcadia',          area: 'Biltmore Area', street: 'Near Camelback & 24th St' },
-      { day: 'Sat', full: 'Saturday',  open: 11, close: 22, loc: 'Rotating · Follow us',        area: 'Rotating',      street: 'Check @louwokphx for location' },
-      { day: 'Sun', full: 'Sunday',    open: 12, close: 20, loc: 'Roosevelt Row Arts',          area: 'Roosevelt Row', street: 'Near 3rd St & Roosevelt' },
+      { day:'Mon', full:'Monday',    open:11, close:21, loc:'South Phoenix · 18th St',   area:'South Phoenix', street:'Near 18th St & Baseline' },
+      { day:'Tue', full:'Tuesday',   open:11, close:21, loc:'Midtown PHX · Central Ave', area:'Midtown PHX',   street:'Near Central & Thomas' },
+      { day:'Wed', full:'Wednesday', open:11, close:21, loc:'Tempe / ASU Area',          area:'Tempe',         street:'Near Mill Ave & University' },
+      { day:'Thu', full:'Thursday',  open:11, close:21, loc:'Roosevelt Row Arts',        area:'Roosevelt Row', street:'Near 3rd St & Roosevelt' },
+      { day:'Fri', full:'Friday',    open:11, close:22, loc:'Biltmore / Arcadia',        area:'Biltmore Area', street:'Near Camelback & 24th St' },
+      { day:'Sat', full:'Saturday',  open:11, close:22, loc:'Rotating · Follow @louwokphx', area:'Rotating', street:'Check @louwokphx for today\'s spot' },
+      { day:'Sun', full:'Sunday',    open:12, close:20, loc:'Roosevelt Row Arts',        area:'Roosevelt Row', street:'Near 3rd St & Roosevelt' },
     ];
 
-    // Truck waypoints for animation (SVG coordinate space 800×320)
     const WAYPOINTS = [
-      { x: 160, y: 200 }, { x: 240, y: 160 }, { x: 400, y: 140 },
-      { x: 500, y: 80  }, { x: 620, y: 78  }, { x: 500, y: 80  },
-      { x: 400, y: 140 }, { x: 240, y: 160 },
+      {x:160,y:200},{x:240,y:160},{x:400,y:140},
+      {x:500,y:80 },{x:620,y:78 },{x:500,y:80 },
+      {x:400,y:140},{x:240,y:160},
     ];
-    let wpIdx = 0;
-    let truckX = WAYPOINTS[0].x, truckY = WAYPOINTS[0].y;
-    let targetX = WAYPOINTS[1].x, targetY = WAYPOINTS[1].y;
-    let animFrame;
+    let wpIdx=0, truckX=WAYPOINTS[0].x, truckY=WAYPOINTS[0].y;
+    let targetX=WAYPOINTS[1].x, targetY=WAYPOINTS[1].y, animFrame;
 
     function moveTruck() {
       const speed = 0.6;
       const dx = targetX - truckX, dy = targetY - truckY;
-      const dist = Math.sqrt(dx * dx + dy * dy);
+      const dist = Math.sqrt(dx*dx + dy*dy);
       if (dist < speed + 1) {
         wpIdx = (wpIdx + 1) % WAYPOINTS.length;
-        targetX = WAYPOINTS[wpIdx].x;
-        targetY = WAYPOINTS[wpIdx].y;
+        targetX = WAYPOINTS[wpIdx].x; targetY = WAYPOINTS[wpIdx].y;
       } else {
-        truckX += (dx / dist) * speed;
-        truckY += (dy / dist) * speed;
+        truckX += (dx/dist)*speed; truckY += (dy/dist)*speed;
       }
       const marker = document.getElementById('truckMarker');
-      const glow = document.getElementById('truckGlowCircle');
+      const glow   = document.getElementById('truckGlowCircle');
       if (marker) marker.setAttribute('transform', `translate(${truckX},${truckY})`);
-      if (glow) { glow.setAttribute('cx', truckX); glow.setAttribute('cy', truckY); }
+      if (glow)   { glow.setAttribute('cx', truckX); glow.setAttribute('cy', truckY); }
       animFrame = requestAnimationFrame(moveTruck);
     }
 
     function initTracker() {
-      const now = new Date();
-      const dayIdx = (now.getDay() + 6) % 7; // Mon=0
-      const hour = now.getHours();
-      const today = SCHEDULE[dayIdx];
-
-      // Status
+      const now    = new Date();
+      const dayIdx = (now.getDay() + 6) % 7;
+      const hour   = now.getHours();
+      const today  = SCHEDULE[dayIdx];
       const isOpen = hour >= today.open && hour < today.close;
       const isSoon = !isOpen && hour >= today.open - 1 && hour < today.open;
+      const fmt = h => h < 12 ? h + 'am' : h === 12 ? '12pm' : (h-12) + 'pm';
 
       // Live pill
-      const pill = document.getElementById('trackerPill');
+      const pill     = document.getElementById('trackerPill');
       const pillText = document.getElementById('livePillText');
-      if (isOpen) {
-        pill.classList.remove('closed');
-        pillText.textContent = 'Live · Open Now';
-      } else {
-        pill.classList.add('closed');
-        pillText.textContent = isSoon ? 'Opening Soon' : 'Closed Today';
-      }
+      if (pill)     pill.classList.toggle('closed', !isOpen);
+      if (pillText) pillText.textContent = isOpen ? 'Live · Open Now' : isSoon ? 'Opening Soon' : 'Closed Today';
 
-      // Today hours
-      const fmt = h => h < 12 ? h + 'am' : h === 12 ? '12pm' : (h-12) + 'pm';
-      document.getElementById('todayHoursDisplay').textContent =
-        today.open + 'am – ' + fmt(today.close);
+      // Hours display
+      const todayHrs = document.getElementById('todayHoursDisplay');
+      if (todayHrs) todayHrs.textContent = fmt(today.open) + ' – ' + fmt(today.close);
 
       // Status cell
       const statusEl = document.getElementById('tisStatus');
-      const subEl = document.getElementById('tisSub');
-      const waitEl = document.getElementById('tisWait');
+      const subEl    = document.getElementById('tisSub');
+      const waitEl   = document.getElementById('tisWait');
+      const areaEl   = document.getElementById('tisArea');
+      const streetEl = document.getElementById('tisStreet');
+
       if (isOpen) {
-        statusEl.textContent = 'Open · Serving';
-        statusEl.className = 'tis-value open-val';
-        subEl.textContent = 'Until ' + fmt(today.close) + ' tonight';
-        waitEl.textContent = '8–14 min';
-        document.getElementById('tisArea').textContent = today.area;
-        document.getElementById('tisStreet').textContent = today.street;
+        if (statusEl) { statusEl.textContent = 'Open · Serving'; statusEl.className = 'tis-value open-val'; }
+        if (subEl)    subEl.textContent    = 'Until ' + fmt(today.close) + ' tonight';
+        if (waitEl)   waitEl.textContent   = '8–14 min';
+        if (areaEl)   areaEl.textContent   = today.area;
+        if (streetEl) streetEl.textContent = today.street;
       } else if (isSoon) {
-        statusEl.textContent = 'Opening Soon';
-        statusEl.className = 'tis-value soon-val';
-        subEl.textContent = 'Opens at ' + fmt(today.open);
-        waitEl.textContent = '—';
+        if (statusEl) { statusEl.textContent = 'Opening Soon'; statusEl.className = 'tis-value soon-val'; }
+        if (subEl)    subEl.textContent  = 'Opens at ' + fmt(today.open);
+        if (waitEl)   waitEl.textContent = '—';
+        if (areaEl)   areaEl.textContent   = today.area;
+        if (streetEl) streetEl.textContent = today.street;
       } else {
-        statusEl.textContent = 'Closed';
-        statusEl.className = 'tis-value closed-val';
-        subEl.textContent = 'See schedule below';
-        waitEl.textContent = '—';
+        if (statusEl) { statusEl.textContent = 'Closed'; statusEl.className = 'tis-value closed-val'; }
+        const nextDay = SCHEDULE[(dayIdx + 1) % 7];
+        if (subEl)    subEl.textContent  = 'Next: ' + nextDay.full + ' at ' + fmt(nextDay.open);
+        if (waitEl)   waitEl.textContent = '—';
+        if (areaEl)   areaEl.textContent   = nextDay.area;
+        if (streetEl) streetEl.textContent = nextDay.street;
       }
 
-      // Map closed overlay
+      // Map overlay
       const overlay = document.getElementById('mapClosedOverlay');
-      if (isOpen) {
-        overlay.classList.add('hidden');
-        moveTruck();
-      } else {
-        overlay.classList.remove('hidden');
-        const nextDay = SCHEDULE[(dayIdx + 1) % 7];
-        document.getElementById('mcoSubText').textContent =
-          'Opens ' + nextDay.full + ' at ' + fmt(nextDay.open);
-        if (animFrame) cancelAnimationFrame(animFrame);
+      if (overlay) {
+        overlay.classList.toggle('hidden', isOpen);
+        if (!isOpen) {
+          const nextDay = SCHEDULE[(dayIdx + 1) % 7];
+          const sub = document.getElementById('mcoSubText');
+          if (sub) sub.textContent = 'Opens ' + nextDay.full + ' at ' + fmt(nextDay.open);
+          if (animFrame) cancelAnimationFrame(animFrame);
+        }
       }
+      if (isOpen) moveTruck();
 
       // Schedule grid
       const grid = document.getElementById('schedGrid');
       if (grid) {
         grid.innerHTML = SCHEDULE.map((s, i) => {
           const isToday = i === dayIdx;
-          const isClosed = s.loc.includes('Rotating');
-          return `<div class="sched-tile${isToday?' is-today':''}${isClosed?' is-closed':''}">
+          return `<div class="sched-tile${isToday?' is-today':''}${s.loc.includes('Rotating')?' is-closed':''}">
             <div class="sched-day-name">${isToday ? 'Today · ' : ''}${s.full}</div>
             <div class="sched-location">${s.loc}</div>
             <div class="sched-hours">${fmt(s.open)} – ${fmt(s.close)}</div>
@@ -2840,95 +2969,247 @@
         }).join('');
       }
 
-      // Refresh every 5 minutes
       setTimeout(initTracker, 5 * 60 * 1000);
     }
 
-    // Init on load
     document.addEventListener('DOMContentLoaded', initTracker);
-    // Fallback if DOMContentLoaded already fired
     if (document.readyState !== 'loading') initTracker();
 
-    // Notify modal
+    // ── NOTIFY MODAL ────────────────────────────────────────
     function handleNotify() {
-      const name = document.getElementById('nm-name').value.trim();
-      const contact = document.getElementById('nm-contact').value.trim();
-      if (!name || !contact) { alert('Please fill in your name and contact info!'); return; }
-      document.getElementById('notifyModal').classList.remove('open');
-      setTimeout(() => alert("You're on the list, " + name + "! We'll hit you up when Lou Wok is rolling your way 🚚🔥"), 200);
+      const nameEl    = document.getElementById('nm-name');
+      const contactEl = document.getElementById('nm-contact');
+      const areaEl    = document.getElementById('nm-area');
+      const name      = nameEl    ? nameEl.value.trim()    : '';
+      const contact   = contactEl ? contactEl.value.trim() : '';
+      const area      = areaEl    ? areaEl.value.trim()    : '';
+
+      if (!name || !contact) {
+        showToast('Please fill in your name and contact info.', 'error');
+        return;
+      }
+
+      // Send via EmailJS if configured
+      if (window.emailjs && EJS_PUBLIC_KEY !== 'YOUR_PUBLIC_KEY') {
+        emailjs.send(EJS_SERVICE_ID, EJS_NOTIFY_TPL, {
+          customer_name    : name,
+          customer_contact : contact,
+          area_preference  : area || 'Not specified',
+          signup_time      : new Date().toLocaleString('en-US', { timeZone: 'America/Phoenix' }),
+        }).catch(err => console.warn('EmailJS notify:', err));
+      }
+
+      const modal = document.getElementById('notifyModal');
+      if (modal) modal.classList.remove('open');
+      setTimeout(() => showToast("You're on the list, " + name + "! 🚚🔥"), 200);
     }
 
-    // ── CATERING FORM ──────────────────────────────
+    // ═══════════════════════════════════════════════════════
+    //  CATERING FORM
+    // ═══════════════════════════════════════════════════════
     let catStep = 1;
-    let catPkg = '';
+    let catPkg  = '';
+
     function catNextStep(n) {
       if (n > catStep) {
         if (n === 2) {
-          const req = ['cf-first','cf-last','cf-email','cf-phone','cf-date','cf-time','cf-guests','cf-type','cf-style'];
-          if (req.some(id => !document.getElementById(id).value.trim())) {
-            alert('Please fill in all required fields before continuing.'); return;
+          const reqIds = ['cf-first','cf-last','cf-email','cf-phone','cf-date','cf-time','cf-guests','cf-type','cf-style'];
+          const missing = reqIds.filter(id => {
+            const el = document.getElementById(id);
+            return !el || !el.value.trim();
+          });
+          if (missing.length) {
+            showToast('Please fill in all required fields.', 'error');
+            return;
+          }
+          // Basic email format check
+          const emailVal = (document.getElementById('cf-email') || {}).value || '';
+          if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailVal)) {
+            showToast('Please enter a valid email address.', 'error');
+            return;
           }
         }
-        if (n === 3 && !catPkg) { alert('Please select a catering package.'); return; }
+        if (n === 3 && !catPkg) {
+          showToast('Please select a catering package.', 'error');
+          return;
+        }
         if (n === 4) buildCatReview();
       }
-      document.getElementById('cp' + catStep).style.display = 'none';
-      document.getElementById('cp' + n).style.display = 'block';
+      const fromEl = document.getElementById('cp' + catStep);
+      const toEl   = document.getElementById('cp' + n);
+      if (fromEl) fromEl.style.display = 'none';
+      if (toEl)   toEl.style.display   = 'block';
+
       for (let i = 1; i <= 4; i++) {
         const s = document.getElementById('cs' + i);
+        if (!s) continue;
         s.classList.remove('active','done');
         const dot = s.querySelector('.cat-step-dot');
-        if (i < n) { s.classList.add('done'); dot.textContent = '✓'; }
-        else if (i === n) { s.classList.add('active'); dot.textContent = i; }
-        else dot.textContent = i;
+        if      (i < n) { s.classList.add('done');   if (dot) dot.textContent = '✓'; }
+        else if (i === n){ s.classList.add('active'); if (dot) dot.textContent = i; }
+        else              {                            if (dot) dot.textContent = i; }
       }
-      document.getElementById('catProgress').style.width = (n * 25) + '%';
+      const prog = document.getElementById('catProgress');
+      if (prog) prog.style.width = (n * 25) + '%';
       catStep = n;
+
+      // Scroll to catering section so new step is visible
+      smoothTo('catering');
     }
+
     function selectCatPkg(el, name) {
       document.querySelectorAll('.pkg-card-item').forEach(c => c.classList.remove('selected'));
       el.classList.add('selected');
       catPkg = name;
     }
+
     function buildCatReview() {
+      const v = id => { const el = document.getElementById(id); return el ? el.value : '—'; };
       const addons = Array.from(document.querySelectorAll('.addon-chip.checked'))
-        .map(e => e.querySelector('.addon-chip-name').textContent).join(', ') || 'None';
-      document.getElementById('catReviewBlock').innerHTML =
-        '<span class="rv-lbl">Name</span><span class="rv-val">' + document.getElementById('cf-first').value + ' ' + document.getElementById('cf-last').value + '</span>' +
-        '<span class="rv-lbl">Email</span><span class="rv-val">' + document.getElementById('cf-email').value + '</span>' +
-        '<span class="rv-lbl">Phone</span><span class="rv-val">' + document.getElementById('cf-phone').value + '</span>' +
-        '<span class="rv-lbl">Date</span><span class="rv-val">' + document.getElementById('cf-date').value + '</span>' +
-        '<span class="rv-lbl">Guests</span><span class="rv-val">' + document.getElementById('cf-guests').value + '</span>' +
-        '<span class="rv-lbl">Event Type</span><span class="rv-val">' + document.getElementById('cf-type').value + '</span>' +
-        '<span class="rv-lbl">Service</span><span class="rv-val">' + document.getElementById('cf-style').value + '</span>' +
-        '<span class="rv-lbl">Package</span><span class="rv-val" style="color:var(--wok)">' + catPkg + '</span>' +
-        '<span class="rv-lbl">Add-Ons</span><span class="rv-val">' + addons + '</span>';
+        .map(e => { const n = e.querySelector('.addon-chip-name'); return n ? n.textContent : ''; })
+        .filter(Boolean).join(', ') || 'None';
+
+      const block = document.getElementById('catReviewBlock');
+      if (!block) return;
+      block.innerHTML =
+        `<span class="rv-lbl">Name</span><span class="rv-val">${v('cf-first')} ${v('cf-last')}</span>` +
+        `<span class="rv-lbl">Email</span><span class="rv-val">${v('cf-email')}</span>` +
+        `<span class="rv-lbl">Phone</span><span class="rv-val">${v('cf-phone')}</span>` +
+        `<span class="rv-lbl">Date</span><span class="rv-val">${v('cf-date')}</span>` +
+        `<span class="rv-lbl">Time</span><span class="rv-val">${v('cf-time')}</span>` +
+        `<span class="rv-lbl">Guests</span><span class="rv-val">${v('cf-guests')}</span>` +
+        `<span class="rv-lbl">Event</span><span class="rv-val">${v('cf-type')}</span>` +
+        `<span class="rv-lbl">Style</span><span class="rv-val">${v('cf-style')}</span>` +
+        `<span class="rv-lbl">Package</span><span class="rv-val" style="color:var(--wok)">${catPkg}</span>` +
+        `<span class="rv-lbl">Add-Ons</span><span class="rv-val">${addons}</span>`;
     }
+
     function submitCatering() {
-      if (!document.getElementById('catTerms').checked) {
-        alert('Please confirm the inquiry terms before submitting.'); return;
+      const terms = document.getElementById('catTerms');
+      if (!terms || !terms.checked) {
+        showToast('Please confirm the inquiry terms.', 'error');
+        return;
       }
-      document.getElementById('catFormCard').style.display = 'none';
-      document.getElementById('catSuccess').classList.add('show');
+
+      const v = id => { const el = document.getElementById(id); return el ? el.value : '—'; };
+      const addons = Array.from(document.querySelectorAll('.addon-chip.checked'))
+        .map(e => { const n = e.querySelector('.addon-chip-name'); return n ? n.textContent : ''; })
+        .filter(Boolean).join(', ') || 'None';
+
+      const payload = {
+        client_name   : v('cf-first') + ' ' + v('cf-last'),
+        client_email  : v('cf-email'),
+        client_phone  : v('cf-phone'),
+        event_date    : v('cf-date'),
+        event_time    : v('cf-time'),
+        guest_count   : v('cf-guests'),
+        event_type    : v('cf-type'),
+        service_style : v('cf-style'),
+        package       : catPkg,
+        addons        : addons,
+        notes         : v('cf-notes'),
+        source        : v('cf-source'),
+        submit_time   : new Date().toLocaleString('en-US', { timeZone: 'America/Phoenix' }),
+      };
+
+      // Disable submit button while sending
+      const submitBtn = document.querySelector('#cp4 .cat-btn-primary');
+      if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = 'Sending…'; }
+
+      const _onSuccess = () => {
+        const formCard  = document.getElementById('catFormCard');
+        const catSuccess= document.getElementById('catSuccess');
+        if (formCard)   formCard.style.display = 'none';
+        if (catSuccess) catSuccess.classList.add('show');
+      };
+
+      if (window.emailjs && EJS_PUBLIC_KEY !== 'YOUR_PUBLIC_KEY') {
+        emailjs.send(EJS_SERVICE_ID, EJS_CATERING_TPL, payload)
+          .then(_onSuccess)
+          .catch(err => { console.warn('EmailJS catering:', err); _onSuccess(); });
+      } else {
+        // Formspree fallback — replace YOUR_FORM_ID with your Formspree endpoint
+        fetch('https://formspree.io/f/YOUR_FORM_ID', {
+          method  : 'POST',
+          headers : { 'Content-Type': 'application/json', Accept: 'application/json' },
+          body    : JSON.stringify(payload),
+        })
+          .then(() => _onSuccess())
+          .catch(() => _onSuccess());
+      }
     }
+
     function resetCatering() {
-      document.getElementById('catSuccess').classList.remove('show');
-      document.getElementById('catFormCard').style.display = 'block';
-      document.querySelectorAll('#catFormCard input, #catFormCard select, #catFormCard textarea').forEach(el => el.value = '');
+      const catSuccess = document.getElementById('catSuccess');
+      const catFormCard= document.getElementById('catFormCard');
+      if (catSuccess)  catSuccess.classList.remove('show');
+      if (catFormCard) catFormCard.style.display = 'block';
+
+      document.querySelectorAll('#catFormCard input, #catFormCard select, #catFormCard textarea')
+        .forEach(el => el.value = '');
       document.querySelectorAll('.pkg-card-item').forEach(c => c.classList.remove('selected'));
       document.querySelectorAll('.addon-chip').forEach(c => c.classList.remove('checked'));
-      document.getElementById('catTerms').checked = false;
+      const terms = document.getElementById('catTerms');
+      if (terms) terms.checked = false;
       catPkg = '';
-      for (let i = 2; i <= 4; i++) document.getElementById('cp' + i).style.display = 'none';
-      document.getElementById('cp1').style.display = 'block';
+      for (let i = 2; i <= 4; i++) {
+        const cp = document.getElementById('cp' + i);
+        if (cp) cp.style.display = 'none';
+      }
+      const cp1 = document.getElementById('cp1');
+      if (cp1) cp1.style.display = 'block';
       for (let i = 1; i <= 4; i++) {
         const s = document.getElementById('cs' + i);
+        if (!s) continue;
         s.classList.remove('active','done');
-        s.querySelector('.cat-step-dot').textContent = i;
+        const dot = s.querySelector('.cat-step-dot');
+        if (dot) dot.textContent = i;
       }
-      document.getElementById('cs1').classList.add('active');
-      document.getElementById('catProgress').style.width = '25%';
+      const cs1  = document.getElementById('cs1');
+      const prog = document.getElementById('catProgress');
+      if (cs1)  cs1.classList.add('active');
+      if (prog) prog.style.width = '25%';
       catStep = 1;
+    }
+
+    // ── WEB SHARE API ───────────────────────────────────────
+    function shareMenu() {
+      if (navigator.share) {
+        navigator.share({
+          title : 'Lou Wok Rice House',
+          text  : 'Wok-fired fried rice & Chinese-American street food in Phoenix, AZ 🔥',
+          url   : window.location.href,
+        }).catch(() => {});
+      } else {
+        navigator.clipboard && navigator.clipboard.writeText(window.location.href)
+          .then(() => showToast('Link copied to clipboard!'))
+          .catch(() => showToast('Visit louwok.com'));
+      }
+    }
+
+    // ── GEOLOCATION — nearest stop ──────────────────────────
+    function findNearbyStop() {
+      if (!navigator.geolocation) { showToast('Geolocation not supported.', 'error'); return; }
+      showToast('Finding your location…');
+      navigator.geolocation.getCurrentPosition(
+        pos => {
+          const { latitude: lat, longitude: lng } = pos.coords;
+          const stops = [
+            { name:'South Phoenix · 18th St',   lat:33.386, lng:-112.055 },
+            { name:'Midtown PHX · Central Ave',  lat:33.476, lng:-112.074 },
+            { name:'Tempe / ASU Area',           lat:33.421, lng:-111.934 },
+            { name:'Roosevelt Row Arts',         lat:33.461, lng:-112.070 },
+            { name:'Biltmore / Arcadia',         lat:33.509, lng:-112.022 },
+          ];
+          const nearest = stops.reduce((best, s) => {
+            const d = Math.hypot(s.lat - lat, s.lng - lng);
+            return d < best.dist ? { ...s, dist: d } : best;
+          }, { dist: Infinity });
+          showToast('Nearest stop: ' + nearest.name + ' 📍');
+        },
+        () => showToast('Location permission denied.', 'error'),
+        { timeout: 8000 }
+      );
     }
 
   </script>
