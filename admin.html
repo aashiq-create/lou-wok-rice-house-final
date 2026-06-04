@@ -335,14 +335,34 @@
     /* ── HOURS EDITOR ────────────────────────────── */
     .hours-row {
       display: grid;
-      grid-template-columns: 120px 1fr 1fr 80px;
-      gap: 1rem;
+      grid-template-columns: 110px 110px 110px 2fr 70px;
+      gap: 0.85rem;
       align-items: center;
       padding: 0.75rem 0;
       border-bottom: 1px solid rgba(232,160,32,0.08);
     }
     .hours-row:last-child { border-bottom: none; }
     .day-label { font-size: 0.82rem; font-weight: 600; color: var(--rice); }
+    .hours-head {
+      display: grid;
+      grid-template-columns: 110px 110px 110px 2fr 70px;
+      gap: 0.85rem;
+      padding: 0 0 0.5rem;
+      border-bottom: 1px solid rgba(232,160,32,0.15);
+      margin-bottom: 0.25rem;
+    }
+    .hours-head span {
+      font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.06em;
+      color: rgba(245,238,216,0.45); font-weight: 700;
+    }
+    .hours-row.is-closed { opacity: 0.5; }
+    .hours-row.is-closed .field-input { pointer-events: none; }
+    @media (max-width: 720px) {
+      .hours-row, .hours-head { grid-template-columns: 1fr 1fr; }
+      .hours-head { display: none; }
+      .hours-row .day-label { grid-column: 1 / -1; }
+      .hours-row .hours-loc { grid-column: 1 / -1; }
+    }
 
     .toggle {
       position: relative;
@@ -762,7 +782,7 @@
       <div class="panel-grid panel-grid-2">
         <div class="panel">
           <div class="panel-header">
-            <span class="panel-title">Operating Hours</span>
+            <span class="panel-title">Hours &amp; Truck Rotation</span>
             <button class="btn btn-primary btn-sm" onclick="saveHours()">Save Hours</button>
           </div>
           <div id="hoursGrid"></div>
@@ -1335,24 +1355,34 @@
   function renderHours() {
     const grid = document.getElementById('hoursGrid');
     if (!grid) return;
-    grid.innerHTML = '';
+    grid.innerHTML = `
+      <div class="hours-head">
+        <span>Day</span><span>Open</span><span>Close</span><span>Location stop</span><span>Open?</span>
+      </div>`;
     hoursData.forEach((h,i) => {
+      const loc = h.location || '';
       grid.innerHTML += `
-        <div class="hours-row">
+        <div class="hours-row${h.closed?' is-closed':''}" id="hours-row-${i}">
           <div class="day-label">${h.day}</div>
           <input class="field-input" type="time" value="${h.open}"  id="open-${i}" />
           <input class="field-input" type="time" value="${h.close}" id="close-${i}" />
-          <label class="toggle"><input type="checkbox" ${h.closed?'':'checked'} id="toggle-${i}" /><span class="toggle-track"></span></label>
+          <input class="field-input hours-loc" type="text" value="${loc.replace(/"/g,'&quot;')}" id="loc-${i}" placeholder="e.g. Roosevelt Row · 3rd St" />
+          <label class="toggle"><input type="checkbox" ${h.closed?'':'checked'} id="toggle-${i}" onchange="document.getElementById('hours-row-${i}').classList.toggle('is-closed', !this.checked)" /><span class="toggle-track"></span></label>
         </div>`;
     });
   }
 
   function saveHours() {
     hoursData.forEach((h,i) => {
-      const o=document.getElementById('open-'+i), c=document.getElementById('close-'+i), t=document.getElementById('toggle-'+i);
+      const o=document.getElementById('open-'+i), c=document.getElementById('close-'+i), t=document.getElementById('toggle-'+i), l=document.getElementById('loc-'+i);
       if(o) h.open=o.value; if(c) h.close=c.value; if(t) h.closed=!t.checked;
+      if(l) {
+        h.location = l.value.trim();
+        // keep area/street roughly in sync from the simple location field
+        h.area = h.location.split('·')[0].trim() || h.location;
+      }
     });
-    setUnsaved(); showToast('Hours updated','success');
+    setUnsaved(); showToast('Hours & rotation updated','success');
   }
 
   function _populateLocation() {
