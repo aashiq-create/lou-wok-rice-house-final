@@ -595,6 +595,12 @@
     <button class="nav-item" onclick="switchSection('socials', this)">
       <span class="icon">📱</span> Social Links
     </button>
+    <button class="nav-item" onclick="switchSection('ticker', this)">
+      <span class="icon">🎞️</span> Ticker Bar
+    </button>
+    <button class="nav-item" onclick="switchSection('footer', this)">
+      <span class="icon">🔗</span> Footer Links
+    </button>
 
     <div class="nav-section-label">Tools</div>
     <a class="nav-item" href="index.html" target="_blank">
@@ -973,11 +979,11 @@
         </div>
         <div class="field-group">
           <label class="field-label">OG Image URL (social share preview)</label>
-          <input class="field-input" placeholder="https://louwok.com/og-image.jpg" />
+          <input class="field-input" id="seo-ogimage" placeholder="https://louwok.com/og-image.jpg" />
         </div>
         <div class="field-group">
           <label class="field-label">Canonical URL</label>
-          <input class="field-input" value="https://www.louwok.com" />
+          <input class="field-input" id="seo-canonical" value="https://www.louwok.com" />
         </div>
         <div style="margin-top:1rem;padding:1rem;background:var(--smoke);border-radius:2px;border:1px solid var(--border);">
           <div style="font-size:0.68rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted);margin-bottom:0.6rem;">Search Preview</div>
@@ -1022,6 +1028,46 @@
         <div class="field-group">
           <label class="field-label">⭐ Yelp</label>
           <input class="field-input" id="social-yelp" placeholder="lou-wok-phoenix  or  full Yelp URL" />
+        </div>
+      </div>
+    </div>
+
+    <div id="section-ticker" class="section">
+      <div class="panel">
+        <div class="panel-header">
+          <span class="panel-title">Scrolling Ticker Bar</span>
+          <button class="btn btn-primary btn-sm" onclick="saveTicker()">Save</button>
+        </div>
+        <p style="color:var(--muted);font-size:0.82rem;margin:0 0 1rem;line-height:1.5;">
+          These are the phrases that scroll across the top of the site. Check “Highlight” to give an item
+          the accent color. Drag isn't needed — order here is the order shown. Remember to
+          <strong>Publish</strong> after saving.
+        </p>
+        <div id="ticker-rows"></div>
+        <button class="btn btn-ghost btn-sm" onclick="addTickerRow()" style="margin-top:0.5rem;">+ Add ticker item</button>
+      </div>
+    </div>
+
+    <div id="section-footer" class="section">
+      <div class="panel">
+        <div class="panel-header">
+          <span class="panel-title">Footer Link Columns</span>
+          <button class="btn btn-primary btn-sm" onclick="saveFooter()">Save</button>
+        </div>
+        <p style="color:var(--muted);font-size:0.82rem;margin:0 0 1rem;line-height:1.5;">
+          Manage the “Menu” and “Visit” columns in the site footer. Use an in-page anchor
+          (<code>#menu</code>, <code>#order</code>, <code>#catering</code>) or a full URL
+          (<code>https://…</code>, which opens in a new tab). The “Connect” column is managed under Social Links.
+        </p>
+        <div style="margin-bottom:1.5rem;">
+          <div class="field-label" style="margin-bottom:0.5rem;">📋 “Menu” column</div>
+          <div id="footer-menu-rows"></div>
+          <button class="btn btn-ghost btn-sm" onclick="addFooterRow('menuLinks','footer-menu-rows')" style="margin-top:0.3rem;">+ Add link</button>
+        </div>
+        <div>
+          <div class="field-label" style="margin-bottom:0.5rem;">📍 “Visit” column</div>
+          <div id="footer-visit-rows"></div>
+          <button class="btn btn-ghost btn-sm" onclick="addFooterRow('visitLinks','footer-visit-rows')" style="margin-top:0.3rem;">+ Add link</button>
         </div>
       </div>
     </div>
@@ -1197,12 +1243,34 @@
       twitter:"",
       youtube:"",
       yelp:""
+    },
+    ticker:[
+      {text:"🍚 Fried Rice", hot:true},
+      {text:"🦀 Crab Rangoon", hot:true},
+      {text:"🥪 St. Paul Sandwich", hot:true},
+      {text:"Wok-Fired Daily", hot:false},
+      {text:"Phoenix, AZ", hot:false}
+    ],
+    footer:{
+      menuLinks:[
+        {label:"Fried Rice", url:"#menu"},
+        {label:"Crab Rangoon", url:"#menu"},
+        {label:"St. Paul Sandwich", url:"#menu"},
+        {label:"Combos", url:"#menu"}
+      ],
+      visitLinks:[
+        {label:"Locations", url:"#"},
+        {label:"Hours", url:"#"},
+        {label:"Order Online", url:"#order"},
+        {label:"Catering", url:"#catering"}
+      ]
     }
   };
 
   // ── LIVE STATE ──────────────────────────────────────────────────
   let menuData = [], hoursData = [], announcementsData = [], orderLinksData = {}, seoData = {};
   let locationData = {}, brandingData = {}, socialsData = {};
+  let tickerData = [], footerData = {};
   let cmsFileSHA = null;
   let selectedItemId = null, selectedTag = '', unsavedChanges = false;
 
@@ -1242,7 +1310,7 @@
       _status('Offline — loaded defaults');
     }
     renderMenuList(); renderHours(); renderAnnouncements();
-    _populateOrderLinks(); _populateSEO(); _populateLocation(); _populateBranding(); _populateSocials();
+    _populateOrderLinks(); _populateSEO(); _populateLocation(); _populateBranding(); _populateSocials(); _populateTicker(); _populateFooter();
     _refreshOverview();
     updateTokenStatus();
   }
@@ -1256,6 +1324,8 @@
     locationData      = d.location      || DEFAULTS.location;
     brandingData      = d.branding      || DEFAULTS.branding;
     socialsData       = d.socials       || DEFAULTS.socials;
+    tickerData        = d.ticker         || DEFAULTS.ticker;
+    footerData        = d.footer         || DEFAULTS.footer;
   }
 
   function _status(msg) {
@@ -1278,6 +1348,8 @@
     saveLocation();
     saveBranding();
     saveSocials();
+    saveTicker();
+    saveFooter();
 
     const allBtns = document.querySelectorAll('[onclick*="publishSite"]');
     allBtns.forEach(b => { b.disabled=true; b.textContent='⏳ Publishing…'; });
@@ -1290,7 +1362,8 @@
       announcements: announcementsData,
       orderLinks: orderLinksData, seo: seoData,
       location: locationData, branding: brandingData,
-      socials: socialsData
+      socials: socialsData,
+      ticker: tickerData, footer: footerData
     };
     const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(payload,null,2))));
 
@@ -1408,7 +1481,8 @@
       hours:'Hours & <span>Location</span>', announcements:'<span>Announcements</span>',
       'order-links':'Order <span>Links</span>', branding:'Brand <span>Settings</span>',
       seo:'SEO & <span>Meta</span>', deploy:'Deploy <span>Site</span>',
-      socials:'Social <span>Links</span>'
+      socials:'Social <span>Links</span>',
+      ticker:'Ticker <span>Bar</span>', footer:'Footer <span>Links</span>'
     };
     document.getElementById('topbar-title').innerHTML = titles[name] || name;
   }
@@ -1613,7 +1687,7 @@
   //  SEO  (data-backed)
   // ══════════════════════════════════════════════════════════════
   function _populateSEO() {
-    const map = {'seo-title':'title','seo-desc':'description','seo-keywords':'keywords'};
+    const map = {'seo-title':'title','seo-desc':'description','seo-keywords':'keywords','seo-ogimage':'ogImage','seo-canonical':'canonical'};
     Object.entries(map).forEach(([elId,key]) => {
       const el = document.getElementById(elId);
       if (el && seoData[key]!==undefined) el.value = seoData[key];
@@ -1621,7 +1695,7 @@
   }
 
   function saveSEO() {
-    const map = {'seo-title':'title','seo-desc':'description','seo-keywords':'keywords'};
+    const map = {'seo-title':'title','seo-desc':'description','seo-keywords':'keywords','seo-ogimage':'ogImage','seo-canonical':'canonical'};
     Object.entries(map).forEach(([elId,key]) => {
       const el = document.getElementById(elId);
       if (el) seoData[key] = el.value;
@@ -1645,6 +1719,84 @@
       if (el) socialsData[k] = el.value.trim();
     });
     setUnsaved(); showToast('Social links saved','success');
+  }
+
+  // ══════════════════════════════════════════════════════════════
+  //  TICKER  (scrolling marquee items)
+  // ══════════════════════════════════════════════════════════════
+  function _populateTicker() {
+    const wrap = document.getElementById('ticker-rows');
+    if (!wrap) return;
+    if (!Array.isArray(tickerData)) tickerData = [];
+    wrap.innerHTML = tickerData.map((it,i)=>`
+      <div class="lk-row" style="display:flex;gap:0.5rem;align-items:center;margin-bottom:0.5rem;">
+        <input class="field-input" id="ticker-text-${i}" value="${(it.text||'').replace(/"/g,'&quot;')}" placeholder="e.g. 🍚 Fried Rice" style="flex:1;" />
+        <label style="display:flex;align-items:center;gap:0.3rem;font-size:0.75rem;color:var(--muted);white-space:nowrap;">
+          <input type="checkbox" id="ticker-hot-${i}" ${it.hot?'checked':''}/> Highlight
+        </label>
+        <button class="btn btn-ghost btn-sm" onclick="removeTickerRow(${i})" title="Remove">✕</button>
+      </div>`).join('') || '<p style="color:var(--muted);font-size:0.82rem;">No ticker items yet.</p>';
+  }
+  function _readTicker() {
+    const wrap = document.getElementById('ticker-rows');
+    if (!wrap) return;
+    const rows=[]; let i=0;
+    while (document.getElementById('ticker-text-'+i)) {
+      const t=document.getElementById('ticker-text-'+i).value.trim();
+      const hot=document.getElementById('ticker-hot-'+i).checked;
+      if (t) rows.push({text:t, hot});
+      i++;
+    }
+    tickerData = rows;
+  }
+  function addTickerRow() { _readTicker(); tickerData.push({text:'', hot:false}); _populateTicker(); }
+  function removeTickerRow(i) { _readTicker(); tickerData.splice(i,1); _populateTicker(); }
+  function saveTicker() { _readTicker(); setUnsaved(); showToast('Ticker saved','success'); }
+
+  // ══════════════════════════════════════════════════════════════
+  //  FOOTER LINK COLUMNS  (Menu + Visit)
+  // ══════════════════════════════════════════════════════════════
+  function _footerRows(colKey, containerId) {
+    const wrap = document.getElementById(containerId);
+    if (!wrap) return;
+    const list = (footerData && Array.isArray(footerData[colKey])) ? footerData[colKey] : [];
+    wrap.innerHTML = list.map((l,i)=>`
+      <div class="lk-row" style="display:flex;gap:0.5rem;align-items:center;margin-bottom:0.5rem;">
+        <input class="field-input" id="${colKey}-label-${i}" value="${(l.label||'').replace(/"/g,'&quot;')}" placeholder="Link text" style="flex:1;" />
+        <input class="field-input" id="${colKey}-url-${i}" value="${(l.url||'').replace(/"/g,'&quot;')}" placeholder="#menu or https://…" style="flex:1.3;" />
+        <button class="btn btn-ghost btn-sm" onclick="removeFooterRow('${colKey}','${containerId}',${i})" title="Remove">✕</button>
+      </div>`).join('') || '<p style="color:var(--muted);font-size:0.82rem;">No links yet.</p>';
+  }
+  function _readFooterCol(colKey) {
+    const rows=[]; let i=0;
+    while (document.getElementById(colKey+'-label-'+i)) {
+      const label=document.getElementById(colKey+'-label-'+i).value.trim();
+      const url=document.getElementById(colKey+'-url-'+i).value.trim();
+      if (label) rows.push({label, url});
+      i++;
+    }
+    if(!footerData) footerData={};
+    footerData[colKey]=rows;
+  }
+  function _populateFooter() {
+    if(!footerData) footerData={};
+    _footerRows('menuLinks','footer-menu-rows');
+    _footerRows('visitLinks','footer-visit-rows');
+  }
+  function addFooterRow(colKey, containerId) {
+    _readFooterCol(colKey);
+    footerData[colKey].push({label:'', url:''});
+    _footerRows(colKey, containerId);
+  }
+  function removeFooterRow(colKey, containerId, i) {
+    _readFooterCol(colKey);
+    footerData[colKey].splice(i,1);
+    _footerRows(colKey, containerId);
+  }
+  function saveFooter() {
+    _readFooterCol('menuLinks');
+    _readFooterCol('visitLinks');
+    setUnsaved(); showToast('Footer links saved','success');
   }
 
   // ══════════════════════════════════════════════════════════════
