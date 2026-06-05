@@ -1,6 +1,6 @@
 {
   "_info": "Written by louwok.com/admin. index.html reads this at runtime.",
-  "_updated": "2026-06-05T22:08:28.105Z",
+  "_updated": "2026-06-05T22:14:37.951Z",
   "menu": [
     {
       "id": 1,
@@ -62,7 +62,7 @@
       "category": "rice",
       "priceHalf": 8,
       "priceFull": 13,
-      "tag": "fan-fave",
+      "tag": "new",
       "desc": "Sweet meets savory. Served in a hollowed pineapple for the full experience."
     },
     {
