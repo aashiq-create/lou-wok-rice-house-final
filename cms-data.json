@@ -1,6 +1,6 @@
 {
   "_info": "Written by louwok.com/admin. index.html reads this at runtime.",
-  "_updated": "2026-06-05T21:47:01.014Z",
+  "_updated": "2026-06-05T22:05:53.675Z",
   "menu": [
     {
       "id": 1,
@@ -9,7 +9,7 @@
       "priceHalf": 7,
       "priceFull": 11,
       "tag": "classic",
-      "desc": "The foundation. Egg, bean sprouts, soy, and green onion — cooked hot and fast in a screaming wok."
+      "desc": "The foundation. Egg, bean sprouts, soy, and green onion â cooked hot and fast in a screaming wok."
     },
     {
       "id": 2,
@@ -81,8 +81,8 @@
       "open": "11:00",
       "close": "21:00",
       "closed": true,
-      "location": "South Phoenix · 18th St",
-      "area": "South Phoenix",
+      "location": "South Phoenix Â· 18th St",
+      "area": "South Phoenix Â",
       "street": "Near 18th St & Baseline"
     },
     {
@@ -90,8 +90,8 @@
       "open": "11:00",
       "close": "21:00",
       "closed": true,
-      "location": "Midtown PHX · Central Ave",
-      "area": "Midtown PHX",
+      "location": "Midtown PHX Â· Central Ave",
+      "area": "Midtown PHX Â",
       "street": "Near Central & Thomas"
     },
     {
@@ -126,8 +126,8 @@
       "open": "11:00",
       "close": "19:00",
       "closed": false,
-      "location": "Rotating · Follow @louwokphx",
-      "area": "Rotating",
+      "location": "Rotating Â· Follow @louwokphx",
+      "area": "Rotating Â",
       "street": "Check @louwokphx for today's spot"
     },
     {
@@ -166,7 +166,9 @@
   "seo": {
     "title": "Lou Wok Rice House",
     "description": "Lou Wok Rice House was built for the transplants, the foodies, the people who moved to Phoenix and couldn't find the flavors they grew up with.",
-    "keywords": "fried rice phoenix, crab rangoon phoenix, st paul sandwich, lou wok fried rice, chicken fried rice, vegetable fried rice, fried chicken wings, egg foo young, phoenix fried rice. phoenix fried chicken wings"
+    "keywords": "fried rice phoenix, crab rangoon phoenix, st paul sandwich, lou wok fried rice, chicken fried rice, vegetable fried rice, fried chicken wings, egg foo young, phoenix fried rice. phoenix fried chicken wings",
+    "ogImage": "",
+    "canonical": "https://www.louwok.com"
   },
   "location": {
     "street": "Phoenix, AZ",
@@ -184,6 +186,82 @@
     "tagline": "Wok-fired flavor built for Phoenix.",
     "displayFont": "Bebas Neue (Current)",
     "bodyFont": "DM Sans (Current)",
-    "footerCredit": "Built with 🔥 in the Valley"
+    "footerCredit": "Built with ð¥ in the Valley"
+  },
+  "socials": {
+    "instagram": "louwokphx",
+    "tiktok": "louwokphx",
+    "facebook": "",
+    "twitter": "",
+    "youtube": "",
+    "yelp": ""
+  },
+  "ticker": [
+    {
+      "text": "🍚 Fried Rice",
+      "hot": true
+    },
+    {
+      "text": "🦀 Crab Rangoon",
+      "hot": true
+    },
+    {
+      "text": "🥪 St. Paul Sandwich",
+      "hot": true
+    },
+    {
+      "text": "Wok-Fired Daily",
+      "hot": true
+    },
+    {
+      "text": "Phoenix, AZ",
+      "hot": true
+    },
+    {
+      "text": "Fried Chicken Wings",
+      "hot": true
+    },
+    {
+      "text": "Vess Soda",
+      "hot": true
+    }
+  ],
+  "footer": {
+    "menuLinks": [
+      {
+        "label": "Fried Rice",
+        "url": "#menu"
+      },
+      {
+        "label": "Crab Rangoon",
+        "url": "#menu"
+      },
+      {
+        "label": "St. Paul Sandwich",
+        "url": "#menu"
+      },
+      {
+        "label": "Combos",
+        "url": "#menu"
+      }
+    ],
+    "visitLinks": [
+      {
+        "label": "Locations",
+        "url": "#"
+      },
+      {
+        "label": "Hours",
+        "url": "#"
+      },
+      {
+        "label": "Order Online",
+        "url": "#order"
+      },
+      {
+        "label": "Catering",
+        "url": "#catering"
+      }
+    ]
   }
 }
