@@ -1,6 +1,6 @@
 {
   "_info": "Written by louwok.com/admin. index.html reads this at runtime.",
-  "_updated": "2026-06-05T22:05:53.675Z",
+  "_updated": "2026-06-05T22:06:51.623Z",
   "menu": [
     {
       "id": 1,
@@ -242,6 +242,10 @@
       },
       {
         "label": "Combos",
+        "url": "#menu"
+      },
+      {
+        "label": "Fried Chicken",
         "url": "#menu"
       }
     ],
