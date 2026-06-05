@@ -592,6 +592,9 @@
     <button class="nav-item" onclick="switchSection('seo', this)">
       <span class="icon">🔍</span> SEO & Meta
     </button>
+    <button class="nav-item" onclick="switchSection('socials', this)">
+      <span class="icon">📱</span> Social Links
+    </button>
 
     <div class="nav-section-label">Tools</div>
     <a class="nav-item" href="index.html" target="_blank">
@@ -985,6 +988,44 @@
       </div>
     </div>
 
+    <div id="section-socials" class="section">
+      <div class="panel">
+        <div class="panel-header">
+          <span class="panel-title">Social Media Links</span>
+          <button class="btn btn-primary btn-sm" onclick="saveSocials()">Save</button>
+        </div>
+        <p style="color:var(--muted);font-size:0.82rem;margin:0 0 1rem;line-height:1.5;">
+          Enter either a full URL (https://instagram.com/louwokphx) or just the handle (louwokphx) —
+          either works. Leave a field blank to hide that platform on the site. Saved links appear in the
+          footer's “Connect” column. Remember to <strong>Publish</strong> after saving to push changes live.
+        </p>
+        <div class="field-group">
+          <label class="field-label">📸 Instagram</label>
+          <input class="field-input" id="social-instagram" placeholder="louwokphx  or  https://instagram.com/louwokphx" />
+        </div>
+        <div class="field-group">
+          <label class="field-label">🎵 TikTok</label>
+          <input class="field-input" id="social-tiktok" placeholder="louwokphx  or  https://tiktok.com/@louwokphx" />
+        </div>
+        <div class="field-group">
+          <label class="field-label">👍 Facebook</label>
+          <input class="field-input" id="social-facebook" placeholder="louwokphx  or  https://facebook.com/louwokphx" />
+        </div>
+        <div class="field-group">
+          <label class="field-label">✖ X / Twitter</label>
+          <input class="field-input" id="social-twitter" placeholder="louwokphx  or  https://x.com/louwokphx" />
+        </div>
+        <div class="field-group">
+          <label class="field-label">▶ YouTube</label>
+          <input class="field-input" id="social-youtube" placeholder="louwokphx  or  https://youtube.com/@louwokphx" />
+        </div>
+        <div class="field-group">
+          <label class="field-label">⭐ Yelp</label>
+          <input class="field-input" id="social-yelp" placeholder="lou-wok-phoenix  or  full Yelp URL" />
+        </div>
+      </div>
+    </div>
+
     <!-- ── DEPLOY ── -->
     <div id="section-deploy" class="section">
       <div class="panel-grid panel-grid-2">
@@ -1148,12 +1189,20 @@
       title:"Lou Wok Rice House",
       description:"Wok-fired fried rice, crab rangoon, and the legendary St. Paul sandwich. Phoenix's boldest rice house.",
       keywords:"fried rice phoenix, crab rangoon phoenix, st paul sandwich, chinese takeout phoenix, lou wok"
+    },
+    socials:{
+      instagram:"louwokphx",
+      tiktok:"louwokphx",
+      facebook:"",
+      twitter:"",
+      youtube:"",
+      yelp:""
     }
   };
 
   // ── LIVE STATE ──────────────────────────────────────────────────
   let menuData = [], hoursData = [], announcementsData = [], orderLinksData = {}, seoData = {};
-  let locationData = {}, brandingData = {};
+  let locationData = {}, brandingData = {}, socialsData = {};
   let cmsFileSHA = null;
   let selectedItemId = null, selectedTag = '', unsavedChanges = false;
 
@@ -1193,7 +1242,7 @@
       _status('Offline — loaded defaults');
     }
     renderMenuList(); renderHours(); renderAnnouncements();
-    _populateOrderLinks(); _populateSEO(); _populateLocation(); _populateBranding();
+    _populateOrderLinks(); _populateSEO(); _populateLocation(); _populateBranding(); _populateSocials();
     _refreshOverview();
     updateTokenStatus();
   }
@@ -1206,6 +1255,7 @@
     seoData           = d.seo           || DEFAULTS.seo;
     locationData      = d.location      || DEFAULTS.location;
     brandingData      = d.branding      || DEFAULTS.branding;
+    socialsData       = d.socials       || DEFAULTS.socials;
   }
 
   function _status(msg) {
@@ -1227,6 +1277,7 @@
     saveSEO();
     saveLocation();
     saveBranding();
+    saveSocials();
 
     const allBtns = document.querySelectorAll('[onclick*="publishSite"]');
     allBtns.forEach(b => { b.disabled=true; b.textContent='⏳ Publishing…'; });
@@ -1238,7 +1289,8 @@
       menu: menuData, hours: hoursData,
       announcements: announcementsData,
       orderLinks: orderLinksData, seo: seoData,
-      location: locationData, branding: brandingData
+      location: locationData, branding: brandingData,
+      socials: socialsData
     };
     const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(payload,null,2))));
 
@@ -1355,7 +1407,8 @@
       overview:'Dashboard <span>Overview</span>', menu:'Menu <span>Editor</span>',
       hours:'Hours & <span>Location</span>', announcements:'<span>Announcements</span>',
       'order-links':'Order <span>Links</span>', branding:'Brand <span>Settings</span>',
-      seo:'SEO & <span>Meta</span>', deploy:'Deploy <span>Site</span>'
+      seo:'SEO & <span>Meta</span>', deploy:'Deploy <span>Site</span>',
+      socials:'Social <span>Links</span>'
     };
     document.getElementById('topbar-title').innerHTML = titles[name] || name;
   }
@@ -1574,6 +1627,24 @@
       if (el) seoData[key] = el.value;
     });
     setUnsaved(); showToast('SEO settings saved','success');
+  }
+
+  // ══════════════════════════════════════════════════════════════
+  //  SOCIAL LINKS  (data-backed)
+  // ══════════════════════════════════════════════════════════════
+  const SOCIAL_KEYS = ['instagram','tiktok','facebook','twitter','youtube','yelp'];
+  function _populateSocials() {
+    SOCIAL_KEYS.forEach(k => {
+      const el = document.getElementById('social-'+k);
+      if (el && socialsData[k]!==undefined) el.value = socialsData[k];
+    });
+  }
+  function saveSocials() {
+    SOCIAL_KEYS.forEach(k => {
+      const el = document.getElementById('social-'+k);
+      if (el) socialsData[k] = el.value.trim();
+    });
+    setUnsaved(); showToast('Social links saved','success');
   }
 
   // ══════════════════════════════════════════════════════════════
