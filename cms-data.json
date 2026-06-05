@@ -1,6 +1,6 @@
 {
   "_info": "Written by louwok.com/admin. index.html reads this at runtime.",
-  "_updated": "2026-06-05T19:56:03.674Z",
+  "_updated": "2026-06-05T19:56:56.156Z",
   "menu": [
     {
       "id": 1,
@@ -73,15 +73,6 @@
       "priceFull": 13,
       "tag": "fan-fave",
       "desc": "Sweet meets savory. Served in a hollowed pineapple for the full experience."
-    },
-    {
-      "id": 9,
-      "name": "Basil Fried Rice",
-      "category": "rice",
-      "priceHalf": 8,
-      "priceFull": 13,
-      "tag": "",
-      "desc": "Fresh Thai basil, garlic, chili, egg — wok-fired until fragrant."
     },
     {
       "id": 10,
@@ -178,7 +169,7 @@
     "grubhub": {
       "url": "",
       "label": "Grubhub",
-      "enabled": false
+      "enabled": true
     }
   },
   "seo": {
