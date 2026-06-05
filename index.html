@@ -2347,7 +2347,7 @@
       </div>
       <div>
         <div class="footer-col-title">Connect</div>
-        <ul class="footer-links">
+        <ul class="footer-links" id="footerSocials">
           <li><a href="#">Instagram</a></li>
           <li><a href="#">TikTok</a></li>
           <li><a href="#">Contact Us</a></li>
@@ -2905,7 +2905,12 @@
       const isClosedDay = !!today.closed;
       const isOpen = !isClosedDay && hour >= today.open && hour < today.close;
       const isSoon = !isClosedDay && !isOpen && hour >= today.open - 1 && hour < today.open;
-      const fmt = h => h < 12 ? h + 'am' : h === 12 ? '12pm' : (h-12) + 'pm';
+      const fmt = h => {
+        const hr = Math.floor(h), min = Math.round((h - hr) * 60);
+        const ampm = hr < 12 ? 'am' : 'pm';
+        const h12 = hr % 12 === 0 ? 12 : hr % 12;
+        return min ? `${h12}:${String(min).padStart(2,'0')}${ampm}` : `${h12}${ampm}`;
+      };
 
       // Live pill
       const pill     = document.getElementById('trackerPill');
@@ -3282,7 +3287,7 @@
         if(!Array.isArray(hours) || !hours.length) return;
         const order=['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
         const abbr={Monday:'Mon',Tuesday:'Tue',Wednesday:'Wed',Thursday:'Thu',Friday:'Fri',Saturday:'Sat',Sunday:'Sun'};
-        const toHr=t=>{ if(!t) return 0; const [H]=t.split(':').map(Number); return H; };
+        const toHr=t=>{ if(!t) return 0; const [H,M]=t.split(':').map(Number); return H + (M||0)/60; };
         const rebuilt = order.map(dayName=>{
           const h = hours.find(x=>x.day===dayName) || {};
           const loc = h.location || (h.area||'') || 'Follow @louwokphx';
@@ -3343,16 +3348,62 @@
         document.body.insertBefore(bar, document.body.firstChild);
       }
 
-      fetch(CMS_URL, { cache:'no-store' })
-        .then(r=>{ if(!r.ok) throw new Error('HTTP '+r.status); return r.json(); })
-        .then(d=>{
-          renderMenu(d.menu);
-          applyRotation(d.hours);
-          renderOrderLinks(d.orderLinks);
-          renderSEO(d.seo);
-          renderAnnouncements(d.announcements);
+      // GitHub's raw CDN caches for ~5 min and ignores query busting, so a fresh
+      // publish may not show up immediately. The API contents endpoint is not
+      // cached the same way — try it first for an instant-fresh read, then fall
+      // back to raw if the API is rate-limited or unavailable.
+      const API_URL = `https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${CMS_FILE}?ref=${GH_BRANCH}&_=${Date.now()}`;
+
+      function loadCMS(data){
+        renderMenu(data.menu);
+        applyRotation(data.hours);
+        renderOrderLinks(data.orderLinks);
+        renderSEO(data.seo);
+        renderAnnouncements(data.announcements);
+        renderSocials(data.socials);
+      }
+
+      function renderSocials(socials){
+        const wrap=document.getElementById('footerSocials');
+        if(!wrap || !socials) return;
+        // platform → { label, url-prefix for bare handles }
+        const defs=[
+          {key:'instagram', label:'Instagram', base:'https://instagram.com/'},
+          {key:'tiktok',    label:'TikTok',    base:'https://tiktok.com/@'},
+          {key:'facebook',  label:'Facebook',  base:'https://facebook.com/'},
+          {key:'twitter',   label:'X / Twitter',base:'https://x.com/'},
+          {key:'youtube',   label:'YouTube',   base:'https://youtube.com/@'},
+          {key:'yelp',      label:'Yelp',      base:'https://yelp.com/biz/'},
+        ];
+        const norm=(v,base)=>{
+          v=String(v||'').trim(); if(!v) return '';
+          if(/^https?:\/\//i.test(v)) return v;            // full URL given
+          return base + v.replace(/^@/,'');                // bare handle
+        };
+        const items=defs
+          .map(d=>({d, url:norm(socials[d.key], d.base)}))
+          .filter(x=>x.url);
+        if(!items.length) return;                          // nothing published → leave defaults
+        wrap.innerHTML =
+          items.map(x=>`<li><a href="${esc(x.url)}" target="_blank" rel="noopener">${esc(x.d.label)}</a></li>`).join('')
+          + '<li><a href="#contact">Contact Us</a></li>';
+      }
+
+
+      fetch(API_URL, { cache:'no-store', headers:{ 'Accept':'application/vnd.github.v3+json' } })
+        .then(r=>{ if(!r.ok) throw new Error('API '+r.status); return r.json(); })
+        .then(j=>{
+          // API returns base64-encoded content
+          const json = JSON.parse(decodeURIComponent(escape(atob(j.content))));
+          loadCMS(json);
         })
-        .catch(e=>{ /* cms-data.json not published yet — keep built-in defaults */ console.info('CMS not loaded:', e.message); });
+        .catch(()=>{
+          // Fallback: raw CDN (may be up to ~5 min stale)
+          fetch(CMS_URL, { cache:'no-store' })
+            .then(r=>{ if(!r.ok) throw new Error('HTTP '+r.status); return r.json(); })
+            .then(loadCMS)
+            .catch(e=>{ console.info('CMS not loaded:', e.message); });
+        });
     })();
 
   </script>
