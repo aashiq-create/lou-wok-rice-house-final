@@ -1,6 +1,6 @@
 {
   "_info": "Written by louwok.com/admin. index.html reads this at runtime.",
-  "_updated": "2026-06-05T19:56:56.156Z",
+  "_updated": "2026-06-05T21:40:42.770Z",
   "menu": [
     {
       "id": 1,
@@ -115,7 +115,7 @@
     {
       "day": "Thursday",
       "open": "11:00",
-      "close": "21:00",
+      "close": "19:00",
       "closed": false,
       "location": "Roosevelt Row Arts",
       "area": "Roosevelt Row Arts",
@@ -124,7 +124,7 @@
     {
       "day": "Friday",
       "open": "11:00",
-      "close": "22:00",
+      "close": "19:00",
       "closed": false,
       "location": "Biltmore / Arcadia",
       "area": "Biltmore / Arcadia",
@@ -133,7 +133,7 @@
     {
       "day": "Saturday",
       "open": "11:00",
-      "close": "22:00",
+      "close": "19:00",
       "closed": false,
       "location": "Rotating · Follow @louwokphx",
       "area": "Rotating",
@@ -141,8 +141,8 @@
     },
     {
       "day": "Sunday",
-      "open": "12:00",
-      "close": "20:00",
+      "open": "11:00",
+      "close": "19:00",
       "closed": false,
       "location": "Roosevelt Row Arts",
       "area": "Roosevelt Row Arts",
