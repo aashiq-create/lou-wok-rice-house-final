@@ -1,0 +1,207 @@
+{
+  "_info": "Written by louwok.com/admin. index.html reads this at runtime.",
+  "_updated": "2026-06-05T19:54:13.912Z",
+  "menu": [
+    {
+      "id": 1,
+      "name": "Classic Fried Rice",
+      "category": "rice",
+      "priceHalf": 7,
+      "priceFull": 11,
+      "tag": "classic",
+      "desc": "The foundation. Egg, bean sprouts, soy, and green onion — cooked hot and fast in a screaming wok."
+    },
+    {
+      "id": 2,
+      "name": "Chicken Fried Rice",
+      "category": "rice",
+      "priceHalf": 8,
+      "priceFull": 13,
+      "tag": "popular",
+      "desc": "All-white chicken, egg, bean sprouts, soy, and green onion. Classic done right."
+    },
+    {
+      "id": 3,
+      "name": "Beef Fried Rice",
+      "category": "rice",
+      "priceHalf": 8,
+      "priceFull": 13,
+      "tag": "",
+      "desc": "Thinly sliced beef, wok-fired with egg, bean sprouts, and green onion."
+    },
+    {
+      "id": 4,
+      "name": "Shrimp Fried Rice",
+      "category": "rice",
+      "priceHalf": 8,
+      "priceFull": 13,
+      "tag": "",
+      "desc": "Plump shrimp, wok-fired with egg, green onion, and a splash of soy."
+    },
+    {
+      "id": 5,
+      "name": "Pork Fried Rice",
+      "category": "rice",
+      "priceHalf": 8,
+      "priceFull": 13,
+      "tag": "",
+      "desc": "Slow-cooked pork, wok-fired with the classic trio: egg, sprouts, and soy."
+    },
+    {
+      "id": 6,
+      "name": "Crab Rangoon",
+      "category": "appetizers",
+      "priceHalf": null,
+      "priceFull": 8,
+      "tag": "popular",
+      "desc": "Crispy wonton cups filled with real crab and cream cheese. Fried to gold. 6pc."
+    },
+    {
+      "id": 7,
+      "name": "St. Paul Sandwich",
+      "category": "sandwiches",
+      "priceHalf": null,
+      "priceFull": 7,
+      "tag": "fan-fave",
+      "desc": "Egg foo young patty on soft white bread with mayo and pickles. A Midwest icon."
+    },
+    {
+      "id": 8,
+      "name": "Pineapple Chicken Rice",
+      "category": "rice",
+      "priceHalf": 8,
+      "priceFull": 13,
+      "tag": "fan-fave",
+      "desc": "Sweet meets savory. Served in a hollowed pineapple for the full experience."
+    },
+    {
+      "id": 9,
+      "name": "Basil Fried Rice",
+      "category": "rice",
+      "priceHalf": 8,
+      "priceFull": 13,
+      "tag": "",
+      "desc": "Fresh Thai basil, garlic, chili, egg — wok-fired until fragrant."
+    },
+    {
+      "id": 10,
+      "name": "Ultimate Fried Rice",
+      "category": "rice",
+      "priceHalf": 8,
+      "priceFull": 13,
+      "tag": "popular",
+      "desc": "Everything in one bowl. Beef, chicken, shrimp, pork, and ham. The works."
+    }
+  ],
+  "hours": [
+    {
+      "day": "Monday",
+      "open": "11:00",
+      "close": "21:00",
+      "closed": true,
+      "location": "South Phoenix · 18th St",
+      "area": "South Phoenix",
+      "street": "Near 18th St & Baseline"
+    },
+    {
+      "day": "Tuesday",
+      "open": "11:00",
+      "close": "21:00",
+      "closed": true,
+      "location": "Midtown PHX · Central Ave",
+      "area": "Midtown PHX",
+      "street": "Near Central & Thomas"
+    },
+    {
+      "day": "Wednesday",
+      "open": "11:00",
+      "close": "21:00",
+      "closed": true,
+      "location": "Tempe / ASU Area",
+      "area": "Tempe / ASU Area",
+      "street": "Near Mill Ave & University"
+    },
+    {
+      "day": "Thursday",
+      "open": "11:00",
+      "close": "21:00",
+      "closed": false,
+      "location": "Roosevelt Row Arts",
+      "area": "Roosevelt Row Arts",
+      "street": "Near 3rd St & Roosevelt"
+    },
+    {
+      "day": "Friday",
+      "open": "11:00",
+      "close": "22:00",
+      "closed": false,
+      "location": "Biltmore / Arcadia",
+      "area": "Biltmore / Arcadia",
+      "street": "Near Camelback & 24th St"
+    },
+    {
+      "day": "Saturday",
+      "open": "11:00",
+      "close": "22:00",
+      "closed": false,
+      "location": "Rotating · Follow @louwokphx",
+      "area": "Rotating",
+      "street": "Check @louwokphx for today's spot"
+    },
+    {
+      "day": "Sunday",
+      "open": "12:00",
+      "close": "20:00",
+      "closed": false,
+      "location": "Roosevelt Row Arts",
+      "area": "Roosevelt Row Arts",
+      "street": "Near 3rd St & Roosevelt"
+    }
+  ],
+  "announcements": [],
+  "orderLinks": {
+    "directPickup": {
+      "url": "",
+      "label": "Order for Pickup",
+      "enabled": true
+    },
+    "doordash": {
+      "url": "https://www.doordash.com/search/store/lou-wok",
+      "label": "DoorDash",
+      "enabled": true
+    },
+    "ubereats": {
+      "url": "https://www.ubereats.com/search?q=lou+wok+phoenix",
+      "label": "Uber Eats",
+      "enabled": true
+    },
+    "grubhub": {
+      "url": "",
+      "label": "Grubhub",
+      "enabled": false
+    }
+  },
+  "seo": {
+    "title": "Lou Wok Rice House",
+    "description": "Wok-fired fried rice, crab rangoon, and the legendary St. Paul sandwich. Phoenix's boldest rice house.",
+    "keywords": "fried rice phoenix, crab rangoon phoenix, st paul sandwich, chinese takeout phoenix, lou wok"
+  },
+  "location": {
+    "street": "Phoenix, AZ",
+    "cityStateZip": "Phoenix, AZ 85001",
+    "phone": "",
+    "email": "orders@louwok.com",
+    "mapsEmbed": ""
+  },
+  "branding": {
+    "colorBlack": "#0a0a08",
+    "colorRice": "#f5eed8",
+    "colorWok": "#c8390a",
+    "colorGold": "#e8a020",
+    "name": "Lou Wok Rice House",
+    "tagline": "Wok-fired flavor built for Phoenix.",
+    "displayFont": "Bebas Neue (Current)",
+    "bodyFont": "DM Sans (Current)",
+    "footerCredit": "Built with 🔥 in the Valley"
+  }
+}
