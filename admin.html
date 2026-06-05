@@ -1063,8 +1063,36 @@
 
   const GITHUB_OWNER  = 'aashiq-create';
   const GITHUB_REPO   = 'Lou-Wok-Rice-House';
-  const GITHUB_BRANCH = 'main';
+  let   GITHUB_BRANCH = 'main';   // auto-corrected to the repo's real default branch on publish
   const CMS_FILE      = 'cms-data.json';
+
+  // Verifies the repo is reachable with this token and returns the TRUE default
+  // branch. A 404 here means the repo path/owner is wrong OR the token can't see
+  // this repo (GitHub returns 404, not 403, for permission problems on private repos).
+  async function verifyRepoAndBranch(token) {
+    const res = await fetch(
+      `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}`,
+      { headers:{ Authorization:`token ${token}`, Accept:'application/vnd.github.v3+json' } }
+    );
+    if (res.status === 404) {
+      throw new Error(
+        `Repo not found: ${GITHUB_OWNER}/${GITHUB_REPO}. ` +
+        `Check the owner/name are exactly right (case-sensitive) and that this token ` +
+        `has the "repo" scope and access to this repository.`
+      );
+    }
+    if (res.status === 401) { const e = new Error('TOKEN_INVALID'); e.code = 401; throw e; }
+    if (!res.ok) {
+      const j = await res.json().catch(()=>({}));
+      throw new Error(`Could not verify repo (HTTP ${res.status}): ${j.message || 'unknown'}`);
+    }
+    const repo = await res.json();
+    // Trust the repo's actual default branch over our hardcoded guess.
+    if (repo.default_branch && repo.default_branch !== GITHUB_BRANCH) {
+      GITHUB_BRANCH = repo.default_branch;
+    }
+    return GITHUB_BRANCH;
+  }
 
   function getToken(){ return localStorage.getItem('louwok_gh_token') || ''; }
 
@@ -1202,7 +1230,7 @@
 
     const allBtns = document.querySelectorAll('[onclick*="publishSite"]');
     allBtns.forEach(b => { b.disabled=true; b.textContent='⏳ Publishing…'; });
-    _status('Writing cms-data.json to GitHub…');
+    const _done = () => allBtns.forEach(b => { b.disabled=false; b.innerHTML='🚀 &nbsp;Publish to louwok.com'; });
 
     const payload = {
       _info:"Written by louwok.com/admin. index.html reads this at runtime.",
@@ -1214,45 +1242,104 @@
     };
     const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(payload,null,2))));
 
-    if (!cmsFileSHA) {
-      try {
-        const r = await fetch(
-          `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${CMS_FILE}?ref=${GITHUB_BRANCH}`,
-          { headers:{ Authorization:`token ${token}`, Accept:'application/vnd.github.v3+json' } }
-        );
-        if (r.ok) cmsFileSHA = (await r.json()).sha;
-      } catch(_){}
-    }
-
-    const body = { message:`CMS update — ${new Date().toLocaleString()}`, content:encoded, branch:GITHUB_BRANCH };
-    if (cmsFileSHA) body.sha = cmsFileSHA;
-
     try {
+      // STEP 1 — confirm the repo is reachable and lock onto its REAL default
+      // branch. This is what surfaces the true cause of "not found" instead of
+      // failing opaquely on the PUT below.
+      _status('Verifying repository…');
+      await verifyRepoAndBranch(token);
+
+      // STEP 2 — get the current file sha against the (now-correct) branch.
+      // 404 here is expected on the very first publish: the file doesn't exist
+      // yet, so we leave sha undefined and GitHub will CREATE it.
+      _status(`Checking ${CMS_FILE} on "${GITHUB_BRANCH}"…`);
+      cmsFileSHA = null;
+      const head = await fetch(
+        `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${CMS_FILE}?ref=${GITHUB_BRANCH}&_=${Date.now()}`,
+        { headers:{ Authorization:`token ${token}`, Accept:'application/vnd.github.v3+json' } }
+      );
+      if (head.ok) {
+        cmsFileSHA = (await head.json()).sha;          // file exists → update
+      } else if (head.status !== 404) {                // 404 = first publish, fine
+        const j = await head.json().catch(()=>({}));
+        throw new Error(`Could not read ${CMS_FILE} (HTTP ${head.status}): ${j.message||'unknown'}`);
+      }
+
+      // STEP 3 — write. Include sha ONLY when updating an existing file.
+      _status(cmsFileSHA ? 'Updating cms-data.json…' : 'Creating cms-data.json…');
+      const body = { message:`CMS update — ${new Date().toLocaleString()}`, content:encoded, branch:GITHUB_BRANCH };
+      if (cmsFileSHA) body.sha = cmsFileSHA;
+
       const res = await fetch(
         `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${CMS_FILE}`,
         { method:'PUT', headers:{ Authorization:`token ${token}`, Accept:'application/vnd.github.v3+json', 'Content-Type':'application/json' }, body:JSON.stringify(body) }
       );
+
       if (res.ok) {
         cmsFileSHA = (await res.json()).content.sha;
         const ind = document.getElementById('deployIndicator');
         if (ind) ind.className = 'deploy-indicator saved';
-        _status('✅ Published — '+ new Date().toLocaleTimeString());
+        _status('✅ Published to "'+GITHUB_BRANCH+'" — '+ new Date().toLocaleTimeString());
         unsavedChanges = false;
         _refreshOverview();
         showToast('🎉 Published! Live on next page refresh','success');
-        allBtns.forEach(b => { b.disabled=false; b.innerHTML='🚀 &nbsp;Publish to louwok.com'; });
-      } else if (res.status===401) {
+        _done();
+        return;
+      }
+
+      if (res.status === 401) {
         localStorage.removeItem('louwok_gh_token');
         showToast('❌ Token invalid — please re-enter','error');
-        allBtns.forEach(b => { b.disabled=false; b.innerHTML='🚀 &nbsp;Publish to louwok.com'; });
+        document.getElementById('tokenModal').style.display='flex';
+        _done();
+        return;
+      }
+
+      // A 409 means the sha we sent is stale (someone/something else updated the
+      // file). Refetch the sha once and retry automatically.
+      if (res.status === 409) {
+        _status('File changed remotely — retrying with fresh version…');
+        const r2 = await fetch(
+          `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${CMS_FILE}?ref=${GITHUB_BRANCH}&_=${Date.now()}`,
+          { headers:{ Authorization:`token ${token}`, Accept:'application/vnd.github.v3+json' } }
+        );
+        if (r2.ok) {
+          body.sha = (await r2.json()).sha;
+          const retry = await fetch(
+            `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${CMS_FILE}`,
+            { method:'PUT', headers:{ Authorization:`token ${token}`, Accept:'application/vnd.github.v3+json', 'Content-Type':'application/json' }, body:JSON.stringify(body) }
+          );
+          if (retry.ok) {
+            cmsFileSHA = (await retry.json()).content.sha;
+            _status('✅ Published to "'+GITHUB_BRANCH+'" — '+ new Date().toLocaleTimeString());
+            unsavedChanges = false; _refreshOverview();
+            showToast('🎉 Published! Live on next page refresh','success');
+            _done();
+            return;
+          }
+        }
+      }
+
+      const j = await res.json().catch(()=>({}));
+      if (res.status === 404) {
+        throw new Error(
+          `GitHub rejected the write (404). Either the "${GITHUB_BRANCH}" branch ` +
+          `doesn't exist, or your token lacks write access to ${GITHUB_OWNER}/${GITHUB_REPO}. ` +
+          `Confirm the token has the full "repo" scope.`
+        );
+      }
+      throw new Error(`HTTP ${res.status}: ${j.message || 'unknown error'}`);
+
+    } catch(e) {
+      if (e.code === 401) {
+        localStorage.removeItem('louwok_gh_token');
+        showToast('❌ Token invalid — please re-enter','error');
         document.getElementById('tokenModal').style.display='flex';
       } else {
-        throw new Error((await res.json()).message || 'HTTP '+res.status);
+        showToast('❌ Publish failed: '+e.message,'error');
+        _status('Publish failed — '+e.message);
       }
-    } catch(e) {
-      showToast('❌ Publish failed: '+e.message,'error');
-      _status('Publish failed — check token & try again');
-      allBtns.forEach(b => { b.disabled=false; b.innerHTML='🚀 &nbsp;Publish to louwok.com'; });
+      _done();
     }
   }
 
