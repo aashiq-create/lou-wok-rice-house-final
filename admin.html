@@ -601,6 +601,9 @@
     <button class="nav-item" onclick="switchSection('footer', this)">
       <span class="icon">🔗</span> Footer Links
     </button>
+    <button class="nav-item" onclick="switchSection('checkout', this)">
+      <span class="icon">💳</span> Checkout &amp; Payments
+    </button>
 
     <div class="nav-section-label">Tools</div>
     <a class="nav-item" href="index.html" target="_blank">
@@ -743,9 +746,9 @@
               <label class="field-label">Category</label>
               <select class="field-select" id="f-category">
                 <option value="rice">Specialty Rice</option>
-                <option value="rangoon">Crab Rangoon</option>
-                <option value="sandwich">St. Paul Sandwich</option>
-                <option value="combo">Combo</option>
+                <option value="appetizers">Appetizer (Crab Rangoon, etc.)</option>
+                <option value="sandwiches">St. Paul Sandwich</option>
+                <option value="combos">Combo</option>
               </select>
             </div>
             <div class="field-group">
@@ -1072,6 +1075,55 @@
       </div>
     </div>
 
+    <div id="section-checkout" class="section">
+      <div class="panel">
+        <div class="panel-header">
+          <span class="panel-title">Checkout &amp; Payments</span>
+          <button class="btn btn-primary btn-sm" onclick="saveSettings()">Save</button>
+        </div>
+        <p style="color:var(--muted);font-size:0.82rem;margin:0 0 1rem;line-height:1.5;">
+          Controls the cart/checkout on the live site. Until your Square account and a payment
+          endpoint are connected, checkout collects the customer's details and places the order as
+          <strong>“pay at pickup.”</strong> Add the Square IDs below when ready to enable card payment.
+        </p>
+        <div class="field-group">
+          <label class="field-label">Sales Tax Rate (%)</label>
+          <input class="field-input" id="set-taxrate" type="number" step="0.01" placeholder="8.6" />
+        </div>
+        <div class="field-group">
+          <label class="field-label">Online Ordering</label>
+          <select class="field-select" id="set-ordering">
+            <option value="on">On — customers can check out</option>
+            <option value="off">Off — ordering disabled</option>
+          </select>
+        </div>
+        <div class="field-group">
+          <label class="field-label">Pickup Instructions (shown in cart)</label>
+          <input class="field-input" id="set-pickup" placeholder="Pickup only · Est. ready 10–15 min" />
+        </div>
+        <div style="margin-top:1rem;padding:1rem;background:var(--smoke);border-radius:2px;border:1px solid var(--border);">
+          <div style="font-size:0.68rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted);margin-bottom:0.75rem;">Square Payment (fill when ready)</div>
+          <div class="field-group">
+            <label class="field-label">Square Application ID</label>
+            <input class="field-input" id="set-sq-appid" placeholder="sq0idp-..." />
+          </div>
+          <div class="field-group">
+            <label class="field-label">Square Location ID</label>
+            <input class="field-input" id="set-sq-locid" placeholder="L..." />
+          </div>
+          <div class="field-group">
+            <label class="field-label">Payment Backend URL (your server endpoint)</label>
+            <input class="field-input" id="set-backend" placeholder="https://your-server.com/charge" />
+          </div>
+          <p style="color:var(--muted);font-size:0.75rem;line-height:1.5;margin:0.5rem 0 0;">
+            Card data is collected by Square's secure hosted fields — your site never sees raw card numbers.
+            The backend URL receives a payment <em>token</em> (not the card) and charges it via Square's API.
+            Leave blank to keep “pay at pickup” mode.
+          </p>
+        </div>
+      </div>
+    </div>
+
     <!-- ── DEPLOY ── -->
     <div id="section-deploy" class="section">
       <div class="panel-grid panel-grid-2">
@@ -1264,13 +1316,21 @@
         {label:"Order Online", url:"#order"},
         {label:"Catering", url:"#catering"}
       ]
+    },
+    settings:{
+      taxRate:0.086,
+      onlineOrderingEnabled:true,
+      pickupInstructions:"Pickup only · Est. ready 10–15 min",
+      squareAppId:"",
+      squareLocationId:"",
+      paymentBackendUrl:""
     }
   };
 
   // ── LIVE STATE ──────────────────────────────────────────────────
   let menuData = [], hoursData = [], announcementsData = [], orderLinksData = {}, seoData = {};
   let locationData = {}, brandingData = {}, socialsData = {};
-  let tickerData = [], footerData = {};
+  let tickerData = [], footerData = {}, settingsData = {};
   let cmsFileSHA = null;
   let selectedItemId = null, selectedTag = '', unsavedChanges = false;
 
@@ -1310,7 +1370,7 @@
       _status('Offline — loaded defaults');
     }
     renderMenuList(); renderHours(); renderAnnouncements();
-    _populateOrderLinks(); _populateSEO(); _populateLocation(); _populateBranding(); _populateSocials(); _populateTicker(); _populateFooter();
+    _populateOrderLinks(); _populateSEO(); _populateLocation(); _populateBranding(); _populateSocials(); _populateTicker(); _populateFooter(); _populateSettings();
     _refreshOverview();
     updateTokenStatus();
   }
@@ -1326,6 +1386,7 @@
     socialsData       = d.socials       || DEFAULTS.socials;
     tickerData        = d.ticker         || DEFAULTS.ticker;
     footerData        = d.footer         || DEFAULTS.footer;
+    settingsData      = d.settings        || DEFAULTS.settings;
   }
 
   function _status(msg) {
@@ -1350,6 +1411,7 @@
     saveSocials();
     saveTicker();
     saveFooter();
+    saveSettings();
 
     const allBtns = document.querySelectorAll('[onclick*="publishSite"]');
     allBtns.forEach(b => { b.disabled=true; b.textContent='⏳ Publishing…'; });
@@ -1363,7 +1425,8 @@
       orderLinks: orderLinksData, seo: seoData,
       location: locationData, branding: brandingData,
       socials: socialsData,
-      ticker: tickerData, footer: footerData
+      ticker: tickerData, footer: footerData,
+      settings: settingsData
     };
     const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(payload,null,2))));
 
@@ -1482,7 +1545,8 @@
       'order-links':'Order <span>Links</span>', branding:'Brand <span>Settings</span>',
       seo:'SEO & <span>Meta</span>', deploy:'Deploy <span>Site</span>',
       socials:'Social <span>Links</span>',
-      ticker:'Ticker <span>Bar</span>', footer:'Footer <span>Links</span>'
+      ticker:'Ticker <span>Bar</span>', footer:'Footer <span>Links</span>',
+      checkout:'Checkout & <span>Payments</span>'
     };
     document.getElementById('topbar-title').innerHTML = titles[name] || name;
   }
@@ -1797,6 +1861,36 @@
     _readFooterCol('menuLinks');
     _readFooterCol('visitLinks');
     setUnsaved(); showToast('Footer links saved','success');
+  }
+
+  // ══════════════════════════════════════════════════════════════
+  //  CHECKOUT / PAYMENT SETTINGS
+  // ══════════════════════════════════════════════════════════════
+  function _populateSettings() {
+    if(!settingsData) settingsData={};
+    const taxPct = document.getElementById('set-taxrate');
+    if (taxPct) taxPct.value = ((settingsData.taxRate!=null?settingsData.taxRate:0.086)*100).toFixed(2);
+    const onSel = document.getElementById('set-ordering');
+    if (onSel) onSel.value = (settingsData.onlineOrderingEnabled===false) ? 'off' : 'on';
+    const pi = document.getElementById('set-pickup');
+    if (pi) pi.value = settingsData.pickupInstructions || '';
+    const appId = document.getElementById('set-sq-appid');
+    if (appId) appId.value = settingsData.squareAppId || '';
+    const locId = document.getElementById('set-sq-locid');
+    if (locId) locId.value = settingsData.squareLocationId || '';
+    const beUrl = document.getElementById('set-backend');
+    if (beUrl) beUrl.value = settingsData.paymentBackendUrl || '';
+  }
+  function saveSettings() {
+    if(!settingsData) settingsData={};
+    const taxPct = parseFloat(document.getElementById('set-taxrate').value);
+    settingsData.taxRate = isNaN(taxPct) ? 0.086 : (taxPct/100);
+    settingsData.onlineOrderingEnabled = document.getElementById('set-ordering').value !== 'off';
+    settingsData.pickupInstructions = document.getElementById('set-pickup').value.trim();
+    settingsData.squareAppId = document.getElementById('set-sq-appid').value.trim();
+    settingsData.squareLocationId = document.getElementById('set-sq-locid').value.trim();
+    settingsData.paymentBackendUrl = document.getElementById('set-backend').value.trim();
+    setUnsaved(); showToast('Checkout settings saved','success');
   }
 
   // ══════════════════════════════════════════════════════════════
