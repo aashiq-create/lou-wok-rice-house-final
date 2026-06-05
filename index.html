@@ -11,6 +11,8 @@
   <meta name="description" content="Wok-fired fried rice, crab rangoon, and the legendary St. Paul sandwich. Phoenix's boldest rice house." />
   <meta property="og:image" content="" id="ogImageMeta" />
   <link rel="canonical" href="https://www.louwok.com" id="canonicalLink" />
+  <!-- Square Web Payments SDK (sandbox). Swap to https://web.squarecdn.com/v1/square.js for production. -->
+  <script src="https://sandbox.web.squarecdn.com/v1/square.js"></script>
 
   <!-- PWA Manifest -->
   <link rel="manifest" href="/manifest.json" />
@@ -1390,6 +1392,9 @@
     }
     .cart-notes::placeholder { color: var(--muted); }
     .cart-notes:focus { border-color: var(--gold); }
+    .co-field { margin-bottom: 0.6rem; }
+    .co-field label { display:block; font-size:0.72rem; letter-spacing:0.06em; text-transform:uppercase; color:var(--muted); margin-bottom:0.25rem; }
+    .co-field input, .co-field select { width:100%; }
     .cart-place-btn {
       width: 100%; background: var(--wok); color: var(--rice); border: none;
       padding: 1rem; font-family: 'Bebas Neue', sans-serif;
@@ -1714,7 +1719,7 @@
       </div>
       <div>
         <p class="menu-intro">Every item on the Lou Wok menu is made to order over a blazing wok. Simple ingredients. Uncompromising flavor. No shortcuts.</p>
-        <div class="menu-tabs" style="margin-top:1.5rem;">
+        <div class="menu-tabs" id="menuTabs" style="margin-top:1.5rem;">
           <button class="tab active" data-filter="all">All</button>
           <button class="tab" data-filter="rice">Rice</button>
           <button class="tab" data-filter="appetizers">Appetizers</button>
@@ -2461,12 +2466,64 @@
     <div class="cart-footer" id="cartFooter" style="display:none">
       <div class="cart-totals">
         <div class="cart-line"><span>Subtotal</span><span id="cartSubtotal">$0.00</span></div>
-        <div class="cart-line"><span>Tax (8.6%)</span><span id="cartTax">$0.00</span></div>
+        <div class="cart-line"><span id="cartTaxLabel">Tax (8.6%)</span><span id="cartTax">$0.00</span></div>
         <div class="cart-total-line"><span>Total</span><span id="cartTotal">$0.00</span></div>
       </div>
       <textarea class="cart-notes" id="cartNotes" rows="2" placeholder="Special instructions, allergies, modifications..."></textarea>
-      <button class="cart-place-btn" id="cartPlaceBtn" onclick="placeOrder()">Place Order — $0.00</button>
-      <p class="cart-fine-print">Pickup at the truck · Est. ready 10–15 min</p>
+      <button class="cart-place-btn" id="cartPlaceBtn" onclick="startCheckout()">Checkout — $0.00</button>
+      <p class="cart-fine-print">Pickup only · Est. ready 10–15 min</p>
+    </div>
+
+    <!-- ── CHECKOUT PANEL (info → review → payment) ── -->
+    <div class="checkout-panel" id="checkoutPanel" style="display:none;padding:0 1.5rem 1.5rem;">
+      <button class="checkout-back" id="checkoutBack" onclick="checkoutBack()"
+        style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:0.8rem;padding:0.5rem 0;margin-bottom:0.5rem;">&larr; Back</button>
+
+      <!-- Step 1: Customer info -->
+      <div class="checkout-step" id="checkoutStep1">
+        <div class="checkout-step-title" style="font-family:'Bebas Neue',sans-serif;font-size:1.5rem;color:var(--gold);letter-spacing:0.04em;margin-bottom:0.75rem;">Your Details</div>
+        <div class="co-field"><label>Name *</label><input class="cart-notes" id="coName" style="min-height:auto;padding:0.6rem;" type="text" autocomplete="name" /></div>
+        <div class="co-field"><label>Phone *</label><input class="cart-notes" id="coPhone" style="min-height:auto;padding:0.6rem;" type="tel" autocomplete="tel" placeholder="(602) 555-0000" /></div>
+        <div class="co-field"><label>Email (for receipt)</label><input class="cart-notes" id="coEmail" style="min-height:auto;padding:0.6rem;" type="email" autocomplete="email" /></div>
+        <div class="co-field"><label>Pickup time</label>
+          <select class="cart-notes" id="coPickupTime" style="min-height:auto;padding:0.6rem;">
+            <option value="asap">As soon as possible</option>
+            <option value="15">In 15 minutes</option>
+            <option value="30">In 30 minutes</option>
+            <option value="45">In 45 minutes</option>
+            <option value="60">In 1 hour</option>
+          </select>
+        </div>
+        <button class="cart-place-btn" onclick="checkoutToReview()" style="margin-top:0.75rem;">Continue to Review</button>
+      </div>
+
+      <!-- Step 2: Review -->
+      <div class="checkout-step" id="checkoutStep2" style="display:none;">
+        <div class="checkout-step-title" style="font-family:'Bebas Neue',sans-serif;font-size:1.5rem;color:var(--gold);letter-spacing:0.04em;margin-bottom:0.75rem;">Review Order</div>
+        <div id="coReviewItems" style="font-size:0.85rem;color:var(--rice);margin-bottom:1rem;"></div>
+        <div class="cart-totals">
+          <div class="cart-line"><span>Subtotal</span><span id="coReviewSubtotal">$0.00</span></div>
+          <div class="cart-line"><span id="coReviewTaxLabel">Tax</span><span id="coReviewTax">$0.00</span></div>
+          <div class="cart-total-line"><span>Total</span><span id="coReviewTotal">$0.00</span></div>
+        </div>
+        <div id="coReviewPickup" style="font-size:0.8rem;color:var(--muted);margin:0.75rem 0;"></div>
+        <button class="cart-place-btn" onclick="checkoutToPayment()" style="margin-top:0.5rem;">Continue to Payment</button>
+      </div>
+
+      <!-- Step 3: Payment (Square Web Payments SDK placeholder) -->
+      <div class="checkout-step" id="checkoutStep3" style="display:none;">
+        <div class="checkout-step-title" style="font-family:'Bebas Neue',sans-serif;font-size:1.5rem;color:var(--gold);letter-spacing:0.04em;margin-bottom:0.75rem;">Payment</div>
+        <div id="coPaymentNotConfigured" style="background:rgba(232,160,32,0.1);border:1px solid var(--gold);border-radius:8px;padding:1rem;margin-bottom:1rem;font-size:0.82rem;color:var(--rice);line-height:1.5;">
+          <strong>💳 Card payment coming soon.</strong><br>
+          Online card payment will be enabled once our Square account is connected.
+          For now, you can place your order and <strong>pay at pickup</strong>.
+        </div>
+        <!-- Square hosted card field mounts here once configured (page never sees raw card data) -->
+        <div id="card-container" style="margin-bottom:1rem;"></div>
+        <div id="coPaymentStatus" style="font-size:0.8rem;color:var(--wok);margin-bottom:0.75rem;min-height:1em;"></div>
+        <button class="cart-place-btn" id="coPayBtn" onclick="submitPayment()">Place Order · Pay at Pickup</button>
+        <p class="cart-fine-print" id="coPayFinePrint">Pickup only · Est. ready 10–15 min</p>
+      </div>
     </div>
     <div class="order-success" id="orderSuccessState">
       <div class="order-success-icon">&#128293;</div>
@@ -2554,19 +2611,47 @@
     });
 
     // ── MENU TABS ────────────────────────────────────────────
-    const tabs  = document.querySelectorAll('.tab');
-    const cards = document.querySelectorAll('.menu-card');
-    tabs.forEach(tab => {
-      tab.addEventListener('click', () => {
-        tabs.forEach(t => t.classList.remove('active'));
+    function applyMenuFilter(f){
+      // Re-query every time: renderMenu() may have replaced the cards after load.
+      const cards = document.querySelectorAll('.menu-card');
+      let visible = 0;
+      cards.forEach(card => {
+        const cat = card.dataset.category || '';
+        const show = (f === 'all' || cat === f);
+        card.style.display = show ? '' : 'none';
+        if (show) visible++;
+      });
+      // Empty-state message so an empty category never looks broken
+      const grid = document.querySelector('.menu-grid');
+      if (grid) {
+        let empty = document.getElementById('menuEmptyState');
+        if (visible === 0) {
+          if (!empty) {
+            empty = document.createElement('div');
+            empty.id = 'menuEmptyState';
+            empty.style.cssText = 'grid-column:1/-1;text-align:center;padding:3rem 1rem;color:var(--muted);font-size:1rem;';
+            grid.appendChild(empty);
+          }
+          empty.textContent = 'Nothing in this category yet — check back soon!';
+          empty.style.display = '';
+        } else if (empty) {
+          empty.style.display = 'none';
+        }
+      }
+    }
+    window.applyMenuFilter = applyMenuFilter;
+    // Event delegation: works even after renderMenu() rebuilds the tab buttons.
+    const tabsContainer = document.getElementById('menuTabs');
+    if (tabsContainer) {
+      tabsContainer.addEventListener('click', (e) => {
+        const tab = e.target.closest('.tab');
+        if (!tab) return;
+        tabsContainer.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
         tab.classList.add('active');
         const f = tab.dataset.filter || tab.textContent.trim().toLowerCase();
-        cards.forEach(card => {
-          const cat = card.dataset.category || '';
-          card.style.display = (f === 'all' || cat === f) ? '' : 'none';
-        });
+        applyMenuFilter(f);
       });
-    });
+    }
 
     // ── BOTTOM NAV ACTIVE STATE ──────────────────────────────
     function setActiveNav(el) {
@@ -2731,7 +2816,8 @@
     function updateCartUI() {
       const count    = cartItems.reduce((s,i) => s + i.qty, 0);
       const subtotal = cartItems.reduce((s,i) => s + i.price * i.qty, 0);
-      const tax      = subtotal * 0.086;
+      const rate     = (typeof ORDER_SETTINGS!=='undefined' && ORDER_SETTINGS.taxRate) ? ORDER_SETTINGS.taxRate : 0.086;
+      const tax      = subtotal * rate;
       const total    = subtotal + tax;
 
       // Badges
@@ -2788,8 +2874,10 @@
         if (sub)     sub.textContent      = '$' + subtotal.toFixed(2);
         if (taxEl)   taxEl.textContent    = '$' + tax.toFixed(2);
         if (totEl)   totEl.textContent    = '$' + total.toFixed(2);
+        const taxLbl = document.getElementById('cartTaxLabel');
+        if (taxLbl)  taxLbl.textContent   = 'Tax (' + (rate*100).toFixed(1) + '%)';
         if (placeBtn) {
-          placeBtn.textContent = 'Place Order — $' + total.toFixed(2);
+          placeBtn.textContent = 'Checkout — $' + total.toFixed(2);
           placeBtn.disabled    = false;
         }
       }
@@ -2820,43 +2908,200 @@
       document.body.style.overflow = '';
     }
 
-    function placeOrder() {
-      if (cartItems.length === 0) return;
-      const notes    = (document.getElementById('cartNotes') || {}).value || '';
-      const subtotal = cartItems.reduce((s,i) => s + i.price * i.qty, 0);
-      const tax      = subtotal * 0.086;
-      const total    = subtotal + tax;
-      const lines    = cartItems.map(i =>
-        `${i.qty}× ${i.name}${i.sizeMeta ? ' (' + i.sizeMeta + ')' : ''} — $${(i.price*i.qty).toFixed(2)}`
-      ).join('\n');
+    // ═══════════════════════════════════════════════════════
+    //  CHECKOUT  (info → review → Square payment placeholder)
+    // ═══════════════════════════════════════════════════════
+    // Order settings (overridable by CMS settings block)
+    let ORDER_SETTINGS = {
+      taxRate: 0.086,                 // 8.6%
+      onlineOrderingEnabled: true,
+      pickupInstructions: 'Pickup only · Est. ready 10–15 min',
+      // Square — fill these from your Square dashboard when ready:
+      squareAppId: '',                // e.g. 'sq0idp-XXXX'
+      squareLocationId: '',           // e.g. 'LXXXXXXXX'
+      paymentBackendUrl: ''           // your server endpoint that charges the token
+    };
 
-      // ── Send order via EmailJS ────────────────────────────
-      if (window.emailjs && EJS_PUBLIC_KEY !== 'YOUR_PUBLIC_KEY') {
+    function _orderTotals() {
+      const subtotal = cartItems.reduce((s,i) => s + i.price * i.qty, 0);
+      const tax      = subtotal * (ORDER_SETTINGS.taxRate || 0);
+      return { subtotal, tax, total: subtotal + tax };
+    }
+
+    function startCheckout() {
+      if (cartItems.length === 0) return;
+      if (ORDER_SETTINGS.onlineOrderingEnabled === false) {
+        showToast('Online ordering is temporarily unavailable.', 'error');
+        return;
+      }
+      document.getElementById('cartFooter').style.display = 'none';
+      document.getElementById('checkoutPanel').style.display = 'block';
+      _showCheckoutStep(1);
+    }
+
+    function _showCheckoutStep(n) {
+      [1,2,3].forEach(i => {
+        const el = document.getElementById('checkoutStep'+i);
+        if (el) el.style.display = (i===n) ? 'block' : 'none';
+      });
+      document.getElementById('checkoutPanel').dataset.step = n;
+    }
+
+    function checkoutBack() {
+      const step = parseInt(document.getElementById('checkoutPanel').dataset.step || '1');
+      if (step <= 1) {
+        // back to cart
+        document.getElementById('checkoutPanel').style.display = 'none';
+        document.getElementById('cartFooter').style.display = 'block';
+      } else {
+        _showCheckoutStep(step - 1);
+      }
+    }
+
+    function checkoutToReview() {
+      const name  = (document.getElementById('coName').value || '').trim();
+      const phone = (document.getElementById('coPhone').value || '').trim();
+      if (!name)  { showToast('Please enter your name.', 'error'); return; }
+      if (!phone || phone.replace(/[^0-9]/g,'').length < 7) { showToast('Please enter a valid phone number.', 'error'); return; }
+
+      const { subtotal, tax, total } = _orderTotals();
+      document.getElementById('coReviewItems').innerHTML = cartItems.map(i =>
+        `<div style="display:flex;justify-content:space-between;padding:0.2rem 0;">
+           <span>${i.qty}× ${i.name}${i.sizeMeta ? ' <span style="color:var(--muted)">('+i.sizeMeta+')</span>' : ''}</span>
+           <span>$${(i.price*i.qty).toFixed(2)}</span>
+         </div>`).join('');
+      document.getElementById('coReviewSubtotal').textContent = '$' + subtotal.toFixed(2);
+      document.getElementById('coReviewTaxLabel').textContent = 'Tax (' + ((ORDER_SETTINGS.taxRate||0)*100).toFixed(1) + '%)';
+      document.getElementById('coReviewTax').textContent      = '$' + tax.toFixed(2);
+      document.getElementById('coReviewTotal').textContent    = '$' + total.toFixed(2);
+      const ptSel = document.getElementById('coPickupTime');
+      const ptTxt = ptSel.options[ptSel.selectedIndex].text;
+      document.getElementById('coReviewPickup').textContent = 'Pickup: ' + ptTxt;
+      _showCheckoutStep(2);
+    }
+
+    async function checkoutToPayment() {
+      _showCheckoutStep(3);
+      // If Square is configured, mount its hosted card field. Otherwise show
+      // the "pay at pickup" placeholder (already in the markup).
+      if (ORDER_SETTINGS.squareAppId && ORDER_SETTINGS.squareLocationId && window.Square) {
+        try {
+          const notice = document.getElementById('coPaymentNotConfigured');
+          if (notice) notice.style.display = 'none';
+          if (!window._sqPayments) {
+            window._sqPayments = window.Square.payments(ORDER_SETTINGS.squareAppId, ORDER_SETTINGS.squareLocationId);
+          }
+          if (!window._sqCard) {
+            window._sqCard = await window._sqPayments.card();
+            await window._sqCard.attach('#card-container');
+          }
+          document.getElementById('coPayBtn').textContent = 'Pay & Place Order';
+          document.getElementById('coPayFinePrint').textContent = 'Secure payment via Square · Pickup only';
+        } catch (e) {
+          console.warn('Square init failed:', e);
+          // fall back to pay-at-pickup placeholder
+        }
+      }
+    }
+
+    async function submitPayment() {
+      const btn = document.getElementById('coPayBtn');
+      const status = document.getElementById('coPaymentStatus');
+      btn.disabled = true;
+
+      // ── PATH A: Square configured → tokenize card, send token to backend ──
+      if (ORDER_SETTINGS.squareAppId && window._sqCard && ORDER_SETTINGS.paymentBackendUrl) {
+        try {
+          status.textContent = 'Processing payment…';
+          const result = await window._sqCard.tokenize();
+          if (result.status !== 'OK') throw new Error('Card tokenization failed');
+          const { total } = _orderTotals();
+          // Send the token (NOT the card data) to YOUR server, which calls Square.
+          const resp = await fetch(ORDER_SETTINGS.paymentBackendUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              sourceId: result.token,
+              amountCents: Math.round(total * 100),
+              order: _buildOrderObject()
+            })
+          });
+          if (!resp.ok) throw new Error('Payment declined');
+          _finishOrder();
+        } catch (e) {
+          status.textContent = '⚠️ ' + (e.message || 'Payment failed. Please try again.');
+          btn.disabled = false;
+        }
+        return;
+      }
+
+      // ── PATH B: No payment backend yet → place order as "pay at pickup" ──
+      _placeOrderNoPayment();
+      btn.disabled = false;
+    }
+
+    function _buildOrderObject() {
+      const { subtotal, tax, total } = _orderTotals();
+      const ptSel = document.getElementById('coPickupTime');
+      return {
+        customer: {
+          name:  (document.getElementById('coName').value||'').trim(),
+          phone: (document.getElementById('coPhone').value||'').trim(),
+          email: (document.getElementById('coEmail').value||'').trim()
+        },
+        pickupTime: ptSel ? ptSel.value : 'asap',
+        notes: (document.getElementById('cartNotes')||{}).value || '',
+        items: cartItems.map(i => ({ id:i.id, name:i.name, size:i.sizeMeta||null, qty:i.qty, price:i.price })),
+        subtotal: +subtotal.toFixed(2),
+        tax: +tax.toFixed(2),
+        total: +total.toFixed(2),
+        placedAt: new Date().toISOString()
+      };
+    }
+
+    function _placeOrderNoPayment() {
+      const order = _buildOrderObject();
+      const lines = order.items.map(i =>
+        `${i.qty}× ${i.name}${i.size ? ' ('+i.size+')' : ''} — $${(i.price*i.qty).toFixed(2)}`
+      ).join('\n');
+      // Email the order (existing EmailJS hookup), now with customer details
+      if (window.emailjs && typeof EJS_PUBLIC_KEY !== 'undefined' && EJS_PUBLIC_KEY !== 'YOUR_PUBLIC_KEY') {
         emailjs.send(EJS_SERVICE_ID, EJS_ORDER_TPL, {
           order_items : lines,
-          subtotal    : '$' + subtotal.toFixed(2),
-          tax         : '$' + tax.toFixed(2),
-          total       : '$' + total.toFixed(2),
-          notes       : notes || '—',
+          subtotal    : '$' + order.subtotal.toFixed(2),
+          tax         : '$' + order.tax.toFixed(2),
+          total       : '$' + order.total.toFixed(2),
+          notes       : order.notes || '—',
+          customer_name : order.customer.name,
+          customer_phone: order.customer.phone,
+          customer_email: order.customer.email || '—',
+          pickup_time : order.pickupTime,
           order_time  : new Date().toLocaleString('en-US', { timeZone: 'America/Phoenix' }),
         }).catch(err => console.warn('EmailJS order:', err));
       }
+      _finishOrder();
+    }
 
-      // Show success state
-      const body    = document.getElementById('cartBody');
-      const footer  = document.getElementById('cartFooter');
+    function _finishOrder() {
+      document.getElementById('checkoutPanel').style.display = 'none';
       const success = document.getElementById('orderSuccessState');
+      const body    = document.getElementById('cartBody');
       if (body)    body.style.display    = 'none';
-      if (footer)  footer.style.display  = 'none';
       if (success) success.classList.add('show');
     }
+
+    // Legacy entry point kept for safety; route to new flow
+    function placeOrder() { startCheckout(); }
 
     function resetOrder() {
       cartItems = [];
       const success = document.getElementById('orderSuccessState');
       const body    = document.getElementById('cartBody');
+      const panel   = document.getElementById('checkoutPanel');
       if (success) success.classList.remove('show');
       if (body)    body.style.display = '';
+      if (panel)   panel.style.display = 'none';
+      ['coName','coPhone','coEmail','cartNotes'].forEach(id=>{ const el=document.getElementById(id); if(el) el.value=''; });
       updateCartUI();
       closeCart();
     }
@@ -3239,6 +3484,22 @@
       function renderMenu(menu){
         if(!Array.isArray(menu)||!menu.length) return;
         const grid=document.querySelector('.menu-grid'); if(!grid) return;
+
+        // Rebuild category tabs to match the categories actually present.
+        const tabsEl=document.getElementById('menuTabs');
+        if(tabsEl){
+          const order=['rice','appetizers','sandwiches','combos'];
+          const present=[...new Set(menu.map(m=>m.category).filter(Boolean))];
+          const ordered=order.filter(c=>present.includes(c))
+            .concat(present.filter(c=>!order.includes(c)));
+          const prevActive=(tabsEl.querySelector('.tab.active')||{}).dataset?.filter || 'all';
+          const labels={rice:'Rice',appetizers:'Appetizers',sandwiches:'Sandwiches',combos:'Combos'};
+          const cap=s=>s.charAt(0).toUpperCase()+s.slice(1);
+          tabsEl.innerHTML =
+            `<button class="tab${prevActive==='all'?' active':''}" data-filter="all">All</button>` +
+            ordered.map(c=>`<button class="tab${prevActive===c?' active':''}" data-filter="${esc(c)}">${esc(labels[c]||cap(c))}</button>`).join('');
+        }
+
         grid.innerHTML = menu.map((m,idx)=>{
           const num=String(idx+1).padStart(2,'0');
           const emoji = m.category==='appetizers'?'🦀':m.category==='sandwiches'?'🥪':'🍚';
@@ -3277,10 +3538,8 @@
         }).join('');
         // re-apply active category filter if one is selected
         const active=document.querySelector('.tab.active');
-        if(active && active.dataset.filter && active.dataset.filter!=='all'){
-          const f=active.dataset.filter;
-          grid.querySelectorAll('.menu-card').forEach(c=>{ c.style.display = c.dataset.category===f?'':'none'; });
-        }
+        const f = active && active.dataset.filter ? active.dataset.filter : 'all';
+        if(typeof window.applyMenuFilter==='function') window.applyMenuFilter(f);
       }
 
       // Rebuild the truck-rotation SCHEDULE from published hours, then
@@ -3315,6 +3574,7 @@
         if(!ol) return;
         const wrap=document.querySelector('#order .order-buttons'); if(!wrap) return;
         const map=[
+          {key:'directPickup', icon:'🥡', label:'Order for Pickup'},
           {key:'doordash', icon:'🚗', label:'DoorDash'},
           {key:'ubereats', icon:'🛵', label:'Uber Eats'},
           {key:'grubhub',  icon:'🍴', label:'Grubhub'},
@@ -3359,6 +3619,7 @@
       const API_URL = `https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${CMS_FILE}?ref=${GH_BRANCH}&_=${Date.now()}`;
 
       function loadCMS(data){
+        renderSettings(data.settings);
         renderTicker(data.ticker);
         renderFooterLinks(data.footer);
         renderMenu(data.menu);
@@ -3441,6 +3702,22 @@
         if(b.colorGold) root.style.setProperty('--gold', b.colorGold);
         if(b.colorRice) root.style.setProperty('--rice', b.colorRice);
         if(b.colorBlack)root.style.setProperty('--black',b.colorBlack);
+      }
+
+      function renderSettings(s){
+        if(!s) return;
+        if(typeof ORDER_SETTINGS==='undefined') return;
+        if(s.taxRate!=null)            ORDER_SETTINGS.taxRate = Number(s.taxRate);
+        if(s.onlineOrderingEnabled!=null) ORDER_SETTINGS.onlineOrderingEnabled = !!s.onlineOrderingEnabled;
+        if(s.pickupInstructions)       ORDER_SETTINGS.pickupInstructions = s.pickupInstructions;
+        if(s.squareAppId!=null)        ORDER_SETTINGS.squareAppId = s.squareAppId;
+        if(s.squareLocationId!=null)   ORDER_SETTINGS.squareLocationId = s.squareLocationId;
+        if(s.paymentBackendUrl!=null)  ORDER_SETTINGS.paymentBackendUrl = s.paymentBackendUrl;
+        // reflect pickup instructions in the cart fine print
+        const fp=document.querySelector('#cartFooter .cart-fine-print');
+        if(fp && ORDER_SETTINGS.pickupInstructions) fp.textContent=ORDER_SETTINGS.pickupInstructions;
+        // refresh totals if cart already has the dynamic rate
+        if(typeof updateCartUI==='function') updateCartUI();
       }
 
       function renderTicker(items){
