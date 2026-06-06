@@ -1,6 +1,6 @@
 {
   "_info": "Written by louwok.com/admin. index.html reads this at runtime.",
-  "_updated": "2026-06-06T01:20:30.491Z",
+  "_updated": "2026-06-06T01:27:02.426Z",
   "menu": [
     {
       "id": 1,
@@ -73,6 +73,15 @@
       "priceFull": 13,
       "tag": "popular",
       "desc": "Everything in one bowl. Beef, chicken, shrimp, bean sprouts & green onion. The works."
+    },
+    {
+      "id": 11,
+      "name": "Fried Chicken ",
+      "category": "rice",
+      "priceHalf": 4,
+      "priceFull": 8,
+      "tag": "popular",
+      "desc": ""
     }
   ],
   "hours": [
@@ -246,6 +255,14 @@
       },
       {
         "label": "Fried Chicken",
+        "url": "#menu"
+      },
+      {
+        "label": "Appetizers",
+        "url": "#menu"
+      },
+      {
+        "label": "Beverages",
         "url": "#menu"
       }
     ],
