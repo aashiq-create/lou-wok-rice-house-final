@@ -1725,6 +1725,7 @@
           <button class="tab" data-filter="appetizers">Appetizers</button>
           <button class="tab" data-filter="sandwiches">Sandwiches</button>
           <button class="tab" data-filter="combos">Combos</button>
+          <button class="tab" data-filter="beverages">Beverages</button>
         </div>
       </div>
     </div>
@@ -3482,7 +3483,7 @@
       const CMS_URL = `https://raw.githubusercontent.com/${GH_OWNER}/${GH_REPO}/${GH_BRANCH}/${CMS_FILE}?_=${Date.now()}`;
 
       const esc = s => String(s==null?'':s).replace(/[&<>"]/g, c=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;' }[c]));
-      const catLabel = c => ({rice:'Base Rice',appetizers:'Appetizer',sandwiches:'Sandwich',combos:'Combo'}[c]||c);
+      const catLabel = c => ({rice:'Base Rice',appetizers:'Appetizer',sandwiches:'Sandwich',combos:'Combo',beverages:'Beverage'}[c]||c);
       const tagClass = t => 'tag-'+(t||'').replace(/[^a-z0-9-]/gi,'');
       const tagLabel = t => ({popular:'Best Seller','fan-fave':'Fan Fave',classic:'Classic',spicy:'Spicy',new:'New'}[t]||t);
 
@@ -3492,7 +3493,7 @@
 
         // Sort items by canonical category order so the menu is grouped sensibly
         // (rice → appetizers → sandwiches → combos), preserving original order within each.
-        const catOrder={rice:0, appetizers:1, sandwiches:2, combos:3};
+        const catOrder={rice:0, appetizers:1, sandwiches:2, combos:3, beverages:4};
         menu = menu.map((m,i)=>({m,i}))
           .sort((a,b)=>{
             const ca=catOrder[a.m.category]!=null?catOrder[a.m.category]:99;
@@ -3504,12 +3505,12 @@
         // Rebuild category tabs to match the categories actually present.
         const tabsEl=document.getElementById('menuTabs');
         if(tabsEl){
-          const order=['rice','appetizers','sandwiches','combos'];
+          const order=['rice','appetizers','sandwiches','combos','beverages'];
           const present=[...new Set(menu.map(m=>m.category).filter(Boolean))];
           const ordered=order.filter(c=>present.includes(c))
             .concat(present.filter(c=>!order.includes(c)));
           const prevActive=(tabsEl.querySelector('.tab.active')||{}).dataset?.filter || 'all';
-          const labels={rice:'Rice',appetizers:'Appetizers',sandwiches:'Sandwiches',combos:'Combos'};
+          const labels={rice:'Rice',appetizers:'Appetizers',sandwiches:'Sandwiches',combos:'Combos',beverages:'Beverages'};
           const cap=s=>s.charAt(0).toUpperCase()+s.slice(1);
           tabsEl.innerHTML =
             `<button class="tab${prevActive==='all'?' active':''}" data-filter="all">All</button>` +
@@ -3518,7 +3519,7 @@
 
         grid.innerHTML = menu.map((m,idx)=>{
           const num=String(idx+1).padStart(2,'0');
-          const emoji = m.category==='appetizers'?'🦀':m.category==='sandwiches'?'🥪':'🍚';
+          const emoji = m.category==='appetizers'?'🦀':m.category==='sandwiches'?'🥪':m.category==='beverages'?'🥤':'🍚';
           let priceBlock, sizeId, addArgs;
           if(m.priceHalf!=null){
             sizeId=`size-${m.priceHalf}-${m.priceFull}-${m.id}`;
