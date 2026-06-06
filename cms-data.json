@@ -1,13 +1,13 @@
 {
   "_info": "Written by louwok.com/admin. index.html reads this at runtime.",
-  "_updated": "2026-06-05T22:14:37.951Z",
+  "_updated": "2026-06-06T01:20:30.491Z",
   "menu": [
     {
       "id": 1,
-      "name": "Classic Fried Rice",
+      "name": "Plain Fried Rice",
       "category": "rice",
-      "priceHalf": 7,
-      "priceFull": 11,
+      "priceHalf": 5,
+      "priceFull": 10,
       "tag": "classic",
       "desc": "The foundation. Egg, bean sprouts, soy, and green onion â cooked hot and fast in a screaming wok."
     },
@@ -15,8 +15,8 @@
       "id": 2,
       "name": "Chicken Fried Rice",
       "category": "rice",
-      "priceHalf": 8,
-      "priceFull": 13,
+      "priceHalf": 6,
+      "priceFull": 12,
       "tag": "popular",
       "desc": "All-white chicken, egg, bean sprouts, soy, and green onion. Classic done right."
     },
@@ -24,8 +24,8 @@
       "id": 3,
       "name": "Beef Fried Rice",
       "category": "rice",
-      "priceHalf": 8,
-      "priceFull": 13,
+      "priceHalf": 6,
+      "priceFull": 12,
       "tag": "",
       "desc": "Thinly sliced beef, wok-fired with egg, bean sprouts, and green onion."
     },
@@ -33,35 +33,35 @@
       "id": 4,
       "name": "Shrimp Fried Rice",
       "category": "rice",
-      "priceHalf": 8,
-      "priceFull": 13,
+      "priceHalf": 6,
+      "priceFull": 12,
       "tag": "",
       "desc": "Plump shrimp, wok-fired with egg, green onion, and a splash of soy."
     },
     {
       "id": 6,
       "name": "Crab Rangoon",
-      "category": "appetizers",
-      "priceHalf": null,
-      "priceFull": 8,
+      "category": "",
+      "priceHalf": 4,
+      "priceFull": 6,
       "tag": "popular",
       "desc": "Crispy wonton cups filled with real crab and cream cheese. Fried to gold. 6pc."
     },
     {
       "id": 7,
       "name": "St. Paul Sandwich",
-      "category": "sandwiches",
+      "category": "sandwich",
       "priceHalf": null,
       "priceFull": 7,
       "tag": "fan-fave",
-      "desc": "Egg foo young patty on soft white bread with mayo and pickles. A Midwest icon."
+      "desc": "Egg foo young patty on soft white bread with mayo and pickles. A Midwest icon. "
     },
     {
       "id": 8,
-      "name": "Pineapple Chicken Rice",
+      "name": "Pineapple Chicken Fried Rice",
       "category": "rice",
       "priceHalf": 8,
-      "priceFull": 13,
+      "priceFull": 12,
       "tag": "new",
       "desc": "Sweet meets savory. Served in a hollowed pineapple for the full experience."
     },
@@ -72,7 +72,7 @@
       "priceHalf": 8,
       "priceFull": 13,
       "tag": "popular",
-      "desc": "Everything in one bowl. Beef, chicken, shrimp, pork, and ham. The works."
+      "desc": "Everything in one bowl. Beef, chicken, shrimp, bean sprouts & green onion. The works."
     }
   ],
   "hours": [
