@@ -2578,6 +2578,11 @@
       entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
     }, { threshold: 0.1 });
     document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+    // Safety net: never let menu cards stay invisible (opacity:0) if the
+    // observer misses them for any reason.
+    setTimeout(() => {
+      document.querySelectorAll('.menu-card.fade-in:not(.visible)').forEach(c => c.classList.add('visible'));
+    }, 1200);
 
     // ── SMOOTH SCROLL WITH NAV OFFSET ───────────────────────
     function smoothTo(id) {
@@ -3485,6 +3490,17 @@
         if(!Array.isArray(menu)||!menu.length) return;
         const grid=document.querySelector('.menu-grid'); if(!grid) return;
 
+        // Sort items by canonical category order so the menu is grouped sensibly
+        // (rice → appetizers → sandwiches → combos), preserving original order within each.
+        const catOrder={rice:0, appetizers:1, sandwiches:2, combos:3};
+        menu = menu.map((m,i)=>({m,i}))
+          .sort((a,b)=>{
+            const ca=catOrder[a.m.category]!=null?catOrder[a.m.category]:99;
+            const cb=catOrder[b.m.category]!=null?catOrder[b.m.category]:99;
+            return ca-cb || a.i-b.i;
+          })
+          .map(x=>x.m);
+
         // Rebuild category tabs to match the categories actually present.
         const tabsEl=document.getElementById('menuTabs');
         if(tabsEl){
@@ -3536,6 +3552,10 @@
             </div>
           </div>`;
         }).join('');
+        // Newly-injected cards have class fade-in (opacity:0) but the original
+        // IntersectionObserver never saw them — mark them visible now so the
+        // menu actually shows. (This was why the menu appeared non-existent.)
+        grid.querySelectorAll('.menu-card.fade-in').forEach(c=>c.classList.add('visible'));
         // re-apply active category filter if one is selected
         const active=document.querySelector('.tab.active');
         const f = active && active.dataset.filter ? active.dataset.filter : 'all';
