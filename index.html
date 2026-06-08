@@ -3502,13 +3502,13 @@
           })
           .map(x=>x.m);
 
-        // Rebuild category tabs to match the categories actually present.
+        // Rebuild category tabs. Standard tabs ALWAYS show (even when empty);
+        // any non-standard categories present in the data are appended.
         const tabsEl=document.getElementById('menuTabs');
         if(tabsEl){
-          const order=['rice','appetizers','sandwiches','combos','beverages'];
+          const standard=['rice','appetizers','sandwiches','combos','beverages'];
           const present=[...new Set(menu.map(m=>m.category).filter(Boolean))];
-          const ordered=order.filter(c=>present.includes(c))
-            .concat(present.filter(c=>!order.includes(c)));
+          const ordered=standard.concat(present.filter(c=>!standard.includes(c)));
           const prevActive=(tabsEl.querySelector('.tab.active')||{}).dataset?.filter || 'all';
           const labels={rice:'Rice',appetizers:'Appetizers',sandwiches:'Sandwiches',combos:'Combos',beverages:'Beverages'};
           const cap=s=>s.charAt(0).toUpperCase()+s.slice(1);
