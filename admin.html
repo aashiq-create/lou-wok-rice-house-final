@@ -18,7 +18,7 @@
       --success: #3a7d44;
       --danger:  #c8390a;
       --info:    #1a6fa8;
-    
+    }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
@@ -718,6 +718,22 @@
 
     <!-- ── MENU EDITOR ── -->
     <div id="section-menu" class="section">
+      <div class="panel" style="margin-bottom:1rem;">
+        <div class="panel-header">
+          <span class="panel-title">Menu Categories</span>
+          <button class="btn btn-primary btn-sm" onclick="saveCategories()">Save</button>
+        </div>
+        <p style="color:var(--muted);font-size:0.82rem;margin:0 0 0.75rem;line-height:1.5;">
+          Create your own categories (Desserts, Sides, Specials…). Each becomes a tab on the site and a
+          choice in the item editor below. You can rename a category anytime; you can only delete one once
+          no items use it. <strong>Publish</strong> to push changes live.
+        </p>
+        <div id="category-rows"></div>
+        <div style="display:flex;gap:0.5rem;align-items:center;margin-top:0.75rem;">
+          <input class="field-input" id="new-cat-name" placeholder="New category name (e.g. Desserts)" style="flex:1;" />
+          <button class="btn btn-ghost btn-sm" onclick="addCategory()">+ Add category</button>
+        </div>
+      </div>
       <div class="menu-editor-grid">
         <!-- Item List -->
         <div class="panel" style="padding:1rem;">
@@ -744,13 +760,7 @@
             </div>
             <div class="field-group">
               <label class="field-label">Category</label>
-              <select class="field-select" id="f-category">
-                <option value="rice">Specialty Rice</option>
-                <option value="appetizers">Appetizer (Crab Rangoon, etc.)</option>
-                <option value="sandwiches">St. Paul Sandwich</option>
-                <option value="combos">Combo</option>
-                <option value="beverages">Beverage</option>
-              </select>
+              <select class="field-select" id="f-category"></select>
             </div>
             <div class="field-group">
               <label class="field-label">Description</label>
@@ -1238,6 +1248,13 @@
 
   // ── DEFAULT DATA (fallback when cms-data.json doesn't exist yet) ─
   const DEFAULTS = {
+    categories:[
+      {value:"rice",       label:"Specialty Rice"},
+      {value:"appetizers", label:"Appetizers"},
+      {value:"sandwiches", label:"Sandwiches"},
+      {value:"combos",     label:"Combos"},
+      {value:"beverages",  label:"Beverages"}
+    ],
     menu:[
       {id:1, name:"Classic Fried Rice",    category:"rice",       priceHalf:7,  priceFull:11, tag:"classic",  desc:"The foundation. Egg, bean sprouts, soy, and green onion — cooked hot and fast in a screaming wok."},
       {id:2, name:"Chicken Fried Rice",    category:"rice",       priceHalf:8,  priceFull:13, tag:"popular",  desc:"All-white chicken, egg, bean sprouts, soy, and green onion. Classic done right."},
@@ -1332,6 +1349,7 @@
 
   // ── LIVE STATE ──────────────────────────────────────────────────
   let menuData = [], hoursData = [], announcementsData = [], orderLinksData = {}, seoData = {};
+  let categoriesData = [];
   let locationData = {}, brandingData = {}, socialsData = {};
   let tickerData = [], footerData = {}, settingsData = {};
   let cmsFileSHA = null;
@@ -1373,13 +1391,14 @@
       _status('Offline — loaded defaults');
     }
     renderMenuList(); renderHours(); renderAnnouncements();
-    _populateOrderLinks(); _populateSEO(); _populateLocation(); _populateBranding(); _populateSocials(); _populateTicker(); _populateFooter(); _populateSettings();
+    _populateOrderLinks(); _populateSEO(); _populateLocation(); _populateBranding(); _populateSocials(); _populateTicker(); _populateFooter(); _populateSettings(); renderCategoryManager(); _fillCategoryDropdown();
     _refreshOverview();
     updateTokenStatus();
   }
 
   function applyData(d) {
     menuData          = d.menu          || DEFAULTS.menu;
+    categoriesData    = (Array.isArray(d.categories) && d.categories.length) ? d.categories : DEFAULTS.categories;
     hoursData         = d.hours         || DEFAULTS.hours;
     announcementsData = d.announcements || DEFAULTS.announcements;
     orderLinksData    = d.orderLinks    || DEFAULTS.orderLinks;
@@ -1415,6 +1434,7 @@
     saveTicker();
     saveFooter();
     saveSettings();
+    _readCategories();
 
     const allBtns = document.querySelectorAll('[onclick*="publishSite"]');
     allBtns.forEach(b => { b.disabled=true; b.textContent='⏳ Publishing…'; });
@@ -1424,6 +1444,7 @@
       _info:"Written by louwok.com/admin. index.html reads this at runtime.",
       _updated: new Date().toISOString(),
       menu: menuData, hours: hoursData,
+      categories: categoriesData,
       announcements: announcementsData,
       orderLinks: orderLinksData, seo: seoData,
       location: locationData, branding: brandingData,
@@ -1570,6 +1591,84 @@
     });
   }
 
+  function _fillCategoryDropdown() {
+    const sel = document.getElementById('f-category');
+    if (!sel) return;
+    const cur = sel.value;
+    sel.innerHTML = categoriesData.map(c=>`<option value="${(c.value||'').replace(/"/g,'&quot;')}">${(c.label||c.value||'').replace(/</g,'&lt;')}</option>`).join('');
+    if (cur) sel.value = cur;
+  }
+
+  function _slugify(s) {
+    return String(s||'').toLowerCase().trim()
+      .replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'');
+  }
+
+  function renderCategoryManager() {
+    const wrap = document.getElementById('category-rows');
+    if (!wrap) return;
+    if (!Array.isArray(categoriesData)) categoriesData = [];
+    wrap.innerHTML = categoriesData.map((c,i)=>{
+      const inUse = menuData.filter(m=>m.category===c.value).length;
+      return `<div class="lk-row" style="display:flex;gap:0.5rem;align-items:center;margin-bottom:0.5rem;">
+        <input class="field-input" id="cat-label-${i}" value="${(c.label||'').replace(/"/g,'&quot;')}" placeholder="Display name (e.g. Desserts)" style="flex:1;" />
+        <span style="font-size:0.7rem;color:var(--muted);font-family:'DM Mono',monospace;white-space:nowrap;">${(c.value||'')} · ${inUse} item${inUse===1?'':'s'}</span>
+        <button class="btn btn-ghost btn-sm" onclick="removeCategory(${i})" title="Remove">✕</button>
+      </div>`;
+    }).join('') || '<p style="color:var(--muted);font-size:0.82rem;">No categories yet.</p>';
+  }
+
+  function _readCategories() {
+    const rows=[]; let i=0;
+    while (document.getElementById('cat-label-'+i)) {
+      const label = document.getElementById('cat-label-'+i).value.trim();
+      // keep the original value (slug) stable so existing items stay linked
+      const orig  = categoriesData[i] ? categoriesData[i].value : _slugify(label);
+      if (label) rows.push({ value: orig || _slugify(label), label });
+      i++;
+    }
+    categoriesData = rows;
+  }
+
+  function addCategory() {
+    _readCategories();
+    const name = (document.getElementById('new-cat-name')||{}).value || '';
+    const label = name.trim();
+    if (!label) { showToast('Enter a category name first','error'); return; }
+    const value = _slugify(label);
+    if (!value) { showToast('Category name needs letters or numbers','error'); return; }
+    if (categoriesData.some(c=>c.value===value)) { showToast('That category already exists','error'); return; }
+    categoriesData.push({ value, label });
+    document.getElementById('new-cat-name').value = '';
+    renderCategoryManager();
+    _fillCategoryDropdown();
+    setUnsaved();
+    showToast('Category added — assign items to it below','success');
+  }
+
+  function removeCategory(i) {
+    _readCategories();
+    const cat = categoriesData[i];
+    if (!cat) return;
+    const inUse = menuData.filter(m=>m.category===cat.value).length;
+    if (inUse > 0) {
+      showToast(`Can't remove "${cat.label}" — ${inUse} item(s) still use it. Reassign them first.`,'error');
+      return;
+    }
+    categoriesData.splice(i,1);
+    renderCategoryManager();
+    _fillCategoryDropdown();
+    setUnsaved();
+    showToast('Category removed','success');
+  }
+
+  function saveCategories() {
+    _readCategories();
+    _fillCategoryDropdown();
+    setUnsaved();
+    showToast('Categories saved','success');
+  }
+
   function selectMenuItem(id) {
     selectedItemId = id;
     const item = menuData.find(i=>i.id===id);
@@ -1578,6 +1677,7 @@
     document.getElementById('editorForm').style.opacity = '1';
     document.getElementById('editorForm').style.pointerEvents = 'auto';
     document.getElementById('f-name').value       = item.name;
+    _fillCategoryDropdown();
     document.getElementById('f-category').value   = item.category;
     document.getElementById('f-desc').value       = item.desc;
     document.getElementById('f-price-half').value = item.priceHalf ?? '';
@@ -1621,7 +1721,8 @@
 
   function newMenuItem() {
     const newId = menuData.length > 0 ? Math.max(...menuData.map(i=>i.id))+1 : 1;
-    menuData.push({id:newId,name:'New Item',category:'rice',priceHalf:null,priceFull:10,tag:'',desc:''});
+    const firstCat = (categoriesData[0] && categoriesData[0].value) || 'rice';
+    menuData.push({id:newId,name:'New Item',category:firstCat,priceHalf:null,priceFull:10,tag:'',desc:''});
     renderMenuList(); selectMenuItem(newId); setUnsaved();
   }
 
