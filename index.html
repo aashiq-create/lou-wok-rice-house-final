@@ -1629,6 +1629,70 @@
       .card-add-row { opacity: 1 !important; transform: translateY(0) !important; }
     }
 
+    /* ════════════════════════════════════════════════════════
+       APP-LIKE MOBILE POLISH (scrolling, transitions, touch)
+       Additive layer — refines without altering base layout.
+       ════════════════════════════════════════════════════════ */
+    @media (hover: none) and (pointer: coarse) {
+      /* Momentum scrolling + no rubber-band chaining anywhere it matters */
+      html { -webkit-text-size-adjust: 100%; }
+      .cart-body, .menu-tabs, .menu-grid, .checkout-panel {
+        -webkit-overflow-scrolling: touch;
+        overscroll-behavior: contain;
+      }
+      /* Kill the 300ms tap delay and double-tap zoom on interactive elements */
+      a, button, .tab, .bottom-nav-item, .card-add-btn,
+      .cart-place-btn, select, .menu-card {
+        touch-action: manipulation;
+      }
+      /* Guarantee Apple's 44px minimum touch target on key controls */
+      .tab, .bottom-nav-item, .card-add-btn, .cart-place-btn,
+      .card-size-select, .qty-btn, .nav-link {
+        min-height: 44px;
+      }
+      .tab {
+        display: inline-flex; align-items: center;
+        padding-top: 0.6rem; padding-bottom: 0.6rem;
+      }
+      /* Tactile press feedback — the little "give" native apps have */
+      .card-add-btn:active, .cart-place-btn:active, .tab:active,
+      .menu-card:active, a.btn:active, .order-link:active {
+        transform: scale(0.97);
+        transition: transform 0.08s ease;
+      }
+      /* Snappier, GPU-friendly transitions; calmer fade-in travel on mobile */
+      .fade-in { transform: translateY(16px); transition: opacity 0.45s ease, transform 0.45s ease; will-change: opacity, transform; }
+      /* Prevent accidental text selection on taps of UI chrome */
+      .tab, .bottom-nav-item, .card-add-btn, .cart-place-btn, .section-label { -webkit-user-select: none; user-select: none; }
+    }
+
+    @media (max-width: 640px) {
+      /* Comfortable type scale and spacing on phones */
+      .card-name { font-size: 1.45rem; line-height: 1.05; }
+      .card-desc { font-size: 0.9rem; line-height: 1.5; }
+      .menu-intro { font-size: 0.95rem; line-height: 1.6; }
+      .menu-card { padding: 1.25rem; }
+      .menu-grid { gap: 1rem; }
+      /* Tab row: edge-to-edge, scroll-snap so tabs click into place like a native segmented control */
+      .menu-tabs { scroll-snap-type: x proximity; gap: 0.5rem; padding-left: 1px; padding-right: 1px; -ms-overflow-style: none; scrollbar-width: none; }
+      .menu-tabs::-webkit-scrollbar { display: none; }
+      .menu-tabs .tab { scroll-snap-align: start; white-space: nowrap; padding-left: 1.1rem; padding-right: 1.1rem; }
+      /* Bigger, thumb-friendly add button */
+      .card-add-btn { padding: 0.7rem 1.1rem; font-size: 0.9rem; }
+      .card-size-select { font-size: 0.9rem; padding: 0.55rem 0.6rem; }
+    }
+
+    /* Tablet: two-column menu, roomy spacing — between phone and desktop */
+    @media (min-width: 641px) and (max-width: 1024px) {
+      .menu-grid { grid-template-columns: repeat(2, 1fr); gap: 1.25rem; }
+      .card-name { font-size: 1.6rem; }
+    }
+
+    /* Respect users who reduce motion */
+    @media (prefers-reduced-motion: reduce) {
+      .fade-in { transition: none; transform: none; opacity: 1; }
+      * { scroll-behavior: auto !important; }
+    }
   </style>
   <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 </head>
@@ -3487,34 +3551,36 @@
       const tagClass = t => 'tag-'+(t||'').replace(/[^a-z0-9-]/gi,'');
       const tagLabel = t => ({popular:'Best Seller','fan-fave':'Fan Fave',classic:'Classic',spicy:'Spicy',new:'New'}[t]||t);
 
-      function renderMenu(menu){
+      function renderMenu(menu, categories){
         if(!Array.isArray(menu)||!menu.length) return;
         const grid=document.querySelector('.menu-grid'); if(!grid) return;
 
-        // Sort items by canonical category order so the menu is grouped sensibly
-        // (rice → appetizers → sandwiches → combos), preserving original order within each.
-        const catOrder={rice:0, appetizers:1, sandwiches:2, combos:3, beverages:4};
+        // Category list comes from the dashboard. Fall back to the standard set.
+        const catList = (Array.isArray(categories) && categories.length) ? categories : [
+          {value:'rice',label:'Rice'},{value:'appetizers',label:'Appetizers'},
+          {value:'sandwiches',label:'Sandwiches'},{value:'combos',label:'Combos'},
+          {value:'beverages',label:'Beverages'}
+        ];
+        const catValues = catList.map(c=>c.value);
+        const labelOf = v => { const f=catList.find(c=>c.value===v); return f?f.label:v; };
+
+        // Sort items by the category order defined in the dashboard.
+        const orderIdx = {}; catValues.forEach((v,i)=>orderIdx[v]=i);
         menu = menu.map((m,i)=>({m,i}))
           .sort((a,b)=>{
-            const ca=catOrder[a.m.category]!=null?catOrder[a.m.category]:99;
-            const cb=catOrder[b.m.category]!=null?catOrder[b.m.category]:99;
+            const ca=orderIdx[a.m.category]!=null?orderIdx[a.m.category]:99;
+            const cb=orderIdx[b.m.category]!=null?orderIdx[b.m.category]:99;
             return ca-cb || a.i-b.i;
           })
           .map(x=>x.m);
 
-        // Rebuild category tabs. Standard tabs ALWAYS show (even when empty);
-        // any non-standard categories present in the data are appended.
+        // Rebuild tabs: every dashboard category always shows (even if empty).
         const tabsEl=document.getElementById('menuTabs');
         if(tabsEl){
-          const standard=['rice','appetizers','sandwiches','combos','beverages'];
-          const present=[...new Set(menu.map(m=>m.category).filter(Boolean))];
-          const ordered=standard.concat(present.filter(c=>!standard.includes(c)));
           const prevActive=(tabsEl.querySelector('.tab.active')||{}).dataset?.filter || 'all';
-          const labels={rice:'Rice',appetizers:'Appetizers',sandwiches:'Sandwiches',combos:'Combos',beverages:'Beverages'};
-          const cap=s=>s.charAt(0).toUpperCase()+s.slice(1);
           tabsEl.innerHTML =
             `<button class="tab${prevActive==='all'?' active':''}" data-filter="all">All</button>` +
-            ordered.map(c=>`<button class="tab${prevActive===c?' active':''}" data-filter="${esc(c)}">${esc(labels[c]||cap(c))}</button>`).join('');
+            catList.map(c=>`<button class="tab${prevActive===c.value?' active':''}" data-filter="${esc(c.value)}">${esc(c.label)}</button>`).join('');
         }
 
         grid.innerHTML = menu.map((m,idx)=>{
@@ -3537,7 +3603,7 @@
           const tag = m.tag ? `<span class="card-tag ${tagClass(m.tag)}">${esc(tagLabel(m.tag))}</span>` : '';
           return `<div class="menu-card fade-in" data-category="${esc(m.category)}">
             <div class="card-number">${num}</div>
-            <div class="card-category">${esc(catLabel(m.category))}</div>
+            <div class="card-category">${esc(labelOf(m.category))}</div>
             <div class="card-name">${esc(m.name)}</div>
             <p class="card-desc">${esc(m.desc)}</p>
             <div class="card-footer">
@@ -3643,7 +3709,7 @@
         renderSettings(data.settings);
         renderTicker(data.ticker);
         renderFooterLinks(data.footer);
-        renderMenu(data.menu);
+        renderMenu(data.menu, data.categories);
         applyRotation(data.hours);
         renderOrderLinks(data.orderLinks);
         renderSEO(data.seo);
