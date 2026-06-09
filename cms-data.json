@@ -1,6 +1,6 @@
 {
   "_info": "Written by louwok.com/admin. index.html reads this at runtime.",
-  "_updated": "2026-06-09T15:00:56.751Z",
+  "_updated": "2026-06-09T15:05:57.456Z",
   "menu": [
     {
       "id": 1,
@@ -91,6 +91,15 @@
       "priceFull": 2,
       "tag": "classic",
       "desc": "Your choice of a 20 fl oz bottle of Grape, Strawberry, Root Beer, Cream Soda, Fruit Punch, Pineapple, Peach"
+    },
+    {
+      "id": 13,
+      "name": "St. Paul Sandwich (Deluxe)",
+      "category": "sandwiches",
+      "priceHalf": null,
+      "priceFull": 5,
+      "tag": "popular",
+      "desc": "Beef, Chicken, Shrimp along with base of Egg foo young patty on soft white bread with mayo and pickles"
     }
   ],
   "hours": [
