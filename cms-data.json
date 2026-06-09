@@ -1,6 +1,6 @@
 {
   "_info": "Written by louwok.com/admin. index.html reads this at runtime.",
-  "_updated": "2026-06-09T14:42:08.848Z",
+  "_updated": "2026-06-09T14:44:53.997Z",
   "menu": [
     {
       "id": 1,
@@ -87,10 +87,10 @@
       "id": 12,
       "name": "Vess ",
       "category": "beverages",
-      "priceHalf": null,
+      "priceHalf": 1.5,
       "priceFull": 0,
       "tag": "classic",
-      "desc": "Your choice of Grape, Strawberry, Root Beer, Cream Soda, Fruit Punch, Pineapple, Peach"
+      "desc": "Your choice of a 20 fl oz bottle of Grape, Strawberry, Root Beer, Cream Soda, Fruit Punch, Pineapple, Peach"
     }
   ],
   "hours": [
