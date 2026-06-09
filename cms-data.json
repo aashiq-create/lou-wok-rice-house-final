@@ -1,6 +1,6 @@
 {
   "_info": "Written by louwok.com/admin. index.html reads this at runtime.",
-  "_updated": "2026-06-09T15:15:27.975Z",
+  "_updated": "2026-06-09T15:22:24.231Z",
   "menu": [
     {
       "id": 1,
@@ -41,11 +41,11 @@
     {
       "id": 6,
       "name": "Crab Rangoon",
-      "category": "",
-      "priceHalf": 4,
-      "priceFull": 6,
+      "category": "appetizers",
+      "priceHalf": 3,
+      "priceFull": 5,
       "tag": "popular",
-      "desc": "Crispy wonton cups filled with real crab and cream cheese. Fried to gold. 6pc."
+      "desc": "Crispy wonton cups filled with real crab and cream cheese. Fried to gold. Your choice of a 3pc. or 6pc."
     },
     {
       "id": 7,
