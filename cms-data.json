@@ -1,13 +1,13 @@
 {
   "_info": "Written by louwok.com/admin. index.html reads this at runtime.",
-  "_updated": "2026-06-09T15:26:54.992Z",
+  "_updated": "2026-06-09T15:31:51.946Z",
   "menu": [
     {
       "id": 1,
       "name": "Plain Fried Rice",
       "category": "rice",
-      "priceHalf": 5,
-      "priceFull": 10,
+      "priceHalf": 4,
+      "priceFull": 7,
       "tag": "classic",
       "desc": "The foundation. Egg, bean sprouts, soy, and green onion ÃÂ¢ÃÂÃÂ cooked hot and fast in a screaming wok."
     },
