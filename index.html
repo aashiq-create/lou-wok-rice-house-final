@@ -951,8 +951,27 @@
       html { scroll-padding-top: calc(var(--nav-height) + var(--safe-top) + 0.75rem); }
 
       .menu-header { flex-direction: column; align-items: flex-start; margin-bottom: 2rem; }
-      .menu-tabs { overflow-x: auto; -webkit-overflow-scrolling: touch; flex-wrap: nowrap; padding-bottom: 0.5rem; width: 100%; }
+      .menu-header > div { width: 100%; min-width: 0; }
+      .menu-tabs {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        flex-wrap: nowrap;
+        width: 100%;
+        max-width: 100%;
+        padding-bottom: 0.5rem;
+        /* let the slider span the full screen width even inside a padded parent */
+        scroll-snap-type: x proximity;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+      }
       .menu-tabs::-webkit-scrollbar { display: none; }
+      .menu-tabs .tab {
+        flex: 0 0 auto;          /* never shrink — this was causing the offset/clipping */
+        white-space: nowrap;
+        scroll-snap-align: start;
+      }
+      /* ensure the last tab isn't cut off at the right edge */
+      .menu-tabs .tab:last-child { margin-right: 1.25rem; }
       .tab { white-space: nowrap; flex-shrink: 0; }
 
       .menu-grid { grid-template-columns: 1fr; gap: 1.5px; }
@@ -1673,10 +1692,6 @@
       .menu-intro { font-size: 0.95rem; line-height: 1.6; }
       .menu-card { padding: 1.25rem; }
       .menu-grid { gap: 1rem; }
-      /* Tab row: edge-to-edge, scroll-snap so tabs click into place like a native segmented control */
-      .menu-tabs { scroll-snap-type: x proximity; gap: 0.5rem; padding-left: 1px; padding-right: 1px; -ms-overflow-style: none; scrollbar-width: none; }
-      .menu-tabs::-webkit-scrollbar { display: none; }
-      .menu-tabs .tab { scroll-snap-align: start; white-space: nowrap; padding-left: 1.1rem; padding-right: 1.1rem; }
       /* Bigger, thumb-friendly add button */
       .card-add-btn { padding: 0.7rem 1.1rem; font-size: 0.9rem; }
       .card-size-select { font-size: 0.9rem; padding: 0.55rem 0.6rem; }
@@ -2420,15 +2435,15 @@
       <div>
         <div class="footer-col-title">Connect</div>
         <ul class="footer-links" id="footerSocials">
-          <li><a href="#">Instagram</a></li>
-          <li><a href="#">TikTok</a></li>
-          <li><a href="#">Contact Us</a></li>
+          <li><a href="https://instagram.com/louwokphx" target="_blank" rel="noopener">📸&nbsp; Instagram</a></li>
+          <li><a href="https://tiktok.com/@louwokphx" target="_blank" rel="noopener">🎵&nbsp; TikTok</a></li>
+          <li><a href="#catering">✉️&nbsp; Contact Us</a></li>
         </ul>
       </div>
     </div>
     <div class="footer-bottom">
       <span id="footerCopyright">© 2025 Lou Wok Rice House. Phoenix, AZ.</span>
-      <span id="footerCredit">Built with 🔥 in the Valley</span>
+      <span id="footerCredit">Built with fire in the Valley</span>
     </div>
   </footer>
 
@@ -2477,20 +2492,24 @@
     <div class="menu-sheet-handle"></div>
     <div class="sheet-title">Lou Wok</div>
     <div class="sheet-links">
-      <a href="#menu" class="sheet-link" onclick="closeMenuSheet()">
+      <a href="#menu" class="sheet-link" onclick="closeMenuSheet();setTimeout(()=>smoothTo('menu'),300);return false;">
         <span>🍚 &nbsp;Full Menu</span>
         <span class="sheet-link-arrow">›</span>
       </a>
-      <a href="#about" class="sheet-link" onclick="closeMenuSheet()">
+      <a href="#about" class="sheet-link" onclick="closeMenuSheet();setTimeout(()=>smoothTo('about'),300);return false;">
         <span>📖 &nbsp;Our Story</span>
         <span class="sheet-link-arrow">›</span>
       </a>
-      <a href="#catering" class="sheet-link" onclick="closeMenuSheet()">
+      <a href="#catering" class="sheet-link" onclick="closeMenuSheet();setTimeout(()=>smoothTo('catering'),300);return false;">
         <span>🎉 &nbsp;Catering</span>
         <span class="sheet-link-arrow">›</span>
       </a>
-      <a href="#order" class="sheet-link" onclick="closeMenuSheet()">
-        <span>📍 &nbsp;Locations & Hours</span>
+      <a href="#tracker" class="sheet-link" onclick="closeMenuSheet();setTimeout(()=>smoothTo('tracker'),300);return false;">
+        <span>🕒 &nbsp;Hours</span>
+        <span class="sheet-link-arrow">›</span>
+      </a>
+      <a href="#tracker" class="sheet-link" onclick="closeMenuSheet();setTimeout(()=>smoothTo('tracker'),300);return false;">
+        <span>📍 &nbsp;Locations</span>
         <span class="sheet-link-arrow">›</span>
       </a>
       <a href="https://www.doordash.com/search/store/lou-wok" target="_blank" rel="noopener" class="sheet-link" onclick="closeMenuSheet()">
@@ -3722,14 +3741,14 @@
       function renderSocials(socials, contactEmail){
         const wrap=document.getElementById('footerSocials');
         if(!wrap || !socials) return;
-        // platform → { label, url-prefix for bare handles }
+        // platform → { emoji, label, url-prefix for bare handles }
         const defs=[
-          {key:'instagram', label:'Instagram', base:'https://instagram.com/'},
-          {key:'tiktok',    label:'TikTok',    base:'https://tiktok.com/@'},
-          {key:'facebook',  label:'Facebook',  base:'https://facebook.com/'},
-          {key:'twitter',   label:'X / Twitter',base:'https://x.com/'},
-          {key:'youtube',   label:'YouTube',   base:'https://youtube.com/@'},
-          {key:'yelp',      label:'Yelp',      base:'https://yelp.com/biz/'},
+          {key:'instagram', emoji:'📸', label:'Instagram', base:'https://instagram.com/'},
+          {key:'tiktok',    emoji:'🎵', label:'TikTok',    base:'https://tiktok.com/@'},
+          {key:'facebook',  emoji:'👍', label:'Facebook',  base:'https://facebook.com/'},
+          {key:'twitter',   emoji:'🐦', label:'X / Twitter',base:'https://x.com/'},
+          {key:'youtube',   emoji:'▶️', label:'YouTube',   base:'https://youtube.com/@'},
+          {key:'yelp',      emoji:'⭐', label:'Yelp',      base:'https://yelp.com/biz/'},
         ];
         const norm=(v,base)=>{
           v=String(v||'').trim(); if(!v) return '';
@@ -3748,8 +3767,8 @@
           return;
         }
         wrap.innerHTML =
-          items.map(x=>`<li><a href="${esc(x.url)}" target="_blank" rel="noopener">${esc(x.d.label)}</a></li>`).join('')
-          + `<li><a href="${contactHref}">Contact Us</a></li>`;
+          items.map(x=>`<li><a href="${esc(x.url)}" target="_blank" rel="noopener">${x.d.emoji}&nbsp; ${esc(x.d.label)}</a></li>`).join('')
+          + `<li><a href="${contactHref}">✉️&nbsp; Contact Us</a></li>`;
       }
 
 
