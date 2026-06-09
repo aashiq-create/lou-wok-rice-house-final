@@ -1,13 +1,13 @@
 {
   "_info": "Written by louwok.com/admin. index.html reads this at runtime.",
-  "_updated": "2026-06-09T15:32:56.644Z",
+  "_updated": "2026-06-09T15:35:19.919Z",
   "menu": [
     {
       "id": 1,
       "name": "Plain Fried Rice",
       "category": "rice",
-      "priceHalf": 4,
-      "priceFull": 7,
+      "priceHalf": 3,
+      "priceFull": 6,
       "tag": "classic",
       "desc": "The foundation. Egg, bean sprouts, soy, and green onion ÃÂ¢ÃÂÃÂ cooked hot and fast in a screaming wok."
     },
@@ -15,7 +15,7 @@
       "id": 2,
       "name": "Chicken Fried Rice",
       "category": "rice",
-      "priceHalf": 5,
+      "priceHalf": 4,
       "priceFull": 8,
       "tag": "popular",
       "desc": "All-white chicken, egg, bean sprouts, soy, and green onion. Classic done right."
@@ -24,7 +24,7 @@
       "id": 3,
       "name": "Beef Fried Rice",
       "category": "rice",
-      "priceHalf": 5,
+      "priceHalf": 4,
       "priceFull": 8,
       "tag": "",
       "desc": "Thinly sliced beef, wok-fired with egg, bean sprouts, and green onion."
@@ -33,7 +33,7 @@
       "id": 4,
       "name": "Shrimp Fried Rice",
       "category": "rice",
-      "priceHalf": 5,
+      "priceHalf": 4,
       "priceFull": 8,
       "tag": "",
       "desc": "Plump shrimp, wok-fired with egg, green onion, and a splash of soy."
@@ -97,7 +97,7 @@
       "name": "St. Paul Sandwich (Deluxe)",
       "category": "sandwiches",
       "priceHalf": null,
-      "priceFull": 5,
+      "priceFull": 7,
       "tag": "popular",
       "desc": "Beef, Chicken, Shrimp along with base of Egg foo young patty on soft white bread with mayo and pickles"
     },
