@@ -1,6 +1,6 @@
 {
   "_info": "Written by louwok.com/admin. index.html reads this at runtime.",
-  "_updated": "2026-06-09T14:44:53.997Z",
+  "_updated": "2026-06-09T14:55:07.464Z",
   "menu": [
     {
       "id": 1,
@@ -9,7 +9,7 @@
       "priceHalf": 5,
       "priceFull": 10,
       "tag": "classic",
-      "desc": "The foundation. Egg, bean sprouts, soy, and green onion Ã¢ÂÂ cooked hot and fast in a screaming wok."
+      "desc": "The foundation. Egg, bean sprouts, soy, and green onion ÃÂ¢ÃÂÃÂ cooked hot and fast in a screaming wok."
     },
     {
       "id": 2,
@@ -87,8 +87,8 @@
       "id": 12,
       "name": "Vess ",
       "category": "beverages",
-      "priceHalf": 1.5,
-      "priceFull": 0,
+      "priceHalf": null,
+      "priceFull": 1.5,
       "tag": "classic",
       "desc": "Your choice of a 20 fl oz bottle of Grape, Strawberry, Root Beer, Cream Soda, Fruit Punch, Pineapple, Peach"
     }
@@ -99,8 +99,8 @@
       "open": "11:00",
       "close": "21:00",
       "closed": true,
-      "location": "South Phoenix ÃÂ· 18th St",
-      "area": "South Phoenix ÃÂ",
+      "location": "South Phoenix ÃÂÃÂ· 18th St",
+      "area": "South Phoenix ÃÂÃÂ",
       "street": "Near 18th St & Baseline"
     },
     {
@@ -108,8 +108,8 @@
       "open": "11:00",
       "close": "21:00",
       "closed": true,
-      "location": "Midtown PHX ÃÂ· Central Ave",
-      "area": "Midtown PHX ÃÂ",
+      "location": "Midtown PHX ÃÂÃÂ· Central Ave",
+      "area": "Midtown PHX ÃÂÃÂ",
       "street": "Near Central & Thomas"
     },
     {
@@ -144,8 +144,8 @@
       "open": "11:00",
       "close": "19:00",
       "closed": false,
-      "location": "Rotating ÃÂ· Follow @louwokphx",
-      "area": "Rotating ÃÂ",
+      "location": "Rotating ÃÂÃÂ· Follow @louwokphx",
+      "area": "Rotating ÃÂÃÂ",
       "street": "Check @louwokphx for today's spot"
     },
     {
@@ -226,7 +226,7 @@
     "tagline": "Wok-fired flavor built for Phoenix.",
     "displayFont": "Bebas Neue (Current)",
     "bodyFont": "DM Sans (Current)",
-    "footerCredit": "Built with Ã°ÂÂÂ¥ in the Valley"
+    "footerCredit": "Built with ÃÂ°ÃÂÃÂÃÂ¥ in the Valley"
   },
   "socials": {
     "instagram": "louwokphx",
@@ -238,15 +238,15 @@
   },
   "ticker": [
     {
-      "text": "ð Fried Rice",
+      "text": "Ã°ÂÂÂ Fried Rice",
       "hot": true
     },
     {
-      "text": "ð¦ Crab Rangoon",
+      "text": "Ã°ÂÂ¦Â Crab Rangoon",
       "hot": true
     },
     {
-      "text": "ð¥ª St. Paul Sandwich",
+      "text": "Ã°ÂÂ¥Âª St. Paul Sandwich",
       "hot": true
     },
     {
@@ -319,7 +319,7 @@
   "settings": {
     "taxRate": 0.086,
     "onlineOrderingEnabled": true,
-    "pickupInstructions": "Pickup only · Est. ready 10–15 min",
+    "pickupInstructions": "Pickup only Â· Est. ready 10â15 min",
     "squareAppId": "",
     "squareLocationId": "",
     "paymentBackendUrl": ""
