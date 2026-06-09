@@ -806,6 +806,15 @@
                 <option value="seasonal">Seasonal</option>
               </select>
             </div>
+            <div class="field-group">
+              <label class="field-label">Customer Options (protein choice, add-ons, etc.)</label>
+              <p style="color:var(--muted);font-size:0.78rem;margin:0 0 0.6rem;line-height:1.5;">
+                Add an option group like "Choose your protein" (single choice) or "Add-ons" (multi-select).
+                Each choice can carry an optional surcharge. Leave empty for items with no options.
+              </p>
+              <div id="options-builder"></div>
+              <button class="btn btn-ghost btn-sm" onclick="addOptionGroup()" style="margin-top:0.5rem;">+ Add option group</button>
+            </div>
           </div>
         </div>
       </div>
@@ -1273,7 +1282,7 @@
       {id:4, name:"Shrimp Fried Rice",     category:"rice",       priceHalf:8,  priceFull:13, tag:"",         desc:"Plump shrimp, wok-fired with egg, green onion, and a splash of soy."},
       {id:5, name:"Pork Fried Rice",       category:"rice",       priceHalf:8,  priceFull:13, tag:"",         desc:"Slow-cooked pork, wok-fired with the classic trio: egg, sprouts, and soy."},
       {id:6, name:"Crab Rangoon",          category:"appetizers", priceHalf:null,priceFull:8, tag:"popular",  desc:"Crispy wonton cups filled with real crab and cream cheese. Fried to gold. 6pc."},
-      {id:7, name:"St. Paul Sandwich",     category:"sandwiches", priceHalf:null,priceFull:7, tag:"fan-fave", desc:"Egg foo young patty on soft white bread with mayo and pickles. A Midwest icon."},
+      {id:7, name:"St. Paul Sandwich",     category:"sandwiches", priceHalf:null,priceFull:7, tag:"fan-fave", desc:"Egg foo young patty on soft white bread with mayo and pickles. A Midwest icon.", options:[{label:"Choose your protein", type:"single", choices:[{name:"Chicken"},{name:"Beef"},{name:"Shrimp",price:1.5},{name:"Pork"},{name:"Veggie"}]},{label:"Add-ons", type:"multi", choices:[{name:"Extra patty",price:2},{name:"Add cheese",price:1},{name:"Extra sauce"}]}]},
       {id:8, name:"Pineapple Chicken Rice",category:"rice",       priceHalf:8,  priceFull:13, tag:"fan-fave", desc:"Sweet meets savory. Served in a hollowed pineapple for the full experience."},
       {id:9, name:"Basil Fried Rice",      category:"rice",       priceHalf:8,  priceFull:13, tag:"",         desc:"Fresh Thai basil, garlic, chili, egg — wok-fired until fragrant."},
       {id:10,name:"Ultimate Fried Rice",   category:"rice",       priceHalf:8,  priceFull:13, tag:"popular",  desc:"Everything in one bowl. Beef, chicken, shrimp, pork, and ham. The works."},
@@ -1698,6 +1707,8 @@
     document.getElementById('f-price-half').value = item.priceHalf ?? '';
     document.getElementById('f-price-full').value = hasHalf ? (item.priceFull ?? '') : '';
     togglePriceMode();
+    _editorOptions = Array.isArray(item.options) ? JSON.parse(JSON.stringify(item.options)) : [];
+    _renderOptionsBuilder();
     document.getElementById('f-available').value  = 'available';
     selectedTag = item.tag || '';
     document.querySelectorAll('.tag-option').forEach(t =>
@@ -1710,6 +1721,70 @@
     const mode = document.getElementById('f-price-mode').value;
     document.getElementById('single-price-wrap').style.display = (mode === 'single') ? 'block' : 'none';
     document.getElementById('dual-price-wrap').style.display   = (mode === 'dual')   ? 'flex'  : 'none';
+  }
+
+  // ── Item options builder (single-choice + multi-select add-ons) ──
+  let _editorOptions = [];
+  function _renderOptionsBuilder() {
+    const wrap = document.getElementById('options-builder');
+    if (!wrap) return;
+    if (!Array.isArray(_editorOptions)) _editorOptions = [];
+    wrap.innerHTML = _editorOptions.map((g, gi)=>`
+      <div style="border:1px solid var(--border);border-radius:8px;padding:0.75rem;margin-bottom:0.6rem;">
+        <div style="display:flex;gap:0.5rem;align-items:center;margin-bottom:0.5rem;">
+          <input class="field-input" id="optg-label-${gi}" value="${(g.label||'').replace(/"/g,'&quot;')}" placeholder="Group name (e.g. Choose your protein)" style="flex:1;" />
+          <select class="field-select" id="optg-type-${gi}" style="width:auto;">
+            <option value="single" ${g.type!=='multi'?'selected':''}>Pick one</option>
+            <option value="multi" ${g.type==='multi'?'selected':''}>Multi-select</option>
+          </select>
+          <button class="btn btn-ghost btn-sm" onclick="removeOptionGroup(${gi})" title="Remove group">✕</button>
+        </div>
+        <div style="padding-left:0.5rem;">
+          ${(g.choices||[]).map((c, ci)=>`
+            <div style="display:flex;gap:0.5rem;align-items:center;margin-bottom:0.35rem;">
+              <input class="field-input" id="optc-name-${gi}-${ci}" value="${(c.name||'').replace(/"/g,'&quot;')}" placeholder="Choice (e.g. Chicken)" style="flex:1;" />
+              <input class="field-input" id="optc-price-${gi}-${ci}" value="${c.price||''}" type="number" step="0.01" placeholder="+$" style="width:90px;" />
+              <button class="btn btn-ghost btn-sm" onclick="removeOptionChoice(${gi},${ci})" title="Remove choice">✕</button>
+            </div>`).join('')}
+          <button class="btn btn-ghost btn-sm" onclick="addOptionChoice(${gi})" style="margin-top:0.2rem;">+ Add choice</button>
+        </div>
+      </div>`).join('') || '';
+  }
+  function _readOptionsBuilder() {
+    const groups = [];
+    for (let gi=0; document.getElementById('optg-label-'+gi); gi++) {
+      const label = document.getElementById('optg-label-'+gi).value.trim();
+      const type  = document.getElementById('optg-type-'+gi).value;
+      const choices = [];
+      for (let ci=0; document.getElementById('optc-name-'+gi+'-'+ci); ci++) {
+        const name = document.getElementById('optc-name-'+gi+'-'+ci).value.trim();
+        const price = parseFloat(document.getElementById('optc-price-'+gi+'-'+ci).value) || 0;
+        if (name) choices.push(price ? {name, price} : {name});
+      }
+      if (label && choices.length) groups.push({label, type, choices});
+    }
+    _editorOptions = groups;
+    return groups;
+  }
+  function addOptionGroup() {
+    _readOptionsBuilder();
+    _editorOptions.push({label:'', type:'single', choices:[{name:''}]});
+    _renderOptionsBuilder();
+  }
+  function removeOptionGroup(gi) {
+    _readOptionsBuilder();
+    _editorOptions.splice(gi,1);
+    _renderOptionsBuilder();
+  }
+  function addOptionChoice(gi) {
+    _readOptionsBuilder();
+    if (_editorOptions[gi]) { _editorOptions[gi].choices = _editorOptions[gi].choices||[]; _editorOptions[gi].choices.push({name:''}); }
+    _renderOptionsBuilder();
+  }
+  function removeOptionChoice(gi, ci) {
+    _readOptionsBuilder();
+    if (_editorOptions[gi]) _editorOptions[gi].choices.splice(ci,1);
+    _renderOptionsBuilder();
   }
 
   function saveMenuItem() {
@@ -1729,6 +1804,7 @@
       item.priceFull = parseFloat(document.getElementById('f-price-full').value) || 0;
     }
     item.tag      = selectedTag;
+    item.options  = _readOptionsBuilder();
     renderMenuList(); setUnsaved();
     showToast('✅ '+item.name+' saved','success');
   }
