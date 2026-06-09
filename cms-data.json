@@ -1,6 +1,6 @@
 {
   "_info": "Written by louwok.com/admin. index.html reads this at runtime.",
-  "_updated": "2026-06-09T15:36:10.068Z",
+  "_updated": "2026-06-09T15:36:25.590Z",
   "menu": [
     {
       "id": 1,
@@ -69,8 +69,8 @@
       "id": 10,
       "name": "Ultimate Fried Rice",
       "category": "rice",
-      "priceHalf": 6,
-      "priceFull": 12,
+      "priceHalf": 5,
+      "priceFull": 10,
       "tag": "popular",
       "desc": "Everything in one bowl. Beef, chicken, shrimp, bean sprouts & green onion. The works."
     },
