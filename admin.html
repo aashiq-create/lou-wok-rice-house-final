@@ -766,14 +766,25 @@
               <label class="field-label">Description</label>
               <textarea class="field-textarea" id="f-desc" placeholder="Describe the dish…"></textarea>
             </div>
-            <div class="price-row">
+            <div class="field-group">
+              <label class="field-label">Pricing Type</label>
+              <select class="field-select" id="f-price-mode" onchange="togglePriceMode()">
+                <option value="single">Single Price (beverages, appetizers, etc.)</option>
+                <option value="dual">Half + Whole (rice bowls, etc.)</option>
+              </select>
+            </div>
+            <div class="field-group" id="single-price-wrap">
+              <label class="field-label">Price ($)</label>
+              <input class="field-input" id="f-price-single" type="number" step="0.01" placeholder="8" />
+            </div>
+            <div class="price-row" id="dual-price-wrap" style="display:none;">
               <div class="field-group">
                 <label class="field-label">Half Price ($)</label>
-                <input class="field-input" id="f-price-half" type="number" placeholder="8" />
+                <input class="field-input" id="f-price-half" type="number" step="0.01" placeholder="8" />
               </div>
               <div class="field-group">
                 <label class="field-label">Whole / Full Price ($)</label>
-                <input class="field-input" id="f-price-full" type="number" placeholder="13" />
+                <input class="field-input" id="f-price-full" type="number" step="0.01" placeholder="13" />
               </div>
             </div>
             <div class="field-group">
@@ -1680,14 +1691,25 @@
     _fillCategoryDropdown();
     document.getElementById('f-category').value   = item.category;
     document.getElementById('f-desc').value       = item.desc;
+    // Pricing mode: single if no half price, dual otherwise
+    const hasHalf = item.priceHalf != null && item.priceHalf !== '';
+    document.getElementById('f-price-mode').value = hasHalf ? 'dual' : 'single';
+    document.getElementById('f-price-single').value = hasHalf ? '' : (item.priceFull ?? '');
     document.getElementById('f-price-half').value = item.priceHalf ?? '';
-    document.getElementById('f-price-full').value = item.priceFull;
+    document.getElementById('f-price-full').value = hasHalf ? (item.priceFull ?? '') : '';
+    togglePriceMode();
     document.getElementById('f-available').value  = 'available';
     selectedTag = item.tag || '';
     document.querySelectorAll('.tag-option').forEach(t =>
       t.classList.toggle('selected', t.dataset.tag===selectedTag||(t.getAttribute('onclick')||'').includes("'"+selectedTag+"'"))
     );
     renderMenuList();
+  }
+
+  function togglePriceMode() {
+    const mode = document.getElementById('f-price-mode').value;
+    document.getElementById('single-price-wrap').style.display = (mode === 'single') ? 'block' : 'none';
+    document.getElementById('dual-price-wrap').style.display   = (mode === 'dual')   ? 'flex'  : 'none';
   }
 
   function saveMenuItem() {
@@ -1697,9 +1719,15 @@
     item.name     = document.getElementById('f-name').value;
     item.category = document.getElementById('f-category').value;
     item.desc     = document.getElementById('f-desc').value;
-    const h = parseFloat(document.getElementById('f-price-half').value);
-    item.priceHalf = isNaN(h) ? null : h;
-    item.priceFull = parseFloat(document.getElementById('f-price-full').value)||0;
+    const mode = document.getElementById('f-price-mode').value;
+    if (mode === 'single') {
+      item.priceHalf = null;
+      item.priceFull = parseFloat(document.getElementById('f-price-single').value) || 0;
+    } else {
+      const h = parseFloat(document.getElementById('f-price-half').value);
+      item.priceHalf = isNaN(h) ? null : h;
+      item.priceFull = parseFloat(document.getElementById('f-price-full').value) || 0;
+    }
     item.tag      = selectedTag;
     renderMenuList(); setUnsaved();
     showToast('✅ '+item.name+' saved','success');
