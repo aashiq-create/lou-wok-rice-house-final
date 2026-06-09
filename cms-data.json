@@ -1,6 +1,6 @@
 {
   "_info": "Written by louwok.com/admin. index.html reads this at runtime.",
-  "_updated": "2026-06-09T15:05:57.456Z",
+  "_updated": "2026-06-09T15:12:15.886Z",
   "menu": [
     {
       "id": 1,
@@ -100,6 +100,15 @@
       "priceFull": 5,
       "tag": "popular",
       "desc": "Beef, Chicken, Shrimp along with base of Egg foo young patty on soft white bread with mayo and pickles"
+    },
+    {
+      "id": 14,
+      "name": "St. Paul Sandwich (Vegetable)",
+      "category": "sandwiches",
+      "priceHalf": null,
+      "priceFull": 5,
+      "tag": "none",
+      "desc": "Broccoli, carrots, cabbage, green onions, bean sprouts served on soft white bread with pickles\n"
     }
   ],
   "hours": [
