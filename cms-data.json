@@ -1,6 +1,6 @@
 {
   "_info": "Written by louwok.com/admin. index.html reads this at runtime.",
-  "_updated": "2026-06-09T15:32:04.213Z",
+  "_updated": "2026-06-09T15:32:14.116Z",
   "menu": [
     {
       "id": 1,
@@ -24,8 +24,8 @@
       "id": 3,
       "name": "Beef Fried Rice",
       "category": "rice",
-      "priceHalf": 6,
-      "priceFull": 12,
+      "priceHalf": 5,
+      "priceFull": 8,
       "tag": "",
       "desc": "Thinly sliced beef, wok-fired with egg, bean sprouts, and green onion."
     },
