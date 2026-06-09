@@ -1715,6 +1715,7 @@
     /* TikTok/X use black marks; on the dark footer show them in the rice tone
        (brand guidelines permit the monochrome mark on dark backgrounds) */
     #footerSocials .fa-tiktok, #footerSocials .fa-x-twitter, #footerSocials .fa-envelope { color: var(--rice); }
+    #footerCreditIcon { color: var(--wok); }
   </style>
   <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 </head>
@@ -2450,7 +2451,7 @@
     </div>
     <div class="footer-bottom">
       <span id="footerCopyright">© 2025 Lou Wok Rice House. Phoenix, AZ.</span>
-      <span id="footerCredit">Built with fire in the Valley</span>
+      <span class="footer-credit-wrap"><i class="fa-solid fa-fire" id="footerCreditIcon" aria-hidden="true"></i> <span id="footerCredit">Built in the Valley</span></span>
     </div>
   </footer>
 
@@ -3799,11 +3800,17 @@
         if(!b) return;
         if(b.tagline){
           const t=document.getElementById('footerTagline');
-          if(t) t.textContent=b.tagline;
+          const tag=String(b.tagline).replace(/\uFFFD/g,'').trim();
+          if(t && tag && !/Ã|Â|ð|â€|\uFFFD/.test(tag)) t.textContent=tag;
         }
         if(b.footerCredit){
           const c=document.getElementById('footerCredit');
-          if(c) c.textContent=b.footerCredit;
+          // Guard against a previously-published value that got mojibaked
+          // (e.g. a broken emoji shows as "ð¥"). Strip control/replacement
+          // junk; if what's left looks corrupted, keep the clean default.
+          let credit=String(b.footerCredit).replace(/\uFFFD/g,'').trim();
+          const looksBroken=/Ã|Â|ð|â€|\uFFFD/.test(credit);
+          if(c && credit && !looksBroken) c.textContent=credit;
         }
         if(b.name){
           const cp=document.getElementById('footerCopyright');
