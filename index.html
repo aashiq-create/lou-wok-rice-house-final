@@ -1854,7 +1854,7 @@
             <span style="font-size:0.95rem;color:var(--muted);font-family:'DM Sans',sans-serif;font-weight:500;">Half&nbsp;<span style="color:var(--gold);font-family:'Bebas Neue',sans-serif;font-size:1.35rem;">$8</span></span>
             <span style="font-size:0.95rem;color:var(--muted);font-family:'DM Sans',sans-serif;font-weight:500;">Whole&nbsp;<span style="color:var(--gold);font-family:'Bebas Neue',sans-serif;font-size:1.35rem;">$12</span></span>
           </div>
-          <span class="card-tag tag-popular">Best Seller</span>
+          <span class="card-tag tag-popular">Popular</span>
         </div>
         <div class="card-add-row">
           <select class="card-size-select" id="size-8-12">
@@ -3576,7 +3576,7 @@
       const esc = s => String(s==null?'':s).replace(/[&<>"]/g, c=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;' }[c]));
       const catLabel = c => ({rice:'Base Rice',appetizers:'Appetizer',sandwiches:'Sandwich',combos:'Combo',beverages:'Beverage'}[c]||c);
       const tagClass = t => 'tag-'+(t||'').replace(/[^a-z0-9-]/gi,'');
-      const tagLabel = t => ({popular:'Best Seller','fan-fave':'Fan Fave',classic:'Classic',spicy:'Spicy',new:'New'}[t]||t);
+      const tagLabel = t => ({popular:'Popular','fan-fave':'Fan Fave',classic:'Classic',spicy:'Spicy',new:'New'}[t]||t);
 
       function renderMenu(menu, categories){
         if(!Array.isArray(menu)||!menu.length) return;
