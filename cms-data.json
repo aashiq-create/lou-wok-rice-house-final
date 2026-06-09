@@ -1,6 +1,6 @@
 {
   "_info": "Written by louwok.com/admin. index.html reads this at runtime.",
-  "_updated": "2026-06-09T15:36:25.590Z",
+  "_updated": "2026-06-09T15:37:16.603Z",
   "menu": [
     {
       "id": 1,
@@ -9,7 +9,7 @@
       "priceHalf": 3,
       "priceFull": 6,
       "tag": "classic",
-      "desc": "The foundation. Egg, bean sprouts, soy, and green onion ÃÂ¢ÃÂÃÂ cooked hot and fast in a screaming wok."
+      "desc": "The foundation. Egg, bean sprouts, and green onion cooked hot and fast in a screaming wok."
     },
     {
       "id": 2,
