@@ -1,6 +1,6 @@
 {
   "_info": "Written by louwok.com/admin. index.html reads this at runtime.",
-  "_updated": "2026-06-09T15:37:53.248Z",
+  "_updated": "2026-06-09T15:38:01.033Z",
   "menu": [
     {
       "id": 1,
@@ -27,7 +27,7 @@
       "priceHalf": 4,
       "priceFull": 8,
       "tag": "",
-      "desc": "Slliced beef, wok-fired with egg, bean sprouts, and green onion."
+      "desc": "Sliced beef, wok-fired with egg, bean sprouts, and green onion."
     },
     {
       "id": 4,
