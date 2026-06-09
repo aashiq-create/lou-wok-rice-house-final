@@ -1,6 +1,6 @@
 {
   "_info": "Written by louwok.com/admin. index.html reads this at runtime.",
-  "_updated": "2026-06-09T15:32:14.116Z",
+  "_updated": "2026-06-09T15:32:28.670Z",
   "menu": [
     {
       "id": 1,
@@ -33,8 +33,8 @@
       "id": 4,
       "name": "Shrimp Fried Rice",
       "category": "rice",
-      "priceHalf": 6,
-      "priceFull": 12,
+      "priceHalf": 5,
+      "priceFull": 8,
       "tag": "",
       "desc": "Plump shrimp, wok-fired with egg, green onion, and a splash of soy."
     },
