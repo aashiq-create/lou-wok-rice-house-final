@@ -1,6 +1,6 @@
 {
   "_info": "Written by louwok.com/admin. index.html reads this at runtime.",
-  "_updated": "2026-06-09T15:50:11.772Z",
+  "_updated": "2026-06-09T15:50:49.784Z",
   "menu": [
     {
       "id": 1,
@@ -117,7 +117,7 @@
       "priceHalf": null,
       "priceFull": 4,
       "tag": "popular",
-      "desc": "Chicken, shrimp or beef along with based of egg foo young patty on soft white bread with mayo and pickles."
+      "desc": "Chicken, shrimp or beef along with based of egg foo young on soft white bread with lettuce, tomato,  and pickles."
     },
     {
       "id": 16,
