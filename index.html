@@ -1774,21 +1774,21 @@
   <!-- ── TICKER ── -->
   <div class="ticker-wrap">
     <div class="ticker" id="tickerTrack">
-      <span class="ticker-item hot">🍚 Fried Rice</span>
+      <span class="ticker-item hot">Fried Rice</span>
       <span class="ticker-item">·</span>
-      <span class="ticker-item hot">🦀 Crab Rangoon</span>
+      <span class="ticker-item hot">Crab Rangoon</span>
       <span class="ticker-item">·</span>
-      <span class="ticker-item hot">🥪 St. Paul Sandwich</span>
+      <span class="ticker-item hot">St. Paul Sandwich</span>
       <span class="ticker-item">·</span>
       <span class="ticker-item">Wok-Fired Daily</span>
       <span class="ticker-item">·</span>
       <span class="ticker-item">Phoenix, AZ</span>
       <span class="ticker-item">·</span>
-      <span class="ticker-item hot">🍚 Fried Rice</span>
+      <span class="ticker-item hot">Fried Rice</span>
       <span class="ticker-item">·</span>
-      <span class="ticker-item hot">🦀 Crab Rangoon</span>
+      <span class="ticker-item hot">Crab Rangoon</span>
       <span class="ticker-item">·</span>
-      <span class="ticker-item hot">🥪 St. Paul Sandwich</span>
+      <span class="ticker-item hot">St. Paul Sandwich</span>
       <span class="ticker-item">·</span>
       <span class="ticker-item">Wok-Fired Daily</span>
       <span class="ticker-item">·</span>
@@ -2079,7 +2079,7 @@
         <div class="detail-item"><div class="detail-label">Bread</div><div class="detail-value">Soft White</div></div>
         <div class="detail-item"><div class="detail-label">Sauce</div><div class="detail-value">Mayo + Pickles</div></div>
       </div>
-      <a href="#order" class="btn-primary">Order the St. Paul</a>
+      <a href="#menu" class="btn-primary" onclick="gotoMenuCategory('sandwiches');return false;">Order the St. Paul</a>
     </div>
   </section>
 
@@ -2097,7 +2097,7 @@
       <div class="section-label">Our Story</div>
       <p class="about-text">Lou Wok Rice House was built for the transplants, the foodies, the people who moved to Phoenix and couldn't find the flavors they grew up with.</p>
       <p class="about-text">We built Lou Wok to fill that gap — a fast, bold, unforgettable rice house that brings Midwest comfort food energy to the Valley of the Sun. Every plate wok-fired to order. Every time.</p>
-      <a href="#menu" class="btn-primary">See the Full Menu</a>
+      <a href="#menu" class="btn-primary" onclick="gotoMenuCategory('all');return false;">See the Full Menu</a>
     </div>
   </section>
 
@@ -2677,6 +2677,18 @@
     }, 1200);
 
     // ── SMOOTH SCROLL WITH NAV OFFSET ───────────────────────
+    function gotoMenuCategory(cat) {
+      smoothTo('menu');
+      // After scrolling, activate the matching tab (which filters the grid)
+      setTimeout(() => {
+        const tabs = document.getElementById('menuTabs');
+        if (!tabs) return;
+        const target = tabs.querySelector('.tab[data-filter="' + cat + '"]')
+                     || tabs.querySelector('.tab[data-filter="all"]');
+        if (target) target.click();
+      }, 450);
+    }
+
     function smoothTo(id) {
       const el = document.getElementById(id);
       if (!el) return;
@@ -3844,9 +3856,11 @@
         const track=document.getElementById('tickerTrack');
         if(!track || !Array.isArray(items) || !items.length) return;
         const sep='<span class="ticker-item">·</span>';
+        const clean=t=>String(t).replace(/\uFFFD/g,'').trim();
+        const broken=t=>/Ã|Â|ð|â€|\uFFFD/.test(t);
         const one = items
-          .filter(it=>it && (it.text!=null) && String(it.text).trim())
-          .map(it=>`<span class="ticker-item${it.hot?' hot':''}">${esc(it.text)}</span>`)
+          .filter(it=>it && (it.text!=null) && clean(it.text) && !broken(String(it.text)))
+          .map(it=>`<span class="ticker-item${it.hot?' hot':''}">${esc(clean(it.text))}</span>`)
           .join(sep);
         if(!one) return;
         track.innerHTML = one + sep + one + sep;   // duplicated for seamless loop
