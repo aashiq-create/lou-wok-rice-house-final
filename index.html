@@ -22,6 +22,8 @@
 
   <title>Lou Wok Rice House</title>
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=Playfair+Display:ital@1&display=swap" rel="stylesheet" />
+  <!-- Font Awesome (brand icons for social links) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
 
   <style>
     :root {
@@ -1708,6 +1710,11 @@
       .fade-in { transition: none; transform: none; opacity: 1; }
       * { scroll-behavior: auto !important; }
     }
+    /* Brand icons in footer social links — fixed width so labels align */
+    #footerSocials .fa-brands, #footerSocials .fa-solid { width: 1.15em; text-align: center; }
+    /* TikTok/X use black marks; on the dark footer show them in the rice tone
+       (brand guidelines permit the monochrome mark on dark backgrounds) */
+    #footerSocials .fa-tiktok, #footerSocials .fa-x-twitter, #footerSocials .fa-envelope { color: var(--rice); }
   </style>
   <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 </head>
@@ -2435,9 +2442,9 @@
       <div>
         <div class="footer-col-title">Connect</div>
         <ul class="footer-links" id="footerSocials">
-          <li><a href="https://instagram.com/louwokphx" target="_blank" rel="noopener">📸&nbsp; Instagram</a></li>
-          <li><a href="https://tiktok.com/@louwokphx" target="_blank" rel="noopener">🎵&nbsp; TikTok</a></li>
-          <li><a href="#catering">✉️&nbsp; Contact Us</a></li>
+          <li><a href="https://instagram.com/louwokphx" target="_blank" rel="noopener"><i class="fa-brands fa-instagram" style="color:#E4405F" aria-hidden="true"></i>&nbsp; Instagram</a></li>
+          <li><a href="https://tiktok.com/@louwokphx" target="_blank" rel="noopener"><i class="fa-brands fa-tiktok" aria-hidden="true"></i>&nbsp; TikTok</a></li>
+          <li><a href="#catering"><i class="fa-solid fa-envelope" aria-hidden="true"></i>&nbsp; Contact Us</a></li>
         </ul>
       </div>
     </div>
@@ -3741,14 +3748,14 @@
       function renderSocials(socials, contactEmail){
         const wrap=document.getElementById('footerSocials');
         if(!wrap || !socials) return;
-        // platform → { emoji, label, url-prefix for bare handles }
+        // platform → { icon (Font Awesome brand), label, url-prefix for bare handles }
         const defs=[
-          {key:'instagram', emoji:'📸', label:'Instagram', base:'https://instagram.com/'},
-          {key:'tiktok',    emoji:'🎵', label:'TikTok',    base:'https://tiktok.com/@'},
-          {key:'facebook',  emoji:'👍', label:'Facebook',  base:'https://facebook.com/'},
-          {key:'twitter',   emoji:'🐦', label:'X / Twitter',base:'https://x.com/'},
-          {key:'youtube',   emoji:'▶️', label:'YouTube',   base:'https://youtube.com/@'},
-          {key:'yelp',      emoji:'⭐', label:'Yelp',      base:'https://yelp.com/biz/'},
+          {key:'instagram', icon:'fa-brands fa-instagram', color:'#E4405F', label:'Instagram', base:'https://instagram.com/'},
+          {key:'tiktok',    icon:'fa-brands fa-tiktok',    color:'',        label:'TikTok',    base:'https://tiktok.com/@'},
+          {key:'facebook',  icon:'fa-brands fa-facebook',  color:'#1877F2', label:'Facebook',  base:'https://facebook.com/'},
+          {key:'twitter',   icon:'fa-brands fa-x-twitter', color:'',        label:'X / Twitter',base:'https://x.com/'},
+          {key:'youtube',   icon:'fa-brands fa-youtube',   color:'#FF0000', label:'YouTube',   base:'https://youtube.com/@'},
+          {key:'yelp',      icon:'fa-brands fa-yelp',      color:'#FF1A1A', label:'Yelp',      base:'https://yelp.com/biz/'},
         ];
         const norm=(v,base)=>{
           v=String(v||'').trim(); if(!v) return '';
@@ -3767,8 +3774,8 @@
           return;
         }
         wrap.innerHTML =
-          items.map(x=>`<li><a href="${esc(x.url)}" target="_blank" rel="noopener">${x.d.emoji}&nbsp; ${esc(x.d.label)}</a></li>`).join('')
-          + `<li><a href="${contactHref}">✉️&nbsp; Contact Us</a></li>`;
+          items.map(x=>`<li><a href="${esc(x.url)}" target="_blank" rel="noopener"><i class="${x.d.icon}"${x.d.color?` style="color:${x.d.color}"`:''} aria-hidden="true"></i>&nbsp; ${esc(x.d.label)}</a></li>`).join('')
+          + `<li><a href="${contactHref}"><i class="fa-solid fa-envelope" aria-hidden="true"></i>&nbsp; Contact Us</a></li>`;
       }
 
 
