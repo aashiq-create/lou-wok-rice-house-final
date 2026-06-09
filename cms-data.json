@@ -1,6 +1,6 @@
 {
   "_info": "Written by louwok.com/admin. index.html reads this at runtime.",
-  "_updated": "2026-06-09T22:18:18.690Z",
+  "_updated": "2026-06-09T22:21:00.241Z",
   "menu": [
     {
       "id": 1,
@@ -127,6 +127,16 @@
       "priceFull": 3,
       "tag": "popular",
       "desc": "A bright, refreshing blend of fresh carrots and fruit juices, delivering a naturally sweet burst of goodness in every sip."
+    },
+    {
+      "id": 17,
+      "name": "Bottled Water",
+      "category": "beverages",
+      "priceHalf": null,
+      "priceFull": 1,
+      "tag": "none",
+      "desc": "16.9 fl oz. bottle of water on chill.",
+      "options": []
     }
   ],
   "hours": [
