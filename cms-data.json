@@ -1,6 +1,6 @@
 {
   "_info": "Written by louwok.com/admin. index.html reads this at runtime.",
-  "_updated": "2026-06-09T22:37:33.902Z",
+  "_updated": "2026-06-09T22:39:21.183Z",
   "menu": [
     {
       "id": 1,
@@ -200,8 +200,8 @@
       "open": "11:00",
       "close": "19:00",
       "closed": false,
-      "location": "Rotating ÃÂÃÂÃÂÃÂ· Follow @louwokphx",
-      "area": "Rotating ÃÂÃÂÃÂÃÂ",
+      "location": "16th & Broadway",
+      "area": "16th & Broadway",
       "street": "Check @louwokphx for today's spot"
     },
     {
@@ -268,9 +268,9 @@
   },
   "location": {
     "street": "Phoenix, AZ",
-    "cityStateZip": "Phoenix, AZ 85001",
-    "phone": "",
-    "email": "orders@louwok.com",
+    "cityStateZip": "Phoenix, AZ 85040",
+    "phone": "(314) 356-5596",
+    "email": "support@louwok.com",
     "mapsEmbed": ""
   },
   "branding": {
