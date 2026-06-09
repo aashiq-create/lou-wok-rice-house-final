@@ -1222,6 +1222,14 @@
     /* Always visible on touch devices */
     @media (hover: none) { .card-add-row { opacity: 1; transform: none; } }
 
+    /* On phones, stack the size selector above the button so the dropdown
+       arrow has room and never overlaps the Half/Whole text */
+    @media (max-width: 640px) {
+      .card-add-row { flex-direction: column; align-items: stretch; gap: 0.6rem; }
+      .card-add-row .card-size-select { width: 100%; padding-right: 34px; }
+      .card-add-row .card-add-btn { width: 100%; justify-content: center; }
+    }
+
     .card-size-select {
       background: var(--black);
       border: 1px solid var(--border);
