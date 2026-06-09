@@ -1,6 +1,6 @@
 {
   "_info": "Written by louwok.com/admin. index.html reads this at runtime.",
-  "_updated": "2026-06-09T15:32:28.670Z",
+  "_updated": "2026-06-09T15:32:56.644Z",
   "menu": [
     {
       "id": 1,
@@ -60,8 +60,8 @@
       "id": 8,
       "name": "Pineapple Chicken Fried Rice",
       "category": "rice",
-      "priceHalf": 8,
-      "priceFull": 12,
+      "priceHalf": 4,
+      "priceFull": 8,
       "tag": "new",
       "desc": "Sweet meets savory. Served in a hollowed pineapple for the full experience."
     },
