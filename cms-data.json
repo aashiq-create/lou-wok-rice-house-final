@@ -1,6 +1,6 @@
 {
   "_info": "Written by louwok.com/admin. index.html reads this at runtime.",
-  "_updated": "2026-06-09T15:26:22.585Z",
+  "_updated": "2026-06-09T15:26:54.992Z",
   "menu": [
     {
       "id": 1,
@@ -85,7 +85,7 @@
     },
     {
       "id": 12,
-      "name": "Vess ",
+      "name": "Vess Soda",
       "category": "beverages",
       "priceHalf": null,
       "priceFull": 2,
