@@ -1,6 +1,6 @@
 {
   "_info": "Written by louwok.com/admin. index.html reads this at runtime.",
-  "_updated": "2026-06-09T16:00:57.592Z",
+  "_updated": "2026-06-09T22:13:30.345Z",
   "menu": [
     {
       "id": 1,
@@ -135,8 +135,8 @@
       "open": "11:00",
       "close": "21:00",
       "closed": true,
-      "location": "South Phoenix ÃÂÃÂ· 18th St",
-      "area": "South Phoenix ÃÂÃÂ",
+      "location": "South Phoenix ÃÂÃÂÃÂÃÂ· 18th St",
+      "area": "South Phoenix ÃÂÃÂÃÂÃÂ",
       "street": "Near 18th St & Baseline"
     },
     {
@@ -144,8 +144,8 @@
       "open": "11:00",
       "close": "21:00",
       "closed": true,
-      "location": "Midtown PHX ÃÂÃÂ· Central Ave",
-      "area": "Midtown PHX ÃÂÃÂ",
+      "location": "Midtown PHX ÃÂÃÂÃÂÃÂ· Central Ave",
+      "area": "Midtown PHX ÃÂÃÂÃÂÃÂ",
       "street": "Near Central & Thomas"
     },
     {
@@ -180,8 +180,8 @@
       "open": "11:00",
       "close": "19:00",
       "closed": false,
-      "location": "Rotating ÃÂÃÂ· Follow @louwokphx",
-      "area": "Rotating ÃÂÃÂ",
+      "location": "Rotating ÃÂÃÂÃÂÃÂ· Follow @louwokphx",
+      "area": "Rotating ÃÂÃÂÃÂÃÂ",
       "street": "Check @louwokphx for today's spot"
     },
     {
@@ -359,7 +359,7 @@
   "settings": {
     "taxRate": 0.086,
     "onlineOrderingEnabled": true,
-    "pickupInstructions": "Pickup only Â· Est. ready 10â15 min",
+    "pickupInstructions": "Pickup only. Estimated Wait Time 10-15 minutes",
     "squareAppId": "",
     "squareLocationId": "",
     "paymentBackendUrl": ""
