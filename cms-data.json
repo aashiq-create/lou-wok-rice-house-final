@@ -1,6 +1,6 @@
 {
   "_info": "Written by louwok.com/admin. index.html reads this at runtime.",
-  "_updated": "2026-06-09T15:49:31.877Z",
+  "_updated": "2026-06-09T15:50:11.772Z",
   "menu": [
     {
       "id": 1,
@@ -108,7 +108,7 @@
       "priceHalf": null,
       "priceFull": 4,
       "tag": "popular",
-      "desc": "Broccoli, carrots, cabbage, green onions, bean sprouts served on soft white bread with pickles\n"
+      "desc": "Broccoli, carrots, cabbage, green onions, bean sprouts served on soft white bread with lettuce, tomato & pickles.\n"
     },
     {
       "id": 15,
