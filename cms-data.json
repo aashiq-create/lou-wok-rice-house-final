@@ -1,6 +1,6 @@
 {
   "_info": "Written by louwok.com/admin. index.html reads this at runtime.",
-  "_updated": "2026-06-09T22:21:00.241Z",
+  "_updated": "2026-06-09T22:25:04.973Z",
   "menu": [
     {
       "id": 1,
@@ -136,6 +136,16 @@
       "priceFull": 1,
       "tag": "none",
       "desc": "16.9 fl oz. bottle of water on chill.",
+      "options": []
+    },
+    {
+      "id": 18,
+      "name": "Lou Wok Box Combo ",
+      "category": "combos",
+      "priceHalf": null,
+      "priceFull": 15,
+      "tag": "fan-fave",
+      "desc": "The combo that put us on the map: a whole order of fried rice with your choice of 2 proteins, 4 crispy fried chicken pieces, 4 crab rangoons, and a Vess Soda or Mystic Carrot Juice. St. Louis comfort food, wok-fired fresh in Phoenix.",
       "options": []
     }
   ],
