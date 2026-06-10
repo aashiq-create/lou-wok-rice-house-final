@@ -1383,6 +1383,30 @@
     .opt-choice input { accent-color: var(--gold); width: 18px; height: 18px; flex-shrink: 0; }
     .opt-choice-name { flex: 1; color: var(--rice); font-size: 0.92rem; }
     .opt-choice-price { color: var(--gold); font-size: 0.85rem; font-family: 'DM Sans', sans-serif; }
+    .opt-group-hint { color: var(--muted); font-size: 0.68rem; font-weight: 400; text-transform: none; letter-spacing: 0; margin-left: 0.5rem; }
+    .ing-grid { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .ing-chip {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      padding: 0.5rem 0.85rem 0.5rem 0.6rem;
+      border: 1px solid var(--border); border-radius: 999px;
+      background: var(--black); color: var(--muted);
+      font-family: 'DM Sans', sans-serif; font-size: 0.85rem; cursor: pointer;
+      transition: all 0.15s ease; min-height: 40px;
+    }
+    .ing-chip .ing-dot {
+      width: 18px; height: 18px; border-radius: 50%;
+      border: 2px solid var(--muted); flex-shrink: 0; position: relative;
+      transition: all 0.15s ease;
+    }
+    .ing-chip.selected { border-color: var(--gold); color: var(--rice); background: rgba(232,160,32,0.08); }
+    .ing-chip.selected .ing-dot { border-color: var(--gold); background: var(--gold); }
+    .ing-chip.selected .ing-dot::after {
+      content: ''; position: absolute; left: 4px; top: 1px;
+      width: 5px; height: 9px; border: solid var(--black);
+      border-width: 0 2px 2px 0; transform: rotate(45deg);
+    }
+    .ing-chip:not(.selected) { text-decoration: line-through; opacity: 0.7; }
+    .ing-chip:active { transform: scale(0.96); }
     .cart-empty-state {
       display: flex; flex-direction: column; align-items: center;
       justify-content: center; height: 100%; text-align: center;
@@ -2932,6 +2956,19 @@
       const body = document.getElementById('optModalBody');
       const groups = Array.isArray(m.options) ? m.options : [];
       body.innerHTML = groups.map((g, gi)=>{
+        // Ingredient toggles: circular chips, all selected by default, tap to remove
+        if(g.type==='ingredients'){
+          const chips=(g.choices||[]).map((c, ci)=>{
+            const nm = typeof c==='string' ? c : (c.name||'');
+            return `<button type="button" class="ing-chip selected" data-label="${esc(nm)}" onclick="_ingToggle(this)">
+              <span class="ing-dot"></span><span class="ing-name">${esc(nm)}</span>
+            </button>`;
+          }).join('');
+          return `<div class="opt-group" data-type="ingredients">
+            <div class="opt-group-label">${esc(g.label||'Ingredients')}<span class="opt-group-hint">tap to remove</span></div>
+            <div class="ing-grid">${chips}</div>
+          </div>`;
+        }
         const type = g.type==='multi' ? 'checkbox' : 'radio';
         const req = (g.type!=='multi' && g.required!==false);
         const choices = (g.choices||[]).map((c, ci)=>{
@@ -2956,6 +2993,9 @@
       document.getElementById('optModalOverlay').classList.add('open');
       document.body.style.overflow='hidden';
     }
+    function _ingToggle(btn){
+      btn.classList.toggle('selected');
+    }
     function _optSync(input){
       // visual checked state; for radios, clear siblings
       const group = input.closest('.opt-group');
@@ -2972,8 +3012,15 @@
     function confirmItemOptions(){
       const m=_optCurrentItem; if(!m) return;
       const groups=document.querySelectorAll('#optModalBody .opt-group');
-      let extra=0; const parts=[];
+      let extra=0; const parts=[]; const removed=[];
       for(const g of groups){
+        if(g.dataset.type==='ingredients'){
+          // any unselected chip = ingredient the customer removed
+          g.querySelectorAll('.ing-chip:not(.selected)').forEach(ch=>{
+            removed.push('No '+ch.dataset.label);
+          });
+          continue;
+        }
         const checked=[...g.querySelectorAll('input:checked')];
         const req=g.dataset.req==='true';
         if(req && checked.length===0){ showToast('Please make a selection','error'); return; }
@@ -2988,7 +3035,7 @@
       const emoji = m.category==='appetizers'?'🦀':m.category==='sandwiches'?'🥪':m.category==='beverages'?'🥤':'🍚';
       const notesEl = document.getElementById('optItemNotes');
       const notes = notesEl ? notesEl.value.trim() : '';
-      let meta = parts.join(', ');
+      let meta = parts.concat(removed).join(', ');
       if(notes) meta = meta ? `${meta} — ${notes}` : notes;
       const existing = cartItems.find(i=>i.id===m.id && i.sizeMeta===meta);
       if(existing){ existing.qty++; } else { cartItems.push({id:m.id, name:m.name, emoji, price, sizeMeta:meta, qty:1}); }
