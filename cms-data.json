@@ -1,6 +1,6 @@
 {
   "_info": "Written by louwok.com/admin. index.html reads this at runtime.",
-  "_updated": "2026-06-10T00:35:35.237Z",
+  "_updated": "2026-06-10T00:58:11.940Z",
   "menu": [
     {
       "id": 1,
@@ -9,7 +9,8 @@
       "priceHalf": 3,
       "priceFull": 6,
       "tag": "classic",
-      "desc": "The foundation. Egg, bean sprouts, and green onion cooked hot and fast in a screaming wok."
+      "desc": "The foundation. Egg, bean sprouts, and green onion cooked hot and fast in a screaming wok.",
+      "options": []
     },
     {
       "id": 2,
@@ -156,8 +157,8 @@
       "open": "11:00",
       "close": "21:00",
       "closed": true,
-      "location": "South Phoenix ÃÂÃÂÃÂÃÂ· 18th St",
-      "area": "South Phoenix ÃÂÃÂÃÂÃÂ",
+      "location": "South Phoenix ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ· 18th St",
+      "area": "South Phoenix ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ",
       "street": "Near 18th St & Baseline"
     },
     {
@@ -165,8 +166,8 @@
       "open": "11:00",
       "close": "21:00",
       "closed": true,
-      "location": "Midtown PHX ÃÂÃÂÃÂÃÂ· Central Ave",
-      "area": "Midtown PHX ÃÂÃÂÃÂÃÂ",
+      "location": "Midtown PHX ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ· Central Ave",
+      "area": "Midtown PHX ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ",
       "street": "Near Central & Thomas"
     },
     {
