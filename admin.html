@@ -1277,12 +1277,12 @@
     ],
     menu:[
       {id:1, name:"Classic Fried Rice",    category:"rice",       priceHalf:7,  priceFull:11, tag:"classic",  desc:"The foundation. Egg, bean sprouts, soy, and green onion — cooked hot and fast in a screaming wok."},
-      {id:2, name:"Chicken Fried Rice",    category:"rice",       priceHalf:8,  priceFull:13, tag:"popular",  desc:"All-white chicken, egg, bean sprouts, soy, and green onion. Classic done right."},
+      {id:2, name:"Chicken Fried Rice",    category:"rice",       priceHalf:8,  priceFull:13, tag:"popular",  desc:"All-white chicken, egg, bean sprouts, soy, and green onion. Classic done right.", options:[{label:"Ingredients", type:"ingredients", choices:[{name:"Egg"},{name:"Bean Sprouts"},{name:"Green Onion"},{name:"Soy Sauce"},{name:"Carrots"}]},{label:"Add-ons", type:"multi", choices:[{name:"Extra protein",price:3},{name:"Extra egg",price:1.5},{name:"Spicy"}]}]},
       {id:3, name:"Beef Fried Rice",       category:"rice",       priceHalf:8,  priceFull:13, tag:"",         desc:"Thinly sliced beef, wok-fired with egg, bean sprouts, and green onion."},
       {id:4, name:"Shrimp Fried Rice",     category:"rice",       priceHalf:8,  priceFull:13, tag:"",         desc:"Plump shrimp, wok-fired with egg, green onion, and a splash of soy."},
       {id:5, name:"Pork Fried Rice",       category:"rice",       priceHalf:8,  priceFull:13, tag:"",         desc:"Slow-cooked pork, wok-fired with the classic trio: egg, sprouts, and soy."},
       {id:6, name:"Crab Rangoon",          category:"appetizers", priceHalf:null,priceFull:8, tag:"popular",  desc:"Crispy wonton cups filled with real crab and cream cheese. Fried to gold. 6pc."},
-      {id:7, name:"St. Paul Sandwich",     category:"sandwiches", priceHalf:null,priceFull:7, tag:"fan-fave", desc:"Egg foo young patty on soft white bread with mayo and pickles. A Midwest icon.", options:[{label:"Choose your protein", type:"single", choices:[{name:"Chicken"},{name:"Beef"},{name:"Shrimp",price:1.5},{name:"Pork"},{name:"Veggie"}]},{label:"Add-ons", type:"multi", choices:[{name:"Extra patty",price:2},{name:"Add cheese",price:1},{name:"Extra sauce"}]}]},
+      {id:7, name:"St. Paul Sandwich",     category:"sandwiches", priceHalf:null,priceFull:7, tag:"fan-fave", desc:"Egg foo young patty on soft white bread with mayo and pickles. A Midwest icon.", options:[{label:"Choose your protein", type:"single", choices:[{name:"Chicken"},{name:"Beef"},{name:"Shrimp",price:1.5},{name:"Pork"},{name:"Veggie"}]},{label:"Ingredients", type:"ingredients", choices:[{name:"Mayo"},{name:"Pickles"},{name:"Lettuce"},{name:"Tomato"},{name:"Onion"}]},{label:"Add-ons", type:"multi", choices:[{name:"Extra patty",price:2},{name:"Add cheese",price:1},{name:"Extra sauce"}]}]},
       {id:8, name:"Pineapple Chicken Rice",category:"rice",       priceHalf:8,  priceFull:13, tag:"fan-fave", desc:"Sweet meets savory. Served in a hollowed pineapple for the full experience."},
       {id:9, name:"Basil Fried Rice",      category:"rice",       priceHalf:8,  priceFull:13, tag:"",         desc:"Fresh Thai basil, garlic, chili, egg — wok-fired until fragrant."},
       {id:10,name:"Ultimate Fried Rice",   category:"rice",       priceHalf:8,  priceFull:13, tag:"popular",  desc:"Everything in one bowl. Beef, chicken, shrimp, pork, and ham. The works."},
@@ -1734,8 +1734,9 @@
         <div style="display:flex;gap:0.5rem;align-items:center;margin-bottom:0.5rem;">
           <input class="field-input" id="optg-label-${gi}" value="${(g.label||'').replace(/"/g,'&quot;')}" placeholder="Group name (e.g. Choose your protein)" style="flex:1;" />
           <select class="field-select" id="optg-type-${gi}" style="width:auto;">
-            <option value="single" ${g.type!=='multi'?'selected':''}>Pick one</option>
-            <option value="multi" ${g.type==='multi'?'selected':''}>Multi-select</option>
+            <option value="single" ${g.type==='single'||(!g.type)?'selected':''}>Pick one</option>
+            <option value="multi" ${g.type==='multi'?'selected':''}>Multi-select add-ons</option>
+            <option value="ingredients" ${g.type==='ingredients'?'selected':''}>Ingredients (removable)</option>
           </select>
           <button class="btn btn-ghost btn-sm" onclick="removeOptionGroup(${gi})" title="Remove group">✕</button>
         </div>
