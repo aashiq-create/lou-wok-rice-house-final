@@ -1,6 +1,6 @@
 {
   "_info": "Written by louwok.com/admin. index.html reads this at runtime.",
-  "_updated": "2026-06-10T01:01:26.175Z",
+  "_updated": "2026-06-10T01:02:10.738Z",
   "menu": [
     {
       "id": 1,
@@ -120,23 +120,7 @@
       "priceFull": 4,
       "tag": "popular",
       "desc": "Chicken, shrimp or beef along with based of egg foo young on soft white bread with lettuce, tomato,  and pickles.",
-      "options": [
-        {
-          "label": "Choose Your Protein",
-          "type": "multi",
-          "choices": [
-            {
-              "name": "Chicken"
-            },
-            {
-              "name": "Shrimp"
-            },
-            {
-              "name": "Beef"
-            }
-          ]
-        }
-      ]
+      "options": []
     },
     {
       "id": 16,
