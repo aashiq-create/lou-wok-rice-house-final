@@ -1,6 +1,6 @@
 {
   "_info": "Written by louwok.com/admin. index.html reads this at runtime.",
-  "_updated": "2026-06-09T22:39:21.183Z",
+  "_updated": "2026-06-10T00:34:15.000Z",
   "menu": [
     {
       "id": 1,
@@ -63,7 +63,8 @@
       "priceHalf": 4,
       "priceFull": 8,
       "tag": "new",
-      "desc": "Sweet meets savory. Served in a hollowed pineapple for the full experience."
+      "desc": "Tender chicken, sweet pineapple, and wok-fired rice come together in the perfect balance of savory and sweet. A bold twist on a Midwest favorite, cooked fresh to order with Lou Wok flavor in every bite.",
+      "options": []
     },
     {
       "id": 10,
