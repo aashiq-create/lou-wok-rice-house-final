@@ -1,6 +1,6 @@
 {
   "_info": "Written by louwok.com/admin. index.html reads this at runtime.",
-  "_updated": "2026-06-11T23:36:35.385Z",
+  "_updated": "2026-06-11T23:38:12.075Z",
   "menu": [
     {
       "id": 1,
@@ -160,6 +160,16 @@
       "priceFull": 6,
       "tag": "",
       "desc": "Golden, crispy, and packed with seasoned chicken, cabbage, celery, and savory spices, our chicken egg roll is the perfect sidekick to any Lou Wok meal. A St. Louis takeout classic done the Midwest way—hot, crunchy, and made for dipping.\n",
+      "options": []
+    },
+    {
+      "id": 20,
+      "name": "Egg Roll (Veggie)",
+      "category": "appetizers",
+      "priceHalf": 3,
+      "priceFull": 6,
+      "tag": "",
+      "desc": "Golden, crispy, and loaded with fresh cabbage, celery, carrots, onions, and savory seasonings, our veggie egg roll delivers big flavor in every bite. A Midwest takeout favorite—hot, crunchy, and made for dipping.",
       "options": []
     }
   ],
