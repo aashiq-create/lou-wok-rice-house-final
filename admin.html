@@ -559,6 +559,21 @@
 </head>
 <body>
 
+<!-- ── LOGIN GATE ── -->
+<div id="loginGate" style="position:fixed;inset:0;z-index:10000;background:#0a0a08;display:flex;align-items:center;justify-content:center;padding:1.5rem;">
+  <div style="background:var(--smoke);border:1px solid var(--border);border-radius:12px;padding:2.25rem 2rem;max-width:400px;width:100%;">
+    <div style="font-family:'Bebas Neue',sans-serif;font-size:2rem;color:var(--gold);letter-spacing:0.04em;margin-bottom:0.4rem;">Lou Wok Admin</div>
+    <p style="font-size:0.84rem;color:rgba(245,238,216,0.6);line-height:1.6;margin-bottom:1.5rem;">Sign in to manage the site.</p>
+    <div style="display:flex;flex-direction:column;gap:0.8rem;">
+      <input type="email" id="loginEmail" class="field-input" placeholder="you@louwok.com" autocomplete="username" />
+      <input type="password" id="loginPassword" class="field-input" placeholder="Password" autocomplete="current-password"
+        onkeydown="if(event.key==='Enter')attemptLogin()" />
+      <button class="btn btn-primary" onclick="attemptLogin()">Sign In</button>
+      <div id="loginError" style="color:var(--wok);font-size:0.8rem;min-height:1em;text-align:center;"></div>
+    </div>
+  </div>
+</div>
+
 <!-- ── SIDEBAR ── -->
 <aside class="sidebar" id="sidebar">
   <div class="sidebar-logo">
@@ -603,6 +618,9 @@
     </button>
     <button class="nav-item" onclick="switchSection('checkout', this)">
       <span class="icon">💳</span> Checkout &amp; Payments
+    </button>
+    <button class="nav-item" onclick="switchSection('users', this)">
+      <span class="icon">🔐</span> Users &amp; Access
     </button>
 
     <div class="nav-section-label">Tools</div>
@@ -1155,6 +1173,28 @@
       </div>
     </div>
 
+    <div id="section-users" class="section">
+      <div class="panel">
+        <div class="panel-header">
+          <span class="panel-title">Users &amp; Access</span>
+          <button class="btn btn-ghost btn-sm" onclick="logout()">Sign Out</button>
+        </div>
+        <p style="color:var(--muted);font-size:0.82rem;margin:0 0 1rem;line-height:1.5;">
+          These email addresses can sign in to this dashboard. Passwords are stored hashed (not in plain text).
+          Add or remove users below, then <strong>Publish</strong> to save the changes.
+        </p>
+        <div id="users-rows"></div>
+        <div style="margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border);">
+          <div class="field-label" style="margin-bottom:0.5rem;">Add a user</div>
+          <div style="display:flex;flex-direction:column;gap:0.5rem;">
+            <input class="field-input" id="new-user-email" type="email" placeholder="name@louwok.com" />
+            <input class="field-input" id="new-user-pw" type="password" placeholder="Password (min 8 characters)" />
+            <button class="btn btn-ghost btn-sm" onclick="addUser()" style="align-self:flex-start;">+ Add user</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- ── DEPLOY ── -->
     <div id="section-deploy" class="section">
       <div class="panel-grid panel-grid-2">
@@ -1429,6 +1469,9 @@
     tickerData        = d.ticker         || DEFAULTS.ticker;
     footerData        = d.footer         || DEFAULTS.footer;
     settingsData      = d.settings        || DEFAULTS.settings;
+    if (Array.isArray(d.users) && d.users.length) usersData = d.users;
+    _checkAuth();
+    if (typeof _renderUsers === 'function') _renderUsers();
   }
 
   function _status(msg) {
@@ -1470,7 +1513,8 @@
       location: locationData, branding: brandingData,
       socials: socialsData,
       ticker: tickerData, footer: footerData,
-      settings: settingsData
+      settings: settingsData,
+      users: usersData
     };
     const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(payload,null,2))));
 
@@ -1590,7 +1634,8 @@
       seo:'SEO & <span>Meta</span>', deploy:'Deploy <span>Site</span>',
       socials:'Social <span>Links</span>',
       ticker:'Ticker <span>Bar</span>', footer:'Footer <span>Links</span>',
-      checkout:'Checkout & <span>Payments</span>'
+      checkout:'Checkout & <span>Payments</span>',
+      users:'Users & <span>Access</span>'
     };
     document.getElementById('topbar-title').innerHTML = titles[name] || name;
   }
@@ -2188,7 +2233,85 @@
   }
 
   // ── INIT ───────────────────────────────────────────────────────
+  // ══════════════════════════════════════════════════════════════
+  //  LOGIN / AUTH  (client-side gate — deters access; see security note)
+  //  Passwords are SHA-256 hashed so the plaintext isn't stored in the file.
+  // ══════════════════════════════════════════════════════════════
+  // SHA-256 of "Letswokit26$"
+  const DEFAULT_PW_HASH = '9455fc82f8414d951e930d69242ef2526a7aa57c76522187394402245fd11782';
+  // Seed users (used until a users list is published in CMS data)
+  let usersData = [
+    { email: 'aashiq@louwok.com', hash: DEFAULT_PW_HASH },
+    { email: 'malika@louwok.com', hash: DEFAULT_PW_HASH }
+  ];
+
+  async function _sha256(str){
+    const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+    return [...new Uint8Array(buf)].map(b=>b.toString(16).padStart(2,'0')).join('');
+  }
+
+  async function attemptLogin(){
+    const email = (document.getElementById('loginEmail').value||'').trim().toLowerCase();
+    const pw    = document.getElementById('loginPassword').value||'';
+    const err   = document.getElementById('loginError');
+    const user  = usersData.find(u=>u.email.toLowerCase()===email);
+    if(!user){ err.textContent='Email not authorized.'; return; }
+    const hash = await _sha256(pw);
+    if(hash !== user.hash){ err.textContent='Incorrect password.'; return; }
+    // success
+    sessionStorage.setItem('louwok_admin_auth', email);
+    document.getElementById('loginGate').style.display='none';
+    err.textContent='';
+  }
+
+  function logout(){
+    sessionStorage.removeItem('louwok_admin_auth');
+    location.reload();
+  }
+
+  function _checkAuth(){
+    const who = sessionStorage.getItem('louwok_admin_auth');
+    if(who && usersData.some(u=>u.email.toLowerCase()===who.toLowerCase())){
+      document.getElementById('loginGate').style.display='none';
+    } else {
+      document.getElementById('loginGate').style.display='flex';
+    }
+  }
+
+  // ── User management (add/delete) ──
+  function _renderUsers(){
+    const wrap = document.getElementById('users-rows');
+    if(!wrap) return;
+    wrap.innerHTML = usersData.map((u,i)=>`
+      <div class="lk-row" style="display:flex;gap:0.5rem;align-items:center;margin-bottom:0.5rem;">
+        <span style="flex:1;color:var(--rice);font-size:0.9rem;font-family:'DM Mono',monospace;">${(u.email||'').replace(/</g,'&lt;')}</span>
+        <button class="btn btn-ghost btn-sm" onclick="deleteUser(${i})" title="Remove user" ${usersData.length<=1?'disabled':''}>✕</button>
+      </div>`).join('') || '<p style="color:var(--muted);font-size:0.82rem;">No users.</p>';
+  }
+  async function addUser(){
+    const email = (document.getElementById('new-user-email').value||'').trim().toLowerCase();
+    const pw    = (document.getElementById('new-user-pw').value||'');
+    if(!email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){ showToast('Enter a valid email','error'); return; }
+    if(pw.length < 8){ showToast('Password must be at least 8 characters','error'); return; }
+    if(usersData.some(u=>u.email.toLowerCase()===email)){ showToast('That email already exists','error'); return; }
+    const hash = await _sha256(pw);
+    usersData.push({ email, hash });
+    document.getElementById('new-user-email').value='';
+    document.getElementById('new-user-pw').value='';
+    _renderUsers(); setUnsaved();
+    showToast('User added — publish to save','success');
+  }
+  function deleteUser(i){
+    if(usersData.length<=1){ showToast("Can't remove the last user",'error'); return; }
+    const u = usersData[i];
+    if(!confirm(`Remove ${u.email}?`)) return;
+    usersData.splice(i,1);
+    _renderUsers(); setUnsaved();
+    showToast('User removed — publish to save','success');
+  }
+
   document.addEventListener('DOMContentLoaded', () => {
+    _checkAuth();
     loadCMSData();
     document.addEventListener('input', e => {
       if (e.target.matches('.field-input,.field-textarea,.field-select')) setUnsaved();
