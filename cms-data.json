@@ -1,6 +1,6 @@
 {
   "_info": "Written by louwok.com/admin. index.html reads this at runtime.",
-  "_updated": "2026-06-11T03:13:14.148Z",
+  "_updated": "2026-06-11T23:36:35.385Z",
   "menu": [
     {
       "id": 1,
@@ -151,6 +151,16 @@
       "tag": "fan-fave",
       "desc": "The combo that put us on the map: a whole order of fried rice, 4 crispy fried chicken pieces, 4 crab rangoons, and a Vess Soda or Mystic Carrot Juice. St. Louis comfort food, wok-fired fresh in Phoenix.",
       "options": []
+    },
+    {
+      "id": 19,
+      "name": "Egg Rolls (Chicken)",
+      "category": "appetizers",
+      "priceHalf": 3,
+      "priceFull": 6,
+      "tag": "",
+      "desc": "Golden, crispy, and packed with seasoned chicken, cabbage, celery, and savory spices, our chicken egg roll is the perfect sidekick to any Lou Wok meal. A St. Louis takeout classic done the Midwest way—hot, crunchy, and made for dipping.\n",
+      "options": []
     }
   ],
   "hours": [
@@ -159,8 +169,8 @@
       "open": "11:00",
       "close": "21:00",
       "closed": true,
-      "location": "South Phoenix ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ· 18th St",
-      "area": "South Phoenix ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ",
+      "location": "South Phoenix ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ· 18th St",
+      "area": "South Phoenix ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ",
       "street": "Near 18th St & Baseline"
     },
     {
@@ -168,8 +178,8 @@
       "open": "11:00",
       "close": "21:00",
       "closed": true,
-      "location": "Midtown PHX ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ· Central Ave",
-      "area": "Midtown PHX ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ",
+      "location": "Midtown PHX ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ· Central Ave",
+      "area": "Midtown PHX ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ",
       "street": "Near Central & Thomas"
     },
     {
