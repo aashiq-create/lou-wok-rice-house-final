@@ -1,6 +1,6 @@
 {
   "_info": "Written by louwok.com/admin. index.html reads this at runtime.",
-  "_updated": "2026-06-10T01:02:10.738Z",
+  "_updated": "2026-06-11T01:22:37.673Z",
   "menu": [
     {
       "id": 1,
@@ -129,7 +129,8 @@
       "priceHalf": null,
       "priceFull": 3,
       "tag": "popular",
-      "desc": "A bright, refreshing blend of fresh carrots and fruit juices, delivering a naturally sweet burst of goodness in every sip."
+      "desc": "A bright, refreshing blend of fresh carrots and fruit juices, delivering a naturally sweet burst of goodness in every sip.",
+      "options": []
     },
     {
       "id": 17,
@@ -305,11 +306,11 @@
       "hot": true
     },
     {
-      "text": "St. Paul Sandwich",
+      "text": "St. Paul Sandwiches",
       "hot": true
     },
     {
-      "text": "Wok-Fired Fried Rice Daily",
+      "text": "Wok Fired Fried Rice Daily",
       "hot": true
     },
     {
@@ -325,7 +326,7 @@
       "hot": true
     },
     {
-      "text": "Mystic Juice",
+      "text": "Mystic Carrot Juice",
       "hot": true
     }
   ],
