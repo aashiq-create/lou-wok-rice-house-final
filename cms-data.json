@@ -1,6 +1,6 @@
 {
   "_info": "Written by louwok.com/admin. index.html reads this at runtime.",
-  "_updated": "2026-06-12T01:00:17.008Z",
+  "_updated": "2026-06-12T19:00:21.240Z",
   "menu": [
     {
       "id": 1,
@@ -110,7 +110,8 @@
       "priceHalf": null,
       "priceFull": 4,
       "tag": "popular",
-      "desc": "Broccoli, carrots, cabbage, green onions, bean sprouts served on soft white bread with lettuce, tomato & pickles.\n"
+      "desc": "Broccoli, carrots, cabbage, green onions, bean sprouts served on soft white bread with lettuce, tomato & pickles.\n",
+      "options": []
     },
     {
       "id": 15,
@@ -159,7 +160,7 @@
       "priceHalf": 4,
       "priceFull": 8,
       "tag": "",
-      "desc": "Golden, crispy, and packed with seasoned chicken, cabbage, celery, and savory spices, our chicken egg roll is the perfect sidekick to any Lou Wok meal. A St. Louis takeout classic done the Midwest way—hot, crunchy, and made for dipping.\n",
+      "desc": "Golden, crispy, and packed with seasoned chicken, cabbage, celery, and savory spices, our chicken egg roll is the perfect sidekick to any Lou Wok meal. A St. Louis takeout classic done the Midwest wayâhot, crunchy, and made for dipping.\n",
       "options": []
     },
     {
@@ -169,8 +170,17 @@
       "priceHalf": 3,
       "priceFull": 6,
       "tag": "",
-      "desc": "Golden, crispy, and loaded with fresh cabbage, celery, carrots, onions, and savory seasonings, our veggie egg roll delivers big flavor in every bite. A Midwest takeout favorite—hot, crunchy, and made for dipping.",
+      "desc": "Golden, crispy, and loaded with fresh cabbage, celery, carrots, onions, and savory seasonings, our veggie egg roll delivers big flavor in every bite. A Midwest takeout favoriteâhot, crunchy, and made for dipping.",
       "options": []
+    },
+    {
+      "id": 21,
+      "name": "New Item",
+      "category": "rice",
+      "priceHalf": null,
+      "priceFull": 10,
+      "tag": "",
+      "desc": ""
     }
   ],
   "hours": [
@@ -179,8 +189,8 @@
       "open": "11:00",
       "close": "21:00",
       "closed": true,
-      "location": "South Phoenix ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ· 18th St",
-      "area": "South Phoenix ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ",
+      "location": "South Phoenix ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ· 18th St",
+      "area": "South Phoenix ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ",
       "street": "Near 18th St & Baseline"
     },
     {
@@ -188,8 +198,8 @@
       "open": "11:00",
       "close": "21:00",
       "closed": true,
-      "location": "Midtown PHX ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ· Central Ave",
-      "area": "Midtown PHX ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ",
+      "location": "Midtown PHX ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ· Central Ave",
+      "area": "Midtown PHX ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ",
       "street": "Near Central & Thomas"
     },
     {
@@ -407,5 +417,15 @@
     "squareAppId": "",
     "squareLocationId": "",
     "paymentBackendUrl": ""
-  }
+  },
+  "users": [
+    {
+      "email": "aashiq@louwok.com",
+      "hash": "9455fc82f8414d951e930d69242ef2526a7aa57c76522187394402245fd11782"
+    },
+    {
+      "email": "malika@louwok.com",
+      "hash": "9455fc82f8414d951e930d69242ef2526a7aa57c76522187394402245fd11782"
+    }
+  ]
 }
