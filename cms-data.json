@@ -1,6 +1,6 @@
 {
   "_info": "Written by louwok.com/admin. index.html reads this at runtime.",
-  "_updated": "2026-06-12T19:00:21.240Z",
+  "_updated": "2026-06-12T19:01:31.308Z",
   "menu": [
     {
       "id": 1,
@@ -105,7 +105,7 @@
     },
     {
       "id": 14,
-      "name": "St. Paul Sandwich (Vegetable)",
+      "name": "St. Paul Sandwich (Veggie)",
       "category": "sandwiches",
       "priceHalf": null,
       "priceFull": 4,
