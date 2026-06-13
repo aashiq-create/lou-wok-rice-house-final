@@ -2551,17 +2551,25 @@
     });
 
     // ── MENU TABS ────────────────────────────────────────────
-    const tabs  = document.querySelectorAll('.tab');
-    const cards = document.querySelectorAll('.menu-card');
+    // Query cards LIVE on every click. The CMS loader rebuilds the menu grid
+    // (grid.innerHTML = ...), which destroys any card nodes captured at load
+    // time. Re-querying here ensures filtering (incl. Sandwiches) keeps working
+    // after a CMS render. Exposed as window.applyMenuFilter so the loader can
+    // re-apply the active filter after it re-renders.
+    const tabs = document.querySelectorAll('.tab');
+    window.applyMenuFilter = function (f) {
+      const cards = document.querySelectorAll('.menu-card');
+      cards.forEach(card => {
+        const cat = card.dataset.category || '';
+        card.style.display = (f === 'all' || cat === f) ? '' : 'none';
+      });
+    };
     tabs.forEach(tab => {
       tab.addEventListener('click', () => {
         tabs.forEach(t => t.classList.remove('active'));
         tab.classList.add('active');
         const f = tab.dataset.filter || tab.textContent.trim().toLowerCase();
-        cards.forEach(card => {
-          const cat = card.dataset.category || '';
-          card.style.display = (f === 'all' || cat === f) ? '' : 'none';
-        });
+        window.applyMenuFilter(f);
       });
     });
 
@@ -3218,8 +3226,6 @@
     // ════════════════════════════════════════════════════════════
     (function(){
       const GH_OWNER='aashiq-create', GH_REPO='Lou-Wok-Rice-House', GH_BRANCH='main', CMS_FILE='cms-data.json';
-      // raw.githubusercontent serves the file directly from the CDN — instant after publish
-      const CMS_URL = `https://raw.githubusercontent.com/${GH_OWNER}/${GH_REPO}/${GH_BRANCH}/${CMS_FILE}?_=${Date.now()}`;
 
       const esc = s => String(s==null?'':s).replace(/[&<>"]/g, c=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;' }[c]));
       const catLabel = c => ({rice:'Base Rice',appetizers:'Appetizer',sandwiches:'Sandwich',combos:'Combo'}[c]||c);
@@ -3265,12 +3271,14 @@
             </div>
           </div>`;
         }).join('');
-        // re-apply active category filter if one is selected
+        // CMS-rendered cards are new nodes the scroll observer never saw, so
+        // they'd stay at opacity:0 (.fade-in). Reveal them immediately.
+        grid.querySelectorAll('.menu-card.fade-in').forEach(c=>c.classList.add('visible'));
+        // Re-apply whichever category tab is currently active (default 'all').
         const active=document.querySelector('.tab.active');
-        if(active && active.dataset.filter && active.dataset.filter!=='all'){
-          const f=active.dataset.filter;
-          grid.querySelectorAll('.menu-card').forEach(c=>{ c.style.display = c.dataset.category===f?'':'none'; });
-        }
+        const f = active && active.dataset.filter ? active.dataset.filter : 'all';
+        if(typeof window.applyMenuFilter==='function'){ window.applyMenuFilter(f); }
+        else { grid.querySelectorAll('.menu-card').forEach(c=>{ c.style.display = (f==='all'||c.dataset.category===f)?'':'none'; }); }
       }
 
       function renderHours(hours){
@@ -3325,16 +3333,61 @@
         document.body.insertBefore(bar, document.body.firstChild);
       }
 
-      fetch(CMS_URL, { cache:'no-store' })
-        .then(r=>{ if(!r.ok) throw new Error('HTTP '+r.status); return r.json(); })
-        .then(d=>{
+      // ── LOAD PUBLISHED CONTENT ──────────────────────────────
+      // Why edits weren't showing: the site only read ONE remote URL
+      // (raw.githubusercontent.com/.../cms-data.json). If that file is missing,
+      // on a private repo, or published elsewhere, the fetch 404s and the site
+      // silently keeps its built-in defaults. We now try several sources in
+      // order and use the first that succeeds, and we also honor a same-browser
+      // localStorage copy so the admin's own preview updates instantly.
+      function applyContent(d, source){
+        if(!d || typeof d!=='object') return false;
+        try{
           renderMenu(d.menu);
           renderHours(d.hours);
           renderOrderLinks(d.orderLinks);
           renderSEO(d.seo);
           renderAnnouncements(d.announcements);
-        })
-        .catch(e=>{ /* cms-data.json not published yet — keep built-in defaults */ console.info('CMS not loaded:', e.message); });
+          console.info('[CMS] content applied from', source);
+          return true;
+        }catch(err){ console.error('[CMS] failed to apply content from', source, err); return false; }
+      }
+
+      // 1) Instant local preview (same browser as the admin), if present.
+      try{
+        const local = localStorage.getItem('louwok-cms');
+        if(local){ applyContent(JSON.parse(local), 'localStorage'); }
+      }catch(e){ /* ignore bad local cache */ }
+
+      // 2) Remote sources, in priority order. First OK response wins.
+      const bust = '?_=' + Date.now();
+      const SOURCES = [
+        // Same-origin file committed next to index.html — most reliable.
+        'cms-data.json' + bust,
+        './cms-data.json' + bust,
+        // GitHub raw CDN fallback (must be a PUBLIC repo to be readable).
+        `https://raw.githubusercontent.com/${GH_OWNER}/${GH_REPO}/${GH_BRANCH}/${CMS_FILE}` + bust,
+      ];
+
+      (async function loadRemote(){
+        for(const url of SOURCES){
+          try{
+            const r = await fetch(url, { cache:'no-store' });
+            if(!r.ok){ console.info('[CMS] skip', url.split('?')[0], '→ HTTP', r.status); continue; }
+            const d = await r.json();
+            if(applyContent(d, url.split('?')[0])){
+              try{ localStorage.setItem('louwok-cms', JSON.stringify(d)); }catch(e){}
+              return; // success — stop trying further sources
+            }
+          }catch(err){
+            console.info('[CMS] skip', url.split('?')[0], '→', err.message);
+          }
+        }
+        console.warn('[CMS] No published cms-data.json could be loaded from any source. '
+          + 'The site is showing built-in defaults. Check that the admin publishes '
+          + 'cms-data.json to a PUBLIC location the site can read (same folder as '
+          + 'index.html, or a public GitHub repo at the configured owner/repo/branch).');
+      })();
     })();
 
   </script>
