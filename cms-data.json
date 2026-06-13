@@ -1,6 +1,6 @@
 {
   "_info": "Written by louwok.com/admin. index.html reads this at runtime.",
-  "_updated": "2026-06-13T19:03:23.333Z",
+  "_updated": "2026-06-13T19:04:06.222Z",
   "menu": [
     {
       "id": 1,
@@ -50,12 +50,13 @@
     },
     {
       "id": 7,
-      "name": "St. Paul Sandwich (Plain)",
+      "name": "St. Paul Sandwich (Original)",
       "category": "sandwiches",
       "priceHalf": null,
       "priceFull": 3,
       "tag": "fan-fave",
-      "desc": "Egg foo young patty on soft white bread with lettuce, tomato, mayo and pickles. A Midwest icon. "
+      "desc": "Egg foo young patty on soft white bread with lettuce, tomato, mayo and pickles. A Midwest icon. ",
+      "options": []
     },
     {
       "id": 8,
