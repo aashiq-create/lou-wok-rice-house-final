@@ -1,6 +1,6 @@
 {
   "_info": "Written by louwok.com/admin. index.html reads this at runtime.",
-  "_updated": "2026-06-14T18:07:55.587Z",
+  "_updated": "2026-06-14T18:09:01.623Z",
   "menu": [
     {
       "id": 1,
@@ -111,9 +111,9 @@
       "name": "St. Paul Sandwich (Veggie)",
       "category": "sandwiches",
       "priceHalf": null,
-      "priceFull": 4,
-      "tag": "popular",
-      "desc": "Broccoli, carrots, cabbage, green onions, bean sprouts served on soft white bread with lettuce, tomato & pickles.\n",
+      "priceFull": 5,
+      "tag": "fan-fave",
+      "desc": "Steamed broccoli, carrots, cabbage, green onions, bean sprouts served on soft white bread with lettuce, tomato & pickles.\n",
       "options": []
     },
     {
