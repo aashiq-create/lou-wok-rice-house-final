@@ -322,10 +322,14 @@
     .hero-bg {
       position: absolute;
       inset: 0;
+      z-index: 0;              /* sit behind hero content */
+      pointer-events: none;    /* never intercept clicks on buttons/links */
       background:
         radial-gradient(ellipse 60% 80% at 75% 50%, rgba(200,57,10,0.12) 0%, transparent 70%),
         radial-gradient(ellipse 40% 60% at 20% 80%, rgba(232,160,32,0.07) 0%, transparent 60%);
     }
+    /* Ensure hero text/buttons stack above the decorative background */
+    .hero-left, .hero-visual { position: relative; z-index: 1; }
     .hero-eyebrow {
       display: inline-flex;
       align-items: center;
@@ -1854,8 +1858,8 @@
         sandwich — every plate made to order, every time.
       </p>
       <div class="hero-actions">
-        <a href="#menu" class="btn-primary" onclick="smoothTo('menu');return false;">View Menu</a>
-        <a href="#order" class="btn-ghost" onclick="smoothTo('order');return false;">Order Online</a>
+        <a href="#menu" class="btn-primary">View Menu</a>
+        <a href="#order" class="btn-ghost">Order Online</a>
       </div>
     </div>
     <div class="hero-visual">
@@ -2378,7 +2382,7 @@
           <div><div class="cat-stat-num">PHX</div><div class="cat-stat-lbl">Valley-Wide</div></div>
         </div>
       </div>
-      <a href="#catering" class="btn-primary" onclick="document.getElementById('cp1').scrollIntoView({behavior:'smooth'});return false;" style="white-space:nowrap;">Book Your Event</a>
+      <a href="#catering" class="btn-primary" style="white-space:nowrap;">Book Your Event</a>
     </div>
     <div class="cat-offer-grid">
       <div class="cat-offer-tile fade-in"><div class="cat-offer-icon">🚚</div><div class="cat-offer-name">Food Truck Onsite</div><div class="cat-offer-sub">We bring the whole setup</div></div>
@@ -2505,7 +2509,7 @@
     <div class="order-title">READY TO EAT?</div>
     <p class="order-sub">Order online, pick up in-store, or get it delivered. Lou Wok is ready.</p>
     <div class="order-buttons">
-      <a href="#menu" class="btn-dark" onclick="smoothTo('menu');return false;">Browse Menu</a>
+      <a href="#menu" class="btn-dark">Browse Menu</a>
       <a href="https://www.doordash.com/search/store/lou-wok" target="_blank" rel="noopener" class="btn-outline-dark">🚗 DoorDash</a>
       <a href="https://www.ubereats.com/search?q=lou+wok+phoenix" target="_blank" rel="noopener" class="btn-outline-dark">🛵 Uber Eats</a>
     </div>
@@ -2725,7 +2729,10 @@
       window.scrollTo({ top, behavior: 'smooth' });
     }
 
-    // Wire all in-page anchor links (DOMContentLoaded)
+    // Wire all in-page anchor links (single source of truth for # nav).
+    // Inline onclick="smoothTo(...)" handlers were removed from the markup so
+    // this delegated handler doesn't double-fire. It closes any open overlays
+    // (menu sheet, cart drawer) before smooth-scrolling to the target section.
     document.addEventListener('DOMContentLoaded', () => {
       document.querySelectorAll('a[href^="#"]').forEach(a => {
         const href = a.getAttribute('href');
@@ -2734,7 +2741,8 @@
           const target = document.querySelector(href);
           if (target) {
             e.preventDefault();
-            closeMenuSheet();          // close sheet if open
+            if (typeof closeMenuSheet === 'function') closeMenuSheet();
+            if (typeof closeCart === 'function') closeCart();
             smoothTo(href.slice(1));
             history.pushState(null, '', href);
           }
