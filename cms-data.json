@@ -1,6 +1,6 @@
 {
   "_info": "Written by louwok.com/admin. index.html reads this at runtime.",
-  "_updated": "2026-06-14T18:09:01.623Z",
+  "_updated": "2026-06-14T18:14:15.178Z",
   "menu": [
     {
       "id": 1,
@@ -75,7 +75,8 @@
       "priceHalf": 5,
       "priceFull": 10,
       "tag": "popular",
-      "desc": "Everything in one bowl. Beef, chicken, shrimp, bean sprouts & green onion. The works."
+      "desc": "A loaded feast of our signature St. Louis-style fried rice piled high with egg, tender chicken, juicy shrimp, savory beef, and fresh vegetables, all wok-fired together with our house seasoning for the ultimate Rice House experience.",
+      "options": []
     },
     {
       "id": 11,
