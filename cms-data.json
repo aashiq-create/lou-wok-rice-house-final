@@ -1,6 +1,6 @@
 {
   "_info": "Written by louwok.com/admin. index.html reads this at runtime.",
-  "_updated": "2026-06-14T16:35:43.252Z",
+  "_updated": "2026-06-14T17:36:16.849Z",
   "menu": [
     {
       "id": 1,
@@ -84,7 +84,8 @@
       "priceHalf": 4,
       "priceFull": 8,
       "tag": "popular",
-      "desc": "Crispy, seasoned chicken fried golden brown and served hot and fresh. 4 piece or 8 piece"
+      "desc": "Crispy, seasoned chicken fried golden brown and served hot and fresh. 4 piece or 8 piece",
+      "options": []
     },
     {
       "id": 12,
@@ -286,9 +287,9 @@
     }
   },
   "seo": {
-    "title": "Lou Wok Rice House - St. Louis Original Fried Rice",
+    "title": "Lou Wok Rice House - St. Louis Original Fried Rice & St. Paul Sandwiches",
     "description": "Lou Wok Rice House was built for the transplants, the foodies, the people who moved to Phoenix and couldn't find the flavors they grew up with.",
-    "keywords": "Fried rice phoenix, Crab rangoon phoenix, St Paul sandwich, Lou wok fried rice, Chicken fried rice, Vegetable fried rice, Fried chicken wings, Egg foo young, Phoenix fried rice, Phoenix fried chicken wings, Chinese food, St. Louis original fried rice, ",
+    "keywords": "Fried rice phoenix, Crab rangoon phoenix, St Paul sandwich, Lou wok fried rice, Chicken fried rice, Vegetable fried rice, Fried chicken wings, Egg foo young, Phoenix fried rice, Phoenix fried chicken wings, Chinese food, St. Louis original fried rice, Chinese food, St. Louis Chinamen, Brown fried rice",
     "ogImage": "",
     "canonical": "https://www.louwok.com"
   },
