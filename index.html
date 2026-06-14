@@ -17,6 +17,63 @@
   <link rel="apple-touch-icon" href="/icons/icon-192.png" />
 
   <title>Lou Wok Rice House</title>
+
+  <!-- ════════════════════════════════════════════════════════════
+       PLATFORM DETECTION — runs before paint so platform-specific
+       CSS applies with no flash. Sets classes on <html>:
+         plat-ios | plat-android | plat-tablet | plat-desktop
+         is-standalone (launched from home screen, app-like)
+         is-touch / is-mouse
+       Also exposes window.LW_PLATFORM for the JS layer below.
+       ════════════════════════════════════════════════════════════ -->
+  <script>
+    (function () {
+      var ua = navigator.userAgent || '';
+      var root = document.documentElement;
+      var platform = navigator.platform || '';
+      var maxTouch = navigator.maxTouchPoints || 0;
+
+      // iPadOS 13+ reports as Mac; detect via touch points.
+      var isIPadOS = (platform === 'MacIntel' && maxTouch > 1);
+      var isIOS = /iPad|iPhone|iPod/.test(ua) || isIPadOS;
+      var isAndroid = /Android/.test(ua);
+
+      // Tablet heuristics: iPad, Android tablet (no "Mobile" token), or a
+      // large touch screen in the tablet size range.
+      var minSide = Math.min(window.screen.width, window.screen.height);
+      var isAndroidTablet = isAndroid && !/Mobile/.test(ua);
+      var isTablet =
+        isIPadOS ||
+        /iPad/.test(ua) ||
+        isAndroidTablet ||
+        (maxTouch > 1 && minSide >= 600 && minSide <= 1024);
+
+      var isTouch = maxTouch > 0 || 'ontouchstart' in window;
+
+      // Standalone = running as an installed PWA / home-screen app.
+      var isStandalone =
+        window.matchMedia('(display-mode: standalone)').matches ||
+        window.matchMedia('(display-mode: fullscreen)').matches ||
+        window.navigator.standalone === true;
+
+      var os = isIOS ? 'ios' : isAndroid ? 'android' : 'desktop';
+      // Treat tablets as their own UX class, but remember the OS too.
+      var uxClass = isTablet ? 'tablet' : os;
+
+      root.classList.add('plat-' + uxClass);
+      root.classList.add('os-' + os);
+      if (isTablet) root.classList.add('is-tablet');
+      if (isStandalone) root.classList.add('is-standalone');
+      root.classList.add(isTouch ? 'is-touch' : 'is-mouse');
+
+      window.LW_PLATFORM = {
+        os: os, ux: uxClass,
+        isIOS: isIOS, isAndroid: isAndroid, isTablet: isTablet,
+        isTouch: isTouch, isStandalone: isStandalone
+      };
+    })();
+  </script>
+
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=Playfair+Display:ital@1&display=swap" rel="stylesheet" />
 
   <style>
@@ -1622,6 +1679,141 @@
       .card-add-row { opacity: 1 !important; transform: translateY(0) !important; }
     }
 
+    /* ════════════════════════════════════════════════════════════
+       PLATFORM-ADAPTIVE UX
+       Each mobile platform follows its own native conventions so the
+       browser behaves like a platform-native app. Driven by classes
+       on <html> set by the detection script in <head>.
+       ════════════════════════════════════════════════════════════ */
+
+    /* ---- Shared app-like touch behavior (all touch platforms) ---- */
+    html.is-touch body {
+      -webkit-tap-highlight-color: transparent;     /* no grey flash on tap */
+      -webkit-touch-callout: none;                  /* no long-press menu */
+      -webkit-user-select: none; user-select: none; /* feels native, not text-y */
+    }
+    /* but keep text selectable where it matters */
+    html.is-touch p, html.is-touch .card-desc, html.is-touch input,
+    html.is-touch textarea, html.is-touch .cart-item-name,
+    html.is-touch [contenteditable] {
+      -webkit-user-select: text; user-select: text;
+    }
+    /* momentum scrolling inside scrollable panels */
+    html.is-touch .cart-drawer, html.is-touch .menu-sheet,
+    html.is-touch .cart-body, html.is-touch .sched-scroll {
+      -webkit-overflow-scrolling: touch;
+    }
+    /* When installed/standalone, never show desktop-style chrome */
+    html.is-standalone .desktop-only { display: none !important; }
+
+    /* ===================  iOS CONVENTIONS  =================== */
+    /* Rounded "sheet" surfaces, spring easing, frosted blur, SF-like weight */
+    html.plat-ios {
+      --app-ease: cubic-bezier(0.32, 0.72, 0, 1);   /* iOS spring-ish */
+      --sheet-radius: 16px;
+    }
+    html.plat-ios .menu-sheet {
+      border-top-left-radius: var(--sheet-radius);
+      border-top-right-radius: var(--sheet-radius);
+      transition: transform 0.5s var(--app-ease);
+    }
+    html.plat-ios .cart-drawer {
+      border-top-left-radius: var(--sheet-radius);
+      border-bottom-left-radius: var(--sheet-radius);
+      transition: transform 0.5s var(--app-ease);
+    }
+    /* iOS grab-handle pill centered at top of sheets */
+    html.plat-ios .menu-sheet-handle {
+      width: 38px; height: 5px; border-radius: 3px;
+      background: rgba(245,238,216,0.3); margin: 8px auto 4px;
+    }
+    /* iOS buttons: soft press-dim rather than ripple */
+    html.plat-ios button:active,
+    html.plat-ios .btn:active,
+    html.plat-ios .card-add-btn:active,
+    html.plat-ios .bottom-nav-item:active {
+      opacity: 0.55; transition: opacity 0.08s ease;
+    }
+    /* Frosted translucent bottom nav like iOS tab bar */
+    html.plat-ios .bottom-nav {
+      background: rgba(10,10,8,0.72);
+      backdrop-filter: saturate(180%) blur(22px);
+      -webkit-backdrop-filter: saturate(180%) blur(22px);
+      border-top: 0.5px solid rgba(245,238,216,0.12);
+    }
+    /* Comfortable iOS hit targets (44pt min) */
+    html.plat-ios .bottom-nav-item,
+    html.plat-ios .card-add-btn { min-height: 44px; }
+
+    /* =================  ANDROID / MATERIAL  ================= */
+    html.plat-android {
+      --app-ease: cubic-bezier(0.2, 0, 0, 1);        /* Material standard */
+      --sheet-radius: 12px;
+    }
+    html.plat-android .menu-sheet {
+      border-top-left-radius: var(--sheet-radius);
+      border-top-right-radius: var(--sheet-radius);
+      transition: transform 0.32s var(--app-ease);
+    }
+    html.plat-android .cart-drawer {
+      border-top-left-radius: var(--sheet-radius);
+      border-bottom-left-radius: var(--sheet-radius);
+      transition: transform 0.32s var(--app-ease);
+    }
+    /* Material elevation on the FAB-style center button */
+    html.plat-android .bottom-nav-center-btn {
+      box-shadow: 0 6px 12px rgba(0,0,0,0.45), 0 2px 4px rgba(0,0,0,0.35);
+    }
+    html.plat-android .bottom-nav-center-btn:active {
+      box-shadow: 0 10px 20px rgba(0,0,0,0.5), 0 4px 8px rgba(0,0,0,0.4);
+    }
+    /* Ripple container + ink (JS adds .ripple spans) */
+    html.plat-android .lw-ripple-host {
+      position: relative; overflow: hidden;
+    }
+    html.plat-android .lw-ink {
+      position: absolute; border-radius: 50%; transform: scale(0);
+      background: rgba(245,238,216,0.35); pointer-events: none;
+      animation: lw-ink-anim 0.55s var(--app-ease) forwards;
+    }
+    @keyframes lw-ink-anim { to { transform: scale(2.6); opacity: 0; } }
+    /* Material uses opaque bars more than frosted glass */
+    html.plat-android .bottom-nav {
+      background: rgba(14,13,11,0.96);
+      border-top: 1px solid rgba(245,238,216,0.08);
+    }
+
+    /* =====================  TABLETS  ===================== */
+    /* Tablets get app-like breathing room and multi-column comfort,
+       while keeping the touch/app behaviors above. */
+    html.is-tablet .container,
+    html.is-tablet .menu-section,
+    html.is-tablet section > .container { max-width: 980px; }
+    /* Two-column menu on tablets even in portrait */
+    html.is-tablet .menu-grid {
+      grid-template-columns: repeat(2, 1fr) !important;
+      gap: 1px;
+    }
+    /* Cart drawer is already a right-side panel; tablets keep it inset & rounded */
+    html.is-tablet .cart-drawer {
+      width: min(420px, 90vw);
+      border-top-left-radius: 16px; border-bottom-left-radius: 16px;
+    }
+    /* Larger, comfortable tap targets and type on big touch screens */
+    html.is-tablet .bottom-nav-item { font-size: 0.8rem; }
+    html.is-tablet .card-name { font-size: 1.15rem; }
+    /* Landscape tablets: show the menu sheet links as a roomy grid */
+    @media (min-width: 700px) {
+      html.is-tablet .sheet-links {
+        display: grid; grid-template-columns: 1fr 1fr; gap: 0 1.5rem;
+      }
+    }
+
+    /* Standalone (installed app) safe-area polish — give content the full
+       screen and respect the notch/home indicator on every platform. */
+    html.is-standalone body { min-height: 100vh; min-height: 100dvh; }
+    html.is-standalone .bottom-nav { padding-bottom: var(--safe-bot); }
+
   </style>
   <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 </head>
@@ -2679,6 +2871,131 @@
       if (b) b.classList.remove('show');
       localStorage.setItem('a2hs-dismissed', '1');
     }
+
+    // ════════════════════════════════════════════════════════════
+    //  PLATFORM-ADAPTIVE APP BEHAVIOR
+    //  Uses window.LW_PLATFORM (set in <head>) to layer on native-
+    //  feeling interactions per platform: Android ripple, iOS/Android
+    //  swipe-to-dismiss sheets, and a platform-correct install flow.
+    // ════════════════════════════════════════════════════════════
+    (function () {
+      var P = window.LW_PLATFORM || { os: 'desktop', isIOS: false, isAndroid: false, isTablet: false, isTouch: false, isStandalone: false };
+
+      // ---- ANDROID: Material ripple on tappable controls ----
+      if (P.isAndroid) {
+        var rippleTargets = '.card-add-btn, .bottom-nav-center-btn, .a2hs-btn, .tab, .btn, .cart-place-btn';
+        document.addEventListener('pointerdown', function (e) {
+          var host = e.target.closest(rippleTargets);
+          if (!host) return;
+          host.classList.add('lw-ripple-host');
+          var rect = host.getBoundingClientRect();
+          var size = Math.max(rect.width, rect.height);
+          var ink = document.createElement('span');
+          ink.className = 'lw-ink';
+          ink.style.width = ink.style.height = size + 'px';
+          ink.style.left = (e.clientX - rect.left - size / 2) + 'px';
+          ink.style.top = (e.clientY - rect.top - size / 2) + 'px';
+          host.appendChild(ink);
+          setTimeout(function () { ink.remove(); }, 600);
+        }, { passive: true });
+      }
+
+      // ---- iOS / Android: swipe-to-dismiss sheets & drawers ----
+      // The cart is a RIGHT-side drawer → dismiss by swiping RIGHT.
+      // The menu sheet is a BOTTOM sheet → dismiss by swiping DOWN.
+      if (P.isTouch) {
+        function attachSwipe(el, opts) {
+          if (!el) return;
+          var startX = 0, startY = 0, curX = 0, curY = 0, dragging = false;
+          var threshold = opts.threshold || 70;
+
+          el.addEventListener('touchstart', function (e) {
+            // Don't hijack scrolling inside a scrollable body
+            var t = e.touches[0];
+            startX = curX = t.clientX;
+            startY = curY = t.clientY;
+            dragging = true;
+            el.style.transition = 'none';
+          }, { passive: true });
+
+          el.addEventListener('touchmove', function (e) {
+            if (!dragging) return;
+            var t = e.touches[0];
+            curX = t.clientX; curY = t.clientY;
+            var dx = curX - startX, dy = curY - startY;
+            if (opts.axis === 'x' && dx > 0) {
+              el.style.transform = 'translateX(' + dx + 'px)';
+            } else if (opts.axis === 'y' && dy > 0) {
+              // only when the inner content is scrolled to top
+              var sc = opts.scrollEl ? opts.scrollEl.scrollTop : 0;
+              if (sc <= 0) el.style.transform = 'translateY(' + dy + 'px)';
+            }
+          }, { passive: true });
+
+          el.addEventListener('touchend', function () {
+            if (!dragging) return;
+            dragging = false;
+            el.style.transition = '';
+            el.style.transform = '';
+            var dx = curX - startX, dy = curY - startY;
+            if (opts.axis === 'x' && dx > threshold) opts.onDismiss();
+            else if (opts.axis === 'y' && dy > threshold) opts.onDismiss();
+          });
+        }
+
+        attachSwipe(document.getElementById('cartDrawer'), {
+          axis: 'x',
+          onDismiss: function () { if (typeof closeCart === 'function') closeCart(); }
+        });
+        attachSwipe(document.getElementById('menuSheet'), {
+          axis: 'y',
+          scrollEl: document.getElementById('menuSheet'),
+          onDismiss: function () { if (typeof closeMenuSheet === 'function') closeMenuSheet(); }
+        });
+      }
+
+      // ---- INSTALL FLOW (platform-correct) ----
+      // Android/Chrome fires beforeinstallprompt (handled above via
+      // deferredPrompt). iOS Safari does NOT — so for iOS we show manual
+      // "Add to Home Screen" instructions instead of a dead button.
+      if (P.isIOS && !P.isStandalone) {
+        var banner = document.getElementById('a2hsBanner');
+        var installBtn = document.getElementById('a2hsInstall');
+        var subEl = banner ? banner.querySelector('.a2hs-sub') : null;
+        if (banner && installBtn) {
+          if (subEl) subEl.textContent = 'Tap Share, then “Add to Home Screen”';
+          installBtn.textContent = 'How?';
+          installBtn.addEventListener('click', function () {
+            // Lightweight inline instruction toast
+            var existing = document.getElementById('iosInstallTip');
+            if (existing) { existing.remove(); return; }
+            var tip = document.createElement('div');
+            tip.id = 'iosInstallTip';
+            tip.style.cssText = 'position:fixed;left:50%;transform:translateX(-50%);' +
+              'bottom:calc(var(--bottom-nav-height) + 5.5rem);z-index:400;max-width:300px;' +
+              'background:var(--smoke);color:var(--rice);border:1px solid var(--border);' +
+              'border-radius:14px;padding:1rem 1.1rem;font-size:0.85rem;line-height:1.5;' +
+              'box-shadow:0 12px 40px rgba(0,0,0,0.55);text-align:center;';
+            tip.innerHTML = 'To install: tap the <strong>Share</strong> icon ' +
+              '(the box with an up-arrow) in Safari\u2019s toolbar, then choose ' +
+              '<strong>Add to Home Screen</strong>.';
+            document.body.appendChild(tip);
+            setTimeout(function () { if (tip.parentNode) tip.remove(); }, 8000);
+          });
+          // iOS won't auto-show via beforeinstallprompt, so reveal the banner
+          // ourselves after a delay (unless already dismissed/standalone).
+          if (!localStorage.getItem('a2hs-dismissed')) {
+            setTimeout(function () { banner.classList.add('show'); }, 3500);
+          }
+        }
+      }
+
+      // Already installed? Never nag about installing.
+      if (P.isStandalone) {
+        var b = document.getElementById('a2hsBanner');
+        if (b) b.classList.remove('show');
+      }
+    })();
 
     // ── TOPBAR SCROLL HIDE/SHOW ──────────────────────────────
     let lastScroll = 0;
