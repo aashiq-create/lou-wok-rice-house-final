@@ -1,6 +1,6 @@
 {
   "_info": "Written by louwok.com/admin. index.html reads this at runtime.",
-  "_updated": "2026-06-14T18:06:03.758Z",
+  "_updated": "2026-06-14T18:07:42.184Z",
   "menu": [
     {
       "id": 1,
@@ -118,12 +118,12 @@
     },
     {
       "id": 15,
-      "name": "St. Paul Sandwich (Chicken, Shrimp or Beef)",
+      "name": "St. Paul Sandwich (Deluxe)",
       "category": "sandwiches",
       "priceHalf": null,
-      "priceFull": 4,
+      "priceFull": 6,
       "tag": "popular",
-      "desc": "Chicken, shrimp or beef along with based of egg foo young on soft white bread with lettuce, tomato,  and pickles.",
+      "desc": "Your choice of two, chicken, shrimp or beef along with based of egg foo young on soft white bread with mayo, lettuce, tomato,  and pickles.",
       "options": []
     },
     {
