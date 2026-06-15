@@ -1,6 +1,6 @@
 {
   "_info": "Written by louwok.com/admin. index.html reads this at runtime.",
-  "_updated": "2026-06-15T23:35:34.145Z",
+  "_updated": "2026-06-15T23:36:21.171Z",
   "menu": [
     {
       "id": 1,
@@ -303,7 +303,7 @@
     "mapsEmbed": ""
   },
   "branding": {
-    "colorBlack": "#7a7a7a",
+    "colorBlack": "#000000",
     "colorRice": "#f5eed8",
     "colorWok": "#c8390a",
     "colorGold": "#e8a020",
