@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
   <meta name="mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
@@ -120,6 +120,8 @@
       overflow-x: hidden;
       -webkit-font-smoothing: antialiased;
       overscroll-behavior-y: none;
+      overscroll-behavior-x: none;
+      touch-action: pan-y;
     }
 
     /* Noise overlay */
@@ -1020,7 +1022,7 @@
       html { scroll-padding-top: calc(var(--nav-height) + var(--safe-top) + 0.75rem); }
 
       .menu-header { flex-direction: column; align-items: flex-start; margin-bottom: 2rem; }
-      .menu-tabs { overflow-x: auto; -webkit-overflow-scrolling: touch; flex-wrap: nowrap; padding-bottom: 0.5rem; width: 100%; }
+      .menu-tabs { overflow-x: auto; -webkit-overflow-scrolling: touch; flex-wrap: nowrap; padding-bottom: 0.5rem; width: 100%; touch-action: pan-x; overscroll-behavior-x: contain; }
       .menu-tabs::-webkit-scrollbar { display: none; }
       .tab { white-space: nowrap; flex-shrink: 0; }
 
@@ -1031,8 +1033,13 @@
         grid-template-columns: none;
         gap: 1rem;
         overflow-x: auto;
+        overflow-y: hidden;
         scroll-snap-type: x mandatory;
         -webkit-overflow-scrolling: touch;
+        /* Honor only left/right gestures so a diagonal drag can't scroll or
+           shift the page underneath. Contain overscroll to the track itself. */
+        touch-action: pan-x;
+        overscroll-behavior-x: contain;
         scroll-padding-left: 1.4rem;
         padding-bottom: 0.5rem;
         /* Let cards bleed to the screen edges instead of the section padding. */
