@@ -1,6 +1,6 @@
 {
   "_info": "Written by louwok.com/admin. index.html reads this at runtime.",
-  "_updated": "2026-06-16T00:43:21.414Z",
+  "_updated": "2026-06-16T00:51:34.025Z",
   "menu": [
     {
       "id": 1,
@@ -211,8 +211,8 @@
       "open": "11:00",
       "close": "19:00",
       "closed": false,
-      "location": "Roosevelt Row Arts",
-      "area": "Roosevelt Row Arts",
+      "location": "(Roosevelt Row / Central Ave Corridor)",
+      "area": "(Roosevelt Row / Central Ave Corridor)",
       "street": "Near 3rd St & Roosevelt"
     },
     {
@@ -220,8 +220,8 @@
       "open": "11:00",
       "close": "19:00",
       "closed": false,
-      "location": "Biltmore / Arcadia",
-      "area": "Biltmore / Arcadia",
+      "location": "48th St & Broadway Rd (Industrial Corridor)",
+      "area": "48th St & Broadway Rd (Industrial Corridor)",
       "street": "Near Camelback & 24th St"
     },
     {
@@ -229,8 +229,8 @@
       "open": "11:00",
       "close": "19:00",
       "closed": false,
-      "location": "16th & Broadway",
-      "area": "16th & Broadway",
+      "location": "Chandler Blvd & Price Rd",
+      "area": "Chandler Blvd & Price Rd",
       "street": "Check @louwokphx for today's spot"
     },
     {
@@ -238,8 +238,8 @@
       "open": "11:00",
       "close": "19:00",
       "closed": false,
-      "location": "Roosevelt Row Arts",
-      "area": "Roosevelt Row Arts",
+      "location": "24th St & University Dr (Airport/Air Cargo District)",
+      "area": "24th St & University Dr (Airport/Air Cargo District)",
       "street": "Near 3rd St & Roosevelt"
     }
   ],
