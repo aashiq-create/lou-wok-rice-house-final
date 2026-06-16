@@ -1,6 +1,6 @@
 {
   "_info": "Written by louwok.com/admin. index.html reads this at runtime.",
-  "_updated": "2026-06-16T00:40:28.283Z",
+  "_updated": "2026-06-16T00:43:21.414Z",
   "menu": [
     {
       "id": 1,
@@ -308,7 +308,7 @@
     "colorWok": "#c8390a",
     "colorGold": "#e8a020",
     "name": "Lou Wok Rice House",
-    "tagline": "Wok-fired midwest flavor, built for Phoenix.",
+    "tagline": "Wok-fired Midwest flavor. St. Louis roots. Phoenix made.",
     "displayFont": "Bebas Neue (Current)",
     "bodyFont": "DM Sans (Current)",
     "footerCredit": "Built with fire in the Valley"
