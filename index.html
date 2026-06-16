@@ -1022,9 +1022,9 @@
       html { scroll-padding-top: calc(var(--nav-height) + var(--safe-top) + 0.75rem); }
 
       .menu-header { flex-direction: column; align-items: flex-start; margin-bottom: 2rem; }
-      .menu-tabs { overflow-x: auto; -webkit-overflow-scrolling: touch; flex-wrap: nowrap; padding-bottom: 0.5rem; width: 100%; touch-action: pan-x; overscroll-behavior-x: contain; }
+      .menu-tabs { overflow-x: auto; overflow-y: hidden; -webkit-overflow-scrolling: touch; flex-wrap: nowrap; padding-bottom: 0.5rem; width: 100%; touch-action: pan-x; overscroll-behavior-x: contain; scroll-snap-type: x proximity; scroll-padding-left: 1.4rem; }
       .menu-tabs::-webkit-scrollbar { display: none; }
-      .tab { white-space: nowrap; flex-shrink: 0; }
+      .tab { scroll-snap-align: start; flex-shrink: 0; white-space: nowrap; }
 
       /* Horizontal swipe carousel on mobile: cards sit side-by-side in a
          scroll-snap track, one snaps into view at a time, next one peeks. */
