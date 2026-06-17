@@ -14,14 +14,15 @@
   <link rel="manifest" href="/manifest.json" />
 
   <!-- Favicon (browser tabs + Google search results) -->
-  <!-- File-based icons: deploy favicon.ico at site root and the /icons/ folder. -->
+  <!-- File-based icons: larger sizes Google prefers for search results. -->
+  <!-- These require favicon.ico + the /icons/ folder to be deployed at the site root. -->
   <link rel="icon" href="/favicon.ico" sizes="32x32" />
   <link rel="icon" type="image/png" href="/icons/favicon-96.png" sizes="96x96" />
   <link rel="icon" type="image/png" href="/icons/favicon-192.png" sizes="192x192" />
   <link rel="icon" type="image/png" href="/icons/favicon-512.png" sizes="512x512" />
 
   <!-- iOS Touch Icons -->
-  <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png" />
 
   <title>Lou Wok Rice House</title>
 
@@ -1019,11 +1020,9 @@
       html { scroll-padding-top: calc(var(--nav-height) + var(--safe-top) + 0.75rem); }
 
       .menu-header { flex-direction: column; align-items: flex-start; margin-bottom: 2rem; }
-      .menu-header > div { width: 100%; min-width: 0; }
-      .menu-tabs { display: flex; overflow-x: auto; overflow-y: hidden; -webkit-overflow-scrolling: touch; flex-wrap: nowrap; padding-bottom: 0.5rem; width: 100%; max-width: 100%; touch-action: pan-x; overscroll-behavior-x: contain; scroll-snap-type: x proximity; scroll-padding-left: 1.4rem; }
+      .menu-tabs { overflow-x: auto; overflow-y: hidden; -webkit-overflow-scrolling: touch; flex-wrap: nowrap; padding-bottom: 0.5rem; width: 100%; touch-action: pan-x; overscroll-behavior-x: contain; scroll-snap-type: x proximity; scroll-padding-left: 1.4rem; }
       .menu-tabs::-webkit-scrollbar { display: none; }
       .tab { scroll-snap-align: start; flex-shrink: 0; white-space: nowrap; }
-      .menu-tabs::after { content: ''; flex: 0 0 1.4rem; }
 
       /* Horizontal swipe carousel on mobile: cards sit side-by-side in a
          scroll-snap track, one snaps into view at a time, next one peeks. */
