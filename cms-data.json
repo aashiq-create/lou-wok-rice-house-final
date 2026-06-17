@@ -1,6 +1,6 @@
 {
   "_info": "Written by louwok.com/admin. index.html reads this at runtime.",
-  "_updated": "2026-06-17T03:02:39.894Z",
+  "_updated": "2026-06-17T03:04:14.495Z",
   "menu": [
     {
       "id": 1,
@@ -300,7 +300,7 @@
     "cityStateZip": "Phoenix, AZ 85040",
     "phone": "(314) 356-5596",
     "email": "support@louwok.com",
-    "mapsEmbed": ""
+    "mapsEmbed": "https://maps.google.com/maps?q=2406%20S%2024th%20St%20%23212A%2C%20Phoenix%2C%20AZ%2085034&z=15&output=embed"
   },
   "branding": {
     "colorBlack": "#000000",
