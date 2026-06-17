@@ -1,6 +1,6 @@
 {
   "_info": "Written by louwok.com/admin. index.html reads this at runtime.",
-  "_updated": "2026-06-17T03:02:10.790Z",
+  "_updated": "2026-06-17T03:02:39.894Z",
   "menu": [
     {
       "id": 1,
@@ -300,7 +300,7 @@
     "cityStateZip": "Phoenix, AZ 85040",
     "phone": "(314) 356-5596",
     "email": "support@louwok.com",
-    "mapsEmbed": "https://www.google.com/maps/place/2406+S+24th+St+%23212a,+Phoenix,+AZ+85034/@33.4253199,-112.0312225,17z/data=!3m1!4b1!4m5!3m4!1s0x872b0f44be09cd5d:0xc3819b01787293d1!8m2!3d33.4253199!4d-112.0312225?entry=ttu&g_ep=EgoyMDI2MDYxMy4wIKXMDSoASAFQAw%3D%3D"
+    "mapsEmbed": ""
   },
   "branding": {
     "colorBlack": "#000000",
