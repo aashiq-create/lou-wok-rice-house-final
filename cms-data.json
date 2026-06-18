@@ -1,6 +1,6 @@
 {
   "_info": "Written by louwok.com/admin. index.html reads this at runtime.",
-  "_updated": "2026-06-17T23:22:05.679Z",
+  "_updated": "2026-06-18T05:05:24.063Z",
   "menu": [
     {
       "id": 1,
@@ -46,7 +46,8 @@
       "priceHalf": 3,
       "priceFull": 5,
       "tag": "popular",
-      "desc": "Crispy wonton cups filled with real crab and cream cheese. Fried to gold. Your choice of a 3pc. or 6pc. Sweet n' Sour sauce compliments this well."
+      "desc": "A St. Louis takeout favorite. Crispy golden wontons packed with creamy crab filling and fried to a satisfying crunch. Sweet, savory, and impossible to stop eating.",
+      "options": []
     },
     {
       "id": 7,
