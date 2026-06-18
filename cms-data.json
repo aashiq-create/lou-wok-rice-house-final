@@ -1,6 +1,6 @@
 {
   "_info": "Written by louwok.com/admin. index.html reads this at runtime.",
-  "_updated": "2026-06-18T14:56:11.948Z",
+  "_updated": "2026-06-18T14:57:52.327Z",
   "menu": [
     {
       "id": 1,
@@ -36,8 +36,9 @@
       "category": "rice",
       "priceHalf": 4,
       "priceFull": 8,
-      "tag": "",
-      "desc": "Plump shrimp, wok-fired with egg, green onion, and a splash of soy."
+      "tag": "classic",
+      "desc": "Plump shrimp wok-fired with rice, egg, green onion, and our signature blend of seasonings. Inspired by the neighborhood rice houses of St. Louis, this Midwest takeout favorite is cooked fresh to order and packed with the bold, savory flavor that put St. Louis-style fried rice on the map.",
+      "options": []
     },
     {
       "id": 6,
