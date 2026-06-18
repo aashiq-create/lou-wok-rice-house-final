@@ -1,6 +1,6 @@
 {
   "_info": "Written by louwok.com/admin. index.html reads this at runtime.",
-  "_updated": "2026-06-18T15:07:06.352Z",
+  "_updated": "2026-06-18T15:09:36.504Z",
   "menu": [
     {
       "id": 1,
@@ -100,16 +100,6 @@
       "priceFull": 2,
       "tag": "",
       "desc": "A St. Louis original and a staple in every rice house across the city. Ice-cold, bold, and nostalgic, Vess Soda has been a Midwest carryout favorite for generations. The perfect sweet finish to a box of fried rice, St. Paul sandwiches, or crispy wings—straight from St. Louis tradition to your Lou Wok meal.",
-      "options": []
-    },
-    {
-      "id": 13,
-      "name": "St. Paul Sandwich (Classic)",
-      "category": "sandwiches",
-      "priceHalf": null,
-      "priceFull": 5,
-      "tag": "classic",
-      "desc": "Beef, Chicken, Shrimp along with lettuce, tomato. Also includes base of egg foo young on soft white bread with mayo and pickles.",
       "options": []
     },
     {
