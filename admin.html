@@ -808,12 +808,13 @@
             <div class="field-group">
               <label class="field-label">Tag</label>
               <div class="tag-select" id="tagSelect">
-                <span class="tag-option" onclick="selectTag(this, 'popular')">Popular</span>
-                <span class="tag-option" onclick="selectTag(this, 'new')">New</span>
-                <span class="tag-option" onclick="selectTag(this, 'spicy')">Spicy</span>
-                <span class="tag-option" onclick="selectTag(this, 'classic')">Classic</span>
-                <span class="tag-option" onclick="selectTag(this, 'fan-fave')">Fan Fave</span>
-                <span class="tag-option" onclick="selectTag(this, 'none')">None</span>
+                <span class="tag-option" data-tag="popular"     onclick="selectTag(this)">Popular</span>
+                <span class="tag-option" data-tag="best-seller" onclick="selectTag(this)">Best Seller</span>
+                <span class="tag-option" data-tag="new"         onclick="selectTag(this)">New</span>
+                <span class="tag-option" data-tag="spicy"       onclick="selectTag(this)">Spicy</span>
+                <span class="tag-option" data-tag="classic"     onclick="selectTag(this)">Classic</span>
+                <span class="tag-option" data-tag="fan-fave"    onclick="selectTag(this)">Fan Fave</span>
+                <span class="tag-option" data-tag=""            onclick="selectTag(this)">None</span>
               </div>
             </div>
             <div class="field-group">
@@ -1757,7 +1758,7 @@
     document.getElementById('f-available').value  = 'available';
     selectedTag = item.tag || '';
     document.querySelectorAll('.tag-option').forEach(t =>
-      t.classList.toggle('selected', t.dataset.tag===selectedTag||(t.getAttribute('onclick')||'').includes("'"+selectedTag+"'"))
+      t.classList.toggle('selected', t.dataset.tag === selectedTag)
     );
     renderMenuList();
   }
@@ -1876,9 +1877,11 @@
     renderMenuList(); selectMenuItem(newId); setUnsaved();
   }
 
-  function selectTag(el, tag) {
+  function selectTag(el) {
     document.querySelectorAll('.tag-option').forEach(t=>t.classList.remove('selected'));
-    el.classList.add('selected'); selectedTag = tag;
+    el.classList.add('selected');
+    selectedTag = el.dataset.tag;
+    unsavedChanges = true;
   }
 
   // ══════════════════════════════════════════════════════════════
