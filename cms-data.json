@@ -1,6 +1,6 @@
 {
   "_info": "Written by louwok.com/admin. index.html reads this at runtime.",
-  "_updated": "2026-06-18T15:00:21.804Z",
+  "_updated": "2026-06-18T15:01:25.656Z",
   "menu": [
     {
       "id": 1,
@@ -18,8 +18,9 @@
       "category": "rice",
       "priceHalf": 4,
       "priceFull": 8,
-      "tag": "popular",
-      "desc": "All-white chicken, egg, bean sprouts, soy, and green onion. Classic done right."
+      "tag": "classic",
+      "desc": "All-white chicken wok-fired with seasoned rice, egg, bean sprouts, soy, and green onion. A St. Louis rice house classic—simple, bold, and built on the kind of no-frills flavors that made Midwest takeout a staple. Cooked fresh to order and served hot, Lou Wok style.",
+      "options": []
     },
     {
       "id": 3,
