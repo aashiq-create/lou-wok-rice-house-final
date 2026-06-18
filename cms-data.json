@@ -1,6 +1,6 @@
 {
   "_info": "Written by louwok.com/admin. index.html reads this at runtime.",
-  "_updated": "2026-06-18T14:35:37.212Z",
+  "_updated": "2026-06-18T14:35:47.895Z",
   "menu": [
     {
       "id": 1,
@@ -104,7 +104,7 @@
       "category": "sandwiches",
       "priceHalf": null,
       "priceFull": 5,
-      "tag": "fan-fave",
+      "tag": "classic",
       "desc": "Beef, Chicken, Shrimp along with lettuce, tomato. Also includes base of egg foo young on soft white bread with mayo and pickles.",
       "options": []
     },
