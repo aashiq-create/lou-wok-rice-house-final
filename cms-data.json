@@ -1,6 +1,6 @@
 {
   "_info": "Written by louwok.com/admin. index.html reads this at runtime.",
-  "_updated": "2026-06-18T14:52:52.556Z",
+  "_updated": "2026-06-18T14:56:11.948Z",
   "menu": [
     {
       "id": 1,
@@ -46,7 +46,7 @@
       "priceHalf": 3,
       "priceFull": 5,
       "tag": "popular",
-      "desc": "A St. Louis takeout favorite. Crispy golden wontons packed with creamy crab filling and fried to a satisfying crunch. Sweet, savory, and impossible to stop eating.",
+      "desc": "A staple of the St. Louis takeout experience. Crispy golden wontons filled with a rich, creamy crab blend and fried until perfectly crunchy. Sweet, savory, and made for sharing alongside a box of wok-fired fried rice—though we won't blame you for keeping them all to yourself.",
       "options": []
     },
     {
