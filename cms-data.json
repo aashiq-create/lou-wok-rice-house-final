@@ -1,6 +1,6 @@
 {
   "_info": "Written by louwok.com/admin. index.html reads this at runtime.",
-  "_updated": "2026-06-18T15:13:05.051Z",
+  "_updated": "2026-06-18T23:03:26.837Z",
   "menu": [
     {
       "id": 1,
@@ -347,6 +347,10 @@
     },
     {
       "text": "Mystic Carrot Juice",
+      "hot": true
+    },
+    {
+      "text": "Coming Soon! Opening August 2026",
       "hot": true
     }
   ],
