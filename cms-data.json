@@ -1,6 +1,6 @@
 {
   "_info": "Written by louwok.com/admin. index.html reads this at runtime.",
-  "_updated": "2026-06-18T14:35:26.692Z",
+  "_updated": "2026-06-18T14:35:37.212Z",
   "menu": [
     {
       "id": 1,
@@ -55,7 +55,7 @@
       "category": "sandwiches",
       "priceHalf": null,
       "priceFull": 3,
-      "tag": "fan-fave",
+      "tag": "classic",
       "desc": "Egg foo young patty on soft white bread with lettuce, tomato, mayo and pickles. A Midwest icon. ",
       "options": []
     },
