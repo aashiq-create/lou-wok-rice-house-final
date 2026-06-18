@@ -1,6 +1,6 @@
 {
   "_info": "Written by louwok.com/admin. index.html reads this at runtime.",
-  "_updated": "2026-06-18T15:05:54.964Z",
+  "_updated": "2026-06-18T15:07:06.352Z",
   "menu": [
     {
       "id": 1,
@@ -138,8 +138,8 @@
       "category": "beverages",
       "priceHalf": null,
       "priceFull": 3,
-      "tag": "popular",
-      "desc": "A bright, refreshing blend of fresh carrots and fruit juices, delivering a naturally sweet burst of goodness in every sip.",
+      "tag": "",
+      "desc": "A bright, refreshing blend of carrot and fruit juices with a smooth, naturally sweet finish. Served ice-cold, it’s the nostalgic Midwest drink that pairs perfectly with fried rice, St. Paul sandwiches, and crispy wings—Lou Wok style.",
       "options": []
     },
     {
