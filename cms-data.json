@@ -1,6 +1,6 @@
 {
   "_info": "Written by louwok.com/admin. index.html reads this at runtime.",
-  "_updated": "2026-06-18T15:04:26.970Z",
+  "_updated": "2026-06-18T15:05:54.964Z",
   "menu": [
     {
       "id": 1,
@@ -98,8 +98,9 @@
       "category": "beverages",
       "priceHalf": null,
       "priceFull": 2,
-      "tag": "classic",
-      "desc": "Your choice of a 20 fl oz bottle of Grape, Strawberry, Root Beer, Cream Soda, Fruit Punch, Pineapple, Peach"
+      "tag": "",
+      "desc": "A St. Louis original and a staple in every rice house across the city. Ice-cold, bold, and nostalgic, Vess Soda has been a Midwest carryout favorite for generations. The perfect sweet finish to a box of fried rice, St. Paul sandwiches, or crispy wings—straight from St. Louis tradition to your Lou Wok meal.",
+      "options": []
     },
     {
       "id": 13,
