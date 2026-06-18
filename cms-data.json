@@ -1,6 +1,6 @@
 {
   "_info": "Written by louwok.com/admin. index.html reads this at runtime.",
-  "_updated": "2026-06-18T14:46:02.503Z",
+  "_updated": "2026-06-18T14:49:22.378Z",
   "menu": [
     {
       "id": 1,
@@ -124,8 +124,8 @@
       "category": "sandwiches",
       "priceHalf": null,
       "priceFull": 6,
-      "tag": "popular",
-      "desc": "Your choice of two, chicken, shrimp or beef along with based of egg foo young on soft white bread with mayo, lettuce, tomato,  and pickles.",
+      "tag": "fan-fave",
+      "desc": "A St. Louis rice house favorite built your way. Choose any two proteins—chicken, shrimp, or beef—stacked on our signature egg foo young patty and served on soft white bread with mayo, crisp lettuce, tomato, cheese, and pickles. A Midwest takeout classic that helped define the St. Paul tradition, now served fresh in Phoenix.",
       "options": []
     },
     {
