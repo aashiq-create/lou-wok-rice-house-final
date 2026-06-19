@@ -1020,7 +1020,7 @@
 
       .menu-header { flex-direction: column; align-items: flex-start; margin-bottom: 2rem; }
       .menu-header > div { width: 100%; min-width: 0; }
-      .menu-tabs { display: flex; overflow-x: auto; overflow-y: hidden; -webkit-overflow-scrolling: touch; flex-wrap: nowrap; padding-bottom: 0.5rem; width: 100%; max-width: 100%; touch-action: pan-x; overscroll-behavior-x: contain; scroll-snap-type: x proximity; scroll-padding-left: 1.4rem; }
+      .menu-tabs { display: flex; overflow-x: auto; overflow-y: hidden; -webkit-overflow-scrolling: touch; flex-wrap: nowrap; padding-bottom: 0.5rem; width: 100%; max-width: 100%; touch-action: pan-x pan-y; overscroll-behavior-x: contain; scroll-snap-type: x proximity; scroll-padding-left: 1.4rem; }
       .menu-tabs::-webkit-scrollbar { display: none; }
       .tab { scroll-snap-align: start; flex-shrink: 0; white-space: nowrap; }
       .menu-tabs::after { content: ''; flex: 0 0 1.4rem; }
@@ -1035,9 +1035,10 @@
         overflow-y: hidden;
         scroll-snap-type: x mandatory;
         -webkit-overflow-scrolling: touch;
-        /* Honor only left/right gestures so a diagonal drag can't scroll or
-           shift the page underneath. Contain overscroll to the track itself. */
-        touch-action: pan-x;
+        /* Allow BOTH axes: horizontal drags scroll the carousel, vertical
+           drags fall through to the page. pan-x alone swallowed vertical
+           swipes and froze the page when a gesture started on the grid. */
+        touch-action: pan-x pan-y;
         overscroll-behavior-x: contain;
         scroll-padding-left: 1.4rem;
         padding-bottom: 0.5rem;
