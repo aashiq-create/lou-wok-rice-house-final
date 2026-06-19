@@ -3767,6 +3767,13 @@
           ubereats:'<svg class="brand-ico" viewBox="0 0 24 24" aria-hidden="true"><path fill="#06C167" d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm4.7 11.2c0 .27-.2.48-.47.48h-1.9a2.9 2.9 0 0 1-2.33 1.16 2.92 2.92 0 1 1 0-5.84c.95 0 1.8.45 2.33 1.15h1.9c.27 0 .47.22.47.48v2.42zM7.3 12a2.06 2.06 0 1 1 4.12 0 2.06 2.06 0 0 1-4.12 0z"/></svg>',
           grubhub:'<svg class="brand-ico" viewBox="0 0 24 24" aria-hidden="true"><path fill="#F63440" d="M20.9 9.4h-3.2V6.2a2.2 2.2 0 0 0-2.2-2.2 2.2 2.2 0 0 0-2.06 1.43l-.34.9-.34-.9A2.2 2.2 0 0 0 8.5 4a2.2 2.2 0 0 0-2.2 2.2v3.2H3.1a2 2 0 0 0-2 2v1.06c0 .67.33 1.3.88 1.68l.5.35v3.36A2.1 2.1 0 0 0 4.6 20h14.8a2.1 2.1 0 0 0 2.12-2.1v-3.36l.5-.35a2.04 2.04 0 0 0 .88-1.68V11.4a2 2 0 0 0-2-2zM8.4 6.2c0-.06.04-.1.1-.1.04 0 .08.02.09.06l.97 2.55a.6.6 0 0 1-.56.81H8.4V6.2zm7.2 9.46a.6.6 0 0 1-.6.6H9a.6.6 0 0 1-.6-.6v-2.1h7.2v2.1zm-.36-6.14h-.6a.6.6 0 0 1-.56-.81l.97-2.55a.1.1 0 0 1 .1-.06c.05 0 .09.04.09.1v3.32z"/></svg>',
         };
+        // Default hrefs so a platform still appears even if the CMS entry is
+        // missing or has a blank URL (keeps "Ready to Eat" in sync with footer).
+        const FALLBACK={
+          doordash:'https://www.doordash.com/search/store/lou-wok',
+          ubereats:'https://www.ubereats.com/search?q=lou+wok+phoenix',
+          grubhub :'https://www.grubhub.com/restaurant/lou-wok',
+        };
         const map=[
           {key:'doordash', label:'DoorDash'},
           {key:'ubereats', label:'Uber Eats'},
@@ -3775,14 +3782,16 @@
         // keep the Browse Menu button, rebuild the platform links
         wrap.querySelectorAll('a.btn-outline-dark').forEach(a=>a.remove());
         map.forEach(p=>{
-          const d=ol[p.key];
-          if(d && d.enabled!==false && d.url){
-            const a=document.createElement('a');
-            a.href=d.url; a.target='_blank'; a.rel='noopener';
-            a.className='btn-outline-dark';
-            a.innerHTML=`${ICONS[p.key]||''} ${esc(d.label||p.label)}`;
-            wrap.appendChild(a);
-          }
+          const d=ol[p.key]||{};
+          // Hidden only when the admin explicitly disables it.
+          if(d.enabled===false) return;
+          const href=d.url||FALLBACK[p.key];
+          if(!href) return;
+          const a=document.createElement('a');
+          a.href=href; a.target='_blank'; a.rel='noopener';
+          a.className='btn-outline-dark';
+          a.innerHTML=`${ICONS[p.key]||''} ${esc(d.label||p.label)}`;
+          wrap.appendChild(a);
         });
       }
 
