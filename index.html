@@ -14,8 +14,10 @@
   <link rel="manifest" href="/manifest.json" />
 
   <!-- Favicon (browser tabs + Google search results) -->
-  <!-- File-based icons: deploy favicon.ico at site root and the /icons/ folder. -->
-  <link rel="icon" href="/favicon.ico" sizes="32x32" />
+  <!-- Primary: inline data-URI icon — renders instantly with no file deploy. -->
+  <link rel="icon" type="image/png" sizes="32x32" href="data:image/png;base64,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" />
+  <!-- Fallbacks / higher-res: deploy favicon.ico at site root and the /icons/ folder. -->
+  <link rel="icon" href="/favicon.ico" sizes="48x48" />
   <link rel="icon" type="image/png" href="/icons/favicon-96.png" sizes="96x96" />
   <link rel="icon" type="image/png" href="/icons/favicon-192.png" sizes="192x192" />
   <link rel="icon" type="image/png" href="/icons/favicon-512.png" sizes="512x512" />
@@ -821,6 +823,7 @@
     }
     .btn-outline-dark:hover { background: var(--black); color: var(--rice); transform: translateY(-2px); }
     .btn-outline-dark:active { transform: scale(0.97); }
+    .order-buttons .btn-outline-dark { white-space: nowrap; }
     /* Brand delivery icons keep their official color on hover (don't invert). */
     .brand-ico { flex: 0 0 auto; height: 20px; width: auto; display: block; }
     .sheet-link .brand-ico { height: 18px; vertical-align: middle; }
@@ -872,6 +875,8 @@
     .footer-links a:hover { color: var(--gold); }
     .footer-links a .social-ico { width: 18px; height: 18px; margin-right: 0.6rem; flex-shrink: 0; display: block; }
     .footer-links a:hover .social-ico { opacity: 1; }
+    .footer-links a .brand-ico { width: 18px; height: 18px; margin-right: 0.6rem; flex-shrink: 0; display: inline-block; vertical-align: middle; }
+    .footer-delivery a { display: flex; align-items: center; }
     .footer-bottom {
       border-top: 1px solid var(--border);
       padding-top: 2rem;
@@ -2287,20 +2292,20 @@
   <!-- ── FEATURED ── -->
   <section id="featured" style="padding:0;">
     <div class="featured-visual">
-      <div class="featured-big-text">ST.<br>PAUL</div>
-      <div class="featured-icon">🥪</div>
+      <div class="featured-big-text" id="featBigText">ST.<br>PAUL</div>
+      <div class="featured-icon" id="featIcon">🥪</div>
     </div>
     <div class="featured-content fade-in">
-      <div class="section-label">Featured Item</div>
-      <h2 class="section-title">THE ST. PAUL<br>SANDWICH</h2>
-      <p class="featured-desc">Born in St. Louis. Perfected at Lou Wok. The St. Paul Sandwich is an egg foo young patty — crispy, savory, packed with bean sprouts and scallion — served on soft white bread with all the classics.</p>
-      <div class="featured-details">
+      <div class="section-label" id="featLabel">Featured Item</div>
+      <h2 class="section-title" id="featTitle">THE ST. PAUL<br>SANDWICH</h2>
+      <p class="featured-desc" id="featDesc">Born in St. Louis. Perfected at Lou Wok. The St. Paul Sandwich is an egg foo young patty — crispy, savory, packed with bean sprouts and scallion — served on soft white bread with all the classics.</p>
+      <div class="featured-details" id="featDetails">
         <div class="detail-item"><div class="detail-label">Origin</div><div class="detail-value">St. Louis, MO</div></div>
-        <div class="detail-item"><div class="detail-label">Style</div><div class="detail-value">Pressed & Golden</div></div>
+        <div class="detail-item"><div class="detail-label">Style</div><div class="detail-value">Pressed &amp; Golden</div></div>
         <div class="detail-item"><div class="detail-label">Bread</div><div class="detail-value">Soft White</div></div>
         <div class="detail-item"><div class="detail-label">Sauce</div><div class="detail-value">Mayo + Pickles</div></div>
       </div>
-      <a href="#order" class="btn-primary">Order the St. Paul</a>
+      <a href="#order" class="btn-primary" id="featCta">Order the St. Paul</a>
     </div>
   </section>
 
@@ -2548,10 +2553,18 @@
       <div>
         <div class="footer-col-title">Visit</div>
         <ul class="footer-links">
-          <li><a href="#">Locations</a></li>
-          <li><a href="#">Hours</a></li>
-          <li><a href="#">Order Online</a></li>
+          <li><a href="#location">Locations</a></li>
+          <li><a href="#location">Hours</a></li>
           <li><a href="#catering">Catering</a></li>
+        </ul>
+        <div class="footer-col-title" style="margin-top:1.5rem;">Order Delivery</div>
+        <ul class="footer-links footer-delivery">
+          <li><a href="https://www.doordash.com/search/store/lou-wok" target="_blank" rel="noopener">
+            <svg class="brand-ico" viewBox="0 0 24 24" aria-hidden="true"><path fill="#FF3008" d="M23.07 8.45c-.67-1.33-2.04-2.17-3.54-2.17H.66a.66.66 0 0 0-.46 1.12l3.06 3.06c.3.3.7.47 1.12.47h13.97c.7 0 1.3.55 1.32 1.25a1.28 1.28 0 0 1-1.28 1.31H8.06a.66.66 0 0 0-.47 1.13l3.06 3.05c.3.3.7.47 1.12.47h6.65c4.07 0 7.06-4.32 4.65-9.17z"/></svg>DoorDash</a></li>
+          <li><a href="https://www.grubhub.com/restaurant/lou-wok" target="_blank" rel="noopener">
+            <svg class="brand-ico" viewBox="0 0 24 24" aria-hidden="true"><path fill="#F63440" d="M20.9 9.4h-3.2V6.2a2.2 2.2 0 0 0-2.2-2.2 2.2 2.2 0 0 0-2.06 1.43l-.34.9-.34-.9A2.2 2.2 0 0 0 8.5 4a2.2 2.2 0 0 0-2.2 2.2v3.2H3.1a2 2 0 0 0-2 2v1.06c0 .67.33 1.3.88 1.68l.5.35v3.36A2.1 2.1 0 0 0 4.6 20h14.8a2.1 2.1 0 0 0 2.12-2.1v-3.36l.5-.35a2.04 2.04 0 0 0 .88-1.68V11.4a2 2 0 0 0-2-2zM8.4 6.2c0-.06.04-.1.1-.1.04 0 .08.02.09.06l.97 2.55a.6.6 0 0 1-.56.81H8.4V6.2zm7.2 9.46a.6.6 0 0 1-.6.6H9a.6.6 0 0 1-.6-.6v-2.1h7.2v2.1zm-.36-6.14h-.6a.6.6 0 0 1-.56-.81l.97-2.55a.1.1 0 0 1 .1-.06c.05 0 .09.04.09.1v3.32z"/></svg>Grubhub</a></li>
+          <li><a href="https://www.ubereats.com/search?q=lou+wok+phoenix" target="_blank" rel="noopener">
+            <svg class="brand-ico" viewBox="0 0 24 24" aria-hidden="true"><path fill="#06C167" d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm4.7 11.2c0 .27-.2.48-.47.48h-1.9a2.9 2.9 0 0 1-2.33 1.16 2.92 2.92 0 1 1 0-5.84c.95 0 1.8.45 2.33 1.15h1.9c.27 0 .47.22.47.48v2.42zM7.3 12a2.06 2.06 0 1 1 4.12 0 2.06 2.06 0 0 1-4.12 0z"/></svg>Uber Eats</a></li>
         </ul>
       </div>
       <div>
@@ -3773,11 +3786,32 @@
         });
       }
 
-      function renderSEO(seo){
-        if(!seo) return;
-        if(seo.title){ document.title=seo.title; }
-        if(seo.description){ const m=document.querySelector('meta[name="description"]'); if(m) m.setAttribute('content',seo.description); }
+      // Featured item (admin-editable). Falls back to existing markup when
+      // a field is omitted, so partial edits are safe.
+      function renderFeatured(f){
+        if(!f || typeof f!=='object') return;
+        const setText=(id,val)=>{ if(val==null) return; const el=document.getElementById(id); if(el) el.textContent=val; };
+        const setHTML=(id,val)=>{ if(val==null) return; const el=document.getElementById(id); if(el) el.innerHTML=esc(val).replace(/\n/g,'<br>'); };
+        // Big background text + emoji on the visual panel
+        setHTML('featBigText', f.bigText);
+        setText('featIcon', f.icon);
+        setText('featLabel', f.label);
+        setHTML('featTitle', f.title);
+        setText('featDesc', f.desc);
+        // CTA button text + (optional) link
+        const cta=document.getElementById('featCta');
+        if(cta){ if(f.ctaText) cta.textContent=f.ctaText; if(f.ctaHref) cta.setAttribute('href', f.ctaHref); }
+        // Detail chips: array of {label,value}; only rebuilt when provided
+        if(Array.isArray(f.details) && f.details.length){
+          const wrap=document.getElementById('featDetails');
+          if(wrap){
+            wrap.innerHTML=f.details.slice(0,6).map(d=>
+              `<div class="detail-item"><div class="detail-label">${esc(d.label||'')}</div><div class="detail-value">${esc(d.value||'')}</div></div>`
+            ).join('');
+          }
+        }
       }
+
 
       function renderAnnouncements(items){
         if(!Array.isArray(items)) return;
@@ -3806,6 +3840,7 @@
           renderLocation(d.location);
           renderSocials(d.socials);
           renderOrderLinks(d.orderLinks);
+          renderFeatured(d.featured);
           renderSEO(d.seo);
           renderAnnouncements(d.announcements);
           console.info('[CMS] content applied from', source);
