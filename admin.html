@@ -599,6 +599,9 @@
     <button class="nav-item" onclick="switchSection('order-links', this)">
       <span class="icon">🔗</span> Order Links
     </button>
+    <button class="nav-item" onclick="switchSection('featured', this)">
+      <span class="icon">⭐</span> Featured Item
+    </button>
 
     <div class="nav-section-label">Site Settings</div>
     <button class="nav-item" onclick="switchSection('branding', this)">
@@ -935,6 +938,66 @@
         </div>
         <div style="margin-top:1.2rem;padding-top:1rem;border-top:1px solid var(--border);font-size:0.75rem;color:var(--muted);">
           Toggling a platform on/off shows or hides it from the Order section of the site.
+        </div>
+      </div>
+    </div>
+
+    <!-- ── FEATURED ITEM ── -->
+    <div id="section-featured" class="section">
+      <div class="panel">
+        <div class="panel-header">
+          <span class="panel-title">Featured Item</span>
+          <button class="btn btn-primary btn-sm" onclick="saveFeatured()">Save Featured</button>
+        </div>
+        <div style="font-size:0.78rem;color:var(--muted);margin-bottom:1.2rem;">
+          Controls the big spotlight section on the home page (currently the St. Paul Sandwich). Use line breaks in the big text / title to split across lines.
+        </div>
+        <div class="panel-grid panel-grid-2">
+          <div>
+            <label class="field-label">Big Background Text</label>
+            <textarea class="field-input" id="feat-bigtext" rows="2" placeholder="ST.&#10;PAUL"></textarea>
+          </div>
+          <div>
+            <label class="field-label">Icon / Emoji</label>
+            <input class="field-input" id="feat-icon" maxlength="4" placeholder="🥪" />
+          </div>
+        </div>
+        <div style="margin-top:1rem;">
+          <label class="field-label">Section Label</label>
+          <input class="field-input" id="feat-label" placeholder="Featured Item" />
+        </div>
+        <div style="margin-top:1rem;">
+          <label class="field-label">Title</label>
+          <textarea class="field-input" id="feat-title" rows="2" placeholder="THE ST. PAUL&#10;SANDWICH"></textarea>
+        </div>
+        <div style="margin-top:1rem;">
+          <label class="field-label">Description</label>
+          <textarea class="field-input" id="feat-desc" rows="3" placeholder="Born in St. Louis. Perfected at Lou Wok..."></textarea>
+        </div>
+        <div class="panel-grid panel-grid-2" style="margin-top:1rem;">
+          <div>
+            <label class="field-label">Button Text</label>
+            <input class="field-input" id="feat-ctatext" placeholder="Order the St. Paul" />
+          </div>
+          <div>
+            <label class="field-label">Button Link</label>
+            <input class="field-input" id="feat-ctahref" placeholder="#order" />
+          </div>
+        </div>
+
+        <div class="panel-header" style="margin-top:1.6rem;">
+          <span class="panel-title" style="font-size:0.9rem;">Detail Chips</span>
+        </div>
+        <div style="font-size:0.74rem;color:var(--muted);margin-bottom:0.8rem;">Up to 4 small label/value pairs shown under the description.</div>
+        <div class="panel-grid panel-grid-2">
+          <div><label class="field-label">Label 1</label><input class="field-input" id="feat-d1l" placeholder="Origin" /></div>
+          <div><label class="field-label">Value 1</label><input class="field-input" id="feat-d1v" placeholder="St. Louis, MO" /></div>
+          <div><label class="field-label">Label 2</label><input class="field-input" id="feat-d2l" placeholder="Style" /></div>
+          <div><label class="field-label">Value 2</label><input class="field-input" id="feat-d2v" placeholder="Pressed & Golden" /></div>
+          <div><label class="field-label">Label 3</label><input class="field-input" id="feat-d3l" placeholder="Bread" /></div>
+          <div><label class="field-label">Value 3</label><input class="field-input" id="feat-d3v" placeholder="Soft White" /></div>
+          <div><label class="field-label">Label 4</label><input class="field-input" id="feat-d4l" placeholder="Sauce" /></div>
+          <div><label class="field-label">Value 4</label><input class="field-input" id="feat-d4v" placeholder="Mayo + Pickles" /></div>
         </div>
       </div>
     </div>
@@ -1346,6 +1409,21 @@
       ubereats:    {url:"https://www.ubereats.com/search?q=lou+wok+phoenix",label:"Uber Eats",enabled:true},
       grubhub:     {url:"",label:"Grubhub",enabled:false}
     },
+    featured:{
+      bigText:"ST.\nPAUL",
+      icon:"🥪",
+      label:"Featured Item",
+      title:"THE ST. PAUL\nSANDWICH",
+      desc:"Born in St. Louis. Perfected at Lou Wok. The St. Paul Sandwich is an egg foo young patty — crispy, savory, packed with bean sprouts and scallion — served on soft white bread with all the classics.",
+      ctaText:"Order the St. Paul",
+      ctaHref:"#order",
+      details:[
+        {label:"Origin",value:"St. Louis, MO"},
+        {label:"Style", value:"Pressed & Golden"},
+        {label:"Bread", value:"Soft White"},
+        {label:"Sauce", value:"Mayo + Pickles"}
+      ]
+    },
     location:{
       street:"Phoenix, AZ",
       cityStateZip:"Phoenix, AZ 85001",
@@ -1409,7 +1487,7 @@
   };
 
   // ── LIVE STATE ──────────────────────────────────────────────────
-  let menuData = [], hoursData = [], announcementsData = [], orderLinksData = {}, seoData = {};
+  let menuData = [], hoursData = [], announcementsData = [], orderLinksData = {}, seoData = {}, featuredData = {};
   let categoriesData = [];
   let locationData = {}, brandingData = {}, socialsData = {};
   let tickerData = [], footerData = {}, settingsData = {};
@@ -1452,7 +1530,7 @@
       _status('Offline — loaded defaults');
     }
     renderMenuList(); renderHours(); renderAnnouncements();
-    _populateOrderLinks(); _populateSEO(); _populateLocation(); _populateBranding(); _populateSocials(); _populateTicker(); _populateFooter(); _populateSettings(); renderCategoryManager(); _fillCategoryDropdown();
+    _populateOrderLinks(); _populateFeatured(); _populateSEO(); _populateLocation(); _populateBranding(); _populateSocials(); _populateTicker(); _populateFooter(); _populateSettings(); renderCategoryManager(); _fillCategoryDropdown();
     _refreshOverview();
     updateTokenStatus();
   }
@@ -1463,6 +1541,7 @@
     hoursData         = d.hours         || DEFAULTS.hours;
     announcementsData = d.announcements || DEFAULTS.announcements;
     orderLinksData    = d.orderLinks    || DEFAULTS.orderLinks;
+    featuredData      = d.featured      || DEFAULTS.featured;
     seoData           = d.seo           || DEFAULTS.seo;
     locationData      = d.location      || DEFAULTS.location;
     brandingData      = d.branding      || DEFAULTS.branding;
@@ -1491,6 +1570,7 @@
     if (selectedItemId) saveMenuItem();
     saveHours();
     saveOrderLinks();
+    saveFeatured();
     saveSEO();
     saveLocation();
     saveBranding();
@@ -1511,6 +1591,7 @@
       categories: categoriesData,
       announcements: announcementsData,
       orderLinks: orderLinksData, seo: seoData,
+      featured: featuredData,
       location: locationData, branding: brandingData,
       socials: socialsData,
       ticker: tickerData, footer: footerData,
@@ -1631,7 +1712,7 @@
     const titles = {
       overview:'Dashboard <span>Overview</span>', menu:'Menu <span>Editor</span>',
       hours:'Hours & <span>Location</span>', announcements:'<span>Announcements</span>',
-      'order-links':'Order <span>Links</span>', branding:'Brand <span>Settings</span>',
+      'order-links':'Order <span>Links</span>', featured:'Featured <span>Item</span>', branding:'Brand <span>Settings</span>',
       seo:'SEO & <span>Meta</span>', deploy:'Deploy <span>Site</span>',
       socials:'Social <span>Links</span>',
       ticker:'Ticker <span>Bar</span>', footer:'Footer <span>Links</span>',
@@ -2002,6 +2083,46 @@
       orderLinksData[key].label = labels[key];
     });
     setUnsaved(); showToast('Order links saved','success');
+  }
+
+  // ══════════════════════════════════════════════════════════════
+  //  FEATURED ITEM  (data-backed)
+  // ══════════════════════════════════════════════════════════════
+  function _populateFeatured() {
+    const f = featuredData || {};
+    const set = (id,val) => { const el=document.getElementById(id); if(el) el.value = (val==null?'':val); };
+    set('feat-bigtext', f.bigText);
+    set('feat-icon',    f.icon);
+    set('feat-label',   f.label);
+    set('feat-title',   f.title);
+    set('feat-desc',    f.desc);
+    set('feat-ctatext', f.ctaText);
+    set('feat-ctahref', f.ctaHref);
+    const d = Array.isArray(f.details) ? f.details : [];
+    for (let i=0;i<4;i++){
+      set('feat-d'+(i+1)+'l', d[i] && d[i].label);
+      set('feat-d'+(i+1)+'v', d[i] && d[i].value);
+    }
+  }
+
+  function saveFeatured() {
+    const val = id => { const el=document.getElementById(id); return el ? el.value.trim() : ''; };
+    const details = [];
+    for (let i=1;i<=4;i++){
+      const l = val('feat-d'+i+'l'), v = val('feat-d'+i+'v');
+      if (l || v) details.push({label:l, value:v});
+    }
+    featuredData = {
+      bigText: val('feat-bigtext'),
+      icon:    val('feat-icon'),
+      label:   val('feat-label'),
+      title:   val('feat-title'),
+      desc:    val('feat-desc'),
+      ctaText: val('feat-ctatext'),
+      ctaHref: val('feat-ctahref'),
+      details: details
+    };
+    setUnsaved(); showToast('Featured item saved','success');
   }
 
   // ══════════════════════════════════════════════════════════════
