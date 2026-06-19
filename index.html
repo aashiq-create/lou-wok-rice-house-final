@@ -1097,76 +1097,97 @@
     }
     @keyframes ripple-anim { to { transform: scale(4); opacity: 0; } }
 
+    /* Swipe-affordance arrows: hidden by default (desktop), shown on mobile.
+       Base rule BEFORE the media query so mobile display wins on source order. */
+    .menu-tabs-hint, .menu-grid-hint { display: none; }
+
     /* Swipe hint on menu cards */
     @media (max-width: 640px) {
       .menu-card { position: relative; overflow: hidden; }
 
-      /* ── Swipe-affordance arrows (mobile only) ── */
+      /* ── Swipe-affordance arrows: both edges, both sliders ── */
 
-      /* Filter tabs: wrapper hugs the tab row exactly, so the arrow
-         aligns to the row's right edge and true vertical center. */
-      .menu-tabs-wrap { position: relative; width: 100%; }
-      .menu-tabs-wrap .menu-tabs { margin-top: 1.5rem; }
-
-      .menu-tabs-wrap::after {
-        content: '';
+      /* Shared chevron styling */
+      .menu-tabs-hint, .menu-grid-hint {
         position: absolute;
-        top: 1.5rem;            /* matches tab row top (margin-top) */
-        bottom: 0.5rem;         /* matches tab row padding-bottom */
-        right: 0;
-        width: 3rem;
-        pointer-events: none;
-        z-index: 3;
-        background: linear-gradient(to right, transparent, var(--black) 80%);
-      }
-      .menu-tabs-hint {
-        position: absolute;
-        display: flex;
-        top: 1.5rem;
-        bottom: 0.5rem;         /* span the exact tab-row band */
-        right: 0.5rem;
-        display: flex;
-        align-items: center;    /* perfect vertical centering on the row */
         z-index: 4;
         pointer-events: none;
         color: var(--rice);
-        font-size: 1.1rem;
         line-height: 1;
+        display: flex;
+        align-items: center;
+      }
+
+      /* Filter tabs: wrapper hugs the tab row exactly, so arrows align
+         to the row's edges and true vertical center. */
+      .menu-tabs-wrap { position: relative; width: 100%; }
+      .menu-tabs-wrap .menu-tabs { margin-top: 1.5rem; }
+
+      /* fade gradients on both sides */
+      .menu-tabs-wrap::before,
+      .menu-tabs-wrap::after {
+        content: '';
+        position: absolute;
+        top: 1.5rem;
+        bottom: 0.5rem;
+        width: 3rem;
+        pointer-events: none;
+        z-index: 3;
+      }
+      .menu-tabs-wrap::before {
+        left: 0;
+        background: linear-gradient(to left, transparent, var(--black) 80%);
+      }
+      .menu-tabs-wrap::after {
+        right: 0;
+        background: linear-gradient(to right, transparent, var(--black) 80%);
+      }
+      .menu-tabs-hint {
+        top: 1.5rem;
+        bottom: 0.5rem;          /* span the exact tab-row band */
+        font-size: 1.25rem;
         animation: swipeNudge 1.6s ease-in-out infinite;
       }
+      .menu-tabs-hint.left  { left: 0.5rem; animation-name: swipeNudgeL; }
+      .menu-tabs-hint.right { right: 0.5rem; }
 
       /* Menu card carousel: anchored on the section. */
       #menu { position: relative; }
-      #menu::before {
+      #menu::before,
+      #menu::after {
         content: '';
         position: absolute;
-        right: 0;
         bottom: 3.5rem;
         height: 60%;
         width: 3rem;
         pointer-events: none;
         z-index: 3;
+      }
+      #menu::before {
+        left: 0;
+        background: linear-gradient(to left, transparent, var(--black) 80%);
+      }
+      #menu::after {
+        right: 0;
         background: linear-gradient(to right, transparent, var(--black) 80%);
       }
       .menu-grid-hint {
-        position: absolute;
-        display: block;
-        right: 0.5rem;
-        bottom: 30%;
-        z-index: 4;
-        pointer-events: none;
-        color: var(--rice);
-        font-size: 1.6rem;
-        line-height: 1;
+        bottom: 28%;
+        font-size: 1.7rem;
         animation: swipeNudge 1.6s ease-in-out infinite;
       }
+      .menu-grid-hint.left  { left: 0.5rem; animation-name: swipeNudgeL; }
+      .menu-grid-hint.right { right: 0.5rem; }
 
       @keyframes swipeNudge {
-        0%, 100% { opacity: 0.18; transform: translateX(0); }
-        50%      { opacity: 0.5;  transform: translateX(-4px); }
+        0%, 100% { opacity: 0.5; transform: translateX(0); }
+        50%      { opacity: 1;   transform: translateX(5px); }
+      }
+      @keyframes swipeNudgeL {
+        0%, 100% { opacity: 0.5; transform: translateX(0); }
+        50%      { opacity: 1;   transform: translateX(-5px); }
       }
     }
-    .menu-tabs-hint, .menu-grid-hint { display: none; }
 
     /* iOS rubber band fix */
     @supports (-webkit-touch-callout: none) {
@@ -1191,7 +1212,7 @@
     .cat-stat-lbl { font-size: 0.68rem; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); margin-top: 2px; }
     .cat-offer-grid {
       display: grid;
-      grid-template-columns: repeat(4,1fr);
+      grid-template-columns: repeat(3,1fr);
       gap: 1.5px;
       margin-bottom: 3rem;
     }
@@ -1329,13 +1350,16 @@
     .cat-success-sub { font-size: 0.88rem; color: rgba(245,238,216,0.5); line-height: 1.7; margin-bottom: 1.5rem; }
     @media (max-width: 900px) {
       .cat-layout { grid-template-columns: 1fr; }
-      .cat-offer-grid { grid-template-columns: 1fr 1fr; }
+      .cat-offer-grid { grid-template-columns: repeat(3,1fr); }
       .cat-hero-strip { grid-template-columns: 1fr; }
     }
     @media (max-width: 640px) {
       .cat-row { grid-template-columns: 1fr; }
       .addon-grid { grid-template-columns: 1fr; }
-      .cat-offer-grid { grid-template-columns: 1fr 1fr; }
+      .cat-offer-grid { grid-template-columns: repeat(3,1fr); }
+      .cat-offer-tile { padding: 1rem 0.6rem; text-align: center; }
+      .cat-offer-name { font-size: 0.74rem; }
+      .cat-offer-sub { font-size: 0.64rem; }
     }
 
   
@@ -1983,7 +2007,8 @@
           <button class="tab" data-filter="combos">Combos</button>
           <button class="tab" data-filter="beverages">Beverages</button>
         </div>
-          <span class="menu-tabs-hint" aria-hidden="true">&#10095;</span>
+          <span class="menu-tabs-hint left" aria-hidden="true">&#10094;</span>
+          <span class="menu-tabs-hint right" aria-hidden="true">&#10095;</span>
         </div>
       </div>
     </div>
@@ -2232,7 +2257,8 @@
 
       <!--MENU_CARDS_END-->
     </div>
-    <span class="menu-grid-hint" aria-hidden="true">&#10095;</span>
+    <span class="menu-grid-hint left" aria-hidden="true">&#10094;</span>
+    <span class="menu-grid-hint right" aria-hidden="true">&#10095;</span>
   </section>
 
   <!-- ── FEATURED ── -->
@@ -2330,7 +2356,7 @@
     </div>
     <div class="cat-hero-strip fade-in">
       <div>
-        <p class="cat-hero-desc">Bring Lou Wok to your next event — corporate lunches, weddings, birthday parties, and private gatherings. We fire up the wok and serve your guests something unforgettable, on-site or delivered.</p>
+        <p class="cat-hero-desc">Bring Lou Wok to your next event — corporate lunches, weddings, birthday parties, and private gatherings. We fire up the wok and serve your guests something unforgettable, delivered.</p>
         <div class="cat-stats-row">
           <div><div class="cat-stat-num">20+</div><div class="cat-stat-lbl">Min Guests</div></div>
           <div><div class="cat-stat-num">500+</div><div class="cat-stat-lbl">Max Served</div></div>
@@ -2341,7 +2367,6 @@
       <a href="#catering" class="btn-primary" style="white-space:nowrap;">Book Your Event</a>
     </div>
     <div class="cat-offer-grid">
-      <div class="cat-offer-tile fade-in"><div class="cat-offer-icon">🍳</div><div class="cat-offer-name">On-Site Catering</div><div class="cat-offer-sub">We bring the whole setup</div></div>
       <div class="cat-offer-tile fade-in"><div class="cat-offer-icon">📦</div><div class="cat-offer-name">Drop-Off Catering</div><div class="cat-offer-sub">Trays &amp; bulk orders</div></div>
       <div class="cat-offer-tile fade-in"><div class="cat-offer-icon">🍚</div><div class="cat-offer-name">Custom Menu</div><div class="cat-offer-sub">Build your own spread</div></div>
       <div class="cat-offer-tile fade-in"><div class="cat-offer-icon">🎉</div><div class="cat-offer-name">All Event Types</div><div class="cat-offer-sub">Corporate, private, public</div></div>
@@ -2381,7 +2406,7 @@
               <div class="cat-group"><label class="cat-lbl">Event Type <span>*</span></label><select class="cat-select" id="cf-type"><option value="">Select type</option><option>Corporate / Office</option><option>Wedding / Reception</option><option>Birthday Party</option><option>Block Party / Festival</option><option>Private Party</option><option>Festival / Market</option><option>School / University</option><option>Other</option></select></div>
             </div>
             <div class="cat-row">
-              <div class="cat-group"><label class="cat-lbl">Service Style <span>*</span></label><select class="cat-select" id="cf-style"><option value="">Select style</option><option>On-Site Chef Station</option><option>Drop-Off Trays</option><option>Buffet Setup</option><option>Not sure yet</option></select></div>
+              <div class="cat-group"><label class="cat-lbl">Service Style <span>*</span></label><select class="cat-select" id="cf-style"><option value="">Select style</option><option>Drop-Off Trays</option><option>Buffet Setup</option><option>Not sure yet</option></select></div>
               <div class="cat-group"><label class="cat-lbl">Venue / Address</label><input class="cat-input" id="cf-venue" type="text" placeholder="Venue name or full address"/></div>
             </div>
             <div class="cat-btn-row"><button class="cat-next-btn" onclick="catNextStep(2)">Continue to Package Selection &rarr;</button></div>
@@ -2451,7 +2476,7 @@
           <div class="cat-faq-head">FAQ</div>
           <div class="cat-faq-item" onclick="this.classList.toggle('open')"><div class="cat-faq-q">How far in advance should I book?<span class="cat-faq-arrow">&#9662;</span></div><div class="cat-faq-a">We recommend 3&ndash;4 weeks for smaller events and 6&ndash;8 weeks for large events or weekends.</div></div>
           <div class="cat-faq-item" onclick="this.classList.toggle('open')"><div class="cat-faq-q">Do you travel outside Phoenix?<span class="cat-faq-arrow">&#9662;</span></div><div class="cat-faq-a">Yes &mdash; full Valley coverage including Scottsdale, Tempe, Mesa, Chandler, and Gilbert. Travel fees may apply beyond 20 miles.</div></div>
-          <div class="cat-faq-item" onclick="this.classList.toggle('open')"><div class="cat-faq-q">What's the minimum guest count?<span class="cat-faq-arrow">&#9662;</span></div><div class="cat-faq-a">Minimum 20 guests for on-site catering bookings. Drop-off catering has a $150 minimum order value.</div></div>
+          <div class="cat-faq-item" onclick="this.classList.toggle('open')"><div class="cat-faq-q">What's the minimum guest count?<span class="cat-faq-arrow">&#9662;</span></div><div class="cat-faq-a">Minimum 20 guests for catering bookings. Drop-off catering has a $150 minimum order value.</div></div>
           <div class="cat-faq-item" onclick="this.classList.toggle('open')"><div class="cat-faq-q">Can I customize the menu?<span class="cat-faq-arrow">&#9662;</span></div><div class="cat-faq-a">Absolutely. Select the Custom Package and tell us what you need. We accommodate dietary restrictions and can create off-menu specials.</div></div>
           <div class="cat-faq-item" onclick="this.classList.toggle('open')"><div class="cat-faq-q">What is your cancellation policy?<span class="cat-faq-arrow">&#9662;</span></div><div class="cat-faq-a">Cancellations 14+ days out receive a full deposit refund. Within 14 days, the deposit is forfeited. We'll always try to reschedule.</div></div>
         </div>
