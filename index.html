@@ -805,6 +805,7 @@
     .btn-outline-dark {
       display: inline-flex;
       align-items: center;
+      gap: 0.6rem;
       border: 2px solid rgba(0,0,0,0.3);
       color: var(--black);
       text-decoration: none;
@@ -820,6 +821,9 @@
     }
     .btn-outline-dark:hover { background: var(--black); color: var(--rice); transform: translateY(-2px); }
     .btn-outline-dark:active { transform: scale(0.97); }
+    /* Brand delivery icons keep their official color on hover (don't invert). */
+    .brand-ico { flex: 0 0 auto; height: 20px; width: auto; display: block; }
+    .sheet-link .brand-ico { height: 18px; vertical-align: middle; }
 
     /* ── FOOTER ── */
     footer {
@@ -1587,11 +1591,29 @@
     .cart-place-btn:hover:not(:disabled) { background: var(--gold); color: var(--black); }
     .cart-place-btn:disabled { opacity: 0.3; cursor: not-allowed; }
     .cart-fine-print { font-size: 0.68rem; color: var(--muted); text-align: center; margin-top: 0.6rem; line-height: 1.5; }
+    /* Customer contact fields */
+    .cart-contact { display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 0.75rem; }
+    .cart-input {
+      width: 100%; box-sizing: border-box;
+      background: var(--smoke); border: 1px solid var(--border);
+      color: var(--rice); font-family: 'DM Sans', sans-serif; font-size: 16px;
+      padding: 0.7rem 0.85rem; border-radius: 4px; transition: border-color 0.16s;
+    }
+    .cart-input::placeholder { color: var(--muted); }
+    .cart-input:focus { outline: none; border-color: var(--gold); }
+    .cart-input.invalid { border-color: var(--wok); }
+    .cart-contact-note { font-size: 0.66rem; color: var(--muted); line-height: 1.5; margin: 0.1rem 0 0; }
     /* Order success */
     .order-success { display: none; text-align: center; padding: 2.5rem 1rem; }
     .order-success.show { display: block; }
     .order-success-icon { font-size: 3.5rem; margin-bottom: 1rem; }
     .order-success-title { font-family: 'Bebas Neue', sans-serif; font-size: 2.5rem; letter-spacing: 0.06em; color: var(--gold); margin-bottom: 0.5rem; }
+    .order-success-num {
+      display: inline-block; font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.5rem; letter-spacing: 0.14em; color: var(--rice);
+      background: var(--smoke); border: 1px dashed var(--gold);
+      padding: 0.35rem 1rem; border-radius: 4px; margin-bottom: 1rem;
+    }
     .order-success-sub { font-size: 0.88rem; color: rgba(245,238,216,0.5); line-height: 1.7; margin-bottom: 1.5rem; }
     .new-order-btn {
       background: var(--wok); color: var(--rice); border: none;
@@ -2492,8 +2514,18 @@
     <p class="order-sub">Order online, pick up in-store, or get it delivered. Lou Wok is ready.</p>
     <div class="order-buttons">
       <a href="#menu" class="btn-dark">Browse Menu</a>
-      <a href="https://www.doordash.com/search/store/lou-wok" target="_blank" rel="noopener" class="btn-outline-dark">🚗 DoorDash</a>
-      <a href="https://www.ubereats.com/search?q=lou+wok+phoenix" target="_blank" rel="noopener" class="btn-outline-dark">🛵 Uber Eats</a>
+      <a href="https://www.doordash.com/search/store/lou-wok" target="_blank" rel="noopener" class="btn-outline-dark">
+        <svg class="brand-ico" viewBox="0 0 24 24" aria-hidden="true"><path fill="#FF3008" d="M23.07 8.45c-.67-1.33-2.04-2.17-3.54-2.17H.66a.66.66 0 0 0-.46 1.12l3.06 3.06c.3.3.7.47 1.12.47h13.97c.7 0 1.3.55 1.32 1.25a1.28 1.28 0 0 1-1.28 1.31H8.06a.66.66 0 0 0-.47 1.13l3.06 3.05c.3.3.7.47 1.12.47h6.65c4.07 0 7.06-4.32 4.65-9.17z"/></svg>
+        DoorDash
+      </a>
+      <a href="https://www.grubhub.com/restaurant/lou-wok" target="_blank" rel="noopener" class="btn-outline-dark">
+        <svg class="brand-ico" viewBox="0 0 24 24" aria-hidden="true"><path fill="#F63440" d="M20.9 9.4h-3.2V6.2a2.2 2.2 0 0 0-2.2-2.2 2.2 2.2 0 0 0-2.06 1.43l-.34.9-.34-.9A2.2 2.2 0 0 0 8.5 4a2.2 2.2 0 0 0-2.2 2.2v3.2H3.1a2 2 0 0 0-2 2v1.06c0 .67.33 1.3.88 1.68l.5.35v3.36A2.1 2.1 0 0 0 4.6 20h14.8a2.1 2.1 0 0 0 2.12-2.1v-3.36l.5-.35a2.04 2.04 0 0 0 .88-1.68V11.4a2 2 0 0 0-2-2zM8.4 6.2c0-.06.04-.1.1-.1.04 0 .08.02.09.06l.97 2.55a.6.6 0 0 1-.56.81H8.4V6.2zm7.2 9.46a.6.6 0 0 1-.6.6H9a.6.6 0 0 1-.6-.6v-2.1h7.2v2.1zm-.36-6.14h-.6a.6.6 0 0 1-.56-.81l.97-2.55a.1.1 0 0 1 .1-.06c.05 0 .09.04.09.1v3.32z"/></svg>
+        Grubhub
+      </a>
+      <a href="https://www.ubereats.com/search?q=lou+wok+phoenix" target="_blank" rel="noopener" class="btn-outline-dark">
+        <svg class="brand-ico" viewBox="0 0 24 24" aria-hidden="true"><path fill="#06C167" d="M3 3h18v18H3z" opacity="0"/><path fill="#06C167" d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm4.7 11.2c0 .27-.2.48-.47.48h-1.9a2.9 2.9 0 0 1-2.33 1.16 2.92 2.92 0 1 1 0-5.84c.95 0 1.8.45 2.33 1.15h1.9c.27 0 .47.22.47.48v2.42zM7.3 12a2.06 2.06 0 1 1 4.12 0 2.06 2.06 0 0 1-4.12 0z"/></svg>
+        Uber Eats
+      </a>
     </div>
   </section>
 
@@ -2627,11 +2659,15 @@
         <span class="sheet-link-arrow">›</span>
       </a>
       <a href="https://www.doordash.com/search/store/lou-wok" target="_blank" rel="noopener" class="sheet-link" onclick="closeMenuSheet()">
-        <span>🚗 &nbsp;DoorDash</span>
+        <span><svg class="brand-ico" viewBox="0 0 24 24" aria-hidden="true" style="display:inline-block;margin-right:0.5rem;"><path fill="#FF3008" d="M23.07 8.45c-.67-1.33-2.04-2.17-3.54-2.17H.66a.66.66 0 0 0-.46 1.12l3.06 3.06c.3.3.7.47 1.12.47h13.97c.7 0 1.3.55 1.32 1.25a1.28 1.28 0 0 1-1.28 1.31H8.06a.66.66 0 0 0-.47 1.13l3.06 3.05c.3.3.7.47 1.12.47h6.65c4.07 0 7.06-4.32 4.65-9.17z"/></svg>DoorDash</span>
+        <span class="sheet-link-arrow">›</span>
+      </a>
+      <a href="https://www.grubhub.com/restaurant/lou-wok" target="_blank" rel="noopener" class="sheet-link" onclick="closeMenuSheet()">
+        <span><svg class="brand-ico" viewBox="0 0 24 24" aria-hidden="true" style="display:inline-block;margin-right:0.5rem;"><path fill="#F63440" d="M20.9 9.4h-3.2V6.2a2.2 2.2 0 0 0-2.2-2.2 2.2 2.2 0 0 0-2.06 1.43l-.34.9-.34-.9A2.2 2.2 0 0 0 8.5 4a2.2 2.2 0 0 0-2.2 2.2v3.2H3.1a2 2 0 0 0-2 2v1.06c0 .67.33 1.3.88 1.68l.5.35v3.36A2.1 2.1 0 0 0 4.6 20h14.8a2.1 2.1 0 0 0 2.12-2.1v-3.36l.5-.35a2.04 2.04 0 0 0 .88-1.68V11.4a2 2 0 0 0-2-2zM8.4 6.2c0-.06.04-.1.1-.1.04 0 .08.02.09.06l.97 2.55a.6.6 0 0 1-.56.81H8.4V6.2zm7.2 9.46a.6.6 0 0 1-.6.6H9a.6.6 0 0 1-.6-.6v-2.1h7.2v2.1zm-.36-6.14h-.6a.6.6 0 0 1-.56-.81l.97-2.55a.1.1 0 0 1 .1-.06c.05 0 .09.04.09.1v3.32z"/></svg>Grubhub</span>
         <span class="sheet-link-arrow">›</span>
       </a>
       <a href="https://www.ubereats.com/search?q=lou+wok+phoenix" target="_blank" rel="noopener" class="sheet-link" onclick="closeMenuSheet()">
-        <span>🛵 &nbsp;Uber Eats</span>
+        <span><svg class="brand-ico" viewBox="0 0 24 24" aria-hidden="true" style="display:inline-block;margin-right:0.5rem;"><path fill="#06C167" d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm4.7 11.2c0 .27-.2.48-.47.48h-1.9a2.9 2.9 0 0 1-2.33 1.16 2.92 2.92 0 1 1 0-5.84c.95 0 1.8.45 2.33 1.15h1.9c.27 0 .47.22.47.48v2.42zM7.3 12a2.06 2.06 0 1 1 4.12 0 2.06 2.06 0 0 1-4.12 0z"/></svg>Uber Eats</span>
         <span class="sheet-link-arrow">›</span>
       </a>
       <a href="tel:+16025550000" class="sheet-link">
@@ -2668,13 +2704,20 @@
         <div class="cart-total-line"><span>Total</span><span id="cartTotal">$0.00</span></div>
       </div>
       <textarea class="cart-notes" id="cartNotes" rows="2" placeholder="Special instructions, allergies, modifications..."></textarea>
+      <div class="cart-contact">
+        <input class="cart-input" id="custName" type="text" autocomplete="name" placeholder="Name *">
+        <input class="cart-input" id="custPhone" type="tel" autocomplete="tel" inputmode="tel" placeholder="Mobile number *">
+        <input class="cart-input" id="custEmail" type="email" autocomplete="email" inputmode="email" placeholder="Email (optional)">
+        <p class="cart-contact-note">We'll text you an order number and confirmation. Standard rates may apply.</p>
+      </div>
       <button class="cart-place-btn" id="cartPlaceBtn" onclick="placeOrder()">Place Order — $0.00</button>
       <p class="cart-fine-print">Pickup in-store · Est. ready 10–15 min</p>
     </div>
     <div class="order-success" id="orderSuccessState">
       <div class="order-success-icon">&#128293;</div>
       <div class="order-success-title">Order Fired!</div>
-      <p class="order-success-sub">Your order is in the wok. Come on in — hot and fresh in about 10–12 minutes.</p>
+      <div class="order-success-num" id="orderSuccessNum"></div>
+      <p class="order-success-sub" id="orderSuccessSub">Your order is in the wok. Come on in — hot and fresh in about 10–12 minutes.</p>
       <button class="new-order-btn" onclick="resetOrder()">Start New Order</button>
     </div>
   </div>
@@ -2701,6 +2744,31 @@
     const EJS_CATERING_TPL  = 'louwok_catering';
     const EJS_NOTIFY_TPL    = 'louwok_notify';
     if (window.emailjs) emailjs.init({ publicKey: EJS_PUBLIC_KEY });
+
+    // ── ORDER NOTIFICATIONS (email + SMS) ───────────────────
+    // Vercel serverless function that sends the real email + SMS.
+    // Deploy /api/notify.js (template provided) then this works live.
+    const NOTIFY_ENDPOINT = '/api/notify';
+    // Admin recipients for every order + catering inquiry.
+    // (Hardcoded for now; can move to cms-data.json later.)
+    const ADMIN_RECIPIENTS = {
+      email: ['aashiq@louwok.com', 'malika@louwok.com'],
+      sms  : []   // add admin mobile numbers in E.164 form e.g. '+16025551234'
+    };
+    // Human-friendly order number: LW-YYMMDD-XXXX
+    function makeOrderNumber() {
+      const d = new Date();
+      const ymd = d.toLocaleDateString('en-CA', { timeZone:'America/Phoenix' }).replace(/-/g,'').slice(2);
+      const rand = Math.floor(1000 + Math.random()*9000);
+      return `LW-${ymd}-${rand}`;
+    }
+    // Normalize a US phone to E.164 (+1XXXXXXXXXX). Returns '' if not 10/11 digits.
+    function toE164(raw) {
+      const dgts = String(raw||'').replace(/\D/g,'');
+      if (dgts.length === 10) return '+1' + dgts;
+      if (dgts.length === 11 && dgts[0] === '1') return '+' + dgts;
+      return '';
+    }
 
     // ── TOAST NOTIFICATION ──────────────────────────────────
     let _toastTimer;
@@ -3162,6 +3230,23 @@
 
     function placeOrder() {
       if (cartItems.length === 0) return;
+
+      // ── Validate customer contact ─────────────────────────
+      const nameEl  = document.getElementById('custName');
+      const phoneEl = document.getElementById('custPhone');
+      const emailEl = document.getElementById('custEmail');
+      const custName  = (nameEl  && nameEl.value  || '').trim();
+      const custPhone = (phoneEl && phoneEl.value || '').trim();
+      const custEmail = (emailEl && emailEl.value || '').trim();
+      const phoneE164 = toE164(custPhone);
+
+      let bad = false;
+      [nameEl, phoneEl, emailEl].forEach(el => el && el.classList.remove('invalid'));
+      if (!custName)            { nameEl  && nameEl.classList.add('invalid');  bad = true; }
+      if (!phoneE164)           { phoneEl && phoneEl.classList.add('invalid'); bad = true; }
+      if (custEmail && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(custEmail)) { emailEl && emailEl.classList.add('invalid'); bad = true; }
+      if (bad) { showToast('Please add your name and a valid mobile number.', 'error'); return; }
+
       const notes    = (document.getElementById('cartNotes') || {}).value || '';
       const subtotal = cartItems.reduce((s,i) => s + i.price * i.qty, 0);
       const tax      = subtotal * 0.086;
@@ -3170,22 +3255,72 @@
         `${i.qty}× ${i.name}${i.sizeMeta ? ' (' + i.sizeMeta + ')' : ''} — $${(i.price*i.qty).toFixed(2)}`
       ).join('\n');
 
-      // ── Send order via EmailJS ────────────────────────────
-      if (window.emailjs && EJS_PUBLIC_KEY !== 'YOUR_PUBLIC_KEY') {
-        emailjs.send(EJS_SERVICE_ID, EJS_ORDER_TPL, {
-          order_items : lines,
-          subtotal    : '$' + subtotal.toFixed(2),
-          tax         : '$' + tax.toFixed(2),
-          total       : '$' + total.toFixed(2),
-          notes       : notes || '—',
-          order_time  : new Date().toLocaleString('en-US', { timeZone: 'America/Phoenix' }),
-        }).catch(err => console.warn('EmailJS order:', err));
-      }
+      const orderNumber = makeOrderNumber();
+      const orderTime   = new Date().toLocaleString('en-US', { timeZone: 'America/Phoenix' });
 
-      // Show success state
+      const payload = {
+        type         : 'order',
+        order_number : orderNumber,
+        customer     : { name: custName, phone: phoneE164, email: custEmail || null },
+        order_items  : lines,
+        subtotal     : '$' + subtotal.toFixed(2),
+        tax          : '$' + tax.toFixed(2),
+        total        : '$' + total.toFixed(2),
+        notes        : notes || '—',
+        order_time   : orderTime,
+        recipients   : ADMIN_RECIPIENTS,   // who the server should notify
+      };
+
+      const placeBtn = document.getElementById('cartPlaceBtn');
+      if (placeBtn) { placeBtn.disabled = true; placeBtn.textContent = 'Sending…'; }
+
+      // Always show success once we've made our best effort to notify.
+      const finish = () => showOrderSuccess(orderNumber, custEmail);
+
+      // ── Primary path: Vercel serverless function (real email + SMS) ──
+      fetch(NOTIFY_ENDPOINT, {
+        method  : 'POST',
+        headers : { 'Content-Type': 'application/json' },
+        body    : JSON.stringify(payload),
+      })
+        .then(r => { if (!r.ok) throw new Error('notify ' + r.status); return r.json().catch(()=> ({})); })
+        .then(finish)
+        .catch(err => {
+          console.warn('notify endpoint failed, trying EmailJS fallback:', err);
+          // ── Fallback: client-side EmailJS (email only, no SMS) ──
+          if (window.emailjs && EJS_PUBLIC_KEY !== 'YOUR_PUBLIC_KEY') {
+            emailjs.send(EJS_SERVICE_ID, EJS_ORDER_TPL, {
+              order_number : orderNumber,
+              to_email     : ADMIN_RECIPIENTS.email.join(','),
+              customer_name: custName,
+              customer_phone: phoneE164,
+              customer_email: custEmail || '—',
+              order_items  : lines,
+              subtotal     : '$' + subtotal.toFixed(2),
+              tax          : '$' + tax.toFixed(2),
+              total        : '$' + total.toFixed(2),
+              notes        : notes || '—',
+              order_time   : orderTime,
+            }).then(finish).catch(e => { console.warn('EmailJS order:', e); finish(); });
+          } else {
+            finish();
+          }
+        });
+    }
+
+    // Reveal success state with the order number + confirmation copy.
+    function showOrderSuccess(orderNumber, custEmail) {
       const body    = document.getElementById('cartBody');
       const footer  = document.getElementById('cartFooter');
       const success = document.getElementById('orderSuccessState');
+      const numEl   = document.getElementById('orderSuccessNum');
+      const subEl   = document.getElementById('orderSuccessSub');
+      if (numEl) numEl.textContent = 'Order ' + orderNumber;
+      if (subEl) {
+        subEl.textContent = custEmail
+          ? 'Confirmation sent by text and email. Come on in — hot and fresh in about 10–12 minutes.'
+          : 'Confirmation sent by text. Come on in — hot and fresh in about 10–12 minutes.';
+      }
       if (body)    body.style.display    = 'none';
       if (footer)  footer.style.display  = 'none';
       if (success) success.classList.add('show');
@@ -3195,8 +3330,15 @@
       cartItems = [];
       const success = document.getElementById('orderSuccessState');
       const body    = document.getElementById('cartBody');
+      const footer  = document.getElementById('cartFooter');
+      const placeBtn= document.getElementById('cartPlaceBtn');
       if (success) success.classList.remove('show');
       if (body)    body.style.display = '';
+      if (footer)  footer.style.display = '';
+      if (placeBtn){ placeBtn.disabled = false; }
+      ['custName','custPhone','custEmail','cartNotes'].forEach(id => {
+        const el = document.getElementById(id); if (el) { el.value = ''; el.classList.remove('invalid'); }
+      });
       updateCartUI();
       closeCart();
     }
@@ -3432,20 +3574,29 @@
         if (catSuccess) catSuccess.classList.add('show');
       };
 
-      if (window.emailjs && EJS_PUBLIC_KEY !== 'YOUR_PUBLIC_KEY') {
-        emailjs.send(EJS_SERVICE_ID, EJS_CATERING_TPL, payload)
-          .then(_onSuccess)
-          .catch(err => { console.warn('EmailJS catering:', err); _onSuccess(); });
-      } else {
-        // Formspree fallback — replace YOUR_FORM_ID with your Formspree endpoint
-        fetch('https://formspree.io/f/YOUR_FORM_ID', {
-          method  : 'POST',
-          headers : { 'Content-Type': 'application/json', Accept: 'application/json' },
-          body    : JSON.stringify(payload),
-        })
-          .then(() => _onSuccess())
-          .catch(() => _onSuccess());
-      }
+      // ── Primary: serverless notify endpoint (emails + SMS to admins) ──
+      fetch(NOTIFY_ENDPOINT, {
+        method  : 'POST',
+        headers : { 'Content-Type': 'application/json' },
+        body    : JSON.stringify(Object.assign({ type:'catering', recipients: ADMIN_RECIPIENTS }, payload)),
+      })
+        .then(r => { if (!r.ok) throw new Error('notify ' + r.status); return r.json().catch(()=> ({})); })
+        .then(_onSuccess)
+        .catch(err => {
+          console.warn('catering notify failed, trying fallbacks:', err);
+          if (window.emailjs && EJS_PUBLIC_KEY !== 'YOUR_PUBLIC_KEY') {
+            emailjs.send(EJS_SERVICE_ID, EJS_CATERING_TPL, payload)
+              .then(_onSuccess)
+              .catch(e => { console.warn('EmailJS catering:', e); _onSuccess(); });
+          } else {
+            // Formspree fallback — replace YOUR_FORM_ID with your Formspree endpoint
+            fetch('https://formspree.io/f/YOUR_FORM_ID', {
+              method  : 'POST',
+              headers : { 'Content-Type': 'application/json', Accept: 'application/json' },
+              body    : JSON.stringify(payload),
+            }).then(_onSuccess).catch(_onSuccess);
+          }
+        });
     }
 
     function resetCatering() {
@@ -3598,10 +3749,15 @@
       function renderOrderLinks(ol){
         if(!ol) return;
         const wrap=document.querySelector('#order .order-buttons'); if(!wrap) return;
+        const ICONS={
+          doordash:'<svg class="brand-ico" viewBox="0 0 24 24" aria-hidden="true"><path fill="#FF3008" d="M23.07 8.45c-.67-1.33-2.04-2.17-3.54-2.17H.66a.66.66 0 0 0-.46 1.12l3.06 3.06c.3.3.7.47 1.12.47h13.97c.7 0 1.3.55 1.32 1.25a1.28 1.28 0 0 1-1.28 1.31H8.06a.66.66 0 0 0-.47 1.13l3.06 3.05c.3.3.7.47 1.12.47h6.65c4.07 0 7.06-4.32 4.65-9.17z"/></svg>',
+          ubereats:'<svg class="brand-ico" viewBox="0 0 24 24" aria-hidden="true"><path fill="#06C167" d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm4.7 11.2c0 .27-.2.48-.47.48h-1.9a2.9 2.9 0 0 1-2.33 1.16 2.92 2.92 0 1 1 0-5.84c.95 0 1.8.45 2.33 1.15h1.9c.27 0 .47.22.47.48v2.42zM7.3 12a2.06 2.06 0 1 1 4.12 0 2.06 2.06 0 0 1-4.12 0z"/></svg>',
+          grubhub:'<svg class="brand-ico" viewBox="0 0 24 24" aria-hidden="true"><path fill="#F63440" d="M20.9 9.4h-3.2V6.2a2.2 2.2 0 0 0-2.2-2.2 2.2 2.2 0 0 0-2.06 1.43l-.34.9-.34-.9A2.2 2.2 0 0 0 8.5 4a2.2 2.2 0 0 0-2.2 2.2v3.2H3.1a2 2 0 0 0-2 2v1.06c0 .67.33 1.3.88 1.68l.5.35v3.36A2.1 2.1 0 0 0 4.6 20h14.8a2.1 2.1 0 0 0 2.12-2.1v-3.36l.5-.35a2.04 2.04 0 0 0 .88-1.68V11.4a2 2 0 0 0-2-2zM8.4 6.2c0-.06.04-.1.1-.1.04 0 .08.02.09.06l.97 2.55a.6.6 0 0 1-.56.81H8.4V6.2zm7.2 9.46a.6.6 0 0 1-.6.6H9a.6.6 0 0 1-.6-.6v-2.1h7.2v2.1zm-.36-6.14h-.6a.6.6 0 0 1-.56-.81l.97-2.55a.1.1 0 0 1 .1-.06c.05 0 .09.04.09.1v3.32z"/></svg>',
+        };
         const map=[
-          {key:'doordash', icon:'🚗', label:'DoorDash'},
-          {key:'ubereats', icon:'🛵', label:'Uber Eats'},
-          {key:'grubhub',  icon:'🍴', label:'Grubhub'},
+          {key:'doordash', label:'DoorDash'},
+          {key:'ubereats', label:'Uber Eats'},
+          {key:'grubhub',  label:'Grubhub'},
         ];
         // keep the Browse Menu button, rebuild the platform links
         wrap.querySelectorAll('a.btn-outline-dark').forEach(a=>a.remove());
@@ -3610,7 +3766,8 @@
           if(d && d.enabled!==false && d.url){
             const a=document.createElement('a');
             a.href=d.url; a.target='_blank'; a.rel='noopener';
-            a.className='btn-outline-dark'; a.textContent=`${p.icon} ${d.label||p.label}`;
+            a.className='btn-outline-dark';
+            a.innerHTML=`${ICONS[p.key]||''} ${esc(d.label||p.label)}`;
             wrap.appendChild(a);
           }
         });
