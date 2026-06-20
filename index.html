@@ -1969,6 +1969,7 @@
   </header>
 
   <!-- ── HERO ── -->
+  <main id="main-content">
   <section id="hero">
     <div class="hero-bg"></div>
     <div class="hero-left">
@@ -2065,7 +2066,7 @@
           <span class="card-tag tag-classic">Classic</span>
         </div>
         <div class="card-add-row">
-          <select class="card-size-select" id="size-7-10">
+          <select class="card-size-select" id="size-7-10" aria-label="Select portion size">
             <option value="7">Half — $7</option>
             <option value="10" selected>Whole — $10</option>
           </select>
@@ -2089,7 +2090,7 @@
           <span class="card-tag tag-popular">Best Seller</span>
         </div>
         <div class="card-add-row">
-          <select class="card-size-select" id="size-8-12">
+          <select class="card-size-select" id="size-8-12" aria-label="Select portion size">
             <option value="8">Half — $8</option>
             <option value="12" selected>Whole — $12</option>
           </select>
@@ -2113,7 +2114,7 @@
           <span class="card-tag tag-popular">Fan Fave</span>
         </div>
         <div class="card-add-row">
-          <select class="card-size-select" id="size-8-13b">
+          <select class="card-size-select" id="size-8-13b" aria-label="Select portion size">
             <option value="8">Half — $8</option>
             <option value="13" selected>Whole — $13b</option>
           </select>
@@ -2137,7 +2138,7 @@
           <span class="card-tag tag-new">Fan Fave</span>
         </div>
         <div class="card-add-row">
-          <select class="card-size-select" id="size-8-13s">
+          <select class="card-size-select" id="size-8-13s" aria-label="Select portion size">
             <option value="8">Half — $8</option>
             <option value="13" selected>Whole — $13s</option>
           </select>
@@ -2161,7 +2162,7 @@
           <span class="card-tag tag-classic">Plant-Based</span>
         </div>
         <div class="card-add-row">
-          <select class="card-size-select" id="size-8-12v">
+          <select class="card-size-select" id="size-8-12v" aria-label="Select portion size">
             <option value="8">Half — $8</option>
             <option value="12" selected>Whole — $12v</option>
           </select>
@@ -2185,7 +2186,7 @@
           <span class="card-tag tag-popular">The Works</span>
         </div>
         <div class="card-add-row">
-          <select class="card-size-select" id="size-10-16">
+          <select class="card-size-select" id="size-10-16" aria-label="Select portion size">
             <option value="10">Half — $10</option>
             <option value="16" selected>Whole — $16</option>
           </select>
@@ -2280,7 +2281,7 @@
           <span class="card-tag tag-popular">MVP</span>
         </div>
         <div class="card-add-row">
-          <select class="card-size-select" id="size-19-24">
+          <select class="card-size-select" id="size-19-24" aria-label="Select portion size">
             <option value="19">Half — $19</option>
             <option value="24" selected>Whole — $24</option>
           </select>
@@ -2424,26 +2425,26 @@
           <div id="cp1">
             <div class="cat-form-title">Event Details</div>
             <div class="cat-row">
-              <div class="cat-group"><label class="cat-lbl">First Name <span>*</span></label><input class="cat-input" id="cf-first" type="text" placeholder="Marcus"/></div>
-              <div class="cat-group"><label class="cat-lbl">Last Name <span>*</span></label><input class="cat-input" id="cf-last" type="text" placeholder="Johnson"/></div>
+              <div class="cat-group"><label class="cat-lbl" for="cf-first">First Name <span>*</span></label><input class="cat-input" id="cf-first" type="text" placeholder="Marcus"/></div>
+              <div class="cat-group"><label class="cat-lbl" for="cf-last">Last Name <span>*</span></label><input class="cat-input" id="cf-last" type="text" placeholder="Johnson"/></div>
             </div>
             <div class="cat-row">
-              <div class="cat-group"><label class="cat-lbl">Email <span>*</span></label><input class="cat-input" id="cf-email" type="email" placeholder="you@email.com"/></div>
-              <div class="cat-group"><label class="cat-lbl">Phone <span>*</span></label><input class="cat-input" id="cf-phone" type="tel" placeholder="(602) 555-0100"/></div>
+              <div class="cat-group"><label class="cat-lbl" for="cf-email">Email <span>*</span></label><input class="cat-input" id="cf-email" type="email" placeholder="you@email.com"/></div>
+              <div class="cat-group"><label class="cat-lbl" for="cf-phone">Phone <span>*</span></label><input class="cat-input" id="cf-phone" type="tel" placeholder="(602) 555-0100"/></div>
             </div>
             <div class="cat-divider"></div>
             <div class="cat-form-title">Event Info</div>
             <div class="cat-row">
-              <div class="cat-group"><label class="cat-lbl">Event Date <span>*</span></label><input class="cat-input" id="cf-date" type="date"/></div>
-              <div class="cat-group"><label class="cat-lbl">Start Time <span>*</span></label><input class="cat-input" id="cf-time" type="time"/></div>
+              <div class="cat-group"><label class="cat-lbl" for="cf-date">Event Date <span>*</span></label><input class="cat-input" id="cf-date" type="date"/></div>
+              <div class="cat-group"><label class="cat-lbl" for="cf-time">Start Time <span>*</span></label><input class="cat-input" id="cf-time" type="time"/></div>
             </div>
             <div class="cat-row">
-              <div class="cat-group"><label class="cat-lbl">Guest Count <span>*</span></label><select class="cat-select" id="cf-guests"><option value="">Select guests</option><option>20 – 50</option><option>51 – 100</option><option>101 – 200</option><option>201 – 350</option><option>350+</option></select></div>
-              <div class="cat-group"><label class="cat-lbl">Event Type <span>*</span></label><select class="cat-select" id="cf-type"><option value="">Select type</option><option>Corporate / Office</option><option>Wedding / Reception</option><option>Birthday Party</option><option>Block Party / Festival</option><option>Private Party</option><option>Festival / Market</option><option>School / University</option><option>Other</option></select></div>
+              <div class="cat-group"><label class="cat-lbl" for="cf-guests">Guest Count <span>*</span></label><select class="cat-select" id="cf-guests"><option value="">Select guests</option><option>20 – 50</option><option>51 – 100</option><option>101 – 200</option><option>201 – 350</option><option>350+</option></select></div>
+              <div class="cat-group"><label class="cat-lbl" for="cf-type">Event Type <span>*</span></label><select class="cat-select" id="cf-type"><option value="">Select type</option><option>Corporate / Office</option><option>Wedding / Reception</option><option>Birthday Party</option><option>Block Party / Festival</option><option>Private Party</option><option>Festival / Market</option><option>School / University</option><option>Other</option></select></div>
             </div>
             <div class="cat-row">
-              <div class="cat-group"><label class="cat-lbl">Service Style <span>*</span></label><select class="cat-select" id="cf-style"><option value="">Select style</option><option>Drop-Off Trays</option><option>Buffet Setup</option><option>Not sure yet</option></select></div>
-              <div class="cat-group"><label class="cat-lbl">Venue / Address</label><input class="cat-input" id="cf-venue" type="text" placeholder="Venue name or full address"/></div>
+              <div class="cat-group"><label class="cat-lbl" for="cf-style">Service Style <span>*</span></label><select class="cat-select" id="cf-style"><option value="">Select style</option><option>Drop-Off Trays</option><option>Buffet Setup</option><option>Not sure yet</option></select></div>
+              <div class="cat-group"><label class="cat-lbl" for="cf-venue">Venue / Address</label><input class="cat-input" id="cf-venue" type="text" placeholder="Venue name or full address"/></div>
             </div>
             <div class="cat-btn-row"><button class="cat-next-btn" onclick="catNextStep(2)">Continue to Package Selection &rarr;</button></div>
           </div>
@@ -2475,8 +2476,8 @@
               <div class="addon-chip" onclick="this.classList.toggle('checked')"><div class="addon-check"><span class="addon-checkmark">&#10003;</span></div><div><div class="addon-chip-name">Setup &amp; Teardown</div><div class="addon-chip-sub">Full service option</div></div></div>
             </div>
             <div class="cat-divider"></div>
-            <div class="cat-group" style="margin-bottom:12px"><label class="cat-lbl">Dietary Restrictions / Allergies</label><textarea class="cat-textarea" id="cf-dietary" placeholder="e.g. nut allergy for 5 guests, gluten-free needed..."></textarea></div>
-            <div class="cat-group"><label class="cat-lbl">Anything Else?</label><textarea class="cat-textarea" id="cf-notes" placeholder="Venue notes, theme, special requests..."></textarea></div>
+            <div class="cat-group" style="margin-bottom:12px"><label class="cat-lbl" for="cf-dietary">Dietary Restrictions / Allergies</label><textarea class="cat-textarea" id="cf-dietary" placeholder="e.g. nut allergy for 5 guests, gluten-free needed..."></textarea></div>
+            <div class="cat-group"><label class="cat-lbl" for="cf-notes">Anything Else?</label><textarea class="cat-textarea" id="cf-notes" placeholder="Venue notes, theme, special requests..."></textarea></div>
             <div class="cat-btn-row"><button class="cat-back-btn" onclick="catNextStep(2)">&larr; Back</button><button class="cat-next-btn" onclick="catNextStep(4)">Review &amp; Submit &rarr;</button></div>
           </div>
 
@@ -2484,7 +2485,7 @@
           <div id="cp4" style="display:none">
             <div class="cat-form-title">Review &amp; Submit</div>
             <div class="cat-review" id="catReviewBlock"></div>
-            <div class="cat-group"><label class="cat-lbl">How did you hear about us?</label><select class="cat-select" id="cf-source"><option value="">Select one</option><option>Instagram</option><option>TikTok</option><option>Facebook</option><option>Google Search</option><option>Word of Mouth</option><option>Walked By / Visited</option><option>Other</option></select></div>
+            <div class="cat-group"><label class="cat-lbl" for="cf-source">How did you hear about us?</label><select class="cat-select" id="cf-source"><option value="">Select one</option><option>Instagram</option><option>TikTok</option><option>Facebook</option><option>Google Search</option><option>Word of Mouth</option><option>Walked By / Visited</option><option>Other</option></select></div>
             <div class="cat-terms-wrap"><input type="checkbox" id="catTerms"/><label for="catTerms">I understand this is an inquiry form only. Lou Wok will follow up within 48 hours to confirm availability, finalize details, and collect a deposit to secure the date.</label></div>
             <div class="cat-btn-row"><button class="cat-back-btn" onclick="catNextStep(3)">&larr; Back</button><button class="cat-next-btn" onclick="submitCatering()">Submit Catering Inquiry &#128293;</button></div>
             <p class="cat-form-note">We respond within 48 hours &middot; Questions? <a href="mailto:catering@louwok.com">catering@louwok.com</a></p>
@@ -2541,6 +2542,7 @@
       </a>
     </div>
   </section>
+  </main>
 
   <!-- ── FOOTER ── -->
   <footer>
@@ -2724,11 +2726,11 @@
         <div class="cart-line"><span>Tax (8.6%)</span><span id="cartTax">$0.00</span></div>
         <div class="cart-total-line"><span>Total</span><span id="cartTotal">$0.00</span></div>
       </div>
-      <textarea class="cart-notes" id="cartNotes" rows="2" placeholder="Special instructions, allergies, modifications..."></textarea>
+      <textarea class="cart-notes" id="cartNotes" rows="2" placeholder="Special instructions, allergies, modifications..." aria-label="Order notes: special instructions, allergies, modifications"></textarea>
       <div class="cart-contact">
-        <input class="cart-input" id="custName" type="text" autocomplete="name" placeholder="Name *">
-        <input class="cart-input" id="custPhone" type="tel" autocomplete="tel" inputmode="tel" placeholder="Mobile number *">
-        <input class="cart-input" id="custEmail" type="email" autocomplete="email" inputmode="email" placeholder="Email (optional)">
+        <input class="cart-input" id="custName" type="text" autocomplete="name" placeholder="Name *" aria-label="Your name (required)">
+        <input class="cart-input" id="custPhone" type="tel" autocomplete="tel" inputmode="tel" placeholder="Mobile number *" aria-label="Mobile number (required)">
+        <input class="cart-input" id="custEmail" type="email" autocomplete="email" inputmode="email" placeholder="Email (optional)" aria-label="Email (optional)">
         <p class="cart-contact-note">We'll text you an order number and confirmation. Standard rates may apply.</p>
       </div>
       <button class="cart-place-btn" id="cartPlaceBtn" onclick="placeOrder()">Place Order — $0.00</button>
@@ -3461,7 +3463,7 @@
         const m=embed.match(/src=["']([^"']+)["']/i);
         if(m) embed=m[1];
         if(/^https?:\/\//i.test(embed)){
-          area.innerHTML='<iframe src="'+embed.replace(/"/g,'&quot;')+'" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>';
+          area.innerHTML='<iframe src="'+embed.replace(/"/g,'&quot;')+'" title="Map showing Lou Wok Rice House location" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>';
         }
       } else if(area && fallback){
         // ensure fallback present (in case of re-render)
@@ -3704,7 +3706,7 @@
             addArgs=`${m.id}, '${esc(m.name).replace(/'/g,"\\'")}', '${emoji}', ${m.priceFull}, null`;
           }
           const sizeSelect = m.priceHalf!=null
-            ? `<select class="card-size-select" id="${sizeId}"><option value="${esc(m.priceHalf)}">Half — $${esc(m.priceHalf)}</option><option value="${esc(m.priceFull)}" selected>Whole — $${esc(m.priceFull)}</option></select>`
+            ? `<select class="card-size-select" id="${sizeId}" aria-label="Select portion size"><option value="${esc(m.priceHalf)}">Half — $${esc(m.priceHalf)}</option><option value="${esc(m.priceFull)}" selected>Whole — $${esc(m.priceFull)}</option></select>`
             : '';
           const tag = m.tag ? `<span class="card-tag ${tagClass(m.tag)}">${esc(tagLabel(m.tag))}</span>` : '';
           return `<div class="menu-card fade-in" data-category="${esc(m.category)}">
