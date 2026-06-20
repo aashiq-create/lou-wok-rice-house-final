@@ -1,0 +1,9 @@
+{
+  "name": "lou-wok-rice-house-final",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Lou Wok Rice House — static site + Twilio voice/SMS serverless backend on Vercel",
+  "dependencies": {
+    "twilio": "^5.3.0"
+  }
+}
