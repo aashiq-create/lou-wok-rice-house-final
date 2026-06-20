@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <meta name="mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
@@ -2857,15 +2857,24 @@
     document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
 
     // ── SMOOTH SCROLL WITH NAV OFFSET ───────────────────────
+    // Read layout CSS vars ONCE and cache them (avoids a forced reflow on
+    // every nav click from re-running getComputedStyle). Refreshed on resize
+    // since --safe-top / --nav-height can change with orientation.
+    let _navH = 64, _safeTop = 0;
+    function refreshNavMetrics() {
+      const cs = getComputedStyle(document.documentElement);
+      _navH = parseInt(cs.getPropertyValue('--nav-height')) || 64;
+      _safeTop = parseInt(cs.getPropertyValue('--safe-top')) || 0;
+    }
+    refreshNavMetrics();
+    window.addEventListener('resize', refreshNavMetrics, { passive: true });
+    window.addEventListener('orientationchange', refreshNavMetrics, { passive: true });
+
     function smoothTo(id) {
       const el = document.getElementById(id);
       if (!el) return;
-      const navH = parseInt(getComputedStyle(document.documentElement)
-                    .getPropertyValue('--nav-height')) || 64;
-      const safeTop = parseInt(getComputedStyle(document.documentElement)
-                    .getPropertyValue('--safe-top')) || 0;
       const isMobile = window.innerWidth <= 640;
-      const offset = navH + safeTop + (isMobile ? 12 : 24);
+      const offset = _navH + _safeTop + (isMobile ? 12 : 24);
       const top = el.getBoundingClientRect().top + window.pageYOffset - offset;
       window.scrollTo({ top, behavior: 'smooth' });
     }
