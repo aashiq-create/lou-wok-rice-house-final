@@ -1,0 +1,13 @@
+# Lou Wok Rice House — robots.txt
+# Allow all crawlers full access (favicon + pages must be crawlable
+# for the icon to appear in Google Search results).
+
+User-agent: *
+Allow: /
+
+# Be explicit that the image crawler may fetch the favicon files.
+User-agent: Googlebot-Image
+Allow: /favicon.ico
+Allow: /icons/
+
+Sitemap: https://louwok.com/sitemap.xml
