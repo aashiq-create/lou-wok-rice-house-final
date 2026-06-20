@@ -595,7 +595,7 @@
       text-transform: uppercase;
       background: transparent;
       border: 1px solid var(--border);
-      g<1>0.55g<2>;
+      color: var(--gold);
       cursor: pointer;
       border-radius: 2px;
       transition: all 0.2s;
@@ -679,7 +679,7 @@
     }
     .tag-popular { background: rgba(200,57,10,0.2); color: var(--wok); }
     .tag-new     { background: rgba(232,160,32,0.15); color: var(--gold); }
-    .tag-classic { background: rgba(245,238,216,0.08); g<1>0.55g<2>; }
+    .tag-classic { background: rgba(245,238,216,0.08); color: rgba(245,238,216,0.55); }
 
     /* ── FEATURED ── */
     #featured {
@@ -1318,7 +1318,7 @@
     .cat-input::placeholder, .cat-textarea::placeholder { color: var(--muted); }
     .cat-textarea { resize: vertical; min-height: 75px; line-height: 1.6; }
     .cat-select { cursor: pointer; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236b6558' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; }
-    .cat-select option { background: var(--smoke); }
+    .cat-select option { background: var(--smoke); color: var(--gold); }
     /* PACKAGES */
     .pkg-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 4px; }
     .pkg-card-item {
@@ -1387,7 +1387,7 @@
     .cat-info-line { display: flex; gap: 10px; margin-bottom: 0.85rem; }
     .cat-info-line:last-child { margin-bottom: 0; }
     .cat-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--wok); flex-shrink: 0; margin-top: 6px; }
-    .cat-info-txt { font-size: 0.8rem; g<1>0.55g<2>; line-height: 1.65; }
+    .cat-info-txt { font-size: 0.8rem; color: rgba(245,238,216,0.55); line-height: 1.65; }
     .cat-info-txt strong { color: rgba(245,238,216,0.85); font-weight: 600; }
     .cat-faq { background: var(--smoke); border: 1px solid var(--border); }
     .cat-faq-head { padding: 0.85rem 1rem; font-size: 0.6rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--muted); border-bottom: 1px solid var(--border); }
@@ -1405,7 +1405,7 @@
     .cat-success.show { display: block; }
     .cat-success-icon { font-size: 3rem; margin-bottom: 1rem; }
     .cat-success-title { font-family: 'Bebas Neue', sans-serif; font-size: 2.5rem; letter-spacing: 0.06em; color: var(--gold); margin-bottom: 0.5rem; }
-    .cat-success-sub { font-size: 0.88rem; g<1>0.55g<2>; line-height: 1.7; margin-bottom: 1.5rem; }
+    .cat-success-sub { font-size: 0.88rem; color: rgba(245,238,216,0.55); line-height: 1.7; margin-bottom: 1.5rem; }
     @media (max-width: 900px) {
       .cat-layout { grid-template-columns: 1fr; }
       .cat-offer-grid { grid-template-columns: repeat(3,1fr); }
@@ -1465,7 +1465,7 @@
       padding-right: 24px;
     }
     .card-size-select:focus { border-color: var(--gold); }
-    .card-size-select option { background: var(--smoke); }
+    .card-size-select option { background: var(--smoke); color: var(--gold); }
 
     .card-add-btn {
       display: flex;
@@ -1667,7 +1667,7 @@
       background: var(--smoke); border: 1px dashed var(--gold);
       padding: 0.35rem 1rem; border-radius: 4px; margin-bottom: 1rem;
     }
-    .order-success-sub { font-size: 0.88rem; g<1>0.55g<2>; line-height: 1.7; margin-bottom: 1.5rem; }
+    .order-success-sub { font-size: 0.88rem; color: rgba(245,238,216,0.55); line-height: 1.7; margin-bottom: 1.5rem; }
     .new-order-btn {
       background: var(--wok); color: var(--rice); border: none;
       padding: 0.8rem 2rem; font-size: 0.82rem; font-weight: 700;
@@ -1778,7 +1778,7 @@
     .hl-sched-row.closed .hl-sched-time { color: var(--wok); font-weight: 700; }
 
     .hl-foot-note {
-      margin-top: 1.75rem; text-align: center; g<1>0.55g<2>;
+      margin-top: 1.75rem; text-align: center; color: rgba(245,238,216,0.55);
       font-family: 'DM Sans', sans-serif; font-size: 0.9rem;
     }
     .hl-foot-note a { color: var(--gold); font-weight: 700; text-decoration: none; }
