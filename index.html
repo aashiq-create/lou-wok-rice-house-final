@@ -86,7 +86,12 @@
     })();
   </script>
 
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=Playfair+Display:ital@1&display=swap" rel="stylesheet" />
+  <!-- Warm up the font connections early so they don't block first paint -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <!-- Load fonts without blocking render: paint text immediately, swap font in when ready -->
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=Playfair+Display:ital@1&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=Playfair+Display:ital@1&display=swap" rel="stylesheet" /></noscript>
 
   <style>
     :root {
@@ -1941,7 +1946,7 @@
     html.is-standalone .bottom-nav { padding-bottom: var(--safe-bot); }
 
   </style>
-  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js" defer></script>
 </head>
 <body>
 
@@ -2637,7 +2642,7 @@
   </nav>
 
   <!-- ── SCROLL TO TOP FAB ── -->
-  <button class="fab-top" id="fabTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+  <button class="fab-top" id="fabTop" aria-label="Scroll back to top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
 
   <!-- ── ADD TO HOME SCREEN BANNER ── -->
   <div class="a2hs-banner" id="a2hsBanner">
@@ -2648,7 +2653,7 @@
     </div>
     <div class="a2hs-actions">
       <button class="a2hs-btn a2hs-btn-primary" id="a2hsInstall">Add</button>
-      <button class="a2hs-btn a2hs-btn-dismiss" onclick="dismissA2HS()">✕</button>
+      <button class="a2hs-btn a2hs-btn-dismiss" onclick="dismissA2HS()" aria-label="Dismiss install banner">✕</button>
     </div>
   </div>
 
@@ -2704,7 +2709,7 @@
         <span class="cart-drawer-title">Your Order</span>
         <span class="cart-item-count-lbl" id="cartCountLabel">0 items</span>
       </div>
-      <button class="cart-close" onclick="closeCart()">&#10005;</button>
+      <button class="cart-close" onclick="closeCart()" aria-label="Close cart">&#10005;</button>
     </div>
     <div class="cart-body" id="cartBody">
       <div class="cart-empty-state">
