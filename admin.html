@@ -622,6 +622,9 @@
     <button class="nav-item" onclick="switchSection('checkout', this)">
       <span class="icon">💳</span> Checkout &amp; Payments
     </button>
+    <button class="nav-item" onclick="switchSection('notify', this)">
+      <span class="icon">📲</span> Calls &amp; Texts
+    </button>
     <button class="nav-item" onclick="switchSection('users', this)">
       <span class="icon">🔐</span> Users &amp; Access
     </button>
@@ -1237,6 +1240,72 @@
       </div>
     </div>
 
+    <div id="section-notify" class="section">
+      <div class="panel">
+        <div class="panel-header">
+          <span class="panel-title">Calls &amp; Texts</span>
+          <button class="btn btn-primary btn-sm" onclick="saveNotify()">Save</button>
+        </div>
+        <p style="color:var(--muted);font-size:0.82rem;margin:0 0 1rem;line-height:1.5;">
+          Controls call forwarding and order/pickup texts. These settings publish to the live
+          backend on <strong>Deploy</strong>. <strong style="color:var(--gold);">Secrets
+          (Twilio Auth Token / Account SID) are never stored here</strong> — they live encrypted in
+          Vercel. This panel only holds non-secret operational settings: phone numbers and message text.
+        </p>
+
+        <div style="margin-bottom:1rem;padding:0.85rem 1rem;background:var(--smoke);border-radius:2px;border:1px solid var(--border);">
+          <div style="font-size:0.68rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted);margin-bottom:0.4rem;">📞 Call Forwarding</div>
+
+          <div class="field-group">
+            <label class="field-label">Forward calls to (your cell, E.164)</label>
+            <input class="field-input" id="ntf-personal" placeholder="+16025551234" />
+            <p style="color:var(--muted);font-size:0.72rem;margin:0.3rem 0 0;">Incoming restaurant calls ring this phone. Format: +1 then 10 digits, no spaces or dashes.</p>
+          </div>
+
+          <div class="field-group">
+            <label class="field-label">Screening whisper</label>
+            <select class="field-select" id="ntf-screen">
+              <option value="off">Auto-connect — just announce the call</option>
+              <option value="on">Require key press — press any key to accept</option>
+            </select>
+            <p style="color:var(--muted);font-size:0.72rem;margin:0.3rem 0 0;">"Require key press" lets you decline an unknown call to voicemail without it hitting your personal voicemail.</p>
+          </div>
+        </div>
+
+        <div style="margin-bottom:1rem;padding:0.85rem 1rem;background:var(--smoke);border-radius:2px;border:1px solid var(--border);">
+          <div style="font-size:0.68rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted);margin-bottom:0.4rem;">💬 Order &amp; Pickup Texts</div>
+
+          <div class="field-group">
+            <label class="field-label">Staff alert numbers — get the order ticket by text</label>
+            <input class="field-input" id="ntf-admin-sms" placeholder="+16025551234, +16025555678" />
+            <p style="color:var(--muted);font-size:0.72rem;margin:0.3rem 0 0;">Comma-separated, E.164. Each gets a text with the full order when a customer checks out. Customers always get their own order-number text regardless of this.</p>
+          </div>
+
+          <div class="field-group">
+            <label class="field-label">Pickup ETA shown to customer (minutes)</label>
+            <input class="field-input" id="ntf-eta" placeholder="10-12" />
+            <p style="color:var(--muted);font-size:0.72rem;margin:0.3rem 0 0;">Appears in the confirmation text, e.g. "Ready for pickup in about 10-12 min."</p>
+          </div>
+
+          <div class="field-group">
+            <label class="field-label">Business name in messages</label>
+            <input class="field-input" id="ntf-name" placeholder="Lou Wok Rice House" />
+          </div>
+        </div>
+
+        <div style="padding:0.85rem 1rem;background:rgba(232,160,32,0.07);border-radius:2px;border:1px solid var(--border);">
+          <div style="font-size:0.68rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted);margin-bottom:0.4rem;">🔒 Secrets — set in Vercel, not here</div>
+          <p style="color:var(--muted);font-size:0.75rem;line-height:1.6;margin:0;">
+            <strong style="color:var(--rice);">TWILIO_ACCOUNT_SID</strong>,
+            <strong style="color:var(--rice);">TWILIO_AUTH_TOKEN</strong>,
+            <strong style="color:var(--rice);">TWILIO_CALLER_ID</strong> (your Twilio business number) live in
+            Vercel → Settings → Environment Variables. If you change your Twilio number or rotate the token,
+            update it there and redeploy. Everything on this page is safe to edit and publish.
+          </p>
+        </div>
+      </div>
+    </div>
+
     <div id="section-users" class="section">
       <div class="panel">
         <div class="panel-header">
@@ -1530,7 +1599,7 @@
       _status('Offline — loaded defaults');
     }
     renderMenuList(); renderHours(); renderAnnouncements();
-    _populateOrderLinks(); _populateFeatured(); _populateSEO(); _populateLocation(); _populateBranding(); _populateSocials(); _populateTicker(); _populateFooter(); _populateSettings(); renderCategoryManager(); _fillCategoryDropdown();
+    _populateOrderLinks(); _populateFeatured(); _populateSEO(); _populateLocation(); _populateBranding(); _populateSocials(); _populateTicker(); _populateFooter(); _populateSettings(); _populateNotify(); renderCategoryManager(); _fillCategoryDropdown();
     _refreshOverview();
     updateTokenStatus();
   }
@@ -2269,6 +2338,58 @@
     settingsData.squareLocationId = document.getElementById('set-sq-locid').value.trim();
     settingsData.paymentBackendUrl = document.getElementById('set-backend').value.trim();
     setUnsaved(); showToast('Checkout settings saved','success');
+  }
+
+  // ══════════════════════════════════════════════════════════════
+  //  CALLS & TEXTS  (data-backed; secrets stay in Vercel)
+  function _populateNotify() {
+    if(!settingsData) settingsData={};
+    const n = settingsData.notify || {};
+    const personal = document.getElementById('ntf-personal');
+    if (personal) personal.value = n.personalPhone || '';
+    const screen = document.getElementById('ntf-screen');
+    if (screen) screen.value = (n.screenRequireKey ? 'on' : 'off');
+    const adminSms = document.getElementById('ntf-admin-sms');
+    if (adminSms) adminSms.value = Array.isArray(n.adminSms) ? n.adminSms.join(', ') : '';
+    const eta = document.getElementById('ntf-eta');
+    if (eta) eta.value = n.pickupEtaMin || '';
+    const name = document.getElementById('ntf-name');
+    if (name) name.value = n.restaurantName || '';
+  }
+  // Normalize a phone string to E.164 (US default). Returns '' if unusable.
+  function _toE164(raw) {
+    const s = String(raw || '').trim();
+    if (!s) return '';
+    if (s[0] === '+') { const d = s.replace(/[^\d]/g,''); return d ? '+' + d : ''; }
+    const d = s.replace(/\D/g, '');
+    if (d.length === 10) return '+1' + d;
+    if (d.length === 11 && d[0] === '1') return '+' + d;
+    return '';
+  }
+  function saveNotify() {
+    if(!settingsData) settingsData={};
+    const n = settingsData.notify || {};
+
+    const personalRaw = document.getElementById('ntf-personal').value;
+    const personal = _toE164(personalRaw);
+    if (personalRaw.trim() && !personal) { showToast('Forwarding number must be a valid US number','error'); return; }
+    n.personalPhone = personal;
+
+    n.screenRequireKey = document.getElementById('ntf-screen').value === 'on';
+
+    const rawList = document.getElementById('ntf-admin-sms').value.split(',').map(s=>s.trim()).filter(Boolean);
+    const cleaned = [], bad = [];
+    rawList.forEach(r => { const e = _toE164(r); if (e) cleaned.push(e); else bad.push(r); });
+    if (bad.length) { showToast('Invalid number(s): ' + bad.join(', '),'error'); return; }
+    n.adminSms = cleaned;
+
+    n.pickupEtaMin = document.getElementById('ntf-eta').value.trim() || '10-12';
+    n.restaurantName = document.getElementById('ntf-name').value.trim() || 'Lou Wok Rice House';
+
+    settingsData.notify = n;
+    // Reflect cleaned values back into the inputs so the user sees the normalized form.
+    _populateNotify();
+    setUnsaved(); showToast('Call & text settings saved — Deploy to publish','success');
   }
 
   // ══════════════════════════════════════════════════════════════
