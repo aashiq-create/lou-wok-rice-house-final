@@ -1807,10 +1807,10 @@
     .truck-stop.closed-day .truck-stop-day { opacity:0.5; }
     .truck-stop-day .d { font-size:0.62rem; font-weight:800; letter-spacing:0.06em; text-transform:uppercase; color:rgba(245,238,216,0.65); }
     .truck-stop.active .truck-stop-day .d { color:var(--rice); }
-    .truck-stop-main { min-width:0; }
-    .truck-stop-spot { color:var(--rice); font-weight:700; font-size:0.97rem; line-height:1.25; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .truck-stop-main { min-width:0; display:flex; flex-direction:column; gap:0.15rem; }
+    .truck-stop-spot { display:block; color:var(--rice); font-weight:700; font-size:0.97rem; line-height:1.25; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
     .truck-stop.closed-day .truck-stop-spot { color:rgba(245,238,216,0.45); font-weight:600; }
-    .truck-stop-time { color:rgba(245,238,216,0.6); font-weight:600; font-size:0.82rem; }
+    .truck-stop-time { display:block; color:rgba(245,238,216,0.6); font-weight:600; font-size:0.82rem; line-height:1.2; }
     .truck-stop.active .truck-stop-spot { color:var(--gold); }
     .truck-stop-tag {
       font-size:0.56rem; font-weight:800; letter-spacing:0.1em; text-transform:uppercase;
