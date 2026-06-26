@@ -1,6 +1,6 @@
 {
   "_info": "Written by louwok.com/admin. index.html reads this at runtime.",
-  "_updated": "2026-06-26T23:25:58.799Z",
+  "_updated": "2026-06-26T23:27:56.751Z",
   "menu": [
     {
       "id": 1,
@@ -16,10 +16,10 @@
       "id": 2,
       "name": "Chicken Fried Rice",
       "category": "rice",
-      "priceHalf": 4,
-      "priceFull": 8,
+      "priceHalf": 5,
+      "priceFull": 10,
       "tag": "classic",
-      "desc": "All-white chicken wok-fired with seasoned rice, egg, bean sprouts, soy, and green onion. A St. Louis rice house classic—simple, bold, and built on the kind of no-frills flavors that made Midwest takeout a staple. Cooked fresh to order and served hot, Lou Wok style.",
+      "desc": "All-white chicken, seasoned rice, egg, bean sprouts, and green onions, wok-fired fresh to order. A St. Louis rice house classic with bold, no-frills Midwest flavor.\n",
       "options": []
     },
     {
