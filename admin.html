@@ -358,7 +358,9 @@
       color: rgba(245,238,216,0.45); font-weight: 700;
     }
     .hours-row.is-closed { opacity: 0.5; }
-    .hours-row.is-closed .field-input { pointer-events: none; }
+    /* Note: inputs stay editable even when a day is toggled closed, so the
+       location/stop text can always be cleared or changed. (Previously
+       pointer-events:none here made the box unclickable.) */
     @media (max-width: 720px) {
       .hours-row, .hours-head { grid-template-columns: 1fr 1fr; }
       .hours-head { display: none; }
@@ -2048,13 +2050,13 @@
   function renderHours() {
     const grid = document.getElementById('hoursGrid');
     if (!grid) return;
-    grid.innerHTML = `
+    let html = `
       <div class="hours-head">
         <span>Day</span><span>Open</span><span>Close</span><span>Location stop</span><span>Open?</span>
       </div>`;
     hoursData.forEach((h,i) => {
       const loc = h.location || '';
-      grid.innerHTML += `
+      html += `
         <div class="hours-row${h.closed?' is-closed':''}" id="hours-row-${i}">
           <div class="day-label">${h.day}</div>
           <input class="field-input" type="time" value="${h.open}"  id="open-${i}" />
@@ -2063,6 +2065,7 @@
           <label class="toggle"><input type="checkbox" ${h.closed?'':'checked'} id="toggle-${i}" onchange="document.getElementById('hours-row-${i}').classList.toggle('is-closed', !this.checked)" /><span class="toggle-track"></span></label>
         </div>`;
     });
+    grid.innerHTML = html;
   }
 
   // Known Phoenix-area stop coordinates, matched loosely by name so the map
