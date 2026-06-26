@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- ✅ LOU-WOK-TRACKER vFIND-THE-TRUCK | correct file | 2026-06-26 -->
+<!-- ✅ LOU-WOK-TRACKER vTRUCK-ICON-MAP | leaflet truck marker + grid-driven | 2026-06-26 -->
 
 <html lang="en">
 <head>
@@ -1752,6 +1752,10 @@
     .truck-map-card { overflow:hidden; background:var(--black); min-height:420px; position:relative; }
     .truck-map-area { position:absolute; inset:0; }
     .truck-map-area iframe { width:100%; height:100%; border:0; display:block; filter:grayscale(0.25) contrast(1.05) brightness(0.95); }
+    .truck-leaflet-icon { background:none; border:none; }
+    .truck-map-area .leaflet-container { width:100%; height:100%; background:#1e1c18; }
+    .truck-map-card .leaflet-control-attribution { font-size:9px; background:rgba(10,10,8,0.6); color:rgba(245,238,216,0.6); }
+    .truck-map-card .leaflet-control-attribution a { color:var(--gold); }
     .truck-map-overlay {
       position:absolute; left:0; right:0; bottom:0; z-index:3;
       display:flex; align-items:center; gap:0.75rem; flex-wrap:wrap;
@@ -2026,6 +2030,9 @@
 
   </style>
   <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js" defer></script>
+  <!-- Leaflet — interactive map with a custom truck marker (free OSM tiles, no API key) -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" defer></script>
 </head>
 <body>
 
@@ -3542,11 +3549,39 @@
 
     function _dayShort(d){ return ({Monday:'Mon',Tuesday:'Tue',Wednesday:'Wed',Thursday:'Thu',Friday:'Fri',Saturday:'Sat',Sunday:'Sun'})[d]||d.slice(0,3); }
 
-    // Build an OpenStreetMap embed for a coordinate (no API key needed).
-    function _osmEmbed(lat,lng){
-      const d=0.012; // bbox half-size
-      const bbox=[(lng-d),(lat-d),(lng+d),(lat+d)].join('%2C');
-      return 'https://www.openstreetmap.org/export/embed.html?bbox='+bbox+'&layer=mapnik&marker='+lat+'%2C'+lng;
+    // ── Leaflet map with a custom TRUCK marker (free OSM tiles, no API key) ──
+    let _truckMap = null, _truckMarker = null;
+    function _truckIcon(){
+      // Inline SVG: a truck on a brand teardrop, so customers see the truck's spot.
+      const svg =
+        '<svg xmlns="http://www.w3.org/2000/svg" width="48" height="58" viewBox="0 0 48 58">'
+        + '<defs><filter id="tshad" x="-30%" y="-30%" width="160%" height="160%">'
+        + '<feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="rgba(0,0,0,0.45)"/></filter></defs>'
+        + '<path filter="url(#tshad)" d="M24 1C12 1 2.4 10.6 2.4 22.6 2.4 37.5 22 55.4 22.8 56.1a1.8 1.8 0 0 0 2.4 0C26 55.4 45.6 37.5 45.6 22.6 45.6 10.6 36 1 24 1z" fill="#c8390a" stroke="#e8a020" stroke-width="2"/>'
+        + '<g transform="translate(9.5,13)">'
+        + '<rect x="0" y="3" width="17" height="11.5" rx="1.5" fill="#f5eed8"/>'
+        + '<path d="M17 6.5h6.2l4.3 4.2v3.8H17z" fill="#f5eed8"/>'
+        + '<circle cx="6.2" cy="16.5" r="2.7" fill="#0a0a08" stroke="#f5eed8" stroke-width="1"/>'
+        + '<circle cx="21" cy="16.5" r="2.7" fill="#0a0a08" stroke="#f5eed8" stroke-width="1"/>'
+        + '</g></svg>';
+      return L.divIcon({ html:svg, className:'truck-leaflet-icon', iconSize:[48,58], iconAnchor:[24,56], popupAnchor:[0,-52] });
+    }
+    function _renderTruckMap(lat,lng,label){
+      if(typeof L==='undefined') return false; // Leaflet not loaded yet
+      const area=document.getElementById('truckMapArea');
+      if(!area) return false;
+      if(!_truckMap){
+        area.innerHTML='';
+        _truckMap = L.map(area, { zoomControl:true, scrollWheelZoom:false, attributionControl:true }).setView([lat,lng],14);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom:19, attribution:'&copy; OpenStreetMap' }).addTo(_truckMap);
+      } else {
+        _truckMap.setView([lat,lng],14);
+      }
+      if(_truckMarker){ _truckMarker.remove(); }
+      _truckMarker = L.marker([lat,lng], { icon:_truckIcon(), title:label||'Lou Wok truck' }).addTo(_truckMap);
+      if(label){ _truckMarker.bindPopup('<b>🚚 '+String(label).replace(/</g,'&lt;')+'</b>'); }
+      setTimeout(()=>{ try{ _truckMap.invalidateSize(); }catch(e){} }, 60);
+      return true;
     }
 
     function _isOpenNow(stop){
@@ -3586,9 +3621,14 @@
 
       if(area){
         if(stop.lat&&stop.lng){
-          area.innerHTML='<iframe src="'+_osmEmbed(stop.lat,stop.lng)+'" title="Map showing the Lou Wok truck at '+(stop.spot||'its stop').replace(/"/g,'&quot;')+'" loading="lazy"></iframe>';
           if(loading) loading.style.display='none';
+          // Render the interactive map with the truck marker. If Leaflet hasn't
+          // finished loading yet, retry shortly.
+          if(!_renderTruckMap(stop.lat, stop.lng, stop.spot||'Lou Wok')){
+            let tries=0; const t=setInterval(()=>{ tries++; if(_renderTruckMap(stop.lat,stop.lng,stop.spot||'Lou Wok')||tries>20){ clearInterval(t); } }, 150);
+          }
         } else {
+          if(_truckMap){ try{ _truckMap.remove(); }catch(e){} _truckMap=null; _truckMarker=null; }
           area.innerHTML='';
           if(loading){ loading.style.display='flex'; loading.querySelector('div:last-child').textContent='Off the road today — see you tomorrow!'; }
         }
