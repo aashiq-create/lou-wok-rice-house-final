@@ -93,17 +93,22 @@ module.exports = async (req, res) => {
   // Dial your personal phone. The whisper plays to YOU only, via the
   // <Number>'s url attribute pointing at /api/voice-whisper.
   const requireKey = cfg.screenRequireKey;
+  const proto0 = (req.headers['x-forwarded-proto'] || 'https');
+  const host0  = (req.headers['x-forwarded-host'] || req.headers.host || 'louwok.com');
+  const base0  = `${proto0}://${host0}`;
   const dial = tw.dial({
     callerId,                    // shows your Twilio number to your cell
     answerOnBridge: true,        // caller hears ringing, not dead air
     timeout: 20,                 // ring your cell ~20s before voicemail
-    action: '/api/voice-dial-status', // where to go if you don't answer
+    action: `${base0}/api/voice-dial-status`, // where to go if you don't answer
     method: 'POST',
   });
 
+  // Whisper must use an ABSOLUTE URL (relative paths are silently skipped
+  // by Twilio for the <Number url="..."> attribute). Reuse base0 from above.
   dial.number(
     {
-      url: `/api/voice-whisper?from=${encodeURIComponent(fromRaw)}&require=${requireKey ? '1' : '0'}`,
+      url: `${base0}/api/voice-whisper?from=${encodeURIComponent(fromRaw)}&require=${requireKey ? '1' : '0'}`,
       method: 'POST',
     },
     personal
