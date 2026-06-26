@@ -1,6 +1,6 @@
 {
   "_info": "Written by louwok.com/admin. index.html reads this at runtime.",
-  "_updated": "2026-06-26T23:38:25.208Z",
+  "_updated": "2026-06-26T23:40:16.592Z",
   "menu": [
     {
       "id": 1,
@@ -79,7 +79,7 @@
       "priceHalf": 5,
       "priceFull": 10,
       "tag": "popular",
-      "desc": "A loaded feast of our signature St. Louis-style fried rice piled high with egg, tender chicken, juicy shrimp, savory beef, and fresh vegetables, all wok-fired together with our house seasoning for the ultimate Rice House experience.",
+      "desc": "Our signature St. Louis-style fried rice is loaded with fluffy egg, tender chicken, juicy shrimp, savory beef, and crisp vegetables, all tossed over blazing heat with our signature house seasoning. Every bite delivers the bold, satisfying flavor that defines the Rice House experience.\n",
       "options": []
     },
     {
