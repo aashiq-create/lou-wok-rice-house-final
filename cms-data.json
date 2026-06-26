@@ -1,6 +1,6 @@
 {
   "_info": "Written by louwok.com/admin. index.html reads this at runtime.",
-  "_updated": "2026-06-26T00:27:11.319Z",
+  "_updated": "2026-06-26T00:54:44.240Z",
   "menu": [
     {
       "id": 1,
@@ -206,8 +206,8 @@
       "open": "11:00",
       "close": "19:00",
       "closed": false,
-      "location": "(Roosevelt Row / Central Ave Corridor)",
-      "area": "(Roosevelt Row / Central Ave Corridor)",
+      "location": "Camelback Rd & 16th St (Biltmore Corridor)",
+      "area": "Camelback Rd & 16th St (Biltmore Corridor)",
       "street": "Near 3rd St & Roosevelt"
     },
     {
@@ -215,8 +215,8 @@
       "open": "11:00",
       "close": "19:00",
       "closed": false,
-      "location": "48th St & Broadway Rd (Industrial Corridor)",
-      "area": "48th St & Broadway Rd (Industrial Corridor)",
+      "location": "Ahwatukee (Ray Rd & 48th St)",
+      "area": "Ahwatukee (Ray Rd & 48th St)",
       "street": "Near Camelback & 24th St"
     },
     {
@@ -224,8 +224,8 @@
       "open": "11:00",
       "close": "19:00",
       "closed": false,
-      "location": "Chandler Blvd & Price Rd",
-      "area": "Chandler Blvd & Price Rd",
+      "location": "Uptown Phoenix (7th St & Camelback)",
+      "area": "Uptown Phoenix (7th St & Camelback)",
       "street": "Check @louwokphx for today's spot"
     },
     {
@@ -233,8 +233,8 @@
       "open": "11:00",
       "close": "19:00",
       "closed": false,
-      "location": "24th St & University Dr (Airport/Air Cargo District)",
-      "area": "24th St & University Dr (Airport/Air Cargo District)",
+      "location": "Tempe Marketplace area",
+      "area": "Tempe Marketplace area",
       "street": "Near 3rd St & Roosevelt"
     }
   ],
