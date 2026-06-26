@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- ✅ LOU-WOK-ADMIN vTRUCK-EDITOR | has Truck Stops + Calls&Texts | 2026-06-26 -->
+<!-- ✅ LOU-WOK-ADMIN vTRUCK-EDITOR-v2 | truck+hours editors, instant localStorage publish | 2026-06-26 -->
 
 <html lang="en">
 <head>
@@ -1683,6 +1683,12 @@
       users: usersData
     };
     const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(payload,null,2))));
+
+    // INSTANT PREVIEW: write the same payload to localStorage under the key
+    // index.html reads ('louwok-cms'). In THIS browser the live site applies it
+    // immediately on next load — no waiting for the GitHub→Vercel rebuild.
+    // (Other visitors get it after the deploy finishes, ~1–2 min.)
+    try { localStorage.setItem('louwok-cms', JSON.stringify(payload)); } catch(e){ /* quota/again */ }
 
     try {
       // STEP 1 — confirm the repo is reachable and lock onto its REAL default
