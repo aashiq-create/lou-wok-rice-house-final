@@ -49,7 +49,7 @@ module.exports = async (req, res) => {
     });
     gather.say(
       { voice: 'Polly.Joanna' },
-      `${RESTAURANT_NAME} call from ${spoken}. Press any key to accept, or hang up to send to voicemail.`
+      `${RESTAURANT_NAME} customer call. Press any key to accept, or hang up to send to voicemail.`
     );
     // No key pressed → don't connect; let the parent <Dial> fall through.
     tw.hangup();
@@ -57,7 +57,7 @@ module.exports = async (req, res) => {
     // Simple announcement, then auto-connect.
     tw.say(
       { voice: 'Polly.Joanna' },
-      `${RESTAURANT_NAME} call from ${spoken}. Connecting now.`
+      `${RESTAURANT_NAME} customer call. Connecting now.`
     );
   }
 
