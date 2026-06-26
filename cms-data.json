@@ -1,6 +1,6 @@
 {
   "_info": "Written by louwok.com/admin. index.html reads this at runtime.",
-  "_updated": "2026-06-26T23:31:57.832Z",
+  "_updated": "2026-06-26T23:34:25.991Z",
   "menu": [
     {
       "id": 1,
@@ -46,10 +46,10 @@
       "id": 6,
       "name": "Crab Rangoon",
       "category": "appetizers",
-      "priceHalf": 3,
-      "priceFull": 5,
+      "priceHalf": 4,
+      "priceFull": 6,
       "tag": "popular",
-      "desc": "A staple of the St. Louis takeout experience. Crispy golden wontons filled with a rich, creamy crab blend and fried until perfectly crunchy. Sweet, savory, and made for sharing alongside a box of wok-fired fried rice—though we won't blame you for keeping them all to yourself.",
+      "desc": "A St. Louis takeout staple. Crispy golden wontons filled with a rich, sweet, creamy crab blend and fried to perfection. Sweet, savory, and the perfect side to complete your Lou Wok meal. Your choice of a 4-piece or 8-piece.",
       "options": []
     },
     {
