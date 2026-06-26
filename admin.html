@@ -1,4 +1,6 @@
 <!DOCTYPE html>
+<!-- ✅ LOU-WOK-ADMIN vTRUCK-EDITOR | has Truck Stops + Calls&Texts | 2026-06-26 -->
+
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -881,6 +883,19 @@
             <input class="field-input" id="loc-maps" placeholder="Paste Google Maps embed link..." />
           </div>
         </div>
+        <div class="panel">
+          <div class="panel-header">
+            <span class="panel-title">🚚 Truck Stops — weekly map</span>
+            <button class="btn btn-primary btn-sm" onclick="saveTruckStops()">Save Stops</button>
+          </div>
+          <p style="color:var(--muted);font-size:0.82rem;margin:0 0 1rem;line-height:1.5;">
+            Sets the live map on the site's "Find the Truck" section. Each day shows a spot,
+            time window, and map pin. Toggle <strong>Off</strong> for days you're not rolling.
+            For the pin, paste the address — or latitude/longitude for an exact drop
+            (right-click a spot in Google Maps → the lat,lng is at the top).
+          </p>
+          <div id="truckStopsEditor"></div>
+        </div>
       </div>
     </div>
 
@@ -1599,7 +1614,7 @@
       _status('Offline — loaded defaults');
     }
     renderMenuList(); renderHours(); renderAnnouncements();
-    _populateOrderLinks(); _populateFeatured(); _populateSEO(); _populateLocation(); _populateBranding(); _populateSocials(); _populateTicker(); _populateFooter(); _populateSettings(); _populateNotify(); renderCategoryManager(); _fillCategoryDropdown();
+    _populateOrderLinks(); _populateFeatured(); _populateSEO(); _populateLocation(); _populateTruckStops(); _populateBranding(); _populateSocials(); _populateTicker(); _populateFooter(); _populateSettings(); _populateNotify(); renderCategoryManager(); _fillCategoryDropdown();
     _refreshOverview();
     updateTokenStatus();
   }
@@ -2085,6 +2100,95 @@
       if (el) locationData[key] = el.value.trim();
     });
     setUnsaved(); showToast('Location info saved','success');
+  }
+
+  // ══════════════════════════════════════════════════════════════
+  //  TRUCK STOPS  (writes location.truckSchedule → live map)
+  const _TRUCK_DAYS = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+  const _TRUCK_DEFAULTS = [
+    { day:'Monday',    spot:'Downtown Phoenix', address:'Cityscape, 1 E Washington St, Phoenix, AZ', lat:33.4484, lng:-112.0740, open:'11:00', close:'14:00', closed:false },
+    { day:'Tuesday',   spot:'Tempe / ASU',      address:'Mill Ave & University Dr, Tempe, AZ',        lat:33.4242, lng:-111.9400, open:'11:00', close:'14:00', closed:false },
+    { day:'Wednesday', spot:'Midtown Phoenix',  address:'Park Central, 3121 N 3rd Ave, Phoenix, AZ',  lat:33.4870, lng:-112.0740, open:'11:00', close:'14:00', closed:false },
+    { day:'Thursday',  spot:'Scottsdale',       address:'Scottsdale Quarter, Scottsdale, AZ',         lat:33.6230, lng:-111.9265, open:'17:00', close:'21:00', closed:false },
+    { day:'Friday',    spot:'Roosevelt Row',    address:'Roosevelt Row Arts District, Phoenix, AZ',   lat:33.4580, lng:-112.0700, open:'17:00', close:'22:00', closed:false },
+    { day:'Saturday',  spot:'Gilbert',          address:'Heritage District, Gilbert, AZ',             lat:33.3528, lng:-111.7890, open:'11:00', close:'15:00', closed:false },
+    { day:'Sunday',    spot:'',                 address:'', lat:null, lng:null, open:'', close:'', closed:true }
+  ];
+
+  function _populateTruckStops() {
+    const editor = document.getElementById('truckStopsEditor');
+    if (!editor) return;
+    let sched = Array.isArray(locationData.truckSchedule) && locationData.truckSchedule.length
+      ? locationData.truckSchedule : _TRUCK_DEFAULTS;
+    const byDay = {}; sched.forEach(s => { if (s && s.day) byDay[s.day] = s; });
+
+    editor.innerHTML = _TRUCK_DAYS.map(day => {
+      const s = byDay[day] || { day, closed:true };
+      const off = !!s.closed;
+      return `<div class="truck-row" data-day="${day}" style="border:1px solid var(--border);border-radius:3px;padding:0.85rem;margin-bottom:0.6rem;${off?'opacity:0.6;':''}">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.5rem;">
+          <strong style="color:var(--rice);font-size:0.95rem;">${day}</strong>
+          <label style="display:inline-flex;align-items:center;gap:0.4rem;font-size:0.78rem;color:var(--muted);cursor:pointer;">
+            <input type="checkbox" class="tk-off" ${off?'checked':''} onchange="_truckRowToggle(this)"/> Off / not rolling
+          </label>
+        </div>
+        <div class="tk-fields" style="display:${off?'none':'grid'};grid-template-columns:1fr 1fr;gap:0.5rem;">
+          <input class="field-input tk-spot" placeholder="Spot name (e.g. Roosevelt Row)" value="${(s.spot||'').replace(/"/g,'&quot;')}" style="grid-column:1/3;"/>
+          <input class="field-input tk-addr" placeholder="Address for directions + map pin" value="${(s.address||'').replace(/"/g,'&quot;')}" style="grid-column:1/3;"/>
+          <input class="field-input tk-lat" placeholder="Latitude (optional)" value="${s.lat!=null?s.lat:''}"/>
+          <input class="field-input tk-lng" placeholder="Longitude (optional)" value="${s.lng!=null?s.lng:''}"/>
+          <input class="field-input tk-open" placeholder="Open (e.g. 11:00)" value="${s.open||''}"/>
+          <input class="field-input tk-close" placeholder="Close (e.g. 14:00)" value="${s.close||''}"/>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  function _truckRowToggle(cb) {
+    const row = cb.closest('.truck-row');
+    const fields = row.querySelector('.tk-fields');
+    if (fields) fields.style.display = cb.checked ? 'none' : 'grid';
+    row.style.opacity = cb.checked ? '0.6' : '1';
+  }
+  window._truckRowToggle = _truckRowToggle;
+
+  function _normTime(v) {
+    v = String(v||'').trim();
+    if (!v) return '';
+    // accept "11:00", "11", "5pm", "5:30 pm"
+    let m = v.match(/^(\d{1,2})(?::(\d{2}))?\s*([ap]m)?$/i);
+    if (!m) return v; // leave as-is if unparseable
+    let h = parseInt(m[1],10); const min = m[2]||'00'; const ap = (m[3]||'').toLowerCase();
+    if (ap==='pm' && h<12) h+=12;
+    if (ap==='am' && h===12) h=0;
+    return String(h).padStart(2,'0')+':'+min;
+  }
+
+  function saveTruckStops() {
+    const rows = document.querySelectorAll('#truckStopsEditor .truck-row');
+    const sched = [];
+    rows.forEach(row => {
+      const day = row.dataset.day;
+      const off = row.querySelector('.tk-off').checked;
+      if (off) { sched.push({ day, spot:'', address:'', lat:null, lng:null, open:'', close:'', closed:true }); return; }
+      const spot = row.querySelector('.tk-spot').value.trim();
+      const addr = row.querySelector('.tk-addr').value.trim();
+      const latV = row.querySelector('.tk-lat').value.trim();
+      const lngV = row.querySelector('.tk-lng').value.trim();
+      const lat = latV ? parseFloat(latV) : null;
+      const lng = lngV ? parseFloat(lngV) : null;
+      sched.push({
+        day, spot, address: addr,
+        lat: (lat!=null && !isNaN(lat)) ? lat : null,
+        lng: (lng!=null && !isNaN(lng)) ? lng : null,
+        open: _normTime(row.querySelector('.tk-open').value),
+        close: _normTime(row.querySelector('.tk-close').value),
+        closed: false
+      });
+    });
+    locationData.truckSchedule = sched;
+    _populateTruckStops(); // reflect normalized times
+    setUnsaved(); showToast('Truck stops saved — Deploy to publish','success');
   }
 
   // ══════════════════════════════════════════════════════════════
