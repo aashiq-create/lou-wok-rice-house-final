@@ -2959,7 +2959,7 @@
     // time. Re-querying here ensures filtering (incl. Sandwiches) keeps working
     // after a CMS render. Exposed as window.applyMenuFilter so the loader can
     // re-apply the active filter after it re-renders.
-    const tabs = document.querySelectorAll('.tab');
+    const tabBar = document.querySelector('.menu-tabs');
     window.applyMenuFilter = function (f) {
       const cards = document.querySelectorAll('.menu-card');
       cards.forEach(card => {
@@ -2967,14 +2967,18 @@
         card.style.display = (f === 'all' || cat === f) ? '' : 'none';
       });
     };
-    tabs.forEach(tab => {
-      tab.addEventListener('click', () => {
-        tabs.forEach(t => t.classList.remove('active'));
+    // Delegated click: works for the original static tabs AND any tabs the CMS
+    // loader rebuilds via renderCategoryTabs(). Bound once to the container.
+    if (tabBar) {
+      tabBar.addEventListener('click', (e) => {
+        const tab = e.target.closest('.tab');
+        if (!tab || !tabBar.contains(tab)) return;
+        tabBar.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
         tab.classList.add('active');
         const f = tab.dataset.filter || tab.textContent.trim().toLowerCase();
         window.applyMenuFilter(f);
       });
-    });
+    }
 
     // ── BOTTOM NAV ACTIVE STATE ──────────────────────────────
     function setActiveNav(el) {
@@ -3919,7 +3923,50 @@
       const GH_OWNER='aashiq-create', GH_REPO='lou-wok-rice-house-final', GH_BRANCH='main', CMS_FILE='cms-data.json';
 
       const esc = s => String(s==null?'':s).replace(/[&<>"]/g, c=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;' }[c]));
-      const catLabel = c => ({rice:'Base Rice',appetizers:'Appetizer',sandwiches:'Sandwich',combos:'Combo'}[c]||c);
+      // CMS categories ({value,label}) published by the admin. Populated by
+      // renderCategoryTabs(); used by catLabel() so admin-added categories
+      // (Desserts, Sides, …) get a proper card label and filter tab.
+      let _cmsCategories = [];
+      const _builtinCatLabels = {rice:'Base Rice',appetizers:'Appetizer',sandwiches:'Sandwich',combos:'Combo'};
+      const catLabel = c => {
+        const hit = _cmsCategories.find(x => x.value === c);
+        if (hit && hit.label) return hit.label;
+        return _builtinCatLabels[c] || c;
+      };
+
+      // Rebuild the menu filter tabs from the CMS category list + whatever
+      // categories the menu items actually use, so any admin-added category
+      // shows up as a tab. Order follows cms.categories; an "All" tab is always
+      // first. Uses event delegation (bound once, below) so newly created tabs
+      // work without re-binding listeners.
+      function renderCategoryTabs(categories, menu){
+        const bar = document.querySelector('.menu-tabs');
+        if(!bar) return;
+        _cmsCategories = Array.isArray(categories) ? categories.slice() : [];
+        // Categories present on actual items (preserves items whose category
+        // isn't in the CMS list for some reason).
+        const used = new Set((Array.isArray(menu)?menu:[]).map(m=>m && m.category).filter(Boolean));
+        const ordered = [];
+        _cmsCategories.forEach(c=>{ if(c && c.value){ ordered.push({value:c.value,label:c.label||c.value}); used.delete(c.value); } });
+        // Append any leftover used categories not declared in the CMS list.
+        used.forEach(v=> ordered.push({value:v,label:catLabel(v)}));
+        // Only show tabs that have at least one item (keeps empty tabs out).
+        const counts = {};
+        (Array.isArray(menu)?menu:[]).forEach(m=>{ if(m&&m.category) counts[m.category]=(counts[m.category]||0)+1; });
+        const visible = ordered.filter(c=> counts[c.value]>0);
+        if(!visible.length) return; // nothing to show; leave existing markup
+        const activeEl = bar.querySelector('.tab.active');
+        const activeF = activeEl && activeEl.dataset.filter ? activeEl.dataset.filter : 'all';
+        const stillValid = activeF==='all' || visible.some(c=>c.value===activeF);
+        const html = [`<button class="tab${stillValid&&activeF==='all'?' active':''}" data-filter="all">All</button>`]
+          .concat(visible.map(c=>`<button class="tab${activeF===c.value?' active':''}" data-filter="${esc(c.value)}">${esc(c.label)}</button>`));
+        bar.innerHTML = html.join('\n');
+        if(!stillValid){ // active tab disappeared — fall back to All
+          const allTab = bar.querySelector('.tab[data-filter="all"]');
+          if(allTab) allTab.classList.add('active');
+          if(typeof window.applyMenuFilter==='function') window.applyMenuFilter('all');
+        }
+      }
       const tagClass = t => 'tag-'+(t||'').replace(/[^a-z0-9-]/gi,'');
       const tagLabel = t => ({popular:'Best Seller','fan-fave':'Fan Fave',classic:'Classic',spicy:'Spicy',new:'New'}[t]||t);
 
@@ -3928,7 +3975,8 @@
         const grid=document.querySelector('.menu-grid'); if(!grid) return;
         grid.innerHTML = menu.map((m,idx)=>{
           const num=String(idx+1).padStart(2,'0');
-          const emoji = m.category==='appetizers'?'🦀':m.category==='sandwiches'?'🥪':'🍚';
+          const _catEmoji = {rice:'🍚',appetizers:'🦀',sandwiches:'🥪',combos:'🍱',beverages:'🥤',desserts:'🍰',sides:'🍟',specials:'⭐'};
+          const emoji = _catEmoji[m.category] || '🍚';
           let priceBlock, sizeId, addArgs;
           if(m.priceHalf!=null){
             sizeId=`size-${m.priceHalf}-${m.priceFull}-${m.id}`;
@@ -4089,8 +4137,8 @@
       function applyContent(d, source){
         if(!d || typeof d!=='object') return false;
         try{
+          renderCategoryTabs(d.categories, d.menu);
           renderMenu(d.menu);
-          renderHours(d.hours);
           renderLocation(d.location);
           renderSocials(d.socials);
           renderOrderLinks(d.orderLinks);
