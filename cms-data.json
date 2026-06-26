@@ -1,6 +1,6 @@
 {
   "_info": "Written by louwok.com/admin. index.html reads this at runtime.",
-  "_updated": "2026-06-26T00:26:33.662Z",
+  "_updated": "2026-06-26T00:27:11.319Z",
   "menu": [
     {
       "id": 1,
@@ -318,9 +318,9 @@
     ]
   },
   "location": {
-    "street": "2406 S 24th St. #212a",
-    "cityStateZip": "Phoenix, AZ 85034",
-    "phone": "(314) 356-5596",
+    "street": "",
+    "cityStateZip": "Phoenix, AZ 85014",
+    "phone": "(877) 379-7974",
     "email": "support@louwok.com",
     "mapsEmbed": "https://maps.google.com/maps?q=2406%20S%2024th%20St%20%23212A%2C%20Phoenix%2C%20AZ%2085034&z=15&output=embed"
   },
