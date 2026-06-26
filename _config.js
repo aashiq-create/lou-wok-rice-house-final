@@ -70,7 +70,7 @@ async function loadConfig() {
   const screenRequireKey =
     typeof n.screenRequireKey === 'boolean'
       ? n.screenRequireKey
-      : process.env.SCREEN_REQUIRE_KEY === '1';
+      : (process.env.SCREEN_REQUIRE_KEY === '0' ? false : true);
 
   return {
     // operational (admin-editable)
