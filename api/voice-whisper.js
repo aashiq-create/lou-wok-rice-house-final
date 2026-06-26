@@ -33,6 +33,10 @@ module.exports = async (req, res) => {
   const requireKey = ((req.query && req.query.require) || '0') === '1';
   const spoken     = spokenNumber(from);
 
+  const proto = (req.headers['x-forwarded-proto'] || 'https');
+  const host  = (req.headers['x-forwarded-host'] || req.headers.host || 'louwok.com');
+  const base  = `${proto}://${host}`;
+
   if (requireKey) {
     // You must press any key to accept; otherwise the caller goes to voicemail.
     const gather = tw.gather({
@@ -40,7 +44,7 @@ module.exports = async (req, res) => {
       timeout: 6,
       // If you press a key, just hang up this <Gather> doc — the bridge
       // completes and you're connected. If you don't, we <Reject> below.
-      action: '/api/voice-whisper-accept',
+      action: `${base}/api/voice-whisper-accept`,
       method: 'POST',
     });
     gather.say(
