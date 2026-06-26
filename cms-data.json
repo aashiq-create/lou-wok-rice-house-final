@@ -1,6 +1,6 @@
 {
   "_info": "Written by louwok.com/admin. index.html reads this at runtime.",
-  "_updated": "2026-06-26T23:51:46.964Z",
+  "_updated": "2026-06-26T23:53:11.820Z",
   "menu": [
     {
       "id": 1,
@@ -177,9 +177,9 @@
       "name": "Funnel Cake",
       "category": "desserts",
       "priceHalf": null,
-      "priceFull": 5,
+      "priceFull": 4,
       "tag": "",
-      "desc": "",
+      "desc": "Golden, crispy funnel cake made with sweet cream in the batter for a rich, soft-then-crunchy bite. Lightly dusted with powdered sugar and served fresh and warm—our Lou Wok dessert twist on a classic favorite.",
       "options": []
     }
   ],
