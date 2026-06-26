@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- ✅ LOU-WOK-ADMIN vTRUCK-EDITOR-v2 | truck+hours editors, instant localStorage publish | 2026-06-26 -->
+<!-- ✅ LOU-WOK-ADMIN vSIMPLE-GRID | hours grid drives truck map, card panel removed | 2026-06-26 -->
 
 <html lang="en">
 <head>
@@ -883,19 +883,6 @@
             <input class="field-input" id="loc-maps" placeholder="Paste Google Maps embed link..." />
           </div>
         </div>
-        <div class="panel">
-          <div class="panel-header">
-            <span class="panel-title">🚚 Truck Stops — weekly map</span>
-            <button class="btn btn-primary btn-sm" onclick="saveTruckStops()">Save Stops</button>
-          </div>
-          <p style="color:var(--muted);font-size:0.82rem;margin:0 0 1rem;line-height:1.5;">
-            Sets the live map on the site's "Find the Truck" section. Each day shows a spot,
-            time window, and map pin. Toggle <strong>Off</strong> for days you're not rolling.
-            For the pin, paste the address — or latitude/longitude for an exact drop
-            (right-click a spot in Google Maps → the lat,lng is at the top).
-          </p>
-          <div id="truckStopsEditor"></div>
-        </div>
       </div>
     </div>
 
@@ -1614,7 +1601,7 @@
       _status('Offline — loaded defaults');
     }
     renderMenuList(); renderHours(); renderAnnouncements();
-    _populateOrderLinks(); _populateFeatured(); _populateSEO(); _populateLocation(); _populateTruckStops(); _populateBranding(); _populateSocials(); _populateTicker(); _populateFooter(); _populateSettings(); _populateNotify(); renderCategoryManager(); _fillCategoryDropdown();
+    _populateOrderLinks(); _populateFeatured(); _populateSEO(); _populateLocation(); _populateBranding(); _populateSocials(); _populateTicker(); _populateFooter(); _populateSettings(); _populateNotify(); renderCategoryManager(); _fillCategoryDropdown();
     _refreshOverview();
     updateTokenStatus();
   }
@@ -2078,17 +2065,57 @@
     });
   }
 
+  // Known Phoenix-area stop coordinates, matched loosely by name so the map
+  // can drop a pin from just the simple "Location stop" text. Add more as needed.
+  const _STOP_COORDS = [
+    { match:/downtown|cityscape|washington/i,        lat:33.4484, lng:-112.0740 },
+    { match:/tempe|asu|mill ave|university/i,         lat:33.4242, lng:-111.9400 },
+    { match:/midtown|park central|3rd ave/i,         lat:33.4870, lng:-112.0740 },
+    { match:/scottsdale|quarter/i,                   lat:33.6230, lng:-111.9265 },
+    { match:/roosevelt|rorow|arts district/i,        lat:33.4580, lng:-112.0700 },
+    { match:/gilbert|heritage/i,                     lat:33.3528, lng:-111.7890 },
+    { match:/tempe marketplace|marketplace/i,        lat:33.4309, lng:-111.8990 },
+    { match:/chandler/i,                             lat:33.3062, lng:-111.8413 },
+    { match:/mesa/i,                                 lat:33.4152, lng:-111.8315 },
+    { match:/glendale/i,                             lat:33.5387, lng:-112.1860 },
+    { match:/camelback|biltmore/i,                   lat:33.5092, lng:-112.0260 },
+    { match:/ahwatukee/i,                            lat:33.3450, lng:-111.9840 },
+    { match:/uptown/i,                               lat:33.5120, lng:-112.0740 },
+    { match:/south mountain|south phoenix/i,         lat:33.3900, lng:-112.0700 }
+  ];
+  function _coordsForStop(name){
+    const s = String(name||'');
+    for(const c of _STOP_COORDS){ if(c.match.test(s)) return { lat:c.lat, lng:c.lng }; }
+    return { lat:null, lng:null };
+  }
+
   function saveHours() {
     hoursData.forEach((h,i) => {
       const o=document.getElementById('open-'+i), c=document.getElementById('close-'+i), t=document.getElementById('toggle-'+i), l=document.getElementById('loc-'+i);
       if(o) h.open=o.value; if(c) h.close=c.value; if(t) h.closed=!t.checked;
       if(l) {
         h.location = l.value.trim();
-        // keep area/street roughly in sync from the simple location field
         h.area = h.location.split('·')[0].trim() || h.location;
       }
     });
-    setUnsaved(); showToast('Hours & rotation updated','success');
+
+    // Drive the live "Find the Truck" map: build location.truckSchedule from
+    // this same grid, so one editor controls hours AND the map.
+    if(!locationData || typeof locationData!=='object') locationData = {};
+    locationData.truckSchedule = hoursData.map(h => {
+      const stop = h.location || '';
+      const co = _coordsForStop(stop);
+      return {
+        day: h.day,
+        spot: stop.split('·')[0].trim() || stop,
+        address: stop,
+        lat: co.lat, lng: co.lng,
+        open: h.open || '', close: h.close || '',
+        closed: !!h.closed
+      };
+    });
+
+    setUnsaved(); showToast('Hours & truck map updated','success');
   }
 
   function _populateLocation() {
