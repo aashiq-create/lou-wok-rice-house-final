@@ -1724,106 +1724,83 @@
     }
     .hours-today-note span { color: var(--gold); font-weight: 800; }
 
-    /* ── FOOD TRUCK TRACKER ── */
-    .truck-banner {
-      display:flex; align-items:center; gap:0.85rem; flex-wrap:wrap;
-      background:var(--black); border:1px solid var(--border);
-      padding:1rem 1.25rem; margin-bottom:1.5px;
+    .hl-grid {
+      display: grid; grid-template-columns: 1.15fr 1fr; gap: 1.5px;
     }
-    .truck-banner-icon { font-size:1.6rem; line-height:1; }
-    .truck-banner-txt { font-family:'DM Sans',sans-serif; color:var(--rice); font-size:0.98rem; font-weight:600; }
-    .truck-banner-txt b { color:var(--gold); font-weight:800; }
-    .truck-banner-sub { color:rgba(245,238,216,0.6); font-size:0.85rem; font-weight:500; }
-    .truck-here-tag {
-      margin-left:auto; display:inline-flex; align-items:center; gap:0.45rem;
-      background:rgba(46,204,113,0.12); color:#2ecc71; border:1px solid rgba(46,204,113,0.35);
-      padding:0.4rem 0.85rem; border-radius:100px; font-weight:800; font-size:0.78rem;
-      letter-spacing:0.08em; text-transform:uppercase; font-family:'DM Sans',sans-serif;
+    .hl-map-card {
+      overflow: hidden; background: var(--black);
+      min-height: 340px; position: relative;
     }
-    .truck-here-tag.off { background:rgba(245,238,216,0.06); color:rgba(245,238,216,0.5); border-color:var(--border); }
-    .truck-here-tag .live-pulse { width:8px; height:8px; border-radius:50%; background:#2ecc71; box-shadow:0 0 0 0 rgba(46,204,113,0.7); animation:lpulse 1.8s infinite; }
-    .truck-here-tag.off .live-pulse { background:var(--wok); animation:none; box-shadow:none; }
+    .hl-map-area { position: absolute; inset: 0; }
+    .hl-map-area iframe { width: 100%; height: 100%; border: 0; display: block; filter: grayscale(0.3) contrast(1.05); }
+    .hl-map-fallback {
+      position: absolute; inset: 0; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; gap: 0.6rem; text-align: center;
+      background: radial-gradient(circle at 50% 40%, var(--smoke), var(--black) 75%);
+      color: var(--rice); padding: 2rem;
+    }
+    .hl-map-pin { font-size: 2.6rem; }
+    .hl-map-addr { font-weight: 700; font-size: 1.05rem; letter-spacing: 0.02em; color: var(--rice); }
+    .hl-map-link { color: var(--gold); font-weight: 700; text-decoration: none; font-size: 0.92rem; }
+    .hl-map-link:hover { text-decoration: underline; }
 
-    .hl-grid { display:grid; grid-template-columns:1.25fr 1fr; gap:1.5px; }
+    .hl-info { display: grid; grid-template-rows: auto 1fr; gap: 1.5px; }
+    .hl-address-block {
+      background: var(--black); padding: 2rem;
+    }
+    .hl-addr-label {
+      font-family: 'DM Sans', sans-serif; font-size: 0.68rem; font-weight: 700;
+      letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold);
+      margin-bottom: 0.6rem;
+    }
+    .hl-addr-line { font-weight: 700; font-size: 1.15rem; color: var(--rice); line-height: 1.4; }
+    .hl-addr-sub { font-weight: 500; font-size: 0.95rem; color: rgba(245,238,216,0.6); }
+    .hl-dir-btn {
+      display: inline-flex; align-items: center; gap: 0.4rem; margin-top: 1.25rem;
+      background: var(--wok); color: var(--rice); padding: 0.7rem 1.3rem;
+      border-radius: 2px; font-weight: 700; font-size: 0.78rem;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      text-decoration: none; transition: all 0.2s;
+      font-family: 'DM Sans', sans-serif;
+    }
+    .hl-dir-btn:hover { background: var(--gold); color: var(--black); transform: translateY(-2px); }
 
-    /* Map panel */
-    .truck-map-card { overflow:hidden; background:var(--black); min-height:420px; position:relative; }
-    .truck-map-area { position:absolute; inset:0; }
-    .truck-map-area iframe { width:100%; height:100%; border:0; display:block; filter:grayscale(0.25) contrast(1.05) brightness(0.95); }
-    .truck-map-overlay {
-      position:absolute; left:0; right:0; bottom:0; z-index:3;
-      display:flex; align-items:center; gap:0.75rem; flex-wrap:wrap;
-      padding:1rem 1.15rem; background:linear-gradient(to top, rgba(10,10,8,0.96), rgba(10,10,8,0.0));
-      pointer-events:none;
+    .hl-sched {
+      background: var(--black); padding: 2rem;
     }
-    .truck-map-overlay > * { pointer-events:auto; }
-    .truck-map-now { font-family:'DM Sans',sans-serif; }
-    .truck-map-now .lbl { font-size:0.62rem; font-weight:800; letter-spacing:0.18em; text-transform:uppercase; color:var(--gold); }
-    .truck-map-now .spot { color:var(--rice); font-weight:800; font-size:1.05rem; line-height:1.25; }
-    .truck-map-now .when { color:rgba(245,238,216,0.65); font-weight:600; font-size:0.85rem; }
-    .truck-dir-btn {
-      margin-left:auto; display:inline-flex; align-items:center; gap:0.4rem;
-      background:var(--wok); color:var(--rice); padding:0.65rem 1.15rem; border-radius:2px;
-      font-weight:800; font-size:0.74rem; letter-spacing:0.12em; text-transform:uppercase;
-      text-decoration:none; transition:all 0.2s; font-family:'DM Sans',sans-serif; white-space:nowrap;
+    .hl-sched-head {
+      font-family: 'DM Sans', sans-serif; font-size: 0.68rem; font-weight: 700;
+      letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold);
+      margin-bottom: 1rem;
     }
-    .truck-dir-btn:hover { background:var(--gold); color:var(--black); transform:translateY(-2px); }
-    /* map loading shimmer */
-    .truck-map-loading {
-      position:absolute; inset:0; z-index:2; display:flex; flex-direction:column;
-      align-items:center; justify-content:center; gap:0.5rem; text-align:center; padding:2rem;
-      background:radial-gradient(circle at 50% 38%, var(--smoke), var(--black) 78%); color:var(--rice);
+    .hl-sched-row {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0.6rem 0; border-bottom: 1px solid var(--border);
+      font-family: 'DM Sans', sans-serif; font-size: 0.95rem;
     }
-    .truck-map-loading .pin { font-size:2.4rem; animation:truckBob 1.6s ease-in-out infinite; }
-    @keyframes truckBob { 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(-7px); } }
-
-    /* Stops list */
-    .truck-stops { background:var(--black); padding:1.5rem 1.5rem 1.25rem; display:flex; flex-direction:column; }
-    .truck-stops-head {
-      font-family:'DM Sans',sans-serif; font-size:0.68rem; font-weight:800; letter-spacing:0.2em;
-      text-transform:uppercase; color:var(--gold); margin-bottom:1rem;
+    .hl-sched-row:last-child { border-bottom: none; }
+    .hl-sched-day { color: rgba(245,238,216,0.85); font-weight: 600; }
+    .hl-sched-time { color: rgba(245,238,216,0.6); font-weight: 600; }
+    .hl-sched-row.today .hl-sched-day { color: var(--gold); font-weight: 800; }
+    .hl-sched-row.today .hl-sched-time { color: var(--rice); font-weight: 800; }
+    .hl-sched-row.today .hl-sched-day::after {
+      content: 'Today'; margin-left: 0.5rem; font-size: 0.6rem; font-weight: 700;
+      letter-spacing: 0.1em; text-transform: uppercase; color: var(--rice);
+      background: var(--wok); padding: 0.12rem 0.45rem; border-radius: 100px;
+      vertical-align: middle;
     }
-    .truck-stop {
-      display:grid; grid-template-columns:auto 1fr auto; align-items:center; gap:0.85rem;
-      width:100%; text-align:left; background:transparent; border:none; cursor:pointer;
-      padding:0.7rem 0.6rem; border-radius:3px; transition:background 0.18s;
-      border-bottom:1px solid var(--border); font-family:'DM Sans',sans-serif;
-    }
-    .truck-stop:last-child { border-bottom:none; }
-    .truck-stop:hover { background:rgba(245,238,216,0.04); }
-    .truck-stop.active { background:rgba(200,57,10,0.14); }
-    .truck-stop-day {
-      width:42px; height:42px; flex-shrink:0; border-radius:50%;
-      display:flex; align-items:center; justify-content:center; flex-direction:column;
-      background:var(--smoke); border:1px solid var(--border); line-height:1;
-    }
-    .truck-stop.active .truck-stop-day { background:var(--wok); border-color:var(--wok); }
-    .truck-stop.closed-day .truck-stop-day { opacity:0.5; }
-    .truck-stop-day .d { font-size:0.62rem; font-weight:800; letter-spacing:0.06em; text-transform:uppercase; color:rgba(245,238,216,0.65); }
-    .truck-stop.active .truck-stop-day .d { color:var(--rice); }
-    .truck-stop-main { min-width:0; }
-    .truck-stop-spot { color:var(--rice); font-weight:700; font-size:0.97rem; line-height:1.25; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-    .truck-stop.closed-day .truck-stop-spot { color:rgba(245,238,216,0.45); font-weight:600; }
-    .truck-stop-time { color:rgba(245,238,216,0.6); font-weight:600; font-size:0.82rem; }
-    .truck-stop.active .truck-stop-spot { color:var(--gold); }
-    .truck-stop-tag {
-      font-size:0.56rem; font-weight:800; letter-spacing:0.1em; text-transform:uppercase;
-      color:var(--rice); background:var(--wok); padding:0.18rem 0.5rem; border-radius:100px; white-space:nowrap;
-    }
-    .truck-stop-arrow { color:rgba(245,238,216,0.3); font-size:1.1rem; transition:transform 0.18s,color 0.18s; }
-    .truck-stop:hover .truck-stop-arrow { color:var(--gold); transform:translateX(2px); }
+    .hl-sched-row.closed .hl-sched-time { color: var(--wok); font-weight: 700; }
 
     .hl-foot-note {
-      margin-top:1.75rem; text-align:center; color:rgba(245,238,216,0.55);
-      font-family:'DM Sans',sans-serif; font-size:0.9rem;
+      margin-top: 1.75rem; text-align: center; color: rgba(245,238,216,0.55);
+      font-family: 'DM Sans', sans-serif; font-size: 0.9rem;
     }
-    .hl-foot-note a { color:var(--gold); font-weight:700; text-decoration:none; }
-    .hl-foot-note a:hover { text-decoration:underline; }
+    .hl-foot-note a { color: var(--gold); font-weight: 700; text-decoration: none; }
+    .hl-foot-note a:hover { text-decoration: underline; }
 
-    @media (max-width: 820px) {
-      .hl-grid { grid-template-columns:1fr; }
-      .truck-map-card { min-height:300px; order:-1; }
-      .truck-here-tag { margin-left:0; }
+    @media (max-width: 760px) {
+      .hl-grid { grid-template-columns: 1fr; }
+      .hl-map-card { min-height: 260px; }
     }
 
   
@@ -2022,7 +1999,61 @@
     html.is-standalone body { min-height: 100vh; min-height: 100dvh; }
     html.is-standalone .bottom-nav { padding-bottom: var(--safe-bot); }
 
+    /* ── FIND THE TRUCK ── */
+    .truck-wrap { max-width: 1000px; }
+    .truck-status { display:flex; align-items:center; gap:1rem; flex-wrap:wrap; margin-bottom:1.2rem; }
+    .truck-pill { display:inline-flex; align-items:center; gap:.5rem; background:var(--black); border:1px solid rgba(245,238,216,.12);
+      padding:.5rem .9rem; border-radius:100px; font-weight:800; font-size:.92rem; letter-spacing:.02em; }
+    .truck-pill .pulse { width:9px; height:9px; border-radius:50%; background:#36c46f; box-shadow:0 0 0 0 rgba(54,196,111,.7); animation:truckpulse 2s infinite; }
+    .truck-pill.closed { color:rgba(245,238,216,.6); }
+    .truck-pill.closed .pulse { background:var(--wok); animation:none; box-shadow:none; }
+    @keyframes truckpulse { 0%{box-shadow:0 0 0 0 rgba(54,196,111,.7);} 70%{box-shadow:0 0 0 10px rgba(54,196,111,0);} 100%{box-shadow:0 0 0 0 rgba(54,196,111,0);} }
+    .truck-today { font-size:.95rem; color:var(--muted); font-weight:600; }
+    .truck-today b { color:var(--gold); }
+    .truck-grid { display:grid; grid-template-columns:1.4fr 1fr; gap:1.5px; background:rgba(245,238,216,.08);
+      border:1px solid rgba(245,238,216,.08); border-radius:4px; overflow:hidden; }
+    .truck-map-card { position:relative; min-height:420px; background:var(--black); }
+    #truckMap { position:absolute; inset:0; width:100%; height:100%; }
+    .leaflet-container { background:#14120f; font-family:'DM Sans',sans-serif; }
+    .truck-recenter { position:absolute; z-index:500; right:12px; bottom:12px; background:var(--gold); color:var(--black);
+      border:none; font-weight:800; font-size:.82rem; letter-spacing:.02em; padding:.6rem .9rem; border-radius:100px; cursor:pointer;
+      box-shadow:0 4px 14px rgba(0,0,0,.4); display:flex; align-items:center; gap:.4rem; transition:transform .15s; }
+    .truck-recenter:hover { transform:translateY(-2px); }
+    .truck-marker { font-size:2rem; filter:drop-shadow(0 3px 5px rgba(0,0,0,.5)); transform:translateY(-4px); }
+    .truck-pop { font-family:'DM Sans',sans-serif; }
+    .truck-pop b { font-size:1rem; color:#111; }
+    .truck-pop .tp-time { color:var(--wok); font-weight:700; font-size:.85rem; }
+    .truck-pop a { display:inline-block; margin-top:.4rem; color:var(--wok); font-weight:700; text-decoration:none; font-size:.85rem; }
+    .truck-info { background:var(--black); padding:1.4rem; display:flex; flex-direction:column; gap:1.2rem; }
+    .ti-now-label { font-size:.7rem; letter-spacing:.18em; text-transform:uppercase; color:var(--muted); font-weight:700; margin-bottom:.45rem; }
+    .ti-spot { font-weight:800; font-size:1.3rem; color:var(--rice); line-height:1.25; }
+    .ti-spot-sub { font-weight:500; font-size:.92rem; color:rgba(245,238,216,.55); margin-top:.15rem; }
+    .ti-dir { display:inline-flex; align-items:center; gap:.45rem; margin-top:.9rem; background:transparent; border:1.5px solid var(--gold);
+      color:var(--gold); padding:.6rem 1rem; border-radius:100px; font-weight:700; text-decoration:none; font-size:.9rem; transition:all .18s; }
+    .ti-dir:hover { background:var(--gold); color:var(--black); transform:translateY(-2px); }
+    .ti-sched-head { font-size:.7rem; letter-spacing:.18em; text-transform:uppercase; color:var(--muted); font-weight:700; margin-bottom:.3rem; }
+    .ti-day { display:flex; justify-content:space-between; align-items:center; gap:.5rem; width:100%; text-align:left;
+      background:transparent; border:none; border-bottom:1px solid rgba(245,238,216,.07); padding:.6rem .2rem; cursor:pointer; color:inherit;
+      font-family:inherit; transition:background .15s; }
+    .ti-day:last-child { border-bottom:none; }
+    .ti-day:hover { background:rgba(232,160,32,.07); }
+    .ti-day .d-name { font-weight:600; color:rgba(245,238,216,.85); font-size:.95rem; }
+    .ti-day .d-spot { font-size:.78rem; color:var(--muted); font-weight:600; }
+    .ti-day .d-time { font-weight:600; color:rgba(245,238,216,.55); font-size:.85rem; white-space:nowrap; }
+    .ti-day.today { background:rgba(232,160,32,.1); }
+    .ti-day.today .d-name { color:var(--gold); font-weight:800; }
+    .ti-day.today .d-name::after { content:'TODAY'; margin-left:.5rem; font-size:.6rem; letter-spacing:.1em; background:var(--gold); color:var(--black);
+      padding:.1rem .35rem; border-radius:3px; vertical-align:middle; }
+    .ti-day.closed .d-time { color:var(--wok); }
+    .ti-day.active { background:rgba(232,160,32,.16); }
+    @media(max-width:760px){
+      .truck-grid { grid-template-columns:1fr; }
+      .truck-map-card { min-height:300px; }
+    }
+
   </style>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js" defer></script>
 </head>
 <body>
@@ -2415,56 +2446,42 @@
 
 
 
-  <!-- ── FIND THE TRUCK ── -->
+  <!-- ── HOURS & LOCATION ── -->
   <section id="hours">
     <div class="fade-in" style="margin-bottom:2.5rem;">
-      <div class="section-label">Chase the Wok</div>
-      <h2 class="section-title">FIND THE<br>TRUCK</h2>
+      <div class="section-label">Find the Truck</div>
+      <h2 class="section-title">WHERE'S<br>LOU WOK?</h2>
     </div>
 
-    <div class="hours-wrap">
-      <div class="hours-status-bar">
-        <div class="hours-live-pill" id="hoursPill">
-          <span class="live-pulse"></span><span id="livePillText">Checking hours…</span>
-        </div>
-        <div class="hours-today-note" id="hoursTodayNote">Today: <span id="todayHoursDisplay">—</span></div>
+    <div class="truck-wrap">
+      <div class="truck-status">
+        <div class="truck-pill" id="truckPill"><span class="pulse"></span><span id="truckPillText">Checking…</span></div>
+        <div class="truck-today">Today: <b id="truckTodaySpot">—</b> · <span id="truckTodayTime">—</span></div>
       </div>
 
-      <div class="truck-banner">
-        <span class="truck-banner-icon">🚚</span>
-        <div>
-          <div class="truck-banner-txt" id="truckBannerTxt">Today the truck is at <b>—</b></div>
-          <div class="truck-banner-sub" id="truckBannerSub">Tap any day to see where we'll be</div>
-        </div>
-        <div class="truck-here-tag" id="truckHereTag"><span class="live-pulse"></span><span id="truckHereTxt">Serving now</span></div>
-      </div>
-
-      <div class="hl-grid">
+      <div class="truck-grid">
         <div class="truck-map-card">
-          <div class="truck-map-area" id="truckMapArea"></div>
-          <div class="truck-map-loading" id="truckMapLoading">
-            <div class="pin">🚚</div>
-            <div style="font-weight:700;color:var(--rice);">Locating the truck…</div>
-          </div>
-          <div class="truck-map-overlay">
-            <div class="truck-map-now">
-              <div class="lbl" id="truckNowLbl">Today</div>
-              <div class="spot" id="truckNowSpot">—</div>
-              <div class="when" id="truckNowWhen">—</div>
-            </div>
-            <a class="truck-dir-btn" id="truckDirBtn" href="#" target="_blank" rel="noopener">🧭 Directions</a>
-          </div>
+          <div id="truckMap"></div>
+          <button class="truck-recenter" id="truckRecenter" aria-label="Recenter map on today's stop">📍 Today's stop</button>
         </div>
 
-        <div class="truck-stops">
-          <div class="truck-stops-head">This Week's Stops</div>
-          <div id="truckStopsList"></div>
+        <div class="truck-info">
+          <div>
+            <div class="ti-now-label">Right now</div>
+            <div class="ti-spot" id="tiSpot">—</div>
+            <div class="ti-spot-sub" id="tiSpotSub">—</div>
+            <a class="ti-dir" id="tiDir" href="#" target="_blank" rel="noopener">🧭 Get Directions</a>
+          </div>
+          <div>
+            <div class="ti-sched-head">This Week</div>
+            <div id="tiSchedule"></div>
+          </div>
         </div>
       </div>
 
       <div class="hl-foot-note">
-        Stops can shift for weather or private events — we always post day-of changes on
-        <a href="https://instagram.com/louwokphx" target="_blank" rel="noopener">@louwokphx</a>.
+        Stops can shift for weather or events — follow
+        <a href="https://instagram.com/louwokphx" target="_blank" rel="noopener">@louwokphx</a> for last-minute changes.
       </div>
     </div>
   </section>
@@ -2762,7 +2779,7 @@
         <span class="sheet-link-arrow">›</span>
       </a>
       <a href="#hours" class="sheet-link" onclick="closeMenuSheet()">
-        <span>🚚 &nbsp;Find the Truck</span>
+        <span>📍 &nbsp;Hours & Location</span>
         <span class="sheet-link-arrow">›</span>
       </a>
       <a href="https://www.doordash.com/search/store/lou-wok" target="_blank" rel="noopener" class="sheet-link" onclick="closeMenuSheet()">
@@ -3481,182 +3498,93 @@
     }
 
     // Populate the weekly schedule grid + open/closed pill from an hours array.
-    function renderHoursSection(hours){
-      const list = Array.isArray(hours) && hours.length ? hours : DEFAULT_HOURS;
-      const order=['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
-      const dayNames=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
-      const todayName=dayNames[new Date().getDay()];
-      const byDay={}; list.forEach(h=>{ if(h && h.day) byDay[h.day]=h; });
-
-      // Weekly grid (legacy element; only render if present)
-      const grid=document.getElementById('hoursSchedGrid');
-      if(grid){
-        grid.innerHTML = order.map(dn=>{
-          const h=byDay[dn]||{};
-          const isToday=dn===todayName;
-          const timeTxt = h.closed ? 'Closed' : (h.open&&h.close ? `${_fmtTime(h.open)} – ${_fmtTime(h.close)}` : '—');
-          return `<div class="hl-sched-row${isToday?' today':''}${h.closed?' closed':''}">
-            <span class="hl-sched-day">${dn}</span>
-            <span class="hl-sched-time">${timeTxt}</span>
-          </div>`;
-        }).join('');
-      }
-
-      // Today line + open/closed pill
-      const th=byDay[todayName];
-      const todayEl=document.getElementById('todayHoursDisplay');
-      if(todayEl) todayEl.textContent = th ? (th.closed ? 'Closed today' : `${_fmtTime(th.open)} – ${_fmtTime(th.close)}`) : '—';
-
-      const pill=document.getElementById('hoursPill');
-      const pillText=document.getElementById('livePillText');
-      if(pill && pillText){
-        let openNow=false;
-        if(th && !th.closed && th.open && th.close){
-          const now=new Date(); const mins=now.getHours()*60+now.getMinutes();
-          const [oh,om]=th.open.split(':').map(Number);
-          const [ch,cm]=th.close.split(':').map(Number);
-          openNow = mins >= (oh*60+om) && mins < (ch*60+cm);
-        }
-        pill.classList.toggle('closed', !openNow);
-        pillText.textContent = openNow ? 'Open Now' : 'Closed Now';
-      }
-    }
-
-    // ── FOOD TRUCK TRACKER ──────────────────────────────────
-    // Default weekly stop schedule. Overridden by cms-data.json
-    // location.truckSchedule (set from the admin dashboard).
-    // Each stop: { day, spot, address, lat, lng, open, close, closed }
-    const DEFAULT_TRUCK_SCHEDULE = [
-      { day:'Monday',    spot:'Downtown Phoenix',     address:'Cityscape, 1 E Washington St, Phoenix, AZ', lat:33.4484, lng:-112.0740, open:'11:00', close:'14:00', closed:false },
-      { day:'Tuesday',   spot:'Tempe / ASU',          address:'Mill Ave & University Dr, Tempe, AZ',        lat:33.4242, lng:-111.9400, open:'11:00', close:'14:00', closed:false },
-      { day:'Wednesday', spot:'Midtown Phoenix',      address:'Park Central, 3121 N 3rd Ave, Phoenix, AZ',  lat:33.4870, lng:-112.0740, open:'11:00', close:'14:00', closed:false },
-      { day:'Thursday',  spot:'Scottsdale',           address:'Scottsdale Quarter, Scottsdale, AZ',         lat:33.6230, lng:-111.9265, open:'17:00', close:'21:00', closed:false },
-      { day:'Friday',    spot:'Roosevelt Row',        address:'Roosevelt Row Arts District, Phoenix, AZ',   lat:33.4580, lng:-112.0700, open:'17:00', close:'22:00', closed:false },
-      { day:'Saturday',  spot:'Gilbert',              address:'Heritage District, Gilbert, AZ',             lat:33.3528, lng:-111.7890, open:'11:00', close:'15:00', closed:false },
-      { day:'Sunday',    spot:'Off the road',         address:'',                                            lat:null,     lng:null,      open:'',      close:'',      closed:true  }
+    // ── FIND THE TRUCK tracker ──
+    const DEFAULT_SCHEDULE = [
+      { day:'Monday',    spot:'Downtown Phoenix', addr:'Cityscape, 1 E Washington St', open:'11:00', close:'14:00', lat:33.4480, lng:-112.0731, closed:false },
+      { day:'Tuesday',   spot:'Tempe',            addr:'Mill Ave & University Dr',     open:'11:00', close:'14:00', lat:33.4242, lng:-111.9400, closed:false },
+      { day:'Wednesday', spot:'Midtown',          addr:'Park Central, 3121 N 3rd Ave', open:'11:00', close:'14:00', lat:33.4870, lng:-112.0740, closed:false },
+      { day:'Thursday',  spot:'Scottsdale',       addr:'Old Town, 7014 E Camelback',   open:'16:00', close:'20:00', lat:33.4942, lng:-111.9261, closed:false },
+      { day:'Friday',    spot:'Roosevelt Row',    addr:'1st St & Roosevelt',           open:'17:00', close:'22:00', lat:33.4584, lng:-112.0712, closed:false },
+      { day:'Saturday',  spot:'Gilbert',          addr:'Heritage District, Gilbert Rd',open:'16:00', close:'22:00', lat:33.3528, lng:-111.7890, closed:false },
+      { day:'Sunday',    spot:'Closed',           addr:'',                             open:'',      close:'',      lat:33.4484, lng:-112.0740, closed:true }
     ];
+    const _DAY_NAMES=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+    let _truckMap=null, _truckMarker=null, _todayStop=null;
 
-    let _truckSchedule = DEFAULT_TRUCK_SCHEDULE;
-
-    function _dayShort(d){ return ({Monday:'Mon',Tuesday:'Tue',Wednesday:'Wed',Thursday:'Thu',Friday:'Fri',Saturday:'Sat',Sunday:'Sun'})[d]||d.slice(0,3); }
-
-    // Build an OpenStreetMap embed for a coordinate (no API key needed).
-    function _osmEmbed(lat,lng){
-      const d=0.012; // bbox half-size
-      const bbox=[(lng-d),(lat-d),(lng+d),(lat+d)].join('%2C');
-      return 'https://www.openstreetmap.org/export/embed.html?bbox='+bbox+'&layer=mapnik&marker='+lat+'%2C'+lng;
-    }
-
-    function _isOpenNow(stop){
-      if(!stop || stop.closed || !stop.open || !stop.close) return false;
+    function _truckOpenNow(s){
+      if(!s||s.closed||!s.open||!s.close) return false;
       const now=new Date(); const mins=now.getHours()*60+now.getMinutes();
-      const [oh,om]=String(stop.open).split(':').map(Number);
-      const [ch,cm]=String(stop.close).split(':').map(Number);
-      return mins>=(oh*60+om) && mins<(ch*60+cm);
+      const [oh,om]=s.open.split(':').map(Number);
+      const [ch,cm]=s.close.split(':').map(Number);
+      return mins>=(oh*60+om)&&mins<(ch*60+cm);
     }
-
-    // Point the map + overlay + directions at a chosen stop.
-    function _selectTruckStop(idx){
-      const stop=_truckSchedule[idx];
-      if(!stop) return;
-      document.querySelectorAll('.truck-stop').forEach((el,i)=>el.classList.toggle('active', i===idx));
-
-      const area=document.getElementById('truckMapArea');
-      const loading=document.getElementById('truckMapLoading');
-      const spotEl=document.getElementById('truckNowSpot');
-      const whenEl=document.getElementById('truckNowWhen');
-      const lblEl=document.getElementById('truckNowLbl');
-      const dirBtn=document.getElementById('truckDirBtn');
-
-      const dayNames=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
-      const isToday = stop.day===dayNames[new Date().getDay()];
-      if(lblEl) lblEl.textContent = isToday ? 'Today · '+stop.day : stop.day;
-      if(spotEl) spotEl.textContent = stop.spot || '—';
-      if(whenEl) whenEl.textContent = stop.closed ? 'Not on the road' : (stop.open&&stop.close ? `${_fmtTime(stop.open)} – ${_fmtTime(stop.close)}` : '—');
-
-      if(dirBtn){
-        if(stop.address || (stop.lat&&stop.lng)){
-          const q = stop.address ? encodeURIComponent(stop.address) : (stop.lat+','+stop.lng);
-          dirBtn.href='https://www.google.com/maps/dir/?api=1&destination='+q;
-          dirBtn.style.display='';
-        } else { dirBtn.style.display='none'; }
-      }
-
-      if(area){
-        if(stop.lat&&stop.lng){
-          area.innerHTML='<iframe src="'+_osmEmbed(stop.lat,stop.lng)+'" title="Map showing the Lou Wok truck at '+(stop.spot||'its stop').replace(/"/g,'&quot;')+'" loading="lazy"></iframe>';
-          if(loading) loading.style.display='none';
-        } else {
-          area.innerHTML='';
-          if(loading){ loading.style.display='flex'; loading.querySelector('div:last-child').textContent='Off the road today — see you tomorrow!'; }
-        }
-      }
+    function _truckDrawMarker(s){
+      if(!_truckMap||typeof L==='undefined') return;
+      const icon=L.divIcon({className:'',html:'<div class="truck-marker">🚚</div>',iconSize:[40,40],iconAnchor:[20,36],popupAnchor:[0,-34]});
+      if(_truckMarker) _truckMap.removeLayer(_truckMarker);
+      _truckMarker=L.marker([s.lat,s.lng],{icon}).addTo(_truckMap);
+      const dir='https://www.google.com/maps/dir/?api=1&destination='+s.lat+','+s.lng;
+      _truckMarker.bindPopup('<div class="truck-pop"><b>'+s.spot+'</b><br><span class="tp-time">'+(s.closed?'Closed':_fmtTime(s.open)+' – '+_fmtTime(s.close))+'</span><br>'+(s.addr||'')+'<br><a href="'+dir+'" target="_blank" rel="noopener">Directions →</a></div>');
     }
-
+    function _truckSetDir(s){
+      const a=document.getElementById('tiDir'); if(!a) return;
+      a.href='https://www.google.com/maps/dir/?api=1&destination='+s.lat+','+s.lng;
+      a.style.display=s.closed?'none':'inline-flex';
+    }
     function renderTruckTracker(schedule){
-      _truckSchedule = (Array.isArray(schedule) && schedule.length) ? schedule : DEFAULT_TRUCK_SCHEDULE;
+      const list=Array.isArray(schedule)&&schedule.length?schedule:DEFAULT_SCHEDULE;
       const order=['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
-      const dayNames=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
-      const todayName=dayNames[new Date().getDay()];
+      const byDay={}; list.forEach(s=>{ if(s&&s.day) byDay[s.day]=s; });
+      const todayName=_DAY_NAMES[new Date().getDay()];
+      _todayStop=byDay[todayName]||list[0];
 
-      // Sort schedule into Mon–Sun display order.
-      const byDay={}; _truckSchedule.forEach(s=>{ if(s&&s.day) byDay[s.day]=s; });
-      _truckSchedule = order.map(d=> byDay[d] || {day:d, spot:'—', closed:true});
-
-      const todayIdx = _truckSchedule.findIndex(s=>s.day===todayName);
-      const today = _truckSchedule[todayIdx] || {};
-
-      // Banner
-      const bTxt=document.getElementById('truckBannerTxt');
-      const bSub=document.getElementById('truckBannerSub');
-      const hereTag=document.getElementById('truckHereTag');
-      const hereTxt=document.getElementById('truckHereTxt');
-      const openNow=_isOpenNow(today);
-      if(bTxt) bTxt.innerHTML = today.closed
-        ? 'The truck is <b>off the road today</b>'
-        : `Today the truck is at <b>${today.spot||'—'}</b>`;
-      if(bSub) bSub.textContent = today.closed
-        ? 'Catch us tomorrow — tap a day to see the week'
-        : (openNow ? `Serving until ${_fmtTime(today.close)}` : (today.open?`Rolls in at ${_fmtTime(today.open)}`:'Tap any day to see where we\'ll be'));
-      if(hereTag && hereTxt){
-        hereTag.classList.toggle('off', !openNow);
-        hereTxt.textContent = openNow ? 'Serving now' : (today.closed?'Off today':'Not yet open');
+      if(typeof L!=='undefined' && document.getElementById('truckMap')){
+        if(!_truckMap){
+          _truckMap=L.map('truckMap',{zoomControl:true,scrollWheelZoom:false}).setView([_todayStop.lat,_todayStop.lng],13);
+          L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{maxZoom:19,attribution:'&copy; OpenStreetMap &copy; CARTO'}).addTo(_truckMap);
+        }
+        _truckDrawMarker(_todayStop);
       }
 
-      // Stop list
-      const list=document.getElementById('truckStopsList');
-      if(list){
-        list.innerHTML = _truckSchedule.map((s,i)=>{
-          const isToday=s.day===todayName;
-          const timeTxt = s.closed ? 'Off the road' : (s.open&&s.close ? `${_fmtTime(s.open)} – ${_fmtTime(s.close)}` : '—');
-          return `<button type="button" class="truck-stop${isToday?' active':''}${s.closed?' closed-day':''}" onclick="_selectTruckStop(${i})">
-            <span class="truck-stop-day"><span class="d">${_dayShort(s.day)}</span></span>
-            <span class="truck-stop-main">
-              <span class="truck-stop-spot">${s.spot||'—'}</span>
-              <span class="truck-stop-time">${timeTxt}</span>
-            </span>
-            ${isToday?'<span class="truck-stop-tag">Today</span>':'<span class="truck-stop-arrow">›</span>'}
-          </button>`;
+      const openNow=_truckOpenNow(_todayStop);
+      const pill=document.getElementById('truckPill');
+      const pillText=document.getElementById('truckPillText');
+      if(pill&&pillText){ pill.classList.toggle('closed',!openNow); pillText.textContent=openNow?'Serving Now':(_todayStop.closed?'Off Today':'Not Serving Yet'); }
+
+      const ts=document.getElementById('truckTodaySpot'); if(ts) ts.textContent=_todayStop.closed?'No truck today':_todayStop.spot;
+      const tt=document.getElementById('truckTodayTime'); if(tt) tt.textContent=_todayStop.closed?'See you tomorrow':_fmtTime(_todayStop.open)+' – '+_fmtTime(_todayStop.close);
+      const sp=document.getElementById('tiSpot'); if(sp) sp.textContent=_todayStop.closed?'Closed Today':_todayStop.spot;
+      const ss=document.getElementById('tiSpotSub'); if(ss) ss.textContent=_todayStop.closed?'Catch us tomorrow':_todayStop.addr;
+      _truckSetDir(_todayStop);
+
+      const sched=document.getElementById('tiSchedule');
+      if(sched){
+        sched.innerHTML=order.map(dn=>{
+          const s=byDay[dn]||{};
+          const isToday=dn===todayName;
+          const t=s.closed?'Closed':(s.open&&s.close?_fmtTime(s.open)+'–'+_fmtTime(s.close):'—');
+          return '<button class="ti-day'+(isToday?' today':'')+(s.closed?' closed':'')+'" data-day="'+dn+'">'+
+            '<span><span class="d-name">'+dn+'</span><br><span class="d-spot">'+(s.closed?'—':(s.spot||''))+'</span></span>'+
+            '<span class="d-time">'+t+'</span></button>';
         }).join('');
+        sched.querySelectorAll('.ti-day').forEach(btn=>{
+          btn.addEventListener('click',()=>{
+            const s=byDay[btn.dataset.day];
+            if(!s||s.closed) return;
+            sched.querySelectorAll('.ti-day').forEach(b=>b.classList.remove('active'));
+            btn.classList.add('active');
+            if(_truckMap){ _truckMap.flyTo([s.lat,s.lng],14,{duration:.8}); _truckDrawMarker(s); }
+            _truckSetDir(s);
+            const sp2=document.getElementById('tiSpot'); if(sp2) sp2.textContent=s.spot;
+            const ss2=document.getElementById('tiSpotSub'); if(ss2) ss2.textContent=s.addr;
+          });
+        });
       }
-
-      // Default the map to today's stop (or first open stop).
-      let initIdx = todayIdx;
-      if(_truckSchedule[initIdx] && _truckSchedule[initIdx].closed){
-        const firstOpen=_truckSchedule.findIndex(s=>!s.closed);
-        if(firstOpen>=0) initIdx=firstOpen;
-      }
-      _selectTruckStop(initIdx>=0?initIdx:0);
     }
-    window._selectTruckStop = _selectTruckStop;
 
-    // Back-compat: CMS calls renderLocationSection(loc). We pull the truck
-    // schedule from loc.truckSchedule and also keep the footer phone wiring.
+    // Footer "Contact Us" → business phone (kept from location data).
     function renderLocationSection(loc){
       loc = loc || {};
-      renderTruckTracker(loc.truckSchedule);
-
-      // Footer "Contact Us" → business phone (unchanged behavior).
       const phoneRaw = (loc.phone || '').trim();
       const contactEl = document.getElementById('footerContactLink');
       if(contactEl){
@@ -3667,8 +3595,13 @@
     }
 
     document.addEventListener('DOMContentLoaded', () => {
-      renderHoursSection(DEFAULT_HOURS);
-      renderLocationSection(null);
+      const _initTruck = () => renderTruckTracker(DEFAULT_SCHEDULE);
+      if(typeof L!=='undefined') _initTruck();
+      else window.addEventListener('load', _initTruck);
+      const rc=document.getElementById('truckRecenter');
+      if(rc) rc.addEventListener('click',()=>{
+        if(_todayStop&&_truckMap){ _truckMap.flyTo([_todayStop.lat,_todayStop.lng],13,{duration:.8}); _truckDrawMarker(_todayStop); if(_truckMarker) _truckMarker.openPopup(); }
+      });
     });
 
     // ═══════════════════════════════════════════════════════
@@ -3865,7 +3798,7 @@
 
     // ── DIRECTIONS ──────────────────────────────────────────
     function openDirections(){
-      const el=document.getElementById('hlDirBtn');
+      const el=document.getElementById('tiDir');
       if(el && el.href){ window.open(el.href,'_blank','noopener'); }
     }
 
@@ -3931,7 +3864,10 @@
       }
 
       function renderHours(hours){
-        if(typeof renderHoursSection==='function') renderHoursSection(hours);
+        // Hours block replaced by Find the Truck tracker; kept for back-compat.
+      }
+      function renderTruck(schedule){
+        if(typeof renderTruckTracker==='function') renderTruckTracker(schedule);
       }
 
       function renderLocation(loc){
@@ -4049,6 +3985,7 @@
         try{
           renderMenu(d.menu);
           renderHours(d.hours);
+          renderTruck(d.schedule);
           renderLocation(d.location);
           renderSocials(d.socials);
           renderOrderLinks(d.orderLinks);
