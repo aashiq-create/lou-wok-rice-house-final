@@ -322,7 +322,79 @@
     "cityStateZip": "Phoenix, AZ 85014",
     "phone": "(877) 379-7974",
     "email": "support@louwok.com",
-    "mapsEmbed": "https://maps.google.com/maps?q=2406%20S%2024th%20St%20%23212A%2C%20Phoenix%2C%20AZ%2085034&z=15&output=embed"
+    "mapsEmbed": "https://maps.google.com/maps?q=2406%20S%2024th%20St%20%23212A%2C%20Phoenix%2C%20AZ%2085034&z=15&output=embed",
+    "truckSchedule": [
+      {
+        "day": "Monday",
+        "spot": "Downtown Phoenix",
+        "address": "Cityscape, 1 E Washington St, Phoenix, AZ",
+        "lat": 33.4484,
+        "lng": -112.074,
+        "open": "11:00",
+        "close": "14:00",
+        "closed": false
+      },
+      {
+        "day": "Tuesday",
+        "spot": "Tempe / ASU",
+        "address": "Mill Ave & University Dr, Tempe, AZ",
+        "lat": 33.4242,
+        "lng": -111.94,
+        "open": "11:00",
+        "close": "14:00",
+        "closed": false
+      },
+      {
+        "day": "Wednesday",
+        "spot": "Midtown Phoenix",
+        "address": "Park Central, 3121 N 3rd Ave, Phoenix, AZ",
+        "lat": 33.487,
+        "lng": -112.074,
+        "open": "11:00",
+        "close": "14:00",
+        "closed": false
+      },
+      {
+        "day": "Thursday",
+        "spot": "Scottsdale",
+        "address": "Scottsdale Quarter, Scottsdale, AZ",
+        "lat": 33.623,
+        "lng": -111.9265,
+        "open": "17:00",
+        "close": "21:00",
+        "closed": false
+      },
+      {
+        "day": "Friday",
+        "spot": "Roosevelt Row",
+        "address": "Roosevelt Row Arts District, Phoenix, AZ",
+        "lat": 33.458,
+        "lng": -112.07,
+        "open": "17:00",
+        "close": "22:00",
+        "closed": false
+      },
+      {
+        "day": "Saturday",
+        "spot": "Gilbert",
+        "address": "Heritage District, Gilbert, AZ",
+        "lat": 33.3528,
+        "lng": -111.789,
+        "open": "11:00",
+        "close": "15:00",
+        "closed": false
+      },
+      {
+        "day": "Sunday",
+        "spot": "",
+        "address": "",
+        "lat": null,
+        "lng": null,
+        "open": "",
+        "close": "",
+        "closed": true
+      }
+    ]
   },
   "branding": {
     "colorBlack": "#000000",
