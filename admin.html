@@ -1581,7 +1581,7 @@
       if (res.ok) {
         const j = await res.json();
         cmsFileSHA = j.sha;
-        applyData(JSON.parse(atob(j.content.replace(/\n/g,''))));
+        applyData(JSON.parse(decodeURIComponent(escape(atob(j.content.replace(/\n/g,''))))));
         _status('✅ Loaded from GitHub');
         showToast('Data loaded from GitHub','success');
       } else if (res.status === 404) {
