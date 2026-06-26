@@ -1,6 +1,6 @@
 {
   "_info": "Written by louwok.com/admin. index.html reads this at runtime.",
-  "_updated": "2026-06-26T23:46:59.187Z",
+  "_updated": "2026-06-26T23:49:32.243Z",
   "menu": [
     {
       "id": 1,
@@ -127,9 +127,9 @@
       "name": "Mystic Carrot Juice",
       "category": "beverages",
       "priceHalf": null,
-      "priceFull": 3,
+      "priceFull": 2,
       "tag": "",
-      "desc": "A bright, refreshing blend of carrot and fruit juices with a smooth, naturally sweet finish. Served ice-cold, it’s the nostalgic Midwest drink that pairs perfectly with fried rice, St. Paul sandwiches, and crispy wings—Lou Wok style.",
+      "desc": "Mystic Carrot Juice—a bright, refreshing blend of carrot and fruit juices with a smooth, naturally sweet finish. Served ice-cold, it’s a nostalgic Midwest favorite that pairs perfectly with Lou Wok fried rice, St. Paul sandwiches, and crispy wings.",
       "options": []
     },
     {
