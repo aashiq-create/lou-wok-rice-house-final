@@ -1999,7 +1999,61 @@
     html.is-standalone body { min-height: 100vh; min-height: 100dvh; }
     html.is-standalone .bottom-nav { padding-bottom: var(--safe-bot); }
 
+    /* ── FIND THE TRUCK ── */
+    .truck-wrap { max-width: 1000px; }
+    .truck-status { display:flex; align-items:center; gap:1rem; flex-wrap:wrap; margin-bottom:1.2rem; }
+    .truck-pill { display:inline-flex; align-items:center; gap:.5rem; background:var(--black); border:1px solid rgba(245,238,216,.12);
+      padding:.5rem .9rem; border-radius:100px; font-weight:800; font-size:.92rem; letter-spacing:.02em; }
+    .truck-pill .pulse { width:9px; height:9px; border-radius:50%; background:#36c46f; box-shadow:0 0 0 0 rgba(54,196,111,.7); animation:truckpulse 2s infinite; }
+    .truck-pill.closed { color:rgba(245,238,216,.6); }
+    .truck-pill.closed .pulse { background:var(--wok); animation:none; box-shadow:none; }
+    @keyframes truckpulse { 0%{box-shadow:0 0 0 0 rgba(54,196,111,.7);} 70%{box-shadow:0 0 0 10px rgba(54,196,111,0);} 100%{box-shadow:0 0 0 0 rgba(54,196,111,0);} }
+    .truck-today { font-size:.95rem; color:var(--muted); font-weight:600; }
+    .truck-today b { color:var(--gold); }
+    .truck-grid { display:grid; grid-template-columns:1.4fr 1fr; gap:1.5px; background:rgba(245,238,216,.08);
+      border:1px solid rgba(245,238,216,.08); border-radius:4px; overflow:hidden; }
+    .truck-map-card { position:relative; min-height:420px; background:var(--black); }
+    #truckMap { position:absolute; inset:0; width:100%; height:100%; }
+    .leaflet-container { background:#14120f; font-family:'DM Sans',sans-serif; }
+    .truck-recenter { position:absolute; z-index:500; right:12px; bottom:12px; background:var(--gold); color:var(--black);
+      border:none; font-weight:800; font-size:.82rem; letter-spacing:.02em; padding:.6rem .9rem; border-radius:100px; cursor:pointer;
+      box-shadow:0 4px 14px rgba(0,0,0,.4); display:flex; align-items:center; gap:.4rem; transition:transform .15s; }
+    .truck-recenter:hover { transform:translateY(-2px); }
+    .truck-marker { font-size:2rem; filter:drop-shadow(0 3px 5px rgba(0,0,0,.5)); transform:translateY(-4px); }
+    .truck-pop { font-family:'DM Sans',sans-serif; }
+    .truck-pop b { font-size:1rem; color:#111; }
+    .truck-pop .tp-time { color:var(--wok); font-weight:700; font-size:.85rem; }
+    .truck-pop a { display:inline-block; margin-top:.4rem; color:var(--wok); font-weight:700; text-decoration:none; font-size:.85rem; }
+    .truck-info { background:var(--black); padding:1.4rem; display:flex; flex-direction:column; gap:1.2rem; }
+    .ti-now-label { font-size:.7rem; letter-spacing:.18em; text-transform:uppercase; color:var(--muted); font-weight:700; margin-bottom:.45rem; }
+    .ti-spot { font-weight:800; font-size:1.3rem; color:var(--rice); line-height:1.25; }
+    .ti-spot-sub { font-weight:500; font-size:.92rem; color:rgba(245,238,216,.55); margin-top:.15rem; }
+    .ti-dir { display:inline-flex; align-items:center; gap:.45rem; margin-top:.9rem; background:transparent; border:1.5px solid var(--gold);
+      color:var(--gold); padding:.6rem 1rem; border-radius:100px; font-weight:700; text-decoration:none; font-size:.9rem; transition:all .18s; }
+    .ti-dir:hover { background:var(--gold); color:var(--black); transform:translateY(-2px); }
+    .ti-sched-head { font-size:.7rem; letter-spacing:.18em; text-transform:uppercase; color:var(--muted); font-weight:700; margin-bottom:.3rem; }
+    .ti-day { display:flex; justify-content:space-between; align-items:center; gap:.5rem; width:100%; text-align:left;
+      background:transparent; border:none; border-bottom:1px solid rgba(245,238,216,.07); padding:.6rem .2rem; cursor:pointer; color:inherit;
+      font-family:inherit; transition:background .15s; }
+    .ti-day:last-child { border-bottom:none; }
+    .ti-day:hover { background:rgba(232,160,32,.07); }
+    .ti-day .d-name { font-weight:600; color:rgba(245,238,216,.85); font-size:.95rem; }
+    .ti-day .d-spot { font-size:.78rem; color:var(--muted); font-weight:600; }
+    .ti-day .d-time { font-weight:600; color:rgba(245,238,216,.55); font-size:.85rem; white-space:nowrap; }
+    .ti-day.today { background:rgba(232,160,32,.1); }
+    .ti-day.today .d-name { color:var(--gold); font-weight:800; }
+    .ti-day.today .d-name::after { content:'TODAY'; margin-left:.5rem; font-size:.6rem; letter-spacing:.1em; background:var(--gold); color:var(--black);
+      padding:.1rem .35rem; border-radius:3px; vertical-align:middle; }
+    .ti-day.closed .d-time { color:var(--wok); }
+    .ti-day.active { background:rgba(232,160,32,.16); }
+    @media(max-width:760px){
+      .truck-grid { grid-template-columns:1fr; }
+      .truck-map-card { min-height:300px; }
+    }
+
   </style>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js" defer></script>
 </head>
 <body>
@@ -2395,46 +2449,39 @@
   <!-- ── HOURS & LOCATION ── -->
   <section id="hours">
     <div class="fade-in" style="margin-bottom:2.5rem;">
-      <div class="section-label">Visit Us</div>
-      <h2 class="section-title">HOURS &amp;<br>LOCATION</h2>
+      <div class="section-label">Find the Truck</div>
+      <h2 class="section-title">WHERE'S<br>LOU WOK?</h2>
     </div>
 
-    <div class="hours-wrap">
-      <div class="hours-status-bar">
-        <div class="hours-live-pill" id="hoursPill">
-          <span class="live-pulse"></span><span id="livePillText">Checking hours…</span>
-        </div>
-        <div class="hours-today-note" id="hoursTodayNote">Today: <span id="todayHoursDisplay">—</span></div>
+    <div class="truck-wrap">
+      <div class="truck-status">
+        <div class="truck-pill" id="truckPill"><span class="pulse"></span><span id="truckPillText">Checking…</span></div>
+        <div class="truck-today">Today: <b id="truckTodaySpot">—</b> · <span id="truckTodayTime">—</span></div>
       </div>
 
-      <div class="hl-grid">
-        <div class="hl-map-card">
-          <div class="hl-map-area" id="hoursMapArea">
-            <div class="hl-map-fallback" id="hoursMapFallback">
-              <div class="hl-map-pin">📍</div>
-              <div class="hl-map-addr" id="hlMapAddr">Phoenix, AZ</div>
-              <a class="hl-map-link" id="hlMapLink" href="#" target="_blank" rel="noopener">Open in Google Maps →</a>
-            </div>
-          </div>
+      <div class="truck-grid">
+        <div class="truck-map-card">
+          <div id="truckMap"></div>
+          <button class="truck-recenter" id="truckRecenter" aria-label="Recenter map on today's stop">📍 Today's stop</button>
         </div>
 
-        <div class="hl-info">
-          <div class="hl-address-block">
-            <div class="hl-addr-label">Find Us At</div>
-            <div class="hl-addr-line" id="hlStreet">Phoenix, AZ</div>
-            <div class="hl-addr-line hl-addr-sub" id="hlCityStateZip">Phoenix, AZ 85001</div>
-            <a class="hl-dir-btn" id="hlDirBtn" href="#" target="_blank" rel="noopener">🧭 Get Directions</a>
+        <div class="truck-info">
+          <div>
+            <div class="ti-now-label">Right now</div>
+            <div class="ti-spot" id="tiSpot">—</div>
+            <div class="ti-spot-sub" id="tiSpotSub">—</div>
+            <a class="ti-dir" id="tiDir" href="#" target="_blank" rel="noopener">🧭 Get Directions</a>
           </div>
-          <div class="hl-sched">
-            <div class="hl-sched-head">Weekly Hours</div>
-            <div id="hoursSchedGrid"></div>
+          <div>
+            <div class="ti-sched-head">This Week</div>
+            <div id="tiSchedule"></div>
           </div>
         </div>
       </div>
 
       <div class="hl-foot-note">
-        Hours may vary on holidays. Call ahead to confirm — see our latest updates on
-        <a href="https://instagram.com/louwokphx" target="_blank" rel="noopener">@louwokphx</a>.
+        Stops can shift for weather or events — follow
+        <a href="https://instagram.com/louwokphx" target="_blank" rel="noopener">@louwokphx</a> for last-minute changes.
       </div>
     </div>
   </section>
@@ -3451,64 +3498,93 @@
     }
 
     // Populate the weekly schedule grid + open/closed pill from an hours array.
-    function renderHoursSection(hours){
-      const list = Array.isArray(hours) && hours.length ? hours : DEFAULT_HOURS;
-      const order=['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
-      const dayNames=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
-      const todayName=dayNames[new Date().getDay()];
-      const byDay={}; list.forEach(h=>{ if(h && h.day) byDay[h.day]=h; });
+    // ── FIND THE TRUCK tracker ──
+    const DEFAULT_SCHEDULE = [
+      { day:'Monday',    spot:'Downtown Phoenix', addr:'Cityscape, 1 E Washington St', open:'11:00', close:'14:00', lat:33.4480, lng:-112.0731, closed:false },
+      { day:'Tuesday',   spot:'Tempe',            addr:'Mill Ave & University Dr',     open:'11:00', close:'14:00', lat:33.4242, lng:-111.9400, closed:false },
+      { day:'Wednesday', spot:'Midtown',          addr:'Park Central, 3121 N 3rd Ave', open:'11:00', close:'14:00', lat:33.4870, lng:-112.0740, closed:false },
+      { day:'Thursday',  spot:'Scottsdale',       addr:'Old Town, 7014 E Camelback',   open:'16:00', close:'20:00', lat:33.4942, lng:-111.9261, closed:false },
+      { day:'Friday',    spot:'Roosevelt Row',    addr:'1st St & Roosevelt',           open:'17:00', close:'22:00', lat:33.4584, lng:-112.0712, closed:false },
+      { day:'Saturday',  spot:'Gilbert',          addr:'Heritage District, Gilbert Rd',open:'16:00', close:'22:00', lat:33.3528, lng:-111.7890, closed:false },
+      { day:'Sunday',    spot:'Closed',           addr:'',                             open:'',      close:'',      lat:33.4484, lng:-112.0740, closed:true }
+    ];
+    const _DAY_NAMES=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+    let _truckMap=null, _truckMarker=null, _todayStop=null;
 
-      // Weekly grid
-      const grid=document.getElementById('hoursSchedGrid');
-      if(grid){
-        grid.innerHTML = order.map(dn=>{
-          const h=byDay[dn]||{};
-          const isToday=dn===todayName;
-          const timeTxt = h.closed ? 'Closed' : (h.open&&h.close ? `${_fmtTime(h.open)} – ${_fmtTime(h.close)}` : '—');
-          return `<div class="hl-sched-row${isToday?' today':''}${h.closed?' closed':''}">
-            <span class="hl-sched-day">${dn}</span>
-            <span class="hl-sched-time">${timeTxt}</span>
-          </div>`;
-        }).join('');
+    function _truckOpenNow(s){
+      if(!s||s.closed||!s.open||!s.close) return false;
+      const now=new Date(); const mins=now.getHours()*60+now.getMinutes();
+      const [oh,om]=s.open.split(':').map(Number);
+      const [ch,cm]=s.close.split(':').map(Number);
+      return mins>=(oh*60+om)&&mins<(ch*60+cm);
+    }
+    function _truckDrawMarker(s){
+      if(!_truckMap||typeof L==='undefined') return;
+      const icon=L.divIcon({className:'',html:'<div class="truck-marker">🚚</div>',iconSize:[40,40],iconAnchor:[20,36],popupAnchor:[0,-34]});
+      if(_truckMarker) _truckMap.removeLayer(_truckMarker);
+      _truckMarker=L.marker([s.lat,s.lng],{icon}).addTo(_truckMap);
+      const dir='https://www.google.com/maps/dir/?api=1&destination='+s.lat+','+s.lng;
+      _truckMarker.bindPopup('<div class="truck-pop"><b>'+s.spot+'</b><br><span class="tp-time">'+(s.closed?'Closed':_fmtTime(s.open)+' – '+_fmtTime(s.close))+'</span><br>'+(s.addr||'')+'<br><a href="'+dir+'" target="_blank" rel="noopener">Directions →</a></div>');
+    }
+    function _truckSetDir(s){
+      const a=document.getElementById('tiDir'); if(!a) return;
+      a.href='https://www.google.com/maps/dir/?api=1&destination='+s.lat+','+s.lng;
+      a.style.display=s.closed?'none':'inline-flex';
+    }
+    function renderTruckTracker(schedule){
+      const list=Array.isArray(schedule)&&schedule.length?schedule:DEFAULT_SCHEDULE;
+      const order=['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+      const byDay={}; list.forEach(s=>{ if(s&&s.day) byDay[s.day]=s; });
+      const todayName=_DAY_NAMES[new Date().getDay()];
+      _todayStop=byDay[todayName]||list[0];
+
+      if(typeof L!=='undefined' && document.getElementById('truckMap')){
+        if(!_truckMap){
+          _truckMap=L.map('truckMap',{zoomControl:true,scrollWheelZoom:false}).setView([_todayStop.lat,_todayStop.lng],13);
+          L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{maxZoom:19,attribution:'&copy; OpenStreetMap &copy; CARTO'}).addTo(_truckMap);
+        }
+        _truckDrawMarker(_todayStop);
       }
 
-      // Today line + open/closed pill
-      const th=byDay[todayName];
-      const todayEl=document.getElementById('todayHoursDisplay');
-      if(todayEl) todayEl.textContent = th ? (th.closed ? 'Closed today' : `${_fmtTime(th.open)} – ${_fmtTime(th.close)}`) : '—';
+      const openNow=_truckOpenNow(_todayStop);
+      const pill=document.getElementById('truckPill');
+      const pillText=document.getElementById('truckPillText');
+      if(pill&&pillText){ pill.classList.toggle('closed',!openNow); pillText.textContent=openNow?'Serving Now':(_todayStop.closed?'Off Today':'Not Serving Yet'); }
 
-      const pill=document.getElementById('hoursPill');
-      const pillText=document.getElementById('livePillText');
-      if(pill && pillText){
-        let openNow=false;
-        if(th && !th.closed && th.open && th.close){
-          const now=new Date(); const mins=now.getHours()*60+now.getMinutes();
-          const [oh,om]=th.open.split(':').map(Number);
-          const [ch,cm]=th.close.split(':').map(Number);
-          openNow = mins >= (oh*60+om) && mins < (ch*60+cm);
-        }
-        pill.classList.toggle('closed', !openNow);
-        pillText.textContent = openNow ? 'Open Now' : 'Closed Now';
+      const ts=document.getElementById('truckTodaySpot'); if(ts) ts.textContent=_todayStop.closed?'No truck today':_todayStop.spot;
+      const tt=document.getElementById('truckTodayTime'); if(tt) tt.textContent=_todayStop.closed?'See you tomorrow':_fmtTime(_todayStop.open)+' – '+_fmtTime(_todayStop.close);
+      const sp=document.getElementById('tiSpot'); if(sp) sp.textContent=_todayStop.closed?'Closed Today':_todayStop.spot;
+      const ss=document.getElementById('tiSpotSub'); if(ss) ss.textContent=_todayStop.closed?'Catch us tomorrow':_todayStop.addr;
+      _truckSetDir(_todayStop);
+
+      const sched=document.getElementById('tiSchedule');
+      if(sched){
+        sched.innerHTML=order.map(dn=>{
+          const s=byDay[dn]||{};
+          const isToday=dn===todayName;
+          const t=s.closed?'Closed':(s.open&&s.close?_fmtTime(s.open)+'–'+_fmtTime(s.close):'—');
+          return '<button class="ti-day'+(isToday?' today':'')+(s.closed?' closed':'')+'" data-day="'+dn+'">'+
+            '<span><span class="d-name">'+dn+'</span><br><span class="d-spot">'+(s.closed?'—':(s.spot||''))+'</span></span>'+
+            '<span class="d-time">'+t+'</span></button>';
+        }).join('');
+        sched.querySelectorAll('.ti-day').forEach(btn=>{
+          btn.addEventListener('click',()=>{
+            const s=byDay[btn.dataset.day];
+            if(!s||s.closed) return;
+            sched.querySelectorAll('.ti-day').forEach(b=>b.classList.remove('active'));
+            btn.classList.add('active');
+            if(_truckMap){ _truckMap.flyTo([s.lat,s.lng],14,{duration:.8}); _truckDrawMarker(s); }
+            _truckSetDir(s);
+            const sp2=document.getElementById('tiSpot'); if(sp2) sp2.textContent=s.spot;
+            const ss2=document.getElementById('tiSpotSub'); if(ss2) ss2.textContent=s.addr;
+          });
+        });
       }
     }
 
-    // Populate address + Google Maps embed/links from a location object.
+    // Footer "Contact Us" → business phone (kept from location data).
     function renderLocationSection(loc){
       loc = loc || {};
-      const street = loc.street || 'Phoenix, AZ';
-      const csz = loc.cityStateZip || '';
-      const full = [street, csz].filter(Boolean).join(', ');
-
-      const streetEl=document.getElementById('hlStreet'); if(streetEl) streetEl.textContent=street;
-      const cszEl=document.getElementById('hlCityStateZip'); if(cszEl) cszEl.textContent=csz;
-      const addrEl=document.getElementById('hlMapAddr'); if(addrEl) addrEl.textContent=full;
-
-      const mapsQuery='https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(full);
-      const dirQuery='https://www.google.com/maps/dir/?api=1&destination='+encodeURIComponent(full);
-      const linkEl=document.getElementById('hlMapLink'); if(linkEl) linkEl.href=mapsQuery;
-      const dirEl=document.getElementById('hlDirBtn'); if(dirEl) dirEl.href=dirQuery;
-
-      // Footer "Contact Us" → business phone (falls back to default if unset).
       const phoneRaw = (loc.phone || '').trim();
       const contactEl = document.getElementById('footerContactLink');
       if(contactEl){
@@ -3516,29 +3592,16 @@
         const tel = digits ? (digits[0]==='+' ? digits : '+1'+digits.replace(/^1/,'')) : '+16025550000';
         contactEl.href = 'tel:' + tel;
       }
-
-      // If an embed URL is provided, render a live Google Map iframe.
-      const area=document.getElementById('hoursMapArea');
-      const fallback=document.getElementById('hoursMapFallback');
-      if(area && loc.mapsEmbed){
-        let embed=loc.mapsEmbed.trim();
-        // Accept either a full <iframe ...> snippet or a bare src URL.
-        const m=embed.match(/src=["']([^"']+)["']/i);
-        if(m) embed=m[1];
-        if(/^https?:\/\//i.test(embed)){
-          area.innerHTML='<iframe src="'+embed.replace(/"/g,'&quot;')+'" title="Map showing Lou Wok Rice House location" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>';
-        }
-      } else if(area && fallback){
-        // ensure fallback present (in case of re-render)
-        if(!area.querySelector('.hl-map-fallback') && !area.querySelector('iframe')){
-          area.appendChild(fallback);
-        }
-      }
     }
 
     document.addEventListener('DOMContentLoaded', () => {
-      renderHoursSection(DEFAULT_HOURS);
-      renderLocationSection(null);
+      const _initTruck = () => renderTruckTracker(DEFAULT_SCHEDULE);
+      if(typeof L!=='undefined') _initTruck();
+      else window.addEventListener('load', _initTruck);
+      const rc=document.getElementById('truckRecenter');
+      if(rc) rc.addEventListener('click',()=>{
+        if(_todayStop&&_truckMap){ _truckMap.flyTo([_todayStop.lat,_todayStop.lng],13,{duration:.8}); _truckDrawMarker(_todayStop); if(_truckMarker) _truckMarker.openPopup(); }
+      });
     });
 
     // ═══════════════════════════════════════════════════════
@@ -3735,7 +3798,7 @@
 
     // ── DIRECTIONS ──────────────────────────────────────────
     function openDirections(){
-      const el=document.getElementById('hlDirBtn');
+      const el=document.getElementById('tiDir');
       if(el && el.href){ window.open(el.href,'_blank','noopener'); }
     }
 
@@ -3801,7 +3864,10 @@
       }
 
       function renderHours(hours){
-        if(typeof renderHoursSection==='function') renderHoursSection(hours);
+        // Hours block replaced by Find the Truck tracker; kept for back-compat.
+      }
+      function renderTruck(schedule){
+        if(typeof renderTruckTracker==='function') renderTruckTracker(schedule);
       }
 
       function renderLocation(loc){
@@ -3919,6 +3985,7 @@
         try{
           renderMenu(d.menu);
           renderHours(d.hours);
+          renderTruck(d.schedule);
           renderLocation(d.location);
           renderSocials(d.socials);
           renderOrderLinks(d.orderLinks);
