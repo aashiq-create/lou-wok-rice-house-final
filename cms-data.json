@@ -1,6 +1,6 @@
 {
   "_info": "Written by louwok.com/admin. index.html reads this at runtime.",
-  "_updated": "2026-06-27T22:02:46.125Z",
+  "_updated": "2026-06-27T22:03:19.067Z",
   "menu": [
     {
       "id": 1,
@@ -150,16 +150,6 @@
       "priceFull": 20,
       "tag": "fan-fave",
       "desc": "The combo that inspired it all. A full order of our signature St. Louis-style fried rice, an Original St. Paul Sandwich, four pieces of golden fried chicken, four crispy crab rangoons, and your choice of Vess Soda or Mystic Carrot Juice. Straight from the St. Louis rice house tradition, brought to Phoenix and cooked fresh to order with Midwest flavor and wok-fired soul.",
-      "options": []
-    },
-    {
-      "id": 19,
-      "name": "Egg Rolls (Chicken)",
-      "category": "appetizers",
-      "priceHalf": 4,
-      "priceFull": 8,
-      "tag": "",
-      "desc": "Golden, crispy, and packed with seasoned chicken, cabbage, celery, and savory spices, our chicken egg roll is the perfect sidekick to any Lou Wok meal. A St. Louis takeout classic done the Midwest way. Hot, crunchy, and made for dipping.\n",
       "options": []
     },
     {
