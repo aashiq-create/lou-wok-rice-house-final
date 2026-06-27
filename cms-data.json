@@ -1,6 +1,6 @@
 {
   "_info": "Written by louwok.com/admin. index.html reads this at runtime.",
-  "_updated": "2026-06-27T22:01:34.254Z",
+  "_updated": "2026-06-27T22:02:20.602Z",
   "menu": [
     {
       "id": 1,
@@ -66,8 +66,8 @@
       "id": 8,
       "name": "Pineapple Chicken Fried Rice",
       "category": "rice",
-      "priceHalf": 8,
-      "priceFull": 12,
+      "priceHalf": 5,
+      "priceFull": 10,
       "tag": "new",
       "desc": "Tender chicken, sweet pineapple, and wok-fired rice come together in the perfect balance of savory and sweet. A bold twist on a Midwest favorite, cooked fresh to order with Lou Wok flavor in every bite.",
       "options": []
