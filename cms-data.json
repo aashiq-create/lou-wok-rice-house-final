@@ -1,6 +1,6 @@
 {
   "_info": "Written by louwok.com/admin. index.html reads this at runtime.",
-  "_updated": "2026-06-26T20:01:41.134Z",
+  "_updated": "2026-06-27T00:57:36.643Z",
   "menu": [
     {
       "id": 1,
@@ -298,6 +298,7 @@
     "desc": "A St. Louis Chinese takeout classic. Our golden egg-crusted patty is stacked on white bread with crisp lettuce, tomato, pickles, and mayo for a one-of-a-kind sandwich that's been a hometown favorite for generations.",
     "ctaText": "Order the St. Paul",
     "ctaHref": "#order",
+    "image": "assets/featured-st-paul.jpg",
     "details": [
       {
         "label": "Origin",
@@ -312,11 +313,10 @@
         "value": "Soft White"
       },
       {
-        "label": "The Sandwich, The Myth, The Legend",
+        "label": "The Original St. Paul Sandwich. Built Different.",
         "value": "Mayo + Pickles + Tomato"
       }
-    ],
-    "image": "assets/featured-st-paul.jpg"
+    ]
   },
   "location": {
     "street": "",
