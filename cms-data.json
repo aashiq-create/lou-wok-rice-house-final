@@ -1,6 +1,6 @@
 {
   "_info": "Written by louwok.com/admin. index.html reads this at runtime.",
-  "_updated": "2026-06-27T22:18:16.863Z",
+  "_updated": "2026-06-27T22:20:02.416Z",
   "menu": [
     {
       "id": 1,
@@ -160,6 +160,16 @@
       "priceFull": 4,
       "tag": "",
       "desc": "Fresh cabbage, carrots, and vegetables wrapped in a crispy shell and fried golden brown. Two  light, crunchy, and the perfect sidekicks to a box of Lou Wok fried rice.",
+      "options": []
+    },
+    {
+      "id": 21,
+      "name": "Funnel Cake",
+      "category": "desserts",
+      "priceHalf": null,
+      "priceFull": 5,
+      "tag": "popular",
+      "desc": "Golden, crispy, and made from our signature sweet cream batter, then dusted with powdered sugar. A warm, fresh-fried classic that's the perfect finish to your Lou Wok feast.",
       "options": []
     }
   ],
