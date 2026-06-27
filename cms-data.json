@@ -9,7 +9,7 @@
       "priceHalf": 3,
       "priceFull": 6,
       "tag": "classic",
-      "desc": "The St. Louis rice house foundation. Egg, bean sprouts, and green onion wok-tossed in a screaming-hot wok with seasoned rice, cooked fast and fresh to order. Straightforward, satisfying, and rooted in the classic STL scene.",
+      "desc": "Egg, bean sprouts, and green onion wok-tossed with seasoned rice over high heat. The clean, classic base that started it all.",
       "options": []
     },
     {
@@ -19,7 +19,7 @@
       "priceHalf": 4,
       "priceFull": 8,
       "tag": "classic",
-      "desc": "All-white chicken wok-fired with seasoned rice, egg, bean sprouts, soy, and green onion. A St. Louis rice house classic—simple, bold, and built on the kind of no-frills flavors that made Midwest takeout a staple. Cooked fresh to order and served hot, Lou Wok style.",
+      "desc": "All-white chicken seared into seasoned rice with egg, bean sprouts, soy, and scallion. Simple, savory, and hard to put down.",
       "options": []
     },
     {
@@ -29,7 +29,7 @@
       "priceHalf": 4,
       "priceFull": 8,
       "tag": "classic",
-      "desc": "Sliced beef wok-fired with seasoned rice, egg, bean sprouts, and green onion, finished in a savory soy-based blend. A St. Louis rice house staple built on simple, bold ingredients—classic Midwest takeout flavor, cooked fresh to order and served hot in true Lou Wok style.",
+      "desc": "Sliced beef and seasoned rice wok-fired with egg, bean sprouts, and green onion in a deep savory soy glaze.",
       "options": []
     },
     {
@@ -39,7 +39,7 @@
       "priceHalf": 4,
       "priceFull": 8,
       "tag": "classic",
-      "desc": "Plump shrimp wok-fired with rice, egg, green onion, and our signature blend of seasonings. Inspired by the neighborhood rice houses of St. Louis, this Midwest takeout favorite is cooked fresh to order and packed with the bold, savory flavor that put St. Louis-style fried rice on the map.",
+      "desc": "Plump shrimp tossed with rice, egg, and scallion in our signature seasoning blend — bright, briny, and bold.",
       "options": []
     },
     {
@@ -49,7 +49,7 @@
       "priceHalf": 3,
       "priceFull": 5,
       "tag": "popular",
-      "desc": "A staple of the St. Louis takeout experience. Crispy golden wontons filled with a rich, creamy crab blend and fried until perfectly crunchy. Sweet, savory, and made for sharing alongside a box of wok-fired fried rice—though we won't blame you for keeping them all to yourself.",
+      "desc": "Crispy golden wontons stuffed with a rich, creamy crab filling. Sweet, savory, and made for sharing.",
       "options": []
     },
     {
@@ -59,7 +59,7 @@
       "priceHalf": null,
       "priceFull": 5,
       "tag": "classic",
-      "desc": "An egg foo young patty layered with seasoned chicken and served on soft white bread with crisp lettuce, tomato, onion, mayo, and pickles. A true St. Louis rice house creation rooted in Midwest carryout culture—simple, bold, and deeply satisfying, bringing a classic corner-shop favorite from St. Louis to Phoenix in true Lou Wok style.",
+      "desc": "Egg foo young patty layered with seasoned chicken on soft white bread — lettuce, tomato, onion, pickles, and mayo.",
       "options": []
     },
     {
@@ -69,7 +69,7 @@
       "priceHalf": 4,
       "priceFull": 8,
       "tag": "new",
-      "desc": "Tender chicken, sweet pineapple, and wok-fired rice come together in the perfect balance of savory and sweet. A bold twist on a Midwest favorite, cooked fresh to order with Lou Wok flavor in every bite.",
+      "desc": "Tender chicken and sweet pineapple wok-fired into seasoned rice. Savory meets sweet in every bite.",
       "options": []
     },
     {
@@ -79,7 +79,7 @@
       "priceHalf": 5,
       "priceFull": 10,
       "tag": "popular",
-      "desc": "A loaded feast of our signature St. Louis-style fried rice piled high with egg, tender chicken, juicy shrimp, savory beef, and fresh vegetables, all wok-fired together with our house seasoning for the ultimate Rice House experience.",
+      "desc": "The full load: chicken, shrimp, beef, egg, and fresh veggies wok-fired into our house-seasoned rice. One bowl, everything.",
       "options": []
     },
     {
@@ -89,7 +89,7 @@
       "priceHalf": 4,
       "priceFull": 8,
       "tag": "popular",
-      "desc": "Crispy, seasoned chicken fried golden brown and served hot and fresh. 4 piece or 8 piece",
+      "desc": "Hand-seasoned chicken fried golden and served hot. Choose 4 or 8 pieces.",
       "options": []
     },
     {
@@ -99,7 +99,7 @@
       "priceHalf": null,
       "priceFull": 2,
       "tag": "",
-      "desc": "A St. Louis original and a staple in every rice house across the city. Ice-cold, bold, and nostalgic, Vess Soda has been a Midwest carryout favorite for generations. The perfect sweet finish to a box of fried rice, St. Paul sandwiches, or crispy wings—straight from St. Louis tradition to your Lou Wok meal.",
+      "desc": "The St. Louis original — ice-cold, bold, and nostalgic. The classic pairing for any rice house plate.",
       "options": []
     },
     {
@@ -109,7 +109,7 @@
       "priceHalf": null,
       "priceFull": 5,
       "tag": "fan-fave",
-      "desc": "Fresh cabbage, carrots, and vegetables wrapped in a crispy shell and fried golden brown. Light, crunchy, and the perfect sidekick to a box of Lou Wok fried rice.\n",
+      "desc": "A meatless egg foo young patty on soft white bread with lettuce, tomato, onion, pickles, and mayo. The classic, gone veggie.",
       "options": []
     },
     {
@@ -119,7 +119,7 @@
       "priceHalf": null,
       "priceFull": 6,
       "tag": "fan-fave",
-      "desc": "A St. Louis rice house favorite built your way. Choose any two proteins—chicken, shrimp, or beef—stacked on our signature egg foo young patty and served on soft white bread with mayo, crisp lettuce, tomato, cheese, and pickles. A Midwest takeout classic that helped define the St. Paul tradition, now served fresh in Phoenix.",
+      "desc": "Pick any two — chicken, shrimp, or beef — stacked on an egg foo young patty with cheese, lettuce, tomato, pickles, and mayo.",
       "options": []
     },
     {
@@ -129,7 +129,7 @@
       "priceHalf": null,
       "priceFull": 3,
       "tag": "",
-      "desc": "A bright, refreshing blend of carrot and fruit juices with a smooth, naturally sweet finish. Served ice-cold, it’s the nostalgic Midwest drink that pairs perfectly with fried rice, St. Paul sandwiches, and crispy wings—Lou Wok style.",
+      "desc": "A bright, naturally sweet blend of carrot and fruit juice, served ice-cold and refreshing.",
       "options": []
     },
     {
@@ -139,7 +139,7 @@
       "priceHalf": null,
       "priceFull": 1,
       "tag": "none",
-      "desc": "16.9 fl oz. bottle of water on chill.",
+      "desc": "Ice-cold 16.9 fl oz bottled water.",
       "options": []
     },
     {
@@ -149,7 +149,7 @@
       "priceHalf": null,
       "priceFull": 20,
       "tag": "fan-fave",
-      "desc": "The combo that inspired it all. A full order of our signature St. Louis-style fried rice, an Original St. Paul Sandwich, four pieces of golden fried chicken, four crispy crab rangoons, and your choice of Vess Soda or Mystic Carrot Juice. Straight from the St. Louis rice house tradition, brought to Phoenix and cooked fresh to order with Midwest flavor and wok-fired soul.",
+      "desc": "Signature fried rice, an Original St. Paul, four fried chicken, four crab rangoon, and a drink. The whole spread in one box.",
       "options": []
     },
     {
@@ -159,7 +159,7 @@
       "priceHalf": 4,
       "priceFull": 8,
       "tag": "",
-      "desc": "Golden, crispy, and packed with seasoned chicken, cabbage, celery, and savory spices, our chicken egg roll is the perfect sidekick to any Lou Wok meal. A St. Louis takeout classic done the Midwest way. Hot, crunchy, and made for dipping.\n",
+      "desc": "Seasoned chicken, cabbage, and celery rolled in a crackly golden shell. Crunchy and built for dipping.",
       "options": []
     },
     {
@@ -169,7 +169,7 @@
       "priceHalf": 3,
       "priceFull": 6,
       "tag": "",
-      "desc": "Fresh cabbage, carrots, and vegetables wrapped in a crispy shell and fried golden brown. Light, crunchy, and the perfect sidekick to a box of Lou Wok fried rice.",
+      "desc": "Cabbage, carrots, and fresh veggies wrapped and fried golden brown. Light, crisp, and satisfying.",
       "options": []
     },
     {
@@ -179,7 +179,7 @@
       "priceHalf": 0,
       "priceFull": 6,
       "tag": "",
-      "desc": "Golden fried-to-order funnel cake dusted with powdered sugar. A sweet, crispy finish to your Lou Wok order.",
+      "desc": "Fried-to-order and dusted with powdered sugar. A warm, crispy sweet finish.",
       "options": []
     }
   ],
