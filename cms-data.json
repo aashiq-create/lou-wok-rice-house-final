@@ -1,6 +1,6 @@
 {
   "_info": "Written by louwok.com/admin. index.html reads this at runtime.",
-  "_updated": "2026-06-27T22:04:36.758Z",
+  "_updated": "2026-06-27T22:05:27.405Z",
   "menu": [
     {
       "id": 1,
@@ -117,7 +117,7 @@
       "name": "St. Paul Sandwich (Deluxe)",
       "category": "sandwiches",
       "priceHalf": null,
-      "priceFull": 6,
+      "priceFull": 7,
       "tag": "fan-fave",
       "desc": "A St. Louis rice house favorite built your way. Choose any two proteins—chicken, shrimp, or beef—stacked on our signature egg foo young patty and served on soft white bread with mayo, crisp lettuce, tomato, cheese, and pickles. A Midwest takeout classic that helped define the St. Paul tradition, now served fresh in Phoenix.",
       "options": []
