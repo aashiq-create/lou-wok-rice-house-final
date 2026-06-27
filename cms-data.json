@@ -1,6 +1,6 @@
 {
   "_info": "Written by louwok.com/admin. index.html reads this at runtime.",
-  "_updated": "2026-06-27T22:09:35.315Z",
+  "_updated": "2026-06-27T22:10:05.619Z",
   "menu": [
     {
       "id": 1,
@@ -107,7 +107,7 @@
       "name": "St. Paul Sandwich (Veggie)",
       "category": "sandwiches",
       "priceHalf": null,
-      "priceFull": 6,
+      "priceFull": 5,
       "tag": "fan-fave",
       "desc": "A St. Louis Chinese takeout classic featuring our signature golden egg foo young patty on soft white bread with crisp lettuce, tomato, red onion, pickles, and mayo. A Midwest favorite, served fresh at Lou Wok Rice House in Phoenix.\n\n",
       "options": []
