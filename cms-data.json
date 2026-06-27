@@ -1,6 +1,6 @@
 {
   "_info": "Written by louwok.com/admin. index.html reads this at runtime.",
-  "_updated": "2026-06-27T22:02:20.602Z",
+  "_updated": "2026-06-27T22:02:46.125Z",
   "menu": [
     {
       "id": 1,
@@ -76,8 +76,8 @@
       "id": 10,
       "name": "Ultimate Fried Rice",
       "category": "rice",
-      "priceHalf": 5,
-      "priceFull": 10,
+      "priceHalf": 6,
+      "priceFull": 12,
       "tag": "popular",
       "desc": "A loaded feast of our signature St. Louis-style fried rice piled high with egg, tender chicken, juicy shrimp, savory beef, and fresh vegetables, all wok-fired together with our house seasoning for the ultimate Rice House experience.",
       "options": []
