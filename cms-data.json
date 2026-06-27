@@ -1,6 +1,6 @@
 {
   "_info": "Written by louwok.com/admin. index.html reads this at runtime.",
-  "_updated": "2026-06-27T00:57:36.643Z",
+  "_updated": "2026-06-27T06:21:50.367Z",
   "menu": [
     {
       "id": 1,
@@ -295,7 +295,7 @@
     "icon": "🥪",
     "label": "Featured Item",
     "title": "THE ST. PAUL\nSANDWICH",
-    "desc": "A St. Louis Chinese takeout classic. Our golden egg-crusted patty is stacked on white bread with crisp lettuce, tomato, pickles, and mayo for a one-of-a-kind sandwich that's been a hometown favorite for generations.",
+    "desc": "Born in St. Louis, Perfected at Lou Wok.",
     "ctaText": "Order the St. Paul",
     "ctaHref": "#order",
     "image": "assets/featured-st-paul.jpg",
