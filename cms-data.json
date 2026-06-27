@@ -171,6 +171,16 @@
       "tag": "",
       "desc": "Fresh cabbage, carrots, and vegetables wrapped in a crispy shell and fried golden brown. Light, crunchy, and the perfect sidekick to a box of Lou Wok fried rice.",
       "options": []
+    },
+    {
+      "id": 21,
+      "name": "Funnel Cake",
+      "category": "desserts",
+      "priceHalf": 0,
+      "priceFull": 6,
+      "tag": "",
+      "desc": "Golden fried-to-order funnel cake dusted with powdered sugar. A sweet, crispy finish to your Lou Wok order.",
+      "options": []
     }
   ],
   "hours": [
@@ -258,6 +268,10 @@
     {
       "value": "beverages",
       "label": "Beverages"
+    },
+    {
+      "value": "desserts",
+      "label": "Desserts"
     }
   ],
   "announcements": [],
@@ -521,5 +535,16 @@
       "email": "malika@louwok.com",
       "hash": "9455fc82f8414d951e930d69242ef2526a7aa57c76522187394402245fd11782"
     }
-  ]
+  ],
+  "hero": {
+    "eyebrow": "Phoenix, Arizona · Est. 2025",
+    "titleLead": "bold",
+    "titleLines": "WOK\nRICE\nHOUSE",
+    "sub": "Fired over high heat. Built on flavor. Lou Wok serves up wok-tossed rice, crab rangoon, and the legendary St. Paul sandwich — every plate made to order, every time.",
+    "bowlLabel": "Wok-fired daily",
+    "cta1Text": "View Menu",
+    "cta1Href": "#menu",
+    "cta2Text": "Order Online",
+    "cta2Href": "#order"
+  }
 }
