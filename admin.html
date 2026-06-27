@@ -953,6 +953,45 @@
     <div id="section-featured" class="section">
       <div class="panel">
         <div class="panel-header">
+          <span class="panel-title">Hero Section</span>
+          <button class="btn btn-primary btn-sm" onclick="saveHero()">Save Hero</button>
+        </div>
+        <div style="font-size:0.78rem;color:var(--muted);margin-bottom:1.2rem;">
+          The big top banner on the home page — the "bold WOK RICE HOUSE" headline and intro.
+        </div>
+        <div>
+          <label class="field-label">Eyebrow (small line above headline)</label>
+          <input class="field-input" id="hero-eyebrow" placeholder="Phoenix, Arizona · Est. 2025" />
+        </div>
+        <div class="panel-grid panel-grid-2" style="margin-top:1rem;">
+          <div>
+            <label class="field-label">Headline — italic lead word</label>
+            <input class="field-input" id="hero-titlelead" placeholder="bold" />
+          </div>
+          <div>
+            <label class="field-label">Headline — stacked lines (one per line)</label>
+            <textarea class="field-input" id="hero-titlelines" rows="3" placeholder="WOK&#10;RICE&#10;HOUSE"></textarea>
+          </div>
+        </div>
+        <div style="font-size:0.72rem;color:var(--muted);margin-top:0.4rem;">The last line is shown in the accent color. Put each word on its own line.</div>
+        <div style="margin-top:1rem;">
+          <label class="field-label">Intro Paragraph</label>
+          <textarea class="field-input" id="hero-sub" rows="3" placeholder="Fired over high heat. Built on flavor…"></textarea>
+        </div>
+        <div style="margin-top:1rem;">
+          <label class="field-label">Rice Bowl Label</label>
+          <input class="field-input" id="hero-bowllabel" placeholder="Wok-fired daily" />
+        </div>
+        <div class="panel-grid panel-grid-2" style="margin-top:1rem;">
+          <div><label class="field-label">Button 1 Text</label><input class="field-input" id="hero-cta1text" placeholder="View Menu" /></div>
+          <div><label class="field-label">Button 1 Link</label><input class="field-input" id="hero-cta1href" placeholder="#menu" /></div>
+          <div><label class="field-label">Button 2 Text</label><input class="field-input" id="hero-cta2text" placeholder="Order Online" /></div>
+          <div><label class="field-label">Button 2 Link</label><input class="field-input" id="hero-cta2href" placeholder="#order" /></div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-header">
           <span class="panel-title">Featured Item</span>
           <button class="btn btn-primary btn-sm" onclick="saveFeatured()">Save Featured</button>
         </div>
@@ -1513,6 +1552,15 @@
         {label:"Sauce", value:"Mayo + Pickles"}
       ]
     },
+    hero:{
+      eyebrow:"Phoenix, Arizona · Est. 2025",
+      titleLead:"bold",
+      titleLines:"WOK\nRICE\nHOUSE",
+      sub:"Fired over high heat. Built on flavor. Lou Wok serves up wok-tossed rice, crab rangoon, and the legendary St. Paul sandwich — every plate made to order, every time.",
+      bowlLabel:"Wok-fired daily",
+      cta1Text:"View Menu", cta1Href:"#menu",
+      cta2Text:"Order Online", cta2Href:"#order"
+    },
     location:{
       street:"Phoenix, AZ",
       cityStateZip:"Phoenix, AZ 85001",
@@ -1576,7 +1624,7 @@
   };
 
   // ── LIVE STATE ──────────────────────────────────────────────────
-  let menuData = [], hoursData = [], announcementsData = [], orderLinksData = {}, seoData = {}, featuredData = {};
+  let menuData = [], hoursData = [], announcementsData = [], orderLinksData = {}, seoData = {}, featuredData = {}, heroData = {};
   let categoriesData = [];
   let locationData = {}, brandingData = {}, socialsData = {};
   let tickerData = [], footerData = {}, settingsData = {};
@@ -1619,7 +1667,7 @@
       _status('Offline — loaded defaults');
     }
     renderMenuList(); renderHours(); renderAnnouncements();
-    _populateOrderLinks(); _populateFeatured(); _populateSEO(); _populateLocation(); _populateBranding(); _populateSocials(); _populateTicker(); _populateFooter(); _populateSettings(); _populateNotify(); renderCategoryManager(); _fillCategoryDropdown();
+    _populateOrderLinks(); _populateFeatured(); _populateHero(); _populateSEO(); _populateLocation(); _populateBranding(); _populateSocials(); _populateTicker(); _populateFooter(); _populateSettings(); _populateNotify(); renderCategoryManager(); _fillCategoryDropdown();
     _refreshOverview();
     updateTokenStatus();
   }
@@ -1631,6 +1679,7 @@
     announcementsData = d.announcements || DEFAULTS.announcements;
     orderLinksData    = d.orderLinks    || DEFAULTS.orderLinks;
     featuredData      = d.featured      || DEFAULTS.featured;
+    heroData          = d.hero          || DEFAULTS.hero;
     seoData           = d.seo           || DEFAULTS.seo;
     locationData      = d.location      || DEFAULTS.location;
     brandingData      = d.branding      || DEFAULTS.branding;
@@ -1660,6 +1709,7 @@
     saveHours();
     saveOrderLinks();
     saveFeatured();
+    saveHero();
     saveSEO();
     saveLocation();
     saveBranding();
@@ -1681,6 +1731,7 @@
       announcements: announcementsData,
       orderLinks: orderLinksData, seo: seoData,
       featured: featuredData,
+      hero: heroData,
       location: locationData, branding: brandingData,
       socials: socialsData,
       ticker: tickerData, footer: footerData,
@@ -2313,6 +2364,36 @@
   // ══════════════════════════════════════════════════════════════
   //  FEATURED ITEM  (data-backed)
   // ══════════════════════════════════════════════════════════════
+  function _populateHero() {
+    const h = heroData || {};
+    const set = (id,val) => { const el=document.getElementById(id); if(el) el.value = (val==null?'':val); };
+    set('hero-eyebrow',    h.eyebrow);
+    set('hero-titlelead',  h.titleLead);
+    set('hero-titlelines', h.titleLines);
+    set('hero-sub',        h.sub);
+    set('hero-bowllabel',  h.bowlLabel);
+    set('hero-cta1text',   h.cta1Text);
+    set('hero-cta1href',   h.cta1Href);
+    set('hero-cta2text',   h.cta2Text);
+    set('hero-cta2href',   h.cta2Href);
+  }
+
+  function saveHero() {
+    const val = id => { const el=document.getElementById(id); return el ? el.value.trim() : ''; };
+    heroData = {
+      eyebrow:    val('hero-eyebrow'),
+      titleLead:  val('hero-titlelead'),
+      titleLines: (document.getElementById('hero-titlelines') ? document.getElementById('hero-titlelines').value : '').replace(/\r/g,'').split('\n').map(s=>s.trim()).filter(Boolean).join('\n'),
+      sub:        val('hero-sub'),
+      bowlLabel:  val('hero-bowllabel'),
+      cta1Text:   val('hero-cta1text'),
+      cta1Href:   val('hero-cta1href'),
+      cta2Text:   val('hero-cta2text'),
+      cta2Href:   val('hero-cta2href')
+    };
+    setUnsaved(); showToast('Hero section saved','success');
+  }
+
   function _populateFeatured() {
     const f = featuredData || {};
     const set = (id,val) => { const el=document.getElementById(id); if(el) el.value = (val==null?'':val); };
