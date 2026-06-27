@@ -1,55 +1,55 @@
 {
   "_info": "Written by louwok.com/admin. index.html reads this at runtime.",
-  "_updated": "2026-06-26T23:53:48.216Z",
+  "_updated": "2026-06-26T20:01:41.134Z",
   "menu": [
     {
       "id": 1,
       "name": "Plain Fried Rice",
       "category": "rice",
-      "priceHalf": 4,
-      "priceFull": 8,
+      "priceHalf": 3,
+      "priceFull": 6,
       "tag": "classic",
-      "desc": "Our classic St. Louis-style fried rice with egg, bean sprouts, and green onions, wok-tossed fresh in a blazing-hot wok.\n",
+      "desc": "The St. Louis rice house foundation. Egg, bean sprouts, and green onion wok-tossed in a screaming-hot wok with seasoned rice, cooked fast and fresh to order. Straightforward, satisfying, and rooted in the classic STL scene.",
       "options": []
     },
     {
       "id": 2,
       "name": "Chicken Fried Rice",
       "category": "rice",
-      "priceHalf": 5,
-      "priceFull": 10,
+      "priceHalf": 4,
+      "priceFull": 8,
       "tag": "classic",
-      "desc": "All-white chicken, seasoned rice, egg, bean sprouts, and green onions, wok-fired fresh to order. A St. Louis rice house classic with bold, no-frills Midwest flavor.\n",
+      "desc": "All-white chicken wok-fired with seasoned rice, egg, bean sprouts, soy, and green onion. A St. Louis rice house classic—simple, bold, and built on the kind of no-frills flavors that made Midwest takeout a staple. Cooked fresh to order and served hot, Lou Wok style.",
       "options": []
     },
     {
       "id": 3,
       "name": "Beef Fried Rice",
       "category": "rice",
-      "priceHalf": 5,
-      "priceFull": 10,
+      "priceHalf": 4,
+      "priceFull": 8,
       "tag": "classic",
-      "desc": "Sliced beef wok-fired with seasoned rice, egg, bean sprouts, and green onions in a savory soy blend. A St. Louis rice house favorite with rich, hearty flavor that satisfies from the first bite to the last.\n",
+      "desc": "Sliced beef wok-fired with seasoned rice, egg, bean sprouts, and green onion, finished in a savory soy-based blend. A St. Louis rice house staple built on simple, bold ingredients—classic Midwest takeout flavor, cooked fresh to order and served hot in true Lou Wok style.",
       "options": []
     },
     {
       "id": 4,
       "name": "Shrimp Fried Rice",
       "category": "rice",
-      "priceHalf": 5,
-      "priceFull": 10,
+      "priceHalf": 4,
+      "priceFull": 8,
       "tag": "classic",
-      "desc": "Shrimp wok-fired with seasoned rice, egg, bean sprouts, and green onions in our signature seasoning blend. Inspired by St. Louis rice houses, this Midwest favorite brings the perfect balance of savory seafood and authentic wok-fired flavor.\n",
+      "desc": "Plump shrimp wok-fired with rice, egg, green onion, and our signature blend of seasonings. Inspired by the neighborhood rice houses of St. Louis, this Midwest takeout favorite is cooked fresh to order and packed with the bold, savory flavor that put St. Louis-style fried rice on the map.",
       "options": []
     },
     {
       "id": 6,
       "name": "Crab Rangoon",
       "category": "appetizers",
-      "priceHalf": 4,
-      "priceFull": 6,
+      "priceHalf": 3,
+      "priceFull": 5,
       "tag": "popular",
-      "desc": "A St. Louis takeout staple. Crispy golden wontons filled with a rich, sweet, creamy crab blend and fried to perfection. Sweet, savory, and the perfect side to complete your Lou Wok meal. Your choice of a 4-piece or 8-piece.",
+      "desc": "A staple of the St. Louis takeout experience. Crispy golden wontons filled with a rich, creamy crab blend and fried until perfectly crunchy. Sweet, savory, and made for sharing alongside a box of wok-fired fried rice—though we won't blame you for keeping them all to yourself.",
       "options": []
     },
     {
@@ -59,17 +59,17 @@
       "priceHalf": null,
       "priceFull": 5,
       "tag": "classic",
-      "desc": "A true St. Louis classic. An egg foo young patty topped with seasoned chicken and served on soft white bread with crisp lettuce, tomato, onion, mayo, and pickle. A Midwest original that's as unforgettable as it is unique.",
+      "desc": "An egg foo young patty layered with seasoned chicken and served on soft white bread with crisp lettuce, tomato, onion, mayo, and pickles. A true St. Louis rice house creation rooted in Midwest carryout culture—simple, bold, and deeply satisfying, bringing a classic corner-shop favorite from St. Louis to Phoenix in true Lou Wok style.",
       "options": []
     },
     {
       "id": 8,
       "name": "Pineapple Chicken Fried Rice",
       "category": "rice",
-      "priceHalf": 5,
-      "priceFull": 10,
+      "priceHalf": 4,
+      "priceFull": 8,
       "tag": "new",
-      "desc": "Tender chicken, juicy pineapple, and wok-fired rice come together in the perfect balance of savory and sweet. A bold twist on a Midwest favorite, cooked fresh to order and packed with flavor in every forkful.",
+      "desc": "Tender chicken, sweet pineapple, and wok-fired rice come together in the perfect balance of savory and sweet. A bold twist on a Midwest favorite, cooked fresh to order with Lou Wok flavor in every bite.",
       "options": []
     },
     {
@@ -79,7 +79,7 @@
       "priceHalf": 5,
       "priceFull": 10,
       "tag": "popular",
-      "desc": "Our signature St. Louis-style fried rice is loaded with fluffy egg, tender chicken, juicy shrimp, savory beef, and crisp vegetables, all tossed over blazing heat with our signature house seasoning. Every bite delivers the bold, satisfying flavor that defines the Rice House experience.\n",
+      "desc": "A loaded feast of our signature St. Louis-style fried rice piled high with egg, tender chicken, juicy shrimp, savory beef, and fresh vegetables, all wok-fired together with our house seasoning for the ultimate Rice House experience.",
       "options": []
     },
     {
@@ -89,7 +89,7 @@
       "priceHalf": 4,
       "priceFull": 8,
       "tag": "popular",
-      "desc": "Hand-breaded, boldly seasoned chicken fried to a crispy golden finish and served hot from the kitchen. Crunchy on the outside, juicy on the inside—available as a 4-piece or 8-piece meal.",
+      "desc": "Crispy, seasoned chicken fried golden brown and served hot and fresh. 4 piece or 8 piece",
       "options": []
     },
     {
@@ -99,7 +99,7 @@
       "priceHalf": null,
       "priceFull": 2,
       "tag": "",
-      "desc": "Classic Vess sodas served ice-cold in Pineapple, Peach, Strawberry, Fruit Punch, or Orange—sweet, refreshing, and the perfect pairing for any Lou Wok meal.",
+      "desc": "A St. Louis original and a staple in every rice house across the city. Ice-cold, bold, and nostalgic, Vess Soda has been a Midwest carryout favorite for generations. The perfect sweet finish to a box of fried rice, St. Paul sandwiches, or crispy wings—straight from St. Louis tradition to your Lou Wok meal.",
       "options": []
     },
     {
@@ -119,7 +119,7 @@
       "priceHalf": null,
       "priceFull": 6,
       "tag": "fan-fave",
-      "desc": "A St. Louis Rice House classic, your way—choose two proteins (chicken, shrimp, or beef) over an egg foo young patty on soft white bread, topped with mayo, lettuce, tomato, cheese, and pickles. A true Midwest favorite, now fresh in Phoenix.",
+      "desc": "A St. Louis rice house favorite built your way. Choose any two proteins—chicken, shrimp, or beef—stacked on our signature egg foo young patty and served on soft white bread with mayo, crisp lettuce, tomato, cheese, and pickles. A Midwest takeout classic that helped define the St. Paul tradition, now served fresh in Phoenix.",
       "options": []
     },
     {
@@ -127,9 +127,9 @@
       "name": "Mystic Carrot Juice",
       "category": "beverages",
       "priceHalf": null,
-      "priceFull": 2,
+      "priceFull": 3,
       "tag": "",
-      "desc": "Mystic Carrot Juice—a bright, refreshing blend of carrot and fruit juices with a smooth, naturally sweet finish. Served ice-cold, it’s a nostalgic Midwest favorite that pairs perfectly with Lou Wok fried rice, St. Paul sandwiches, and crispy wings.",
+      "desc": "A bright, refreshing blend of carrot and fruit juices with a smooth, naturally sweet finish. Served ice-cold, it’s the nostalgic Midwest drink that pairs perfectly with fried rice, St. Paul sandwiches, and crispy wings—Lou Wok style.",
       "options": []
     },
     {
@@ -147,9 +147,9 @@
       "name": "Lou Wok Box Combo ",
       "category": "combos",
       "priceHalf": null,
-      "priceFull": 19,
+      "priceFull": 20,
       "tag": "fan-fave",
-      "desc": "The combo that started it all—St. Louis-style fried rice, an Original St. Paul Sandwich, 4 crispy fried chicken pieces, and 4 crab rangoons or egg rolls, plus your choice of Vess Soda or Mystic Carrot Juice. A Midwest classic, reimagined Lou Wok style and made fresh to order in Phoenix.\n",
+      "desc": "The combo that inspired it all. A full order of our signature St. Louis-style fried rice, an Original St. Paul Sandwich, four pieces of golden fried chicken, four crispy crab rangoons, and your choice of Vess Soda or Mystic Carrot Juice. Straight from the St. Louis rice house tradition, brought to Phoenix and cooked fresh to order with Midwest flavor and wok-fired soul.",
       "options": []
     },
     {
@@ -170,16 +170,6 @@
       "priceFull": 6,
       "tag": "",
       "desc": "Fresh cabbage, carrots, and vegetables wrapped in a crispy shell and fried golden brown. Light, crunchy, and the perfect sidekick to a box of Lou Wok fried rice.",
-      "options": []
-    },
-    {
-      "id": 21,
-      "name": "Funnel Cake",
-      "category": "desserts",
-      "priceHalf": null,
-      "priceFull": 4,
-      "tag": "",
-      "desc": "Golden, crispy funnel cake made with sweet cream in the batter for a rich, soft-then-crunchy bite. Lightly dusted with powdered sugar and served fresh and warm—our Lou Wok dessert twist on a classic favorite.",
       "options": []
     }
   ],
@@ -268,10 +258,6 @@
     {
       "value": "beverages",
       "label": "Beverages"
-    },
-    {
-      "value": "desserts",
-      "label": "Desserts"
     }
   ],
   "announcements": [],
@@ -329,7 +315,8 @@
         "label": "The Sandwich, The Myth, The Legend",
         "value": "Mayo + Pickles + Tomato"
       }
-    ]
+    ],
+    "image": "assets/featured-st-paul.jpg"
   },
   "location": {
     "street": "",
