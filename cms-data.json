@@ -1,6 +1,6 @@
 {
   "_info": "Written by louwok.com/admin. index.html reads this at runtime.",
-  "_updated": "2026-06-27T22:10:05.619Z",
+  "_updated": "2026-06-27T22:11:20.136Z",
   "menu": [
     {
       "id": 1,
@@ -57,9 +57,9 @@
       "name": "St. Paul Sandwich (Chicken)",
       "category": "sandwiches",
       "priceHalf": null,
-      "priceFull": 5,
+      "priceFull": 6,
       "tag": "classic",
-      "desc": "An egg foo young patty layered with seasoned chicken and served on soft white bread with crisp lettuce, tomato, onion, mayo, and pickles. A true St. Louis rice house creation rooted in Midwest carryout culture—simple, bold, and deeply satisfying, bringing a classic corner-shop favorite from St. Louis to Phoenix in true Lou Wok style.",
+      "desc": "Our signature egg foo young patty topped with seasoned chicken, crisp lettuce, tomato, red onion, pickles, and mayo on soft white bread. A legendary St. Louis takeout classic, now served fresh in Phoenix.",
       "options": []
     },
     {
