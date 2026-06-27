@@ -713,12 +713,33 @@
       position: relative;
       overflow: hidden;
     }
+    .featured-photo {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      z-index: 0;
+    }
+    /* Smoke-toned blend so the photo melts into the panel + the content side. */
+    .featured-visual::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+      background:
+        linear-gradient(90deg, transparent 55%, rgba(30,28,24,0.55) 100%),
+        linear-gradient(0deg, rgba(30,28,24,0.45) 0%, transparent 28%, transparent 72%, rgba(30,28,24,0.45) 100%);
+    }
     .featured-visual::before {
       content: '🍚';
       font-size: 14rem;
       opacity: 0.12;
       position: absolute;
       right: -2rem; bottom: -2rem;
+      z-index: 2;
     }
     .featured-big-text {
       font-family: 'Bebas Neue', sans-serif;
@@ -726,11 +747,14 @@
       line-height: 0.85;
       text-align: center;
       color: var(--rice);
-      opacity: 0.08;
+      opacity: 0.16;
       position: absolute;
       letter-spacing: 0.02em;
+      z-index: 2;
+      mix-blend-mode: overlay;
+      text-shadow: 0 2px 24px rgba(0,0,0,0.5);
     }
-    .featured-icon { font-size: 5rem; position: relative; z-index: 1; }
+    .featured-icon { display: none; }
     .featured-content {
       background: var(--smoke);
       padding: 5rem 4rem;
@@ -2387,6 +2411,7 @@
   <!-- ── FEATURED ── -->
   <section id="featured" style="padding:0;">
     <div class="featured-visual">
+      <img class="featured-photo" id="featPhoto" src="" alt="Lou Wok featured item" loading="lazy" style="display:none;" />
       <div class="featured-big-text" id="featBigText">ST.<br>PAUL</div>
       <div class="featured-icon" id="featIcon">🥪</div>
     </div>
@@ -4097,6 +4122,20 @@
         // Big background text + emoji on the visual panel
         setHTML('featBigText', f.bigText);
         setText('featIcon', f.icon);
+        // Featured photo from the admin (featured.image). Shows when set,
+        // hides (revealing the text/emoji panel) when cleared.
+        const ph=document.getElementById('featPhoto');
+        if(ph){
+          if(f.image){
+            const bust = f.image + (f.image.indexOf('?')<0 ? '?_=' + Date.now() : '');
+            ph.src = bust;
+            ph.alt = (f.title ? String(f.title).replace(/\n/g,' ') : 'Lou Wok featured item');
+            ph.style.display = '';
+          } else {
+            ph.removeAttribute('src');
+            ph.style.display = 'none';
+          }
+        }
         setText('featLabel', f.label);
         setHTML('featTitle', f.title);
         setText('featDesc', f.desc);
