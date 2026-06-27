@@ -1,13 +1,13 @@
 {
   "_info": "Written by louwok.com/admin. index.html reads this at runtime.",
-  "_updated": "2026-06-27T21:59:49.215Z",
+  "_updated": "2026-06-27T22:00:13.214Z",
   "menu": [
     {
       "id": 1,
       "name": "Plain Fried Rice",
       "category": "rice",
-      "priceHalf": 3,
-      "priceFull": 6,
+      "priceHalf": 4,
+      "priceFull": 8,
       "tag": "classic",
       "desc": "The St. Louis rice house foundation. Egg, bean sprouts, and green onion wok-tossed in a screaming-hot wok with seasoned rice, cooked fast and fresh to order. Straightforward, satisfying, and rooted in the classic STL scene.",
       "options": []
