@@ -969,6 +969,22 @@
             <input class="field-input" id="feat-icon" maxlength="4" placeholder="🥪" />
           </div>
         </div>
+
+        <div style="margin-top:1.2rem;padding:1rem;border:1px dashed var(--border);border-radius:4px;">
+          <label class="field-label">Featured Photo</label>
+          <div style="font-size:0.72rem;color:var(--muted);margin:0.3rem 0 0.7rem;">
+            Upload a photo of the dish (JPG/PNG). It's resized automatically, committed to the site, and shown in the big spotlight panel. Hit <strong>Publish</strong> after uploading to push it live.
+          </div>
+          <div style="display:flex;align-items:flex-start;gap:1rem;flex-wrap:wrap;">
+            <div id="feat-img-preview" style="width:120px;height:120px;border-radius:4px;border:1px solid var(--border);background:#1e1c18 center/cover no-repeat;flex-shrink:0;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:0.7rem;text-align:center;">No image</div>
+            <div style="flex:1;min-width:180px;">
+              <input type="file" id="feat-img-file" accept="image/jpeg,image/png,image/webp" style="display:none;" onchange="_uploadFeaturedImage(this)" />
+              <button class="btn btn-ghost btn-sm" onclick="document.getElementById('feat-img-file').click()">Choose image…</button>
+              <button class="btn btn-ghost btn-sm" onclick="_removeFeaturedImage()" style="margin-left:0.4rem;">Remove</button>
+              <div id="feat-img-status" style="font-size:0.72rem;color:var(--muted);margin-top:0.5rem;"></div>
+            </div>
+          </div>
+        </div>
         <div style="margin-top:1rem;">
           <label class="field-label">Section Label</label>
           <input class="field-input" id="feat-label" placeholder="Featured Item" />
@@ -2307,10 +2323,24 @@
     set('feat-desc',    f.desc);
     set('feat-ctatext', f.ctaText);
     set('feat-ctahref', f.ctaHref);
+    _renderFeaturedPreview(f.image);
     const d = Array.isArray(f.details) ? f.details : [];
     for (let i=0;i<4;i++){
       set('feat-d'+(i+1)+'l', d[i] && d[i].label);
       set('feat-d'+(i+1)+'v', d[i] && d[i].value);
+    }
+  }
+
+  function _renderFeaturedPreview(src){
+    const box = document.getElementById('feat-img-preview');
+    if(!box) return;
+    if(src){
+      // cache-bust so a freshly re-uploaded image shows immediately
+      box.style.backgroundImage = `url("${src}${src.indexOf('?')<0?'?_='+Date.now():''}")`;
+      box.textContent = '';
+    } else {
+      box.style.backgroundImage = 'none';
+      box.textContent = 'No image';
     }
   }
 
@@ -2329,10 +2359,123 @@
       desc:    val('feat-desc'),
       ctaText: val('feat-ctatext'),
       ctaHref: val('feat-ctahref'),
+      image:   (featuredData && featuredData.image) || '',
       details: details
     };
     setUnsaved(); showToast('Featured item saved','success');
   }
+
+  // ── FEATURED IMAGE UPLOAD ────────────────────────────────────
+  // Commits an image file straight to the repo via the GitHub Contents API
+  // (same mechanism as publishing cms-data.json), then stores its path in
+  // featuredData.image. index.html reads featured.image and renders it.
+  const FEAT_IMG_PATH = 'assets/featured-st-paul.jpg';
+
+  async function _ghPutFile(path, base64Content, token, message){
+    // Look up existing sha (so we update rather than fail on an existing file).
+    let sha = null;
+    const head = await fetch(
+      `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${path}?ref=${GITHUB_BRANCH}&_=${Date.now()}`,
+      { headers:{ Authorization:`token ${token}`, Accept:'application/vnd.github.v3+json' } }
+    );
+    if (head.ok) sha = (await head.json()).sha;
+    const body = { message: message || `Upload ${path}`, content: base64Content, branch: GITHUB_BRANCH };
+    if (sha) body.sha = sha;
+    let res = await fetch(
+      `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${path}`,
+      { method:'PUT', headers:{ Authorization:`token ${token}`, Accept:'application/vnd.github.v3+json', 'Content-Type':'application/json' }, body:JSON.stringify(body) }
+    );
+    // Handle a stale-sha 409 once.
+    if (res.status === 409) {
+      const r2 = await fetch(
+        `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${path}?ref=${GITHUB_BRANCH}&_=${Date.now()}`,
+        { headers:{ Authorization:`token ${token}`, Accept:'application/vnd.github.v3+json' } }
+      );
+      if (r2.ok){ body.sha = (await r2.json()).sha; res = await fetch(
+        `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${path}`,
+        { method:'PUT', headers:{ Authorization:`token ${token}`, Accept:'application/vnd.github.v3+json', 'Content-Type':'application/json' }, body:JSON.stringify(body) }
+      ); }
+    }
+    return res;
+  }
+
+  // Downscale + compress in-browser, return base64 (no data: prefix) JPEG.
+  function _imageToBase64Jpeg(file, maxW){
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onerror = () => reject(new Error('Could not read file'));
+      reader.onload = () => {
+        const img = new Image();
+        img.onerror = () => reject(new Error('Could not load image'));
+        img.onload = () => {
+          let { width:w, height:h } = img;
+          if (w > maxW){ h = Math.round(h * maxW / w); w = maxW; }
+          const canvas = document.createElement('canvas');
+          canvas.width = w; canvas.height = h;
+          const ctx = canvas.getContext('2d');
+          // fill smoke behind transparency so PNGs don't go black
+          ctx.fillStyle = '#1e1c18'; ctx.fillRect(0,0,w,h);
+          ctx.drawImage(img, 0, 0, w, h);
+          const dataUrl = canvas.toDataURL('image/jpeg', 0.82);
+          resolve(dataUrl.split(',')[1]);
+        };
+        img.src = reader.result;
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+
+  async function _uploadFeaturedImage(input){
+    const file = input.files && input.files[0];
+    if (!file) return;
+    const token = getToken();
+    const statusEl = document.getElementById('feat-img-status');
+    const setS = m => { if(statusEl) statusEl.textContent = m; };
+    if (!token){
+      setS('');
+      showToast('Add your GitHub token in the Deploy tab first','error');
+      const tm=document.getElementById('tokenModal'); if(tm) tm.style.display='flex';
+      input.value=''; return;
+    }
+    try {
+      setS('Optimizing image…');
+      const b64 = await _imageToBase64Jpeg(file, 1200);
+      setS('Uploading to site…');
+      const res = await _ghPutFile(FEAT_IMG_PATH, b64, token, `Featured image upload — ${new Date().toLocaleString()}`);
+      if (res.ok){
+        featuredData = featuredData || {};
+        featuredData.image = FEAT_IMG_PATH;
+        _renderFeaturedPreview(FEAT_IMG_PATH);
+        setS('✅ Uploaded. Hit Publish to push it live.');
+        setUnsaved();
+        showToast('Image uploaded — now Publish to deploy','success');
+      } else if (res.status === 401){
+        localStorage.removeItem('louwok_gh_token');
+        setS('');
+        showToast('GitHub token invalid — re-enter it','error');
+        const tm=document.getElementById('tokenModal'); if(tm) tm.style.display='flex';
+      } else {
+        const j = await res.json().catch(()=>({}));
+        setS('❌ Upload failed: '+(j.message||('HTTP '+res.status)));
+        showToast('Image upload failed','error');
+      }
+    } catch(err){
+      setS('❌ '+err.message);
+      showToast('Image upload failed','error');
+    } finally {
+      input.value='';
+    }
+  }
+  window._uploadFeaturedImage = _uploadFeaturedImage;
+
+  function _removeFeaturedImage(){
+    featuredData = featuredData || {};
+    featuredData.image = '';
+    _renderFeaturedPreview('');
+    const s=document.getElementById('feat-img-status'); if(s) s.textContent='Image cleared. Publish to update the site.';
+    setUnsaved();
+  }
+  window._removeFeaturedImage = _removeFeaturedImage;
 
   // ══════════════════════════════════════════════════════════════
   //  SEO  (data-backed)
