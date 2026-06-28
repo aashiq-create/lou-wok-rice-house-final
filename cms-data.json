@@ -1,6 +1,6 @@
 {
   "_info": "Written by louwok.com/admin. index.html reads this at runtime.",
-  "_updated": "2026-06-28T16:36:02.913Z",
+  "_updated": "2026-06-28T16:38:52.463Z",
   "menu": [
     {
       "id": 1,
@@ -206,8 +206,8 @@
       "open": "11:00",
       "close": "19:00",
       "closed": false,
-      "location": "Ahwatukee Shopping Plaza",
-      "area": "Ahwatukee Shopping Plaza",
+      "location": "S. 51 st. & E. Elliott Rd. (Ahwatukee Plaza)",
+      "area": "S. 51 st. & E. Elliott Rd. (Ahwatukee Plaza)",
       "street": "Near 3rd St & Roosevelt"
     },
     {
@@ -215,8 +215,8 @@
       "open": "11:00",
       "close": "19:00",
       "closed": false,
-      "location": "Ahwatukee Shopping Plaza",
-      "area": "Ahwatukee Shopping Plaza",
+      "location": "S. 51 st. & E. Elliott Rd. (Ahwatukee Plaza)",
+      "area": "S. 51 st. & E. Elliott Rd. (Ahwatukee Plaza)",
       "street": "Near Camelback & 24th St"
     },
     {
@@ -224,8 +224,8 @@
       "open": "11:00",
       "close": "19:00",
       "closed": false,
-      "location": "Ahwatukee Shopping Plaza",
-      "area": "Ahwatukee Shopping Plaza",
+      "location": "S. 51 st. & E. Elliott Rd. (Ahwatukee Plaza)",
+      "area": "S. 51 st. & E. Elliott Rd. (Ahwatukee Plaza)",
       "street": "Check @louwokphx for today's spot"
     },
     {
@@ -233,8 +233,8 @@
       "open": "11:00",
       "close": "19:00",
       "closed": false,
-      "location": "Ahwatukee Shopping Plaza",
-      "area": "Ahwatukee Shopping Plaza",
+      "location": "S. 51 st. & E. Elliott Rd. (Ahwatukee Plaza)",
+      "area": "S. 51 st. & E. Elliott Rd. (Ahwatukee Plaza)",
       "street": "Near 3rd St & Roosevelt"
     }
   ],
@@ -334,7 +334,7 @@
     "cta2Href": "#order"
   },
   "location": {
-    "street": "Ahwatukee Shopping Plaza",
+    "street": "S. 51 st. & E. Elliott Rd. (Ahwatukee Plaza)",
     "cityStateZip": "Phoenix, AZ 85044",
     "phone": "314-356-5596",
     "email": "orders@louwok.com",
@@ -372,8 +372,8 @@
       },
       {
         "day": "Thursday",
-        "spot": "Ahwatukee Shopping Plaza",
-        "address": "Ahwatukee Shopping Plaza",
+        "spot": "S. 51 st. & E. Elliott Rd. (Ahwatukee Plaza)",
+        "address": "S. 51 st. & E. Elliott Rd. (Ahwatukee Plaza)",
         "lat": 33.345,
         "lng": -111.984,
         "open": "11:00",
@@ -382,8 +382,8 @@
       },
       {
         "day": "Friday",
-        "spot": "Ahwatukee Shopping Plaza",
-        "address": "Ahwatukee Shopping Plaza",
+        "spot": "S. 51 st. & E. Elliott Rd. (Ahwatukee Plaza)",
+        "address": "S. 51 st. & E. Elliott Rd. (Ahwatukee Plaza)",
         "lat": 33.345,
         "lng": -111.984,
         "open": "11:00",
@@ -392,8 +392,8 @@
       },
       {
         "day": "Saturday",
-        "spot": "Ahwatukee Shopping Plaza",
-        "address": "Ahwatukee Shopping Plaza",
+        "spot": "S. 51 st. & E. Elliott Rd. (Ahwatukee Plaza)",
+        "address": "S. 51 st. & E. Elliott Rd. (Ahwatukee Plaza)",
         "lat": 33.345,
         "lng": -111.984,
         "open": "11:00",
@@ -402,8 +402,8 @@
       },
       {
         "day": "Sunday",
-        "spot": "Ahwatukee Shopping Plaza",
-        "address": "Ahwatukee Shopping Plaza",
+        "spot": "S. 51 st. & E. Elliott Rd. (Ahwatukee Plaza)",
+        "address": "S. 51 st. & E. Elliott Rd. (Ahwatukee Plaza)",
         "lat": 33.345,
         "lng": -111.984,
         "open": "11:00",
