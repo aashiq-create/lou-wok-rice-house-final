@@ -1,6 +1,6 @@
 {
   "_info": "Written by louwok.com/admin. index.html reads this at runtime.",
-  "_updated": "2026-06-28T16:38:52.463Z",
+  "_updated": "2026-06-28T16:39:47.047Z",
   "menu": [
     {
       "id": 1,
@@ -203,7 +203,7 @@
     },
     {
       "day": "Thursday",
-      "open": "11:00",
+      "open": "12:00",
       "close": "19:00",
       "closed": false,
       "location": "S. 51 st. & E. Elliott Rd. (Ahwatukee Plaza)",
@@ -212,7 +212,7 @@
     },
     {
       "day": "Friday",
-      "open": "11:00",
+      "open": "12:00",
       "close": "19:00",
       "closed": false,
       "location": "S. 51 st. & E. Elliott Rd. (Ahwatukee Plaza)",
@@ -221,7 +221,7 @@
     },
     {
       "day": "Saturday",
-      "open": "11:00",
+      "open": "12:00",
       "close": "19:00",
       "closed": false,
       "location": "S. 51 st. & E. Elliott Rd. (Ahwatukee Plaza)",
@@ -230,7 +230,7 @@
     },
     {
       "day": "Sunday",
-      "open": "11:00",
+      "open": "12:00",
       "close": "19:00",
       "closed": false,
       "location": "S. 51 st. & E. Elliott Rd. (Ahwatukee Plaza)",
@@ -376,7 +376,7 @@
         "address": "S. 51 st. & E. Elliott Rd. (Ahwatukee Plaza)",
         "lat": 33.345,
         "lng": -111.984,
-        "open": "11:00",
+        "open": "12:00",
         "close": "19:00",
         "closed": false
       },
@@ -386,7 +386,7 @@
         "address": "S. 51 st. & E. Elliott Rd. (Ahwatukee Plaza)",
         "lat": 33.345,
         "lng": -111.984,
-        "open": "11:00",
+        "open": "12:00",
         "close": "19:00",
         "closed": false
       },
@@ -396,7 +396,7 @@
         "address": "S. 51 st. & E. Elliott Rd. (Ahwatukee Plaza)",
         "lat": 33.345,
         "lng": -111.984,
-        "open": "11:00",
+        "open": "12:00",
         "close": "19:00",
         "closed": false
       },
@@ -406,7 +406,7 @@
         "address": "S. 51 st. & E. Elliott Rd. (Ahwatukee Plaza)",
         "lat": 33.345,
         "lng": -111.984,
-        "open": "11:00",
+        "open": "12:00",
         "close": "19:00",
         "closed": false
       }
