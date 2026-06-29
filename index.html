@@ -1305,7 +1305,7 @@
       align-items: start;
     }
     /* FORM CARD */
-    .cat-form-card { background: var(--smoke); border: 1px solid var(--border); padding: 2rem; }
+    .cat-form-card { background: var(--smoke); border: 1px solid var(--border); padding: 2rem; min-height: 30rem; }
     .cat-step-indicator { display: flex; margin-bottom: 1.75rem; }
     .cat-step { flex: 1; text-align: center; position: relative; }
     .cat-step:not(:last-child)::after { content: ''; position: absolute; top: 10px; left: 50%; width: 100%; height: 1px; background: var(--border); }
@@ -2584,7 +2584,7 @@
             <div class="cat-form-title">Review &amp; Submit</div>
             <div class="cat-review" id="catReviewBlock"></div>
             <div class="cat-group"><label class="cat-lbl" for="cf-source">How did you hear about us?</label><select class="cat-select" id="cf-source"><option value="">Select one</option><option>Instagram</option><option>TikTok</option><option>Facebook</option><option>Google Search</option><option>Word of Mouth</option><option>Walked By / Visited</option><option>Other</option></select></div>
-            <div class="cat-terms-wrap"><input type="checkbox" id="catTerms"/><label for="catTerms">I understand this is an inquiry form only. Lou Wok will follow up within 48 hours to confirm availability, finalize details, and collect a deposit to secure the date.</label></div>
+            <div class="cat-terms-wrap"><input type="checkbox" id="catTerms"/><label for="catTerms">I understand this is an inquiry form only. Lou Wok will follow up within 48 hours to confirm availability and finalize details, then send a secure link to pay a 25% deposit that locks in the date.</label></div>
             <div class="cat-btn-row"><button class="cat-back-btn" onclick="catNextStep(3)">&larr; Back</button><button class="cat-next-btn" onclick="submitCatering()">Submit Catering Inquiry &#128293;</button></div>
             <p class="cat-form-note">We respond within 48 hours &middot; Questions? <a href="mailto:catering@louwok.com">catering@louwok.com</a></p>
           </div>
@@ -2593,7 +2593,7 @@
         <div class="cat-success" id="catSuccess">
           <div class="cat-success-icon">&#128293;</div>
           <div class="cat-success-title">Inquiry Sent!</div>
-          <p class="cat-success-sub">We got your catering request and we're fired up. Expect a response within 48 hours to lock in your date and details.</p>
+          <p class="cat-success-sub">We got your catering request and we're fired up. Within 48 hours we'll confirm your date and email a secure link to pay your 25% deposit &mdash; that's what locks it in.</p>
           <button class="btn-primary" onclick="resetCatering()">Submit Another Inquiry</button>
         </div>
       </div>
@@ -3786,8 +3786,22 @@
       if (prog) prog.style.width = (n * 25) + '%';
       catStep = n;
 
-      // Scroll to catering section so new step is visible
-      smoothTo('catering');
+      // Keep the screen steady between steps. Only scroll if the form's top has
+      // actually drifted out of view (e.g. a taller step pushed it off-screen or
+      // the page is scrolled away). When the form is already comfortably in
+      // frame, do nothing — no jump.
+      const card = document.getElementById('catFormCard');
+      if (card) {
+        const isMobile = window.innerWidth <= 640;
+        const topOffset = _navH + _safeTop + (isMobile ? 12 : 24);
+        const r = card.getBoundingClientRect();
+        const outOfView = r.top < topOffset || r.top > window.innerHeight * 0.6;
+        if (outOfView) {
+          const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+          const target = r.top + window.pageYOffset - topOffset;
+          window.scrollTo({ top: target, behavior: reduce ? 'auto' : 'smooth' });
+        }
+      }
     }
 
     function selectCatPkg(el, name) {
