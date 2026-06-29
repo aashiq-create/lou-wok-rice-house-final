@@ -1305,7 +1305,14 @@
       align-items: start;
     }
     /* FORM CARD */
-    .cat-form-card { background: var(--smoke); border: 1px solid var(--border); padding: 2rem; min-height: 30rem; }
+    .cat-form-card { background: var(--smoke); border: 1px solid var(--border); padding: 2rem; min-height: 30rem; transition: box-shadow 0.3s ease, border-color 0.3s ease; }
+    .cat-form-pulse { animation: catFormPulse 1.2s ease-out; }
+    @keyframes catFormPulse {
+      0%   { box-shadow: 0 0 0 0 rgba(200,57,10,0.0); border-color: var(--border); }
+      30%  { box-shadow: 0 0 0 4px rgba(200,57,10,0.35); border-color: var(--wok); }
+      100% { box-shadow: 0 0 0 0 rgba(200,57,10,0.0); border-color: var(--border); }
+    }
+    @media (prefers-reduced-motion: reduce) { .cat-form-pulse { animation: none; } }
     .cat-step-indicator { display: flex; margin-bottom: 1.75rem; }
     .cat-step { flex: 1; text-align: center; position: relative; }
     .cat-step:not(:last-child)::after { content: ''; position: absolute; top: 10px; left: 50%; width: 100%; height: 1px; background: var(--border); }
@@ -2499,7 +2506,7 @@
           <div><div class="cat-stat-num">PHX</div><div class="cat-stat-lbl">Valley-Wide</div></div>
         </div>
       </div>
-      <a href="#catering" class="btn-primary" style="white-space:nowrap;">Book Your Event</a>
+      <button type="button" class="btn-primary" style="white-space:nowrap;border:none;cursor:pointer;" onclick="startCatering()">Book Your Event</button>
     </div>
     <div class="cat-offer-grid">
       <div class="cat-offer-tile fade-in"><div class="cat-offer-icon">📦</div><div class="cat-offer-name">Drop-Off Catering</div><div class="cat-offer-sub">Trays &amp; bulk orders</div></div>
@@ -3743,6 +3750,45 @@
     let catStep = 1;
     let catPkg  = '';
 
+    // Launch the booking flow: reset to step 1, scroll the form into view,
+    // pulse it briefly so the eye lands on it, and focus the first field.
+    function startCatering() {
+      // Make sure we're showing the form (not a leftover success state)
+      const formCard   = document.getElementById('catFormCard');
+      const catSuccess = document.getElementById('catSuccess');
+      if (catSuccess) catSuccess.classList.remove('show');
+      if (formCard)   formCard.style.display = 'block';
+
+      // Always begin at step 1
+      if (catStep !== 1) {
+        for (let i = 2; i <= 4; i++) { const cp = document.getElementById('cp' + i); if (cp) cp.style.display = 'none'; }
+        const cp1 = document.getElementById('cp1'); if (cp1) cp1.style.display = 'block';
+        for (let i = 1; i <= 4; i++) {
+          const s = document.getElementById('cs' + i); if (!s) continue;
+          s.classList.remove('active','done');
+          const dot = s.querySelector('.cat-step-dot'); if (dot) dot.textContent = i;
+        }
+        const cs1 = document.getElementById('cs1'); if (cs1) cs1.classList.add('active');
+        const prog = document.getElementById('catProgress'); if (prog) prog.style.width = '25%';
+        catStep = 1;
+      }
+
+      if (!formCard) return;
+      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const isMobile = window.innerWidth <= 640;
+      const topOffset = _navH + _safeTop + (isMobile ? 12 : 24);
+      const target = formCard.getBoundingClientRect().top + window.pageYOffset - topOffset;
+      window.scrollTo({ top: target, behavior: reduce ? 'auto' : 'smooth' });
+
+      // Highlight pulse to draw attention, then focus the first input
+      formCard.classList.add('cat-form-pulse');
+      setTimeout(() => formCard.classList.remove('cat-form-pulse'), 1200);
+      setTimeout(() => {
+        const first = document.getElementById('cf-first');
+        if (first && !isMobile) first.focus({ preventScroll: true });
+      }, reduce ? 0 : 480);
+    }
+
     function catNextStep(n) {
       if (n > catStep) {
         if (n === 2) {
@@ -3859,15 +3905,24 @@
         submit_time   : new Date().toLocaleString('en-US', { timeZone: 'America/Phoenix' }),
       };
 
-      // Disable submit button while sending
-      const submitBtn = document.querySelector('#cp4 .cat-btn-primary');
+      // Disable submit button while sending (correct selector: .cat-next-btn)
+      const submitBtn = document.querySelector('#cp4 .cat-next-btn');
+      const submitOriginal = submitBtn ? submitBtn.innerHTML : '';
       if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = 'Sending…'; }
+
+      const _restoreBtn = () => {
+        if (submitBtn) { submitBtn.disabled = false; submitBtn.innerHTML = submitOriginal; }
+      };
 
       const _onSuccess = () => {
         const formCard  = document.getElementById('catFormCard');
         const catSuccess= document.getElementById('catSuccess');
         if (formCard)   formCard.style.display = 'none';
         if (catSuccess) catSuccess.classList.add('show');
+        // Bring the success message into view so the user sees confirmation
+        if (catSuccess && catSuccess.scrollIntoView) {
+          catSuccess.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
       };
 
       // ── Primary: serverless notify endpoint (emails + SMS to admins) ──
@@ -3890,7 +3945,13 @@
               method  : 'POST',
               headers : { 'Content-Type': 'application/json', Accept: 'application/json' },
               body    : JSON.stringify(payload),
-            }).then(_onSuccess).catch(_onSuccess);
+            })
+            .then(r => { if (!r.ok) throw new Error('formspree ' + r.status); _onSuccess(); })
+            .catch(e => {
+              console.warn('All catering submit paths failed:', e);
+              _restoreBtn();
+              showToast('Something went wrong sending your inquiry. Please email catering@louwok.com or try again.', 'error');
+            });
           }
         });
     }
