@@ -39,6 +39,7 @@ function toE164(raw) {
 }
 
 async function sendSMS(client, from, to, body) {
+  if (!client || !from) return { ok: false, reason: 'sms_disabled', to };
   const dest = toE164(to);
   if (!dest) return { ok: false, reason: 'bad_number', to };
   try {
@@ -48,26 +49,6 @@ async function sendSMS(client, from, to, body) {
     console.error('SMS failed to', dest, err && err.message);
     return { ok: false, reason: err && err.message, to: dest };
   }
-}
-
-// ── Square deposit link ──────────────────────────────────────────────────────
-// 25% of the quoted total secures a catering date. Because the exact total isn't
-// known until the event is quoted, the default flow gives the admins a reusable
-// Square link to send AFTER confirming availability and pricing.
-//
-// Set SQUARE_DEPOSIT_LINK in Vercel to a Square "Payment Link / Online Checkout"
-// you create once in the Square dashboard (item: "Catering deposit", price left
-// open / variable). The admin email then includes it directly.
-//
-// To later AUTO-CREATE a per-event link with the exact 25% amount, swap this for
-// a call to Square's Checkout API (POST /v2/online-checkout/payment-links) using
-// SQUARE_ACCESS_TOKEN — documented upgrade path, off by default.
-function buildSquareDepositLink({ name, email, guests, pkg }) {
-  const base = process.env.SQUARE_DEPOSIT_LINK;
-  if (!base) return { ready: false, url: '' };
-  const sep  = base.includes('?') ? '&' : '?';
-  const note = encodeURIComponent(`Catering deposit — ${name} · ${guests} guests · ${pkg}`);
-  return { ready: true, url: `${base}${sep}note=${note}` };
 }
 
 async function sendEmail(to, subject, text) {
@@ -106,10 +87,10 @@ module.exports = async (req, res) => {
   const RESTAURANT_NAME = cfg.restaurantName;
   const PICKUP_ETA      = cfg.pickupEtaMin;
 
-  if (!accountSid || !authToken || !smsFrom) {
-    return res.status(500).json({ error: 'Twilio not configured' });
-  }
-  const client = twilio(accountSid, authToken);
+  // SMS is best-effort. If Twilio isn't configured we still send email so
+  // an inquiry is NEVER silently lost just because SMS creds are absent.
+  const smsEnabled = !!(accountSid && authToken && smsFrom);
+  const client = smsEnabled ? twilio(accountSid, authToken) : null;
 
   const p    = readBody(req);
   const type = p.type || 'order';
@@ -157,69 +138,67 @@ module.exports = async (req, res) => {
         adminBody
       );
     } else if (type === 'catering') {
-      // The catering form posts FLAT fields (client_name, guest_count, notes…),
-      // not a nested customer object. Read them directly. Fall back to the old
-      // nested shape so either payload works.
-      const c     = p.customer || {};
-      const name  = p.client_name  || c.name  || '—';
-      const phone = p.client_phone || c.phone || '—';
-      const email = p.client_email || c.email || '—';
-      const date  = p.event_date   || '—';
-      const time  = p.event_time   || '—';
-      const guests= p.guest_count  || p.guests || '—';
-      const pkg   = p.package      || '—';
-      const style = p.service_style|| '—';
-      const etype = p.event_type   || '—';
-      const addons= p.addons       || 'None';
-      const notes = p.notes || p.details || '—';
-      const source= p.source       || '—';
+      // Accept BOTH the flat payload the booking form sends and the older
+      // nested {customer:{}} shape, so nothing breaks on either side.
+      const c = p.customer || {};
+      const name   = p.client_name   || c.name   || '—';
+      const email  = p.client_email  || c.email  || '—';
+      const phone  = p.client_phone  || c.phone  || '—';
+      const date   = p.event_date    || '—';
+      const time   = p.event_time    || '';
+      const guests = p.guest_count   || p.guests || '—';
+      const etype  = p.event_type    || '';
+      const style  = p.service_style || '';
+      const pkg    = p.package       || '';
+      const addons = p.addons        || 'None';
+      const notes  = p.notes         || p.details || '';
+      const source = p.source        || '';
+      const when   = p.submit_time   || '';
 
-      // 25% deposit secures the date (per site terms). We can't compute the
-      // exact amount until the event is quoted, so the admin email carries a
-      // one-click Square deposit-link builder instead of a fixed charge.
-      const depositLink = buildSquareDepositLink({ name, email, guests, pkg });
-
-      const smsBody =
+      // SMS: short and scannable (160-char-aware) for the owner's phone.
+      const sms =
         `🎉 CATERING INQUIRY\n` +
-        `${name} · ${phone} · ${email}\n` +
-        `${date} ${time} · ${guests} guests · ${etype}\n` +
-        `Pkg: ${pkg} (${style})\n` +
-        `Add-ons: ${addons}\n` +
-        `Notes: ${notes}\n` +
-        `Heard via: ${source}`;
+        `${name} · ${phone}\n` +
+        `${date}${time ? ' ' + time : ''} · ${guests} guests\n` +
+        `${pkg || etype || ''}`.trim();
+
+      // Email: full ticket, every field, easy to act on.
+      const lines = [
+        `🎉 NEW CATERING INQUIRY`,
+        ``,
+        `Name:     ${name}`,
+        `Phone:    ${phone}`,
+        `Email:    ${email}`,
+        ``,
+        `Date:     ${date}${time ? '  at ' + time : ''}`,
+        `Guests:   ${guests}`,
+        `Event:    ${etype || '—'}`,
+        `Service:  ${style || '—'}`,
+        `Package:  ${pkg || '—'}`,
+        `Add-ons:  ${addons}`,
+        ``,
+        `Notes:    ${notes || '—'}`,
+        `Heard via: ${source || '—'}`,
+        when ? `Submitted: ${when} (Phoenix)` : ``,
+      ].filter(l => l !== null);
+      const emailBody = lines.join('\n');
+
       for (const a of adminSms) {
-        results.admins.push(await sendSMS(client, smsFrom, a, smsBody));
+        results.admins.push(await sendSMS(client, smsFrom, a, sms));
       }
-
-      const emailBody =
-        `NEW CATERING INQUIRY\n` +
-        `──────────────────────────────\n` +
-        `Name:        ${name}\n` +
-        `Phone:       ${phone}\n` +
-        `Email:       ${email}\n` +
-        `Event date:  ${date}  ${time}\n` +
-        `Guests:      ${guests}\n` +
-        `Event type:  ${etype}\n` +
-        `Package:     ${pkg}\n` +
-        `Service:     ${style}\n` +
-        `Add-ons:     ${addons}\n` +
-        `Notes:       ${notes}\n` +
-        `Heard via:   ${source}\n` +
-        `Submitted:   ${p.submit_time || ''}\n` +
-        `──────────────────────────────\n\n` +
-        `NEXT STEP — secure the date with a 25% deposit:\n` +
-        `1. Confirm availability for ${date}.\n` +
-        `2. Quote the event total, then take 25% as the deposit.\n` +
-        `${depositLink.ready
-            ? `3. Send this Square deposit link (set the amount in Square):\n   ${depositLink.url}\n`
-            : `3. Create a Square deposit payment link and send it to ${email}.\n   (Set SQUARE_DEPOSIT_LINK in Vercel to prefill this automatically.)\n`}` +
-        `\nReply within 48 hrs — that's what the site promises.`;
-
       results.email = await sendEmail(
         adminEmail,
-        `Catering inquiry — ${name} · ${date} · ${guests} guests`,
+        `Catering inquiry — ${name}${date !== '—' ? ' · ' + date : ''}`,
         emailBody
       );
+
+      // If BOTH channels failed, surface a 502 so the form shows its fallback
+      // path instead of a false "success".
+      const smsOk   = results.admins.some(r => r && r.ok);
+      const emailOk = results.email && results.email.ok;
+      if (!smsOk && !emailOk) {
+        return res.status(502).json({ ok: false, error: 'all_channels_failed', results });
+      }
     } else {
       return res.status(400).json({ error: 'Unknown type: ' + type });
     }
