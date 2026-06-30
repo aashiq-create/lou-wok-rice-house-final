@@ -1342,6 +1342,8 @@
       color: var(--rice); outline: none; transition: border-color 0.18s;
     }
     .cat-input:focus, .cat-select:focus, .cat-textarea:focus { border-color: var(--gold); }
+    .cat-input.cat-err, .cat-select.cat-err, .cat-textarea.cat-err { border-color: var(--wok); box-shadow: 0 0 0 1px var(--wok) inset; }
+    .pkg-card-item.cat-err { border-color: var(--wok); }
     .cat-input::placeholder, .cat-textarea::placeholder { color: var(--muted); }
     .cat-textarea { resize: vertical; min-height: 75px; line-height: 1.6; }
     .cat-select { cursor: pointer; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236b6558' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; }
@@ -2517,25 +2519,23 @@
       <!-- FORM -->
       <div>
         <div class="cat-form-card" id="catFormCard">
-          <!-- STEP INDICATOR -->
+          <!-- STEP INDICATOR (2-step) -->
           <div class="cat-step-indicator">
-            <div class="cat-step active" id="cs1"><div class="cat-step-dot">1</div><div class="cat-step-lbl">Details</div></div>
-            <div class="cat-step" id="cs2"><div class="cat-step-dot">2</div><div class="cat-step-lbl">Package</div></div>
-            <div class="cat-step" id="cs3"><div class="cat-step-dot">3</div><div class="cat-step-lbl">Add-Ons</div></div>
-            <div class="cat-step" id="cs4"><div class="cat-step-dot">4</div><div class="cat-step-lbl">Confirm</div></div>
+            <div class="cat-step active" id="cs1"><div class="cat-step-dot">1</div><div class="cat-step-lbl">Your Event</div></div>
+            <div class="cat-step" id="cs2"><div class="cat-step-dot">2</div><div class="cat-step-lbl">Details &amp; Send</div></div>
           </div>
-          <div class="cat-progress"><div class="cat-progress-fill" id="catProgress" style="width:25%"></div></div>
+          <div class="cat-progress"><div class="cat-progress-fill" id="catProgress" style="width:50%"></div></div>
 
-          <!-- STEP 1 -->
+          <!-- STEP 1 — contact + event + package -->
           <div id="cp1">
             <div class="cat-form-title">Event Details</div>
             <div class="cat-row">
-              <div class="cat-group"><label class="cat-lbl" for="cf-first">First Name <span>*</span></label><input class="cat-input" id="cf-first" type="text" placeholder="Marcus"/></div>
-              <div class="cat-group"><label class="cat-lbl" for="cf-last">Last Name <span>*</span></label><input class="cat-input" id="cf-last" type="text" placeholder="Johnson"/></div>
+              <div class="cat-group"><label class="cat-lbl" for="cf-first">First Name <span>*</span></label><input class="cat-input" id="cf-first" type="text" autocomplete="given-name" placeholder="Marcus"/></div>
+              <div class="cat-group"><label class="cat-lbl" for="cf-last">Last Name <span>*</span></label><input class="cat-input" id="cf-last" type="text" autocomplete="family-name" placeholder="Johnson"/></div>
             </div>
             <div class="cat-row">
-              <div class="cat-group"><label class="cat-lbl" for="cf-email">Email <span>*</span></label><input class="cat-input" id="cf-email" type="email" placeholder="you@email.com"/></div>
-              <div class="cat-group"><label class="cat-lbl" for="cf-phone">Phone <span>*</span></label><input class="cat-input" id="cf-phone" type="tel" placeholder="(602) 555-0100"/></div>
+              <div class="cat-group"><label class="cat-lbl" for="cf-email">Email <span>*</span></label><input class="cat-input" id="cf-email" type="email" inputmode="email" autocomplete="email" placeholder="you@email.com"/></div>
+              <div class="cat-group"><label class="cat-lbl" for="cf-phone">Phone <span>*</span></label><input class="cat-input" id="cf-phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="(602) 555-0100" maxlength="14"/></div>
             </div>
             <div class="cat-divider"></div>
             <div class="cat-form-title">Event Info</div>
@@ -2544,30 +2544,26 @@
               <div class="cat-group"><label class="cat-lbl" for="cf-time">Start Time <span>*</span></label><input class="cat-input" id="cf-time" type="time"/></div>
             </div>
             <div class="cat-row">
-              <div class="cat-group"><label class="cat-lbl" for="cf-guests">Guest Count <span>*</span></label><select class="cat-select" id="cf-guests"><option value="">Select guests</option><option>20 – 50</option><option>51 – 100</option><option>101 – 200</option><option>201 – 350</option><option>350+</option></select></div>
+              <div class="cat-group"><label class="cat-lbl" for="cf-guests">Guest Count <span>*</span></label><select class="cat-select" id="cf-guests"><option value="">Select guests</option><option>20 &ndash; 50</option><option>51 &ndash; 100</option><option>101 &ndash; 200</option><option>201 &ndash; 350</option><option>350+</option></select></div>
               <div class="cat-group"><label class="cat-lbl" for="cf-type">Event Type <span>*</span></label><select class="cat-select" id="cf-type"><option value="">Select type</option><option>Corporate / Office</option><option>Wedding / Reception</option><option>Birthday Party</option><option>Block Party / Festival</option><option>Private Party</option><option>Festival / Market</option><option>School / University</option><option>Other</option></select></div>
             </div>
             <div class="cat-row">
               <div class="cat-group"><label class="cat-lbl" for="cf-style">Service Style <span>*</span></label><select class="cat-select" id="cf-style"><option value="">Select style</option><option>Drop-Off Trays</option><option>Buffet Setup</option><option>Not sure yet</option></select></div>
               <div class="cat-group"><label class="cat-lbl" for="cf-venue">Venue / Address</label><input class="cat-input" id="cf-venue" type="text" placeholder="Venue name or full address"/></div>
             </div>
-            <div class="cat-btn-row"><button class="cat-next-btn" onclick="catNextStep(2)">Continue to Package Selection &rarr;</button></div>
-          </div>
-
-          <!-- STEP 2 -->
-          <div id="cp2" style="display:none">
-            <div class="cat-form-title">Choose Your Package</div>
+            <div class="cat-divider"></div>
+            <div class="cat-form-title">Choose Your Package <span>*</span></div>
             <div class="pkg-list">
-              <div class="pkg-card-item" onclick="selectCatPkg(this,'Wok Starter')"><div class="pkg-radio"><div class="pkg-radio-dot"></div></div><div class="pkg-body"><div class="pkg-name">Wok Starter</div><div class="pkg-desc">Fried rice (1 variety) + crab rangoon. Perfect for 20–50 guests.</div></div><div class="pkg-cost">From $12/pp</div></div>
-              <div class="pkg-card-item" onclick="selectCatPkg(this,'The Classic Spread')" style="border-color:var(--wok)"><div class="pkg-badge">Most Popular</div><div class="pkg-radio"><div class="pkg-radio-dot"></div></div><div class="pkg-body"><div class="pkg-name">The Classic Spread</div><div class="pkg-desc">2 rice varieties + crab rangoon + St. Paul sandwiches. Feeds 50–150.</div></div><div class="pkg-cost">From $16/pp</div></div>
-              <div class="pkg-card-item" onclick="selectCatPkg(this,'Lou Wok Full Experience')"><div class="pkg-radio"><div class="pkg-radio-dot"></div></div><div class="pkg-body"><div class="pkg-name">Lou Wok Full Experience</div><div class="pkg-desc">Full menu — all rice varieties, rangoon, sandwiches, fried chicken. 100–500+ guests.</div></div><div class="pkg-cost">From $22/pp</div></div>
+              <div class="pkg-card-item" onclick="selectCatPkg(this,'Wok Starter')"><div class="pkg-radio"><div class="pkg-radio-dot"></div></div><div class="pkg-body"><div class="pkg-name">Wok Starter</div><div class="pkg-desc">Fried rice (1 variety) + crab rangoon. Perfect for 20&ndash;50 guests.</div></div><div class="pkg-cost">From $12/pp</div></div>
+              <div class="pkg-card-item" onclick="selectCatPkg(this,'The Classic Spread')" style="border-color:var(--wok)"><div class="pkg-badge">Most Popular</div><div class="pkg-radio"><div class="pkg-radio-dot"></div></div><div class="pkg-body"><div class="pkg-name">The Classic Spread</div><div class="pkg-desc">2 rice varieties + crab rangoon + St. Paul sandwiches. Feeds 50&ndash;150.</div></div><div class="pkg-cost">From $16/pp</div></div>
+              <div class="pkg-card-item" onclick="selectCatPkg(this,'Lou Wok Full Experience')"><div class="pkg-radio"><div class="pkg-radio-dot"></div></div><div class="pkg-body"><div class="pkg-name">Lou Wok Full Experience</div><div class="pkg-desc">Full menu &mdash; all rice varieties, rangoon, sandwiches, fried chicken. 100&ndash;500+ guests.</div></div><div class="pkg-cost">From $22/pp</div></div>
               <div class="pkg-card-item" onclick="selectCatPkg(this,'Custom Package')"><div class="pkg-radio"><div class="pkg-radio-dot"></div></div><div class="pkg-body"><div class="pkg-name">Custom Package</div><div class="pkg-desc">Build your own menu. Tell us what you need and we'll put together a custom quote.</div></div><div class="pkg-cost">Custom Quote</div></div>
             </div>
-            <div class="cat-btn-row"><button class="cat-back-btn" onclick="catNextStep(1)">&larr; Back</button><button class="cat-next-btn" onclick="catNextStep(3)">Continue to Add-Ons &rarr;</button></div>
+            <div class="cat-btn-row"><button class="cat-next-btn" onclick="catNextStep(2)">Continue to Add-Ons &amp; Review &rarr;</button></div>
           </div>
 
-          <!-- STEP 3 -->
-          <div id="cp3" style="display:none">
+          <!-- STEP 2 — add-ons + notes + review + submit -->
+          <div id="cp2" style="display:none">
             <div class="cat-form-title">Add-Ons &amp; Extras</div>
             <p style="font-size:0.78rem;color:var(--muted);margin-bottom:1rem;line-height:1.6;">Select anything you'd like included. Pricing quoted after review.</p>
             <div class="addon-grid">
@@ -2582,17 +2578,13 @@
             </div>
             <div class="cat-divider"></div>
             <div class="cat-group" style="margin-bottom:12px"><label class="cat-lbl" for="cf-dietary">Dietary Restrictions / Allergies</label><textarea class="cat-textarea" id="cf-dietary" placeholder="e.g. nut allergy for 5 guests, gluten-free needed..."></textarea></div>
-            <div class="cat-group"><label class="cat-lbl" for="cf-notes">Anything Else?</label><textarea class="cat-textarea" id="cf-notes" placeholder="Venue notes, theme, special requests..."></textarea></div>
-            <div class="cat-btn-row"><button class="cat-back-btn" onclick="catNextStep(2)">&larr; Back</button><button class="cat-next-btn" onclick="catNextStep(4)">Review &amp; Submit &rarr;</button></div>
-          </div>
-
-          <!-- STEP 4 -->
-          <div id="cp4" style="display:none">
-            <div class="cat-form-title">Review &amp; Submit</div>
-            <div class="cat-review" id="catReviewBlock"></div>
+            <div class="cat-group" style="margin-bottom:12px"><label class="cat-lbl" for="cf-notes">Anything Else?</label><textarea class="cat-textarea" id="cf-notes" placeholder="Venue notes, theme, special requests..."></textarea></div>
             <div class="cat-group"><label class="cat-lbl" for="cf-source">How did you hear about us?</label><select class="cat-select" id="cf-source"><option value="">Select one</option><option>Instagram</option><option>TikTok</option><option>Facebook</option><option>Google Search</option><option>Word of Mouth</option><option>Walked By / Visited</option><option>Other</option></select></div>
+            <div class="cat-divider"></div>
+            <div class="cat-form-title">Review</div>
+            <div class="cat-review" id="catReviewBlock"></div>
             <div class="cat-terms-wrap"><input type="checkbox" id="catTerms"/><label for="catTerms">I understand this is an inquiry form only. Lou Wok will follow up within 48 hours to confirm availability and finalize details, then send a secure link to pay a 25% deposit that locks in the date.</label></div>
-            <div class="cat-btn-row"><button class="cat-back-btn" onclick="catNextStep(3)">&larr; Back</button><button class="cat-next-btn" onclick="submitCatering()">Submit Catering Inquiry &#128293;</button></div>
+            <div class="cat-btn-row"><button class="cat-back-btn" onclick="catNextStep(1)">&larr; Back</button><button class="cat-next-btn" onclick="submitCatering()">Submit Catering Inquiry &#128293;</button></div>
             <p class="cat-form-note">We respond within 48 hours &middot; Questions? <a href="mailto:catering@louwok.com">catering@louwok.com</a></p>
           </div>
         </div>
@@ -3749,27 +3741,58 @@
     // ═══════════════════════════════════════════════════════
     let catStep = 1;
     let catPkg  = '';
+    const CAT_TOTAL_STEPS = 2;
+
+    // Wire up UX niceties once the DOM is ready: phone auto-format, min date,
+    // and clearing the error state as the user corrects a field.
+    (function initCateringUX(){
+      function ready(fn){ if(document.readyState!=='loading'){fn();} else {document.addEventListener('DOMContentLoaded',fn);} }
+      ready(function(){
+        const phone = document.getElementById('cf-phone');
+        if (phone) {
+          phone.addEventListener('input', function(){
+            let d = this.value.replace(/\D/g,'').slice(0,10);
+            let f = d;
+            if (d.length > 6)      f = `(${d.slice(0,3)}) ${d.slice(3,6)}-${d.slice(6)}`;
+            else if (d.length > 3) f = `(${d.slice(0,3)}) ${d.slice(3)}`;
+            else if (d.length > 0) f = `(${d}`;
+            this.value = f;
+          });
+        }
+        // Block past dates on the event date picker.
+        const date = document.getElementById('cf-date');
+        if (date) {
+          const today = new Date().toLocaleDateString('en-CA',{timeZone:'America/Phoenix'});
+          date.min = today;
+        }
+        // Any required field clears its error styling the moment it's edited.
+        ['cf-first','cf-last','cf-email','cf-phone','cf-date','cf-time','cf-guests','cf-type','cf-style']
+          .forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.addEventListener('input', () => el.classList.remove('cat-err'));
+            if (el) el.addEventListener('change', () => el.classList.remove('cat-err'));
+          });
+      });
+    })();
 
     // Launch the booking flow: reset to step 1, scroll the form into view,
     // pulse it briefly so the eye lands on it, and focus the first field.
     function startCatering() {
-      // Make sure we're showing the form (not a leftover success state)
       const formCard   = document.getElementById('catFormCard');
       const catSuccess = document.getElementById('catSuccess');
       if (catSuccess) catSuccess.classList.remove('show');
       if (formCard)   formCard.style.display = 'block';
 
-      // Always begin at step 1
       if (catStep !== 1) {
-        for (let i = 2; i <= 4; i++) { const cp = document.getElementById('cp' + i); if (cp) cp.style.display = 'none'; }
+        const cp2 = document.getElementById('cp2'); if (cp2) cp2.style.display = 'none';
         const cp1 = document.getElementById('cp1'); if (cp1) cp1.style.display = 'block';
-        for (let i = 1; i <= 4; i++) {
+        for (let i = 1; i <= CAT_TOTAL_STEPS; i++) {
           const s = document.getElementById('cs' + i); if (!s) continue;
           s.classList.remove('active','done');
           const dot = s.querySelector('.cat-step-dot'); if (dot) dot.textContent = i;
         }
         const cs1 = document.getElementById('cs1'); if (cs1) cs1.classList.add('active');
-        const prog = document.getElementById('catProgress'); if (prog) prog.style.width = '25%';
+        const prog = document.getElementById('catProgress'); if (prog) prog.style.width = (100/CAT_TOTAL_STEPS) + '%';
         catStep = 1;
       }
 
@@ -3780,7 +3803,6 @@
       const target = formCard.getBoundingClientRect().top + window.pageYOffset - topOffset;
       window.scrollTo({ top: target, behavior: reduce ? 'auto' : 'smooth' });
 
-      // Highlight pulse to draw attention, then focus the first input
       formCard.classList.add('cat-form-pulse');
       setTimeout(() => formCard.classList.remove('cat-form-pulse'), 1200);
       setTimeout(() => {
@@ -3789,53 +3811,65 @@
       }, reduce ? 0 : 480);
     }
 
+    // Validate step 1. Returns true if OK; otherwise marks offending fields,
+    // focuses the first one, and shows a single toast.
+    function catValidateStep1() {
+      const reqIds = ['cf-first','cf-last','cf-email','cf-phone','cf-date','cf-time','cf-guests','cf-type','cf-style'];
+      let firstBad = null;
+      reqIds.forEach(id => {
+        const el = document.getElementById(id);
+        const empty = !el || !el.value.trim();
+        if (el) el.classList.toggle('cat-err', empty);
+        if (empty && !firstBad) firstBad = el;
+      });
+      const emailEl = document.getElementById('cf-email');
+      const emailVal = emailEl ? emailEl.value.trim() : '';
+      const emailBad = emailVal && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailVal);
+      if (emailBad && emailEl) { emailEl.classList.add('cat-err'); if (!firstBad) firstBad = emailEl; }
+
+      const phoneEl = document.getElementById('cf-phone');
+      const phoneDigits = phoneEl ? phoneEl.value.replace(/\D/g,'') : '';
+      const phoneBad = phoneDigits && phoneDigits.length !== 10;
+      if (phoneBad && phoneEl) { phoneEl.classList.add('cat-err'); if (!firstBad) firstBad = phoneEl; }
+
+      if (!catPkg) {
+        document.querySelectorAll('.pkg-card-item').forEach(c => c.classList.add('cat-err'));
+      }
+
+      if (firstBad) {
+        showToast('Please fill in all required fields.', 'error');
+        firstBad.focus({ preventScroll: false });
+        return false;
+      }
+      if (emailBad) { showToast('Please enter a valid email address.', 'error'); return false; }
+      if (phoneBad) { showToast('Please enter a valid 10-digit phone number.', 'error'); return false; }
+      if (!catPkg)  { showToast('Please choose a catering package.', 'error'); return false; }
+      return true;
+    }
+
     function catNextStep(n) {
       if (n > catStep) {
-        if (n === 2) {
-          const reqIds = ['cf-first','cf-last','cf-email','cf-phone','cf-date','cf-time','cf-guests','cf-type','cf-style'];
-          const missing = reqIds.filter(id => {
-            const el = document.getElementById(id);
-            return !el || !el.value.trim();
-          });
-          if (missing.length) {
-            showToast('Please fill in all required fields.', 'error');
-            return;
-          }
-          // Basic email format check
-          const emailVal = (document.getElementById('cf-email') || {}).value || '';
-          if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailVal)) {
-            showToast('Please enter a valid email address.', 'error');
-            return;
-          }
-        }
-        if (n === 3 && !catPkg) {
-          showToast('Please select a catering package.', 'error');
-          return;
-        }
-        if (n === 4) buildCatReview();
+        if (n === 2 && !catValidateStep1()) return;
+        if (n === 2) buildCatReview();
       }
       const fromEl = document.getElementById('cp' + catStep);
       const toEl   = document.getElementById('cp' + n);
       if (fromEl) fromEl.style.display = 'none';
       if (toEl)   toEl.style.display   = 'block';
 
-      for (let i = 1; i <= 4; i++) {
+      for (let i = 1; i <= CAT_TOTAL_STEPS; i++) {
         const s = document.getElementById('cs' + i);
         if (!s) continue;
         s.classList.remove('active','done');
         const dot = s.querySelector('.cat-step-dot');
-        if      (i < n) { s.classList.add('done');   if (dot) dot.textContent = '✓'; }
+        if      (i < n) { s.classList.add('done');   if (dot) dot.textContent = '\u2713'; }
         else if (i === n){ s.classList.add('active'); if (dot) dot.textContent = i; }
         else              {                            if (dot) dot.textContent = i; }
       }
       const prog = document.getElementById('catProgress');
-      if (prog) prog.style.width = (n * 25) + '%';
+      if (prog) prog.style.width = (n * (100/CAT_TOTAL_STEPS)) + '%';
       catStep = n;
 
-      // Keep the screen steady between steps. Only scroll if the form's top has
-      // actually drifted out of view (e.g. a taller step pushed it off-screen or
-      // the page is scrolled away). When the form is already comfortably in
-      // frame, do nothing — no jump.
       const card = document.getElementById('catFormCard');
       if (card) {
         const isMobile = window.innerWidth <= 640;
@@ -3851,13 +3885,13 @@
     }
 
     function selectCatPkg(el, name) {
-      document.querySelectorAll('.pkg-card-item').forEach(c => c.classList.remove('selected'));
+      document.querySelectorAll('.pkg-card-item').forEach(c => { c.classList.remove('selected'); c.classList.remove('cat-err'); });
       el.classList.add('selected');
       catPkg = name;
     }
 
     function buildCatReview() {
-      const v = id => { const el = document.getElementById(id); return el ? el.value : '—'; };
+      const v = id => { const el = document.getElementById(id); return (el && el.value) ? el.value : '\u2014'; };
       const addons = Array.from(document.querySelectorAll('.addon-chip.checked'))
         .map(e => { const n = e.querySelector('.addon-chip-name'); return n ? n.textContent : ''; })
         .filter(Boolean).join(', ') || 'None';
@@ -3868,12 +3902,11 @@
         `<span class="rv-lbl">Name</span><span class="rv-val">${v('cf-first')} ${v('cf-last')}</span>` +
         `<span class="rv-lbl">Email</span><span class="rv-val">${v('cf-email')}</span>` +
         `<span class="rv-lbl">Phone</span><span class="rv-val">${v('cf-phone')}</span>` +
-        `<span class="rv-lbl">Date</span><span class="rv-val">${v('cf-date')}</span>` +
-        `<span class="rv-lbl">Time</span><span class="rv-val">${v('cf-time')}</span>` +
+        `<span class="rv-lbl">Date</span><span class="rv-val">${v('cf-date')} ${v('cf-time')}</span>` +
         `<span class="rv-lbl">Guests</span><span class="rv-val">${v('cf-guests')}</span>` +
         `<span class="rv-lbl">Event</span><span class="rv-val">${v('cf-type')}</span>` +
         `<span class="rv-lbl">Style</span><span class="rv-val">${v('cf-style')}</span>` +
-        `<span class="rv-lbl">Package</span><span class="rv-val" style="color:var(--wok)">${catPkg}</span>` +
+        `<span class="rv-lbl">Package</span><span class="rv-val" style="color:var(--wok)">${catPkg || '\u2014'}</span>` +
         `<span class="rv-lbl">Add-Ons</span><span class="rv-val">${addons}</span>`;
     }
 
@@ -3884,13 +3917,17 @@
         return;
       }
 
-      const v = id => { const el = document.getElementById(id); return el ? el.value : '—'; };
+      const v = id => { const el = document.getElementById(id); return el ? el.value : ''; };
       const addons = Array.from(document.querySelectorAll('.addon-chip.checked'))
         .map(e => { const n = e.querySelector('.addon-chip-name'); return n ? n.textContent : ''; })
         .filter(Boolean).join(', ') || 'None';
 
+      const dietary = v('cf-dietary');
+      const notesRaw = v('cf-notes');
+      const notes = [dietary ? ('Dietary: ' + dietary) : '', notesRaw].filter(Boolean).join(' | ');
+
       const payload = {
-        client_name   : v('cf-first') + ' ' + v('cf-last'),
+        client_name   : (v('cf-first') + ' ' + v('cf-last')).trim(),
         client_email  : v('cf-email'),
         client_phone  : v('cf-phone'),
         event_date    : v('cf-date'),
@@ -3898,17 +3935,17 @@
         guest_count   : v('cf-guests'),
         event_type    : v('cf-type'),
         service_style : v('cf-style'),
+        venue         : v('cf-venue'),
         package       : catPkg,
         addons        : addons,
-        notes         : v('cf-notes'),
+        notes         : notes,
         source        : v('cf-source'),
         submit_time   : new Date().toLocaleString('en-US', { timeZone: 'America/Phoenix' }),
       };
 
-      // Disable submit button while sending (correct selector: .cat-next-btn)
-      const submitBtn = document.querySelector('#cp4 .cat-next-btn');
+      const submitBtn = document.querySelector('#cp2 .cat-next-btn');
       const submitOriginal = submitBtn ? submitBtn.innerHTML : '';
-      if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = 'Sending…'; }
+      if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = 'Sending\u2026'; }
 
       const _restoreBtn = () => {
         if (submitBtn) { submitBtn.disabled = false; submitBtn.innerHTML = submitOriginal; }
@@ -3919,7 +3956,6 @@
         const catSuccess= document.getElementById('catSuccess');
         if (formCard)   formCard.style.display = 'none';
         if (catSuccess) catSuccess.classList.add('show');
-        // Bring the success message into view so the user sees confirmation
         if (catSuccess && catSuccess.scrollIntoView) {
           catSuccess.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
@@ -3938,24 +3974,13 @@
           if (window.emailjs && EJS_PUBLIC_KEY !== 'YOUR_PUBLIC_KEY') {
             emailjs.send(EJS_SERVICE_ID, EJS_CATERING_TPL, payload)
               .then(_onSuccess)
-              .catch(e => { console.warn('EmailJS catering:', e); _onSuccess(); });
+              .catch(e => { console.warn('EmailJS catering:', e); _restoreBtn(); showToast('Something went wrong sending your inquiry. Please email catering@louwok.com or try again.', 'error'); });
           } else {
-            // Formspree fallback — replace YOUR_FORM_ID with your Formspree endpoint
-            fetch('https://formspree.io/f/YOUR_FORM_ID', {
-              method  : 'POST',
-              headers : { 'Content-Type': 'application/json', Accept: 'application/json' },
-              body    : JSON.stringify(payload),
-            })
-            .then(r => { if (!r.ok) throw new Error('formspree ' + r.status); _onSuccess(); })
-            .catch(e => {
-              console.warn('All catering submit paths failed:', e);
-              _restoreBtn();
-              showToast('Something went wrong sending your inquiry. Please email catering@louwok.com or try again.', 'error');
-            });
+            _restoreBtn();
+            showToast('Something went wrong sending your inquiry. Please email catering@louwok.com or try again.', 'error');
           }
         });
     }
-
     function resetCatering() {
       const catSuccess = document.getElementById('catSuccess');
       const catFormCard= document.getElementById('catFormCard');
