@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- ✅ LOU-WOK-TRACKER vTRUCK-ICON-MAP | leaflet truck marker + grid-driven | 2026-06-26 -->
+<!-- ✅ LOU-WOK-TRACKER vCATERING-REDESIGN | condensed form + live ticket + fixed catering notify payload | 2026-07-01 -->
 
 <html lang="en">
 <head>
@@ -1448,6 +1448,60 @@
       .cat-offer-name { font-size: 0.74rem; }
       .cat-offer-sub { font-size: 0.64rem; }
     }
+    /* ── SOCIAL PROOF STRIP ── */
+    .cat-proof-row { display: flex; flex-wrap: wrap; gap: 0.6rem; margin: 1.1rem 0 0; }
+    .cat-proof-chip { display: flex; align-items: center; gap: 6px; background: rgba(232,160,32,0.07); border: 1px solid rgba(232,160,32,0.22); padding: 0.4rem 0.8rem; font-size: 0.72rem; color: var(--rice); font-weight: 600; }
+    .cat-proof-chip b { color: var(--gold); }
+    /* ── CHIP-STYLE SELECTS (replace dropdowns for mobile-native feel) ── */
+    .cat-chip-group { display: flex; flex-wrap: wrap; gap: 8px; }
+    .cat-chip {
+      border: 1px solid var(--border); background: var(--black); color: var(--rice);
+      padding: 0.62rem 0.95rem; font-size: 0.78rem; font-weight: 600; font-family: 'DM Sans', sans-serif;
+      cursor: pointer; transition: all 0.15s; min-height: 40px; display: flex; align-items: center;
+      border-radius: 3px;
+    }
+    .cat-chip:hover { border-color: rgba(200,57,10,0.5); }
+    .cat-chip.selected { border-color: var(--wok); background: var(--wok); color: var(--rice); }
+    .cat-chip-group.cat-err .cat-chip { border-color: var(--wok); }
+    /* ── LIVE ORDER TICKET (signature element: prints as the form fills) ── */
+    .cat-ticket-wrap { position: sticky; top: calc(var(--nav-h, 64px) + 16px); }
+    .cat-ticket {
+      background: var(--rice); color: var(--black); padding: 1.4rem 1.3rem 1.6rem;
+      font-family: 'DM Sans', monospace; transform: rotate(-0.6deg);
+      box-shadow: 0 10px 24px rgba(0,0,0,0.35);
+      position: relative;
+    }
+    .cat-ticket::after {
+      content: ''; position: absolute; left: 0; right: 0; bottom: -9px; height: 10px;
+      background-image: linear-gradient(-45deg, var(--rice) 5px, transparent 0), linear-gradient(45deg, var(--rice) 5px, transparent 0);
+      background-size: 10px 10px; background-repeat: repeat-x;
+    }
+    .cat-ticket-head { text-align: center; border-bottom: 1px dashed rgba(10,10,8,0.35); padding-bottom: 0.7rem; margin-bottom: 0.7rem; }
+    .cat-ticket-brand { font-family: 'Bebas Neue', sans-serif; font-size: 1.15rem; letter-spacing: 0.1em; }
+    .cat-ticket-sub { font-size: 0.62rem; letter-spacing: 0.14em; text-transform: uppercase; opacity: 0.6; margin-top: 2px; }
+    .cat-ticket-line { display: flex; justify-content: space-between; gap: 10px; font-size: 0.76rem; padding: 3px 0; line-height: 1.5; opacity: 0; transform: translateY(4px); animation: catTicketIn 0.28s ease forwards; }
+    @keyframes catTicketIn { to { opacity: 1; transform: translateY(0); } }
+    .cat-ticket-line b { text-align: right; max-width: 60%; font-weight: 700; }
+    .cat-ticket-empty { font-size: 0.76rem; opacity: 0.55; text-align: center; padding: 0.5rem 0; line-height: 1.7; }
+    .cat-ticket-total { display: flex; justify-content: space-between; border-top: 1px dashed rgba(10,10,8,0.35); margin-top: 0.6rem; padding-top: 0.6rem; font-family: 'Bebas Neue', sans-serif; font-size: 1.1rem; }
+    .cat-ticket-total span:last-child { color: var(--wok); }
+    @media (prefers-reduced-motion: reduce) { .cat-ticket-line { animation: none; opacity: 1; transform: none; } }
+    @media (max-width: 900px) { .cat-ticket-wrap { position: static; margin-bottom: 1.5rem; } }
+    /* ── PROGRESS PERCENT LABEL ── */
+    .cat-progress-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.5rem; }
+    .cat-progress-pct { font-family: 'Bebas Neue', sans-serif; font-size: 0.82rem; color: var(--gold); letter-spacing: 0.04em; }
+    /* ── SHARE BUTTON ON SUCCESS ── */
+    .cat-share-btn {
+      background: transparent; border: 1px solid var(--border); color: var(--rice);
+      padding: 0.7rem 1.1rem; font-size: 0.74rem; font-weight: 700; letter-spacing: 0.1em;
+      text-transform: uppercase; cursor: pointer; font-family: 'DM Sans', sans-serif;
+      margin-left: 10px; transition: border-color 0.2s, color 0.2s;
+    }
+    .cat-share-btn:hover { border-color: var(--gold); color: var(--gold); }
+    /* ── CONFETTI ── */
+    .cat-confetti-piece { position: fixed; top: -10px; width: 8px; height: 14px; z-index: 999; pointer-events: none; animation: catConfettiFall linear forwards; }
+    @keyframes catConfettiFall { to { transform: translateY(110vh) rotate(540deg); opacity: 0.9; } }
+    @media (prefers-reduced-motion: reduce) { .cat-confetti-piece { display: none; } }
 
   
     /* ═══════════════════════════════════════════════════
@@ -2507,6 +2561,11 @@
           <div><div class="cat-stat-num">48hr</div><div class="cat-stat-lbl">Response Time</div></div>
           <div><div class="cat-stat-num">PHX</div><div class="cat-stat-lbl">Valley-Wide</div></div>
         </div>
+        <div class="cat-proof-row">
+          <div class="cat-proof-chip">⚡ <b>Takes ~90 seconds</b> to send</div>
+          <div class="cat-proof-chip">📅 Books out <b>3&ndash;4 weeks</b> &mdash; grab your date early</div>
+          <div class="cat-proof-chip">🔒 No payment due to inquire</div>
+        </div>
       </div>
       <button type="button" class="btn-primary" style="white-space:nowrap;border:none;cursor:pointer;" onclick="startCatering()">Book Your Event</button>
     </div>
@@ -2522,44 +2581,66 @@
           <!-- STEP INDICATOR (2-step) -->
           <div class="cat-step-indicator">
             <div class="cat-step active" id="cs1"><div class="cat-step-dot">1</div><div class="cat-step-lbl">Your Event</div></div>
-            <div class="cat-step" id="cs2"><div class="cat-step-dot">2</div><div class="cat-step-lbl">Details &amp; Send</div></div>
+            <div class="cat-step" id="cs2"><div class="cat-step-dot">2</div><div class="cat-step-lbl">Add-Ons &amp; Send</div></div>
           </div>
+          <div class="cat-progress-row"><span class="cat-progress-pct" id="catProgressPct">50% &mdash; almost there</span></div>
           <div class="cat-progress"><div class="cat-progress-fill" id="catProgress" style="width:50%"></div></div>
 
           <!-- STEP 1 — contact + event + package -->
           <div id="cp1">
             <div class="cat-form-title">Event Details</div>
-            <div class="cat-row">
-              <div class="cat-group"><label class="cat-lbl" for="cf-first">First Name <span>*</span></label><input class="cat-input" id="cf-first" type="text" autocomplete="given-name" placeholder="Marcus"/></div>
-              <div class="cat-group"><label class="cat-lbl" for="cf-last">Last Name <span>*</span></label><input class="cat-input" id="cf-last" type="text" autocomplete="family-name" placeholder="Johnson"/></div>
-            </div>
+            <div class="cat-group" style="margin-bottom:12px"><label class="cat-lbl" for="cf-name">Your Name <span>*</span></label><input class="cat-input" id="cf-name" type="text" autocomplete="name" placeholder="Marcus Johnson"/></div>
             <div class="cat-row">
               <div class="cat-group"><label class="cat-lbl" for="cf-email">Email <span>*</span></label><input class="cat-input" id="cf-email" type="email" inputmode="email" autocomplete="email" placeholder="you@email.com"/></div>
               <div class="cat-group"><label class="cat-lbl" for="cf-phone">Phone <span>*</span></label><input class="cat-input" id="cf-phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="(602) 555-0100" maxlength="14"/></div>
             </div>
-            <div class="cat-divider"></div>
-            <div class="cat-form-title">Event Info</div>
             <div class="cat-row">
               <div class="cat-group"><label class="cat-lbl" for="cf-date">Event Date <span>*</span></label><input class="cat-input" id="cf-date" type="date"/></div>
               <div class="cat-group"><label class="cat-lbl" for="cf-time">Start Time <span>*</span></label><input class="cat-input" id="cf-time" type="time"/></div>
             </div>
-            <div class="cat-row">
-              <div class="cat-group"><label class="cat-lbl" for="cf-guests">Guest Count <span>*</span></label><select class="cat-select" id="cf-guests"><option value="">Select guests</option><option>20 &ndash; 50</option><option>51 &ndash; 100</option><option>101 &ndash; 200</option><option>201 &ndash; 350</option><option>350+</option></select></div>
-              <div class="cat-group"><label class="cat-lbl" for="cf-type">Event Type <span>*</span></label><select class="cat-select" id="cf-type"><option value="">Select type</option><option>Corporate / Office</option><option>Wedding / Reception</option><option>Birthday Party</option><option>Block Party / Festival</option><option>Private Party</option><option>Festival / Market</option><option>School / University</option><option>Other</option></select></div>
+            <div class="cat-divider"></div>
+            <div class="cat-group" style="margin-bottom:14px">
+              <label class="cat-lbl">Guest Count <span>*</span></label>
+              <div class="cat-chip-group" id="grp-guests">
+                <div class="cat-chip" onclick="pickChip(this,'cf-guests','20 – 50')">20&ndash;50</div>
+                <div class="cat-chip" onclick="pickChip(this,'cf-guests','51 – 100')">51&ndash;100</div>
+                <div class="cat-chip" onclick="pickChip(this,'cf-guests','101 – 200')">101&ndash;200</div>
+                <div class="cat-chip" onclick="pickChip(this,'cf-guests','201 – 350')">201&ndash;350</div>
+                <div class="cat-chip" onclick="pickChip(this,'cf-guests','350+')">350+</div>
+              </div>
+              <input type="hidden" id="cf-guests"/>
             </div>
-            <div class="cat-row">
-              <div class="cat-group"><label class="cat-lbl" for="cf-style">Service Style <span>*</span></label><select class="cat-select" id="cf-style"><option value="">Select style</option><option>Drop-Off Trays</option><option>Buffet Setup</option><option>Not sure yet</option></select></div>
-              <div class="cat-group"><label class="cat-lbl" for="cf-venue">Venue / Address</label><input class="cat-input" id="cf-venue" type="text" placeholder="Venue name or full address"/></div>
+            <div class="cat-group" style="margin-bottom:14px">
+              <label class="cat-lbl">Event Type <span>*</span></label>
+              <div class="cat-chip-group" id="grp-type">
+                <div class="cat-chip" onclick="pickChip(this,'cf-type','Corporate / Office')">Corporate</div>
+                <div class="cat-chip" onclick="pickChip(this,'cf-type','Wedding / Reception')">Wedding</div>
+                <div class="cat-chip" onclick="pickChip(this,'cf-type','Birthday Party')">Birthday</div>
+                <div class="cat-chip" onclick="pickChip(this,'cf-type','Block Party / Festival')">Block Party</div>
+                <div class="cat-chip" onclick="pickChip(this,'cf-type','Private Party')">Private Party</div>
+                <div class="cat-chip" onclick="pickChip(this,'cf-type','School / University')">School</div>
+                <div class="cat-chip" onclick="pickChip(this,'cf-type','Other')">Other</div>
+              </div>
+              <input type="hidden" id="cf-type"/>
+            </div>
+            <div class="cat-group">
+              <label class="cat-lbl">Service Style <span>*</span></label>
+              <div class="cat-chip-group" id="grp-style">
+                <div class="cat-chip" onclick="pickChip(this,'cf-style','Drop-Off Trays')">Drop-Off Trays</div>
+                <div class="cat-chip" onclick="pickChip(this,'cf-style','Buffet Setup')">Buffet Setup</div>
+                <div class="cat-chip" onclick="pickChip(this,'cf-style','Not sure yet')">Not Sure Yet</div>
+              </div>
+              <input type="hidden" id="cf-style"/>
             </div>
             <div class="cat-divider"></div>
             <div class="cat-form-title">Choose Your Package <span>*</span></div>
             <div class="pkg-list">
-              <div class="pkg-card-item" onclick="selectCatPkg(this,'Wok Starter')"><div class="pkg-radio"><div class="pkg-radio-dot"></div></div><div class="pkg-body"><div class="pkg-name">Wok Starter</div><div class="pkg-desc">Fried rice (1 variety) + crab rangoon. Perfect for 20&ndash;50 guests.</div></div><div class="pkg-cost">From $12/pp</div></div>
-              <div class="pkg-card-item" onclick="selectCatPkg(this,'The Classic Spread')" style="border-color:var(--wok)"><div class="pkg-badge">Most Popular</div><div class="pkg-radio"><div class="pkg-radio-dot"></div></div><div class="pkg-body"><div class="pkg-name">The Classic Spread</div><div class="pkg-desc">2 rice varieties + crab rangoon + St. Paul sandwiches. Feeds 50&ndash;150.</div></div><div class="pkg-cost">From $16/pp</div></div>
-              <div class="pkg-card-item" onclick="selectCatPkg(this,'Lou Wok Full Experience')"><div class="pkg-radio"><div class="pkg-radio-dot"></div></div><div class="pkg-body"><div class="pkg-name">Lou Wok Full Experience</div><div class="pkg-desc">Full menu &mdash; all rice varieties, rangoon, sandwiches, fried chicken. 100&ndash;500+ guests.</div></div><div class="pkg-cost">From $22/pp</div></div>
-              <div class="pkg-card-item" onclick="selectCatPkg(this,'Custom Package')"><div class="pkg-radio"><div class="pkg-radio-dot"></div></div><div class="pkg-body"><div class="pkg-name">Custom Package</div><div class="pkg-desc">Build your own menu. Tell us what you need and we'll put together a custom quote.</div></div><div class="pkg-cost">Custom Quote</div></div>
+              <div class="pkg-card-item" onclick="selectCatPkg(this,'Wok Starter')"><div class="pkg-radio"><div class="pkg-radio-dot"></div></div><div class="pkg-body"><div class="pkg-name">🥡 Wok Starter</div><div class="pkg-desc">Fried rice (1 variety) + crab rangoon. Perfect for 20&ndash;50 guests.</div></div><div class="pkg-cost">From $12/pp</div></div>
+              <div class="pkg-card-item" onclick="selectCatPkg(this,'The Classic Spread')" style="border-color:var(--wok)"><div class="pkg-badge">Most Popular</div><div class="pkg-radio"><div class="pkg-radio-dot"></div></div><div class="pkg-body"><div class="pkg-name">🍚 The Classic Spread</div><div class="pkg-desc">2 rice varieties + crab rangoon + St. Paul sandwiches. Feeds 50&ndash;150.</div></div><div class="pkg-cost">From $16/pp</div></div>
+              <div class="pkg-card-item" onclick="selectCatPkg(this,'Lou Wok Full Experience')"><div class="pkg-radio"><div class="pkg-radio-dot"></div></div><div class="pkg-body"><div class="pkg-name">🎉 Lou Wok Full Experience</div><div class="pkg-desc">Full menu &mdash; all rice varieties, rangoon, sandwiches, fried chicken. 100&ndash;500+ guests.</div></div><div class="pkg-cost">From $22/pp</div></div>
+              <div class="pkg-card-item" onclick="selectCatPkg(this,'Custom Package')"><div class="pkg-radio"><div class="pkg-radio-dot"></div></div><div class="pkg-body"><div class="pkg-name">✨ Custom Package</div><div class="pkg-desc">Build your own menu. Tell us what you need and we'll put together a custom quote.</div></div><div class="pkg-cost">Custom Quote</div></div>
             </div>
-            <div class="cat-btn-row"><button class="cat-next-btn" onclick="catNextStep(2)">Continue to Add-Ons &amp; Review &rarr;</button></div>
+            <div class="cat-btn-row"><button class="cat-next-btn" onclick="catNextStep(2)">Continue &rarr;</button></div>
           </div>
 
           <!-- STEP 2 — add-ons + notes + review + submit -->
@@ -2567,24 +2648,26 @@
             <div class="cat-form-title">Add-Ons &amp; Extras</div>
             <p style="font-size:0.78rem;color:var(--muted);margin-bottom:1rem;line-height:1.6;">Select anything you'd like included. Pricing quoted after review.</p>
             <div class="addon-grid">
-              <div class="addon-chip" onclick="this.classList.toggle('checked')"><div class="addon-check"><span class="addon-checkmark">&#10003;</span></div><div><div class="addon-chip-name">STL Fried Chicken</div><div class="addon-chip-sub">4pc per order</div></div></div>
-              <div class="addon-chip" onclick="this.classList.toggle('checked')"><div class="addon-check"><span class="addon-checkmark">&#10003;</span></div><div><div class="addon-chip-name">Pineapple Bowls</div><div class="addon-chip-sub">Served in pineapple</div></div></div>
-              <div class="addon-chip" onclick="this.classList.toggle('checked')"><div class="addon-check"><span class="addon-checkmark">&#10003;</span></div><div><div class="addon-chip-name">Vegetarian Options</div><div class="addon-chip-sub">Tofu protein available</div></div></div>
-              <div class="addon-chip" onclick="this.classList.toggle('checked')"><div class="addon-check"><span class="addon-checkmark">&#10003;</span></div><div><div class="addon-chip-name">Branded Packaging</div><div class="addon-chip-sub">Logo boxes &amp; bags</div></div></div>
-              <div class="addon-chip" onclick="this.classList.toggle('checked')"><div class="addon-check"><span class="addon-checkmark">&#10003;</span></div><div><div class="addon-chip-name">Servers / Staff</div><div class="addon-chip-sub">Extra hands on deck</div></div></div>
-              <div class="addon-chip" onclick="this.classList.toggle('checked')"><div class="addon-check"><span class="addon-checkmark">&#10003;</span></div><div><div class="addon-chip-name">Extended Hours</div><div class="addon-chip-sub">Beyond 3hr window</div></div></div>
-              <div class="addon-chip" onclick="this.classList.toggle('checked')"><div class="addon-check"><span class="addon-checkmark">&#10003;</span></div><div><div class="addon-chip-name">Dessert Rangoon</div><div class="addon-chip-sub">Sweet cream filling</div></div></div>
-              <div class="addon-chip" onclick="this.classList.toggle('checked')"><div class="addon-check"><span class="addon-checkmark">&#10003;</span></div><div><div class="addon-chip-name">Setup &amp; Teardown</div><div class="addon-chip-sub">Full service option</div></div></div>
+              <div class="addon-chip" onclick="this.classList.toggle('checked');updateCatTicket();"><div class="addon-check"><span class="addon-checkmark">&#10003;</span></div><div><div class="addon-chip-name">STL Fried Chicken</div><div class="addon-chip-sub">4pc per order</div></div></div>
+              <div class="addon-chip" onclick="this.classList.toggle('checked');updateCatTicket();"><div class="addon-check"><span class="addon-checkmark">&#10003;</span></div><div><div class="addon-chip-name">Pineapple Bowls</div><div class="addon-chip-sub">Served in pineapple</div></div></div>
+              <div class="addon-chip" onclick="this.classList.toggle('checked');updateCatTicket();"><div class="addon-check"><span class="addon-checkmark">&#10003;</span></div><div><div class="addon-chip-name">Vegetarian Options</div><div class="addon-chip-sub">Tofu protein available</div></div></div>
+              <div class="addon-chip" onclick="this.classList.toggle('checked');updateCatTicket();"><div class="addon-check"><span class="addon-checkmark">&#10003;</span></div><div><div class="addon-chip-name">Branded Packaging</div><div class="addon-chip-sub">Logo boxes &amp; bags</div></div></div>
+              <div class="addon-chip" onclick="this.classList.toggle('checked');updateCatTicket();"><div class="addon-check"><span class="addon-checkmark">&#10003;</span></div><div><div class="addon-chip-name">Servers / Staff</div><div class="addon-chip-sub">Extra hands on deck</div></div></div>
+              <div class="addon-chip" onclick="this.classList.toggle('checked');updateCatTicket();"><div class="addon-check"><span class="addon-checkmark">&#10003;</span></div><div><div class="addon-chip-name">Extended Hours</div><div class="addon-chip-sub">Beyond 3hr window</div></div></div>
+              <div class="addon-chip" onclick="this.classList.toggle('checked');updateCatTicket();"><div class="addon-check"><span class="addon-checkmark">&#10003;</span></div><div><div class="addon-chip-name">Dessert Rangoon</div><div class="addon-chip-sub">Sweet cream filling</div></div></div>
+              <div class="addon-chip" onclick="this.classList.toggle('checked');updateCatTicket();"><div class="addon-check"><span class="addon-checkmark">&#10003;</span></div><div><div class="addon-chip-name">Setup &amp; Teardown</div><div class="addon-chip-sub">Full service option</div></div></div>
             </div>
             <div class="cat-divider"></div>
-            <div class="cat-group" style="margin-bottom:12px"><label class="cat-lbl" for="cf-dietary">Dietary Restrictions / Allergies</label><textarea class="cat-textarea" id="cf-dietary" placeholder="e.g. nut allergy for 5 guests, gluten-free needed..."></textarea></div>
-            <div class="cat-group" style="margin-bottom:12px"><label class="cat-lbl" for="cf-notes">Anything Else?</label><textarea class="cat-textarea" id="cf-notes" placeholder="Venue notes, theme, special requests..."></textarea></div>
-            <div class="cat-group"><label class="cat-lbl" for="cf-source">How did you hear about us?</label><select class="cat-select" id="cf-source"><option value="">Select one</option><option>Instagram</option><option>TikTok</option><option>Facebook</option><option>Google Search</option><option>Word of Mouth</option><option>Walked By / Visited</option><option>Other</option></select></div>
+            <div class="cat-row">
+              <div class="cat-group"><label class="cat-lbl" for="cf-venue">Venue / Address</label><input class="cat-input" id="cf-venue" type="text" placeholder="Venue name or full address"/></div>
+              <div class="cat-group"><label class="cat-lbl" for="cf-source">Found Us Via</label><select class="cat-select" id="cf-source"><option value="">Select one</option><option>Instagram</option><option>TikTok</option><option>Facebook</option><option>Google Search</option><option>Word of Mouth</option><option>Walked By / Visited</option><option>Other</option></select></div>
+            </div>
+            <div class="cat-group" style="margin:12px 0"><label class="cat-lbl" for="cf-notes">Dietary Restrictions &amp; Special Requests</label><textarea class="cat-textarea" id="cf-notes" placeholder="e.g. nut allergy for 5 guests, gluten-free needed, venue notes..."></textarea></div>
             <div class="cat-divider"></div>
             <div class="cat-form-title">Review</div>
             <div class="cat-review" id="catReviewBlock"></div>
             <div class="cat-terms-wrap"><input type="checkbox" id="catTerms"/><label for="catTerms">I understand this is an inquiry form only. Lou Wok will follow up within 48 hours to confirm availability and finalize details, then send a secure link to pay a 25% deposit that locks in the date.</label></div>
-            <div class="cat-btn-row"><button class="cat-back-btn" onclick="catNextStep(1)">&larr; Back</button><button class="cat-next-btn" onclick="submitCatering()">Submit Catering Inquiry &#128293;</button></div>
+            <div class="cat-btn-row"><button class="cat-back-btn" onclick="catNextStep(1)">&larr; Back</button><button class="cat-next-btn" onclick="submitCatering()">Fire the Order &#128293;</button></div>
             <p class="cat-form-note">We respond within 48 hours &middot; Questions? <a href="mailto:catering@louwok.com">catering@louwok.com</a></p>
           </div>
         </div>
@@ -2594,17 +2677,21 @@
           <div class="cat-success-title">Inquiry Sent!</div>
           <p class="cat-success-sub">We got your catering request and we're fired up. Within 48 hours we'll confirm your date and email a secure link to pay your 25% deposit &mdash; that's what locks it in.</p>
           <button class="btn-primary" onclick="resetCatering()">Submit Another Inquiry</button>
+          <button class="cat-share-btn" onclick="shareCatering()">Share Lou Wok &#128228;</button>
         </div>
       </div>
       <!-- SIDEBAR -->
       <div class="cat-sidebar">
-        <div class="cat-info-box">
-          <div class="cat-info-box-title">What to Expect</div>
-          <div class="cat-info-line"><div class="cat-dot"></div><div class="cat-info-txt"><strong>Inquiry submitted</strong> &mdash; We review and respond within 48 hours</div></div>
-          <div class="cat-info-line"><div class="cat-dot"></div><div class="cat-info-txt"><strong>Availability confirmed</strong> &mdash; We check our catering calendar for your date</div></div>
-          <div class="cat-info-line"><div class="cat-dot"></div><div class="cat-info-txt"><strong>Custom quote sent</strong> &mdash; Pricing based on guests, package, and add-ons</div></div>
-          <div class="cat-info-line"><div class="cat-dot"></div><div class="cat-info-txt"><strong>Deposit to book</strong> &mdash; 25% secures your date</div></div>
-          <div class="cat-info-line"><div class="cat-dot"></div><div class="cat-info-txt"><strong>We show up and wok it</strong> &mdash; Day-of execution, stress free</div></div>
+        <div class="cat-ticket-wrap">
+          <div class="cat-ticket" id="catTicket">
+            <div class="cat-ticket-head">
+              <div class="cat-ticket-brand">🔥 LOU WOK</div>
+              <div class="cat-ticket-sub">Catering Order Ticket</div>
+            </div>
+            <div id="catTicketBody">
+              <div class="cat-ticket-empty">Your details print here<br>as you fill out the form &rarr;</div>
+            </div>
+          </div>
         </div>
         <div class="cat-faq">
           <div class="cat-faq-head">FAQ</div>
@@ -3766,14 +3853,61 @@
           date.min = today;
         }
         // Any required field clears its error styling the moment it's edited.
-        ['cf-first','cf-last','cf-email','cf-phone','cf-date','cf-time','cf-guests','cf-type','cf-style']
+        ['cf-name','cf-email','cf-phone','cf-date','cf-time']
           .forEach(id => {
             const el = document.getElementById(id);
-            if (el) el.addEventListener('input', () => el.classList.remove('cat-err'));
-            if (el) el.addEventListener('change', () => el.classList.remove('cat-err'));
+            if (el) el.addEventListener('input', () => { el.classList.remove('cat-err'); updateCatTicket(); });
+            if (el) el.addEventListener('change', () => { el.classList.remove('cat-err'); updateCatTicket(); });
           });
+        // Chips are keyboard-focusable buttons, not just click targets.
+        document.querySelectorAll('.cat-chip').forEach(chip => {
+          chip.setAttribute('tabindex', '0');
+          chip.setAttribute('role', 'button');
+          chip.addEventListener('keydown', e => {
+            if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); chip.click(); }
+          });
+        });
       });
     })();
+
+    // Pick a chip in a chip-group (guest count / event type / service style).
+    // Mirrors what a <select> would do: sets a hidden input's value, marks the
+    // chosen chip active, clears any error state, and refreshes the live ticket.
+    function pickChip(el, hiddenId, value) {
+      el.parentElement.querySelectorAll('.cat-chip').forEach(c => c.classList.remove('selected'));
+      el.classList.add('selected');
+      el.parentElement.classList.remove('cat-err');
+      const hidden = document.getElementById(hiddenId);
+      if (hidden) hidden.value = value;
+      updateCatTicket();
+    }
+
+    // Renders the live "order ticket" in the sidebar as the form fills out —
+    // doubles as a running receipt so guests can see their order take shape.
+    function updateCatTicket() {
+      const body = document.getElementById('catTicketBody');
+      if (!body) return;
+      const v = id => { const el = document.getElementById(id); return el ? el.value.trim() : ''; };
+      const addons = Array.from(document.querySelectorAll('.addon-chip.checked'))
+        .map(e => { const n = e.querySelector('.addon-chip-name'); return n ? n.textContent : ''; })
+        .filter(Boolean);
+
+      const rows = [];
+      if (v('cf-name'))   rows.push(['Guest', v('cf-name')]);
+      if (v('cf-date'))   rows.push(['Date', v('cf-date') + (v('cf-time') ? ' · ' + v('cf-time') : '')]);
+      if (v('cf-guests')) rows.push(['Party', v('cf-guests') + ' guests']);
+      if (v('cf-type'))   rows.push(['Event', v('cf-type')]);
+      if (v('cf-style'))  rows.push(['Style', v('cf-style')]);
+      if (catPkg)         rows.push(['Package', catPkg]);
+      if (addons.length)  rows.push(['Add-Ons', addons.join(', ')]);
+
+      if (!rows.length) {
+        body.innerHTML = '<div class="cat-ticket-empty">Your details print here<br>as you fill out the form &rarr;</div>';
+        return;
+      }
+      body.innerHTML = rows.map((r,i) => `<div class="cat-ticket-line" style="animation-delay:${i*35}ms"><span>${r[0]}</span><b>${r[1]}</b></div>`).join('') +
+        (catPkg ? `<div class="cat-ticket-total"><span>Status</span><span>Quote Pending</span></div>` : '');
+    }
 
     // Launch the booking flow: reset to step 1, scroll the form into view,
     // pulse it briefly so the eye lands on it, and focus the first field.
@@ -3806,7 +3940,7 @@
       formCard.classList.add('cat-form-pulse');
       setTimeout(() => formCard.classList.remove('cat-form-pulse'), 1200);
       setTimeout(() => {
-        const first = document.getElementById('cf-first');
+        const first = document.getElementById('cf-name');
         if (first && !isMobile) first.focus({ preventScroll: true });
       }, reduce ? 0 : 480);
     }
@@ -3814,13 +3948,21 @@
     // Validate step 1. Returns true if OK; otherwise marks offending fields,
     // focuses the first one, and shows a single toast.
     function catValidateStep1() {
-      const reqIds = ['cf-first','cf-last','cf-email','cf-phone','cf-date','cf-time','cf-guests','cf-type','cf-style'];
+      const reqIds = ['cf-name','cf-email','cf-phone','cf-date','cf-time','cf-guests','cf-type','cf-style'];
       let firstBad = null;
       reqIds.forEach(id => {
         const el = document.getElementById(id);
         const empty = !el || !el.value.trim();
         if (el) el.classList.toggle('cat-err', empty);
-        if (empty && !firstBad) firstBad = el;
+        // Chip-group fields (guests/type/style) use a hidden input; flag the
+        // visible chip row so the red outline actually shows up.
+        const grp = document.getElementById('grp-' + id.replace('cf-',''));
+        if (grp) {
+          grp.classList.toggle('cat-err', empty);
+          if (empty && !firstBad) firstBad = grp.querySelector('.cat-chip') || el;
+        } else if (empty && !firstBad) {
+          firstBad = el;
+        }
       });
       const emailEl = document.getElementById('cf-email');
       const emailVal = emailEl ? emailEl.value.trim() : '';
@@ -3868,6 +4010,8 @@
       }
       const prog = document.getElementById('catProgress');
       if (prog) prog.style.width = (n * (100/CAT_TOTAL_STEPS)) + '%';
+      const pct = document.getElementById('catProgressPct');
+      if (pct) pct.textContent = n === CAT_TOTAL_STEPS ? '100% — ready to send' : Math.round(n*(100/CAT_TOTAL_STEPS)) + '% — almost there';
       catStep = n;
 
       const card = document.getElementById('catFormCard');
@@ -3888,6 +4032,7 @@
       document.querySelectorAll('.pkg-card-item').forEach(c => { c.classList.remove('selected'); c.classList.remove('cat-err'); });
       el.classList.add('selected');
       catPkg = name;
+      updateCatTicket();
     }
 
     function buildCatReview() {
@@ -3899,7 +4044,7 @@
       const block = document.getElementById('catReviewBlock');
       if (!block) return;
       block.innerHTML =
-        `<span class="rv-lbl">Name</span><span class="rv-val">${v('cf-first')} ${v('cf-last')}</span>` +
+        `<span class="rv-lbl">Name</span><span class="rv-val">${v('cf-name')}</span>` +
         `<span class="rv-lbl">Email</span><span class="rv-val">${v('cf-email')}</span>` +
         `<span class="rv-lbl">Phone</span><span class="rv-val">${v('cf-phone')}</span>` +
         `<span class="rv-lbl">Date</span><span class="rv-val">${v('cf-date')} ${v('cf-time')}</span>` +
@@ -3922,12 +4067,8 @@
         .map(e => { const n = e.querySelector('.addon-chip-name'); return n ? n.textContent : ''; })
         .filter(Boolean).join(', ') || 'None';
 
-      const dietary = v('cf-dietary');
-      const notesRaw = v('cf-notes');
-      const notes = [dietary ? ('Dietary: ' + dietary) : '', notesRaw].filter(Boolean).join(' | ');
-
       const payload = {
-        client_name   : (v('cf-first') + ' ' + v('cf-last')).trim(),
+        client_name   : v('cf-name').trim(),
         client_email  : v('cf-email'),
         client_phone  : v('cf-phone'),
         event_date    : v('cf-date'),
@@ -3938,7 +4079,7 @@
         venue         : v('cf-venue'),
         package       : catPkg,
         addons        : addons,
-        notes         : notes,
+        notes         : v('cf-notes'),
         source        : v('cf-source'),
         submit_time   : new Date().toLocaleString('en-US', { timeZone: 'America/Phoenix' }),
       };
@@ -3959,6 +4100,7 @@
         if (catSuccess && catSuccess.scrollIntoView) {
           catSuccess.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
+        catConfetti();
       };
 
       // ── Primary: serverless notify endpoint (emails + SMS to admins) ──
@@ -3991,9 +4133,12 @@
         .forEach(el => el.value = '');
       document.querySelectorAll('.pkg-card-item').forEach(c => c.classList.remove('selected'));
       document.querySelectorAll('.addon-chip').forEach(c => c.classList.remove('checked'));
+      document.querySelectorAll('.cat-chip').forEach(c => c.classList.remove('selected'));
+      document.querySelectorAll('.cat-chip-group').forEach(g => g.classList.remove('cat-err'));
       const terms = document.getElementById('catTerms');
       if (terms) terms.checked = false;
       catPkg = '';
+      updateCatTicket();
       for (let i = 2; i <= 4; i++) {
         const cp = document.getElementById('cp' + i);
         if (cp) cp.style.display = 'none';
@@ -4009,9 +4154,47 @@
       }
       const cs1  = document.getElementById('cs1');
       const prog = document.getElementById('catProgress');
+      const pct  = document.getElementById('catProgressPct');
       if (cs1)  cs1.classList.add('active');
-      if (prog) prog.style.width = '25%';
+      if (prog) prog.style.width = (100/CAT_TOTAL_STEPS) + '%';
+      if (pct)  pct.textContent = '50% — almost there';
       catStep = 1;
+    }
+
+    // Confetti burst on a successful submit — a small celebratory moment,
+    // skipped entirely for anyone with reduced-motion set.
+    function catConfetti() {
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      const colors = ['#c8390a', '#e8a020', '#f5eed8'];
+      for (let i = 0; i < 26; i++) {
+        const piece = document.createElement('div');
+        piece.className = 'cat-confetti-piece';
+        piece.style.left = Math.random() * 100 + 'vw';
+        piece.style.background = colors[i % colors.length];
+        piece.style.animationDuration = (1.6 + Math.random() * 1.2) + 's';
+        piece.style.animationDelay = (Math.random() * 0.3) + 's';
+        document.body.appendChild(piece);
+        setTimeout(() => piece.remove(), 3200);
+      }
+    }
+
+    // Share button on the success screen — lets a happy inquirer forward
+    // Lou Wok to whoever's planning their next event.
+    function shareCatering() {
+      const shareData = {
+        title : 'Lou Wok Rice House Catering',
+        text  : 'Just booked Lou Wok for our event — wok-fired fried rice & St. Louis-style Chinese-American food, catered. 🔥',
+        url   : window.location.origin + window.location.pathname + '#catering',
+      };
+      if (navigator.share) {
+        navigator.share(shareData).catch(() => {});
+      } else if (navigator.clipboard) {
+        navigator.clipboard.writeText(shareData.url)
+          .then(() => showToast('Link copied — share away!'))
+          .catch(() => showToast('Visit louwok.com/#catering'));
+      } else {
+        showToast('Visit louwok.com/#catering');
+      }
     }
 
     // ── WEB SHARE API ───────────────────────────────────────
