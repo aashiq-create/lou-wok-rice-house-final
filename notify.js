@@ -39,7 +39,6 @@ function toE164(raw) {
 }
 
 async function sendSMS(client, from, to, body) {
-  if (!client || !from) return { ok: false, reason: 'sms_disabled', to };
   const dest = toE164(to);
   if (!dest) return { ok: false, reason: 'bad_number', to };
   try {
@@ -87,10 +86,10 @@ module.exports = async (req, res) => {
   const RESTAURANT_NAME = cfg.restaurantName;
   const PICKUP_ETA      = cfg.pickupEtaMin;
 
-  // SMS is best-effort. If Twilio isn't configured we still send email so
-  // an inquiry is NEVER silently lost just because SMS creds are absent.
-  const smsEnabled = !!(accountSid && authToken && smsFrom);
-  const client = smsEnabled ? twilio(accountSid, authToken) : null;
+  if (!accountSid || !authToken || !smsFrom) {
+    return res.status(500).json({ error: 'Twilio not configured' });
+  }
+  const client = twilio(accountSid, authToken);
 
   const p    = readBody(req);
   const type = p.type || 'order';
@@ -138,67 +137,24 @@ module.exports = async (req, res) => {
         adminBody
       );
     } else if (type === 'catering') {
-      // Accept BOTH the flat payload the booking form sends and the older
-      // nested {customer:{}} shape, so nothing breaks on either side.
-      const c = p.customer || {};
-      const name   = p.client_name   || c.name   || '—';
-      const email  = p.client_email  || c.email  || '—';
-      const phone  = p.client_phone  || c.phone  || '—';
-      const date   = p.event_date    || '—';
-      const time   = p.event_time    || '';
-      const guests = p.guest_count   || p.guests || '—';
-      const etype  = p.event_type    || '';
-      const style  = p.service_style || '';
-      const pkg    = p.package       || '';
-      const addons = p.addons        || 'None';
-      const notes  = p.notes         || p.details || '';
-      const source = p.source        || '';
-      const when   = p.submit_time   || '';
-
-      // SMS: short and scannable (160-char-aware) for the owner's phone.
-      const sms =
+      const body =
         `🎉 CATERING INQUIRY\n` +
-        `${name} · ${phone}\n` +
-        `${date}${time ? ' ' + time : ''} · ${guests} guests\n` +
-        `${pkg || etype || ''}`.trim();
-
-      // Email: full ticket, every field, easy to act on.
-      const lines = [
-        `🎉 NEW CATERING INQUIRY`,
-        ``,
-        `Name:     ${name}`,
-        `Phone:    ${phone}`,
-        `Email:    ${email}`,
-        ``,
-        `Date:     ${date}${time ? '  at ' + time : ''}`,
-        `Guests:   ${guests}`,
-        `Event:    ${etype || '—'}`,
-        `Service:  ${style || '—'}`,
-        `Package:  ${pkg || '—'}`,
-        `Add-ons:  ${addons}`,
-        ``,
-        `Notes:    ${notes || '—'}`,
-        `Heard via: ${source || '—'}`,
-        when ? `Submitted: ${when} (Phoenix)` : ``,
-      ].filter(l => l !== null);
-      const emailBody = lines.join('\n');
-
+        `${p.client_name || '—'} · ${p.client_phone || '—'} · ${p.client_email || '—'}\n` +
+        `Event: ${p.event_date || '—'} ${p.event_time || ''} · Guests: ${p.guest_count || '—'}\n` +
+        `Type: ${p.event_type || '—'} · Style: ${p.service_style || '—'}\n` +
+        `Package: ${p.package || '—'}\n` +
+        `Venue: ${p.venue || '—'}\n` +
+        `Add-Ons: ${p.addons || '—'}\n` +
+        `Notes: ${p.notes || '—'}\n` +
+        `Source: ${p.source || '—'}`;
       for (const a of adminSms) {
-        results.admins.push(await sendSMS(client, smsFrom, a, sms));
+        results.admins.push(await sendSMS(client, smsFrom, a, body));
       }
       results.email = await sendEmail(
         adminEmail,
-        `Catering inquiry — ${name}${date !== '—' ? ' · ' + date : ''}`,
-        emailBody
+        `Catering inquiry — ${p.client_name || 'Guest'}`,
+        body
       );
-
-      // If BOTH channels failed, surface a 502 so the form shows its fallback
-      // path instead of a false "success".
-      const smsOk   = results.admins.some(r => r && r.ok);
-      const emailOk = results.email && results.email.ok;
-      if (!smsOk && !emailOk) {
-        return res.status(502).json({ ok: false, error: 'all_channels_failed', results });
-      }
     } else {
       return res.status(400).json({ error: 'Unknown type: ' + type });
     }
