@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- ✅ LOU-WOK-TRACKER vCATERING-REDESIGN | condensed form + live ticket + fixed catering notify payload | 2026-07-01 -->
+<!-- ✅ LOU-WOK-TRACKER vCATERING-DATEPICKER | custom calendar picker w/ recommended-window + quick-pick chips | 2026-07-01 -->
 
 <html lang="en">
 <head>
@@ -1502,6 +1502,52 @@
     .cat-confetti-piece { position: fixed; top: -10px; width: 8px; height: 14px; z-index: 999; pointer-events: none; animation: catConfettiFall linear forwards; }
     @keyframes catConfettiFall { to { transform: translateY(110vh) rotate(540deg); opacity: 0.9; } }
     @media (prefers-reduced-motion: reduce) { .cat-confetti-piece { display: none; } }
+    /* ── CUSTOM DATE PICKER (replaces native <input type=date>) ── */
+    .cat-date-field { position: relative; }
+    .cat-date-btn {
+      width: 100%; background: var(--black); border: 1px solid var(--border);
+      padding: 10px 12px; font-family: 'DM Sans', sans-serif; font-size: 0.88rem;
+      color: var(--muted); text-align: left; cursor: pointer; outline: none;
+      display: flex; align-items: center; justify-content: space-between; gap: 8px;
+      transition: border-color 0.18s;
+    }
+    .cat-date-btn.has-value { color: var(--rice); }
+    .cat-date-btn:hover, .cat-date-btn:focus { border-color: var(--gold); }
+    .cat-date-btn.cat-err { border-color: var(--wok); box-shadow: 0 0 0 1px var(--wok) inset; }
+    .cat-date-pop {
+      display: none; position: absolute; z-index: 40; top: calc(100% + 8px); left: 0;
+      width: 296px; max-width: 90vw; background: var(--smoke); border: 1px solid var(--border);
+      padding: 1rem; box-shadow: 0 16px 36px rgba(0,0,0,0.5);
+    }
+    .cat-date-pop.open { display: block; }
+    .cat-date-quick { display: flex; gap: 6px; margin-bottom: 0.85rem; flex-wrap: wrap; }
+    .cat-date-quick button {
+      flex: 1; min-width: 84px; background: rgba(232,160,32,0.08); border: 1px solid rgba(232,160,32,0.25);
+      color: var(--gold); font-size: 0.66rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
+      padding: 0.5rem 0.4rem; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: background 0.15s;
+    }
+    .cat-date-quick button:hover { background: rgba(232,160,32,0.18); }
+    .cat-cal-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.7rem; }
+    .cat-cal-title { font-family: 'Bebas Neue', sans-serif; font-size: 1.05rem; letter-spacing: 0.05em; color: var(--rice); }
+    .cat-cal-nav { background: none; border: 1px solid var(--border); color: var(--rice); width: 26px; height: 26px; cursor: pointer; font-size: 0.8rem; line-height: 1; }
+    .cat-cal-nav:hover { border-color: var(--gold); color: var(--gold); }
+    .cat-cal-nav:disabled { opacity: 0.25; cursor: default; }
+    .cat-cal-grid { display: grid; grid-template-columns: repeat(7,1fr); gap: 3px; }
+    .cat-cal-dow { font-size: 0.6rem; color: var(--muted); text-align: center; padding-bottom: 4px; letter-spacing: 0.05em; }
+    .cat-cal-day {
+      aspect-ratio: 1; display: flex; align-items: center; justify-content: center; position: relative;
+      font-size: 0.76rem; color: var(--rice); cursor: pointer; background: transparent; border: none;
+      font-family: 'DM Sans', sans-serif; transition: background 0.12s;
+    }
+    .cat-cal-day:hover:not(:disabled) { background: rgba(232,160,32,0.15); }
+    .cat-cal-day:disabled { color: var(--border); cursor: default; }
+    .cat-cal-day.blank { visibility: hidden; cursor: default; }
+    .cat-cal-day.today { box-shadow: inset 0 0 0 1px var(--gold); }
+    .cat-cal-day.selected { background: var(--wok); color: var(--rice); }
+    .cat-cal-day.recommended::after { content: ''; position: absolute; bottom: 3px; width: 3px; height: 3px; border-radius: 50%; background: var(--gold); }
+    .cat-cal-day.recommended.selected::after { background: var(--rice); }
+    .cat-date-legend { display: flex; align-items: center; gap: 6px; margin-top: 0.75rem; font-size: 0.62rem; color: var(--muted); }
+    .cat-date-legend .dot { width: 5px; height: 5px; border-radius: 50%; background: var(--gold); flex-shrink: 0; }
 
   
     /* ═══════════════════════════════════════════════════
@@ -2595,7 +2641,27 @@
               <div class="cat-group"><label class="cat-lbl" for="cf-phone">Phone <span>*</span></label><input class="cat-input" id="cf-phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="(602) 555-0100" maxlength="14"/></div>
             </div>
             <div class="cat-row">
-              <div class="cat-group"><label class="cat-lbl" for="cf-date">Event Date <span>*</span></label><input class="cat-input" id="cf-date" type="date"/></div>
+              <div class="cat-group cat-date-field">
+                <label class="cat-lbl" for="cf-date-btn">Event Date <span>*</span></label>
+                <button type="button" class="cat-date-btn" id="cf-date-btn" onclick="toggleCatDatePicker(event)">
+                  <span id="cf-date-label">Choose a date</span><span>📅</span>
+                </button>
+                <input type="hidden" id="cf-date"/>
+                <div class="cat-date-pop" id="catDatePop">
+                  <div class="cat-date-quick">
+                    <button type="button" onclick="catCalQuickPick(21)">In 3 Weeks</button>
+                    <button type="button" onclick="catCalQuickPick(42)">In 6 Weeks</button>
+                    <button type="button" onclick="catCalQuickPick(56)">In 8 Weeks</button>
+                  </div>
+                  <div class="cat-cal-head">
+                    <button type="button" class="cat-cal-nav" id="catCalPrev" onclick="catCalShift(-1)" aria-label="Previous month">&lsaquo;</button>
+                    <div class="cat-cal-title" id="catCalTitle"></div>
+                    <button type="button" class="cat-cal-nav" onclick="catCalShift(1)" aria-label="Next month">&rsaquo;</button>
+                  </div>
+                  <div class="cat-cal-grid" id="catCalGrid"></div>
+                  <div class="cat-date-legend"><span class="dot"></span> Recommended booking window</div>
+                </div>
+              </div>
               <div class="cat-group"><label class="cat-lbl" for="cf-time">Start Time <span>*</span></label><input class="cat-input" id="cf-time" type="time"/></div>
             </div>
             <div class="cat-divider"></div>
@@ -3846,14 +3912,11 @@
             this.value = f;
           });
         }
-        // Block past dates on the event date picker.
-        const date = document.getElementById('cf-date');
-        if (date) {
-          const today = new Date().toLocaleDateString('en-CA',{timeZone:'America/Phoenix'});
-          date.min = today;
-        }
+        // Custom date picker: today (Phoenix time) as the floor for the calendar.
+        catCalToday = new Date().toLocaleDateString('en-CA', { timeZone: 'America/Phoenix' });
+        catCalView  = new Date(catCalToday + 'T00:00:00');
         // Any required field clears its error styling the moment it's edited.
-        ['cf-name','cf-email','cf-phone','cf-date','cf-time']
+        ['cf-name','cf-email','cf-phone','cf-time']
           .forEach(id => {
             const el = document.getElementById(id);
             if (el) el.addEventListener('input', () => { el.classList.remove('cat-err'); updateCatTicket(); });
@@ -3867,8 +3930,115 @@
             if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); chip.click(); }
           });
         });
+        // Close the date popover on an outside click or Escape.
+        document.addEventListener('click', e => {
+          const pop = document.getElementById('catDatePop');
+          const btn = document.getElementById('cf-date-btn');
+          if (pop && pop.classList.contains('open') && !pop.contains(e.target) && e.target !== btn) {
+            pop.classList.remove('open');
+          }
+        });
+        document.addEventListener('keydown', e => {
+          if (e.key === 'Escape') {
+            const pop = document.getElementById('catDatePop');
+            if (pop) pop.classList.remove('open');
+          }
+        });
       });
     })();
+
+    // ── CUSTOM DATE PICKER ──────────────────────────────────
+    let catCalToday = '';
+    let catCalView  = new Date();
+
+    function toggleCatDatePicker(e) {
+      if (e) e.stopPropagation();
+      const pop = document.getElementById('catDatePop');
+      if (!pop) return;
+      const opening = !pop.classList.contains('open');
+      pop.classList.toggle('open', opening);
+      if (opening) {
+        const dateVal = document.getElementById('cf-date').value;
+        catCalView = new Date((dateVal || catCalToday) + 'T00:00:00');
+        catCalRender();
+      }
+    }
+
+    // Jumps the calendar to today + N days and selects that date — a fast
+    // path for the common "book a few weeks out" case.
+    function catCalQuickPick(daysOut) {
+      const d = new Date(catCalToday + 'T00:00:00');
+      d.setDate(d.getDate() + daysOut);
+      catCalView = new Date(d);
+      catCalPick(catCalISO(d));
+    }
+
+    function catCalShift(dir) {
+      catCalView.setMonth(catCalView.getMonth() + dir);
+      catCalRender();
+    }
+
+    function catCalISO(d) {
+      return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+    }
+
+    function catCalFmt(iso) {
+      const d = new Date(iso + 'T00:00:00');
+      return d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+    }
+
+    function catCalRender() {
+      const title = document.getElementById('catCalTitle');
+      const grid  = document.getElementById('catCalGrid');
+      const prevBtn = document.getElementById('catCalPrev');
+      if (!title || !grid) return;
+
+      const year = catCalView.getFullYear(), month = catCalView.getMonth();
+      title.textContent = catCalView.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+
+      const todayD = new Date(catCalToday + 'T00:00:00');
+      const firstOfMonth = new Date(year, month, 1);
+      const startDow = firstOfMonth.getDay();
+      const daysInMonth = new Date(year, month + 1, 0).getDate();
+      const selected = document.getElementById('cf-date').value;
+
+      // Don't let the calendar page before the current month.
+      if (prevBtn) prevBtn.disabled = (year === todayD.getFullYear() && month === todayD.getMonth());
+
+      // Recommended window: ~3–4 weeks out, per our usual booking lead time.
+      const recStart = new Date(todayD); recStart.setDate(recStart.getDate() + 21);
+      const recEnd   = new Date(todayD); recEnd.setDate(recEnd.getDate() + 35);
+
+      let html = ['S','M','T','W','T','F','S'].map(d => `<div class="cat-cal-dow">${d}</div>`).join('');
+      for (let i = 0; i < startDow; i++) html += `<div class="cat-cal-day blank"></div>`;
+      for (let day = 1; day <= daysInMonth; day++) {
+        const d = new Date(year, month, day);
+        const iso = catCalISO(d);
+        const isPast = d < todayD;
+        const isToday = iso === catCalToday;
+        const isSelected = iso === selected;
+        const isRecommended = d >= recStart && d <= recEnd;
+        const cls = ['cat-cal-day'];
+        if (isToday) cls.push('today');
+        if (isSelected) cls.push('selected');
+        if (isRecommended && !isPast) cls.push('recommended');
+        html += `<button type="button" class="${cls.join(' ')}" ${isPast ? 'disabled' : `onclick="catCalPick('${iso}')"`}>${day}</button>`;
+      }
+      grid.innerHTML = html;
+    }
+
+    function catCalPick(iso) {
+      const hidden = document.getElementById('cf-date');
+      const label  = document.getElementById('cf-date-label');
+      const btn    = document.getElementById('cf-date-btn');
+      const pop    = document.getElementById('catDatePop');
+      if (hidden) hidden.value = iso;
+      if (label)  label.textContent = catCalFmt(iso);
+      if (btn)    { btn.classList.add('has-value'); btn.classList.remove('cat-err'); }
+      if (pop)    pop.classList.remove('open');
+      catCalView = new Date(iso + 'T00:00:00');
+      updateCatTicket();
+    }
 
     // Pick a chip in a chip-group (guest count / event type / service style).
     // Mirrors what a <select> would do: sets a hidden input's value, marks the
@@ -3894,7 +4064,7 @@
 
       const rows = [];
       if (v('cf-name'))   rows.push(['Guest', v('cf-name')]);
-      if (v('cf-date'))   rows.push(['Date', v('cf-date') + (v('cf-time') ? ' · ' + v('cf-time') : '')]);
+      if (v('cf-date'))   rows.push(['Date', catCalFmt(v('cf-date')) + (v('cf-time') ? ' · ' + v('cf-time') : '')]);
       if (v('cf-guests')) rows.push(['Party', v('cf-guests') + ' guests']);
       if (v('cf-type'))   rows.push(['Event', v('cf-type')]);
       if (v('cf-style'))  rows.push(['Style', v('cf-style')]);
@@ -3954,12 +4124,16 @@
         const el = document.getElementById(id);
         const empty = !el || !el.value.trim();
         if (el) el.classList.toggle('cat-err', empty);
-        // Chip-group fields (guests/type/style) use a hidden input; flag the
-        // visible chip row so the red outline actually shows up.
+        // Chip-group / date-picker fields use a hidden input; flag the visible
+        // control so the red outline actually shows up.
         const grp = document.getElementById('grp-' + id.replace('cf-',''));
+        const dateBtn = id === 'cf-date' ? document.getElementById('cf-date-btn') : null;
         if (grp) {
           grp.classList.toggle('cat-err', empty);
           if (empty && !firstBad) firstBad = grp.querySelector('.cat-chip') || el;
+        } else if (dateBtn) {
+          dateBtn.classList.toggle('cat-err', empty);
+          if (empty && !firstBad) firstBad = dateBtn;
         } else if (empty && !firstBad) {
           firstBad = el;
         }
@@ -4047,7 +4221,7 @@
         `<span class="rv-lbl">Name</span><span class="rv-val">${v('cf-name')}</span>` +
         `<span class="rv-lbl">Email</span><span class="rv-val">${v('cf-email')}</span>` +
         `<span class="rv-lbl">Phone</span><span class="rv-val">${v('cf-phone')}</span>` +
-        `<span class="rv-lbl">Date</span><span class="rv-val">${v('cf-date')} ${v('cf-time')}</span>` +
+        `<span class="rv-lbl">Date</span><span class="rv-val">${document.getElementById('cf-date').value ? catCalFmt(v('cf-date')) : '\u2014'} ${v('cf-time')}</span>` +
         `<span class="rv-lbl">Guests</span><span class="rv-val">${v('cf-guests')}</span>` +
         `<span class="rv-lbl">Event</span><span class="rv-val">${v('cf-type')}</span>` +
         `<span class="rv-lbl">Style</span><span class="rv-val">${v('cf-style')}</span>` +
@@ -4135,6 +4309,13 @@
       document.querySelectorAll('.addon-chip').forEach(c => c.classList.remove('checked'));
       document.querySelectorAll('.cat-chip').forEach(c => c.classList.remove('selected'));
       document.querySelectorAll('.cat-chip-group').forEach(g => g.classList.remove('cat-err'));
+      const dateBtn = document.getElementById('cf-date-btn');
+      const dateLbl = document.getElementById('cf-date-label');
+      const datePop = document.getElementById('catDatePop');
+      if (dateBtn) dateBtn.classList.remove('has-value', 'cat-err');
+      if (dateLbl) dateLbl.textContent = 'Choose a date';
+      if (datePop) datePop.classList.remove('open');
+      catCalView = new Date(catCalToday + 'T00:00:00');
       const terms = document.getElementById('catTerms');
       if (terms) terms.checked = false;
       catPkg = '';
