@@ -39,6 +39,7 @@ function toE164(raw) {
 }
 
 async function sendSMS(client, from, to, body) {
+  if (!client) return { ok: false, reason: 'twilio_not_configured', to };
   const dest = toE164(to);
   if (!dest) return { ok: false, reason: 'bad_number', to };
   try {
@@ -86,10 +87,14 @@ module.exports = async (req, res) => {
   const RESTAURANT_NAME = cfg.restaurantName;
   const PICKUP_ETA      = cfg.pickupEtaMin;
 
-  if (!accountSid || !authToken || !smsFrom) {
-    return res.status(500).json({ error: 'Twilio not configured' });
+  // Twilio is optional per-request now — a missing/misconfigured Twilio
+  // account should never block admin email from going out. sendSMS() below
+  // reports 'twilio_not_configured' for each recipient instead of throwing.
+  const twilioReady = !!(accountSid && authToken && smsFrom);
+  const client = twilioReady ? twilio(accountSid, authToken) : null;
+  if (!twilioReady) {
+    console.warn('notify: Twilio env vars missing — SMS will be skipped, email will still attempt to send.');
   }
-  const client = twilio(accountSid, authToken);
 
   const p    = readBody(req);
   const type = p.type || 'order';
@@ -99,6 +104,9 @@ module.exports = async (req, res) => {
   const fromPage   = Array.isArray(recipients.sms) ? recipients.sms : [];
   const adminSms   = Array.from(new Set([...cfg.adminSms, ...fromPage]));
   const adminEmail = Array.isArray(recipients.email) ? recipients.email : [];
+  if (!adminSms.length) {
+    console.warn('notify: no admin SMS numbers configured — add one in admin.html → Calls & Texts, or set ADMIN_SMS.');
+  }
 
   const results = { customer: null, admins: [], email: null };
 
