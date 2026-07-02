@@ -1356,6 +1356,32 @@
           </div>
         </div>
 
+        <div style="margin-bottom:1rem;padding:0.85rem 1rem;background:var(--smoke);border-radius:2px;border:1px solid var(--border);">
+          <div style="font-size:0.68rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted);margin-bottom:0.4rem;">🔗 Twilio Webhook URLs</div>
+          <p style="color:var(--muted);font-size:0.72rem;margin:0 0 0.7rem;line-height:1.5;">
+            These tell Twilio which URL to call when your number gets a voice call or text. Pointing them at your
+            Vercel endpoints below means calls/texts route through this site's serverless functions instead of
+            you setting it manually in the Twilio Console. <strong style="color:var(--rice);">Apply</strong> pushes
+            these straight to your Twilio number using the account credentials already in Vercel — no console login needed.
+          </p>
+
+          <div class="field-group">
+            <label class="field-label">Voice Webhook URL</label>
+            <input class="field-input" id="ntf-voice-url" placeholder="https://louwok.com/api/voice-incoming" />
+          </div>
+
+          <div class="field-group">
+            <label class="field-label">SMS Webhook URL</label>
+            <input class="field-input" id="ntf-sms-url" placeholder="https://louwok.com/api/sms-incoming" />
+          </div>
+
+          <div style="margin-top:0.6rem;display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+            <button type="button" class="btn btn-sm" id="ntf-twilio-load-btn" onclick="loadTwilioConfig()" style="border:1px solid var(--border);background:transparent;color:var(--rice);">🔄 Load Current From Twilio</button>
+            <button type="button" class="btn btn-sm" id="ntf-twilio-apply-btn" onclick="applyTwilioConfig()" style="border:1px solid var(--border);background:transparent;color:var(--rice);">✅ Apply to Twilio</button>
+          </div>
+          <p id="ntf-twilio-status" style="font-size:0.74rem;color:var(--muted);margin:0.5rem 0 0;"></p>
+        </div>
+
         <div style="padding:0.85rem 1rem;background:rgba(232,160,32,0.07);border-radius:2px;border:1px solid var(--border);">
           <div style="font-size:0.68rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted);margin-bottom:0.4rem;">🔒 Secrets — set in Vercel, not here</div>
           <p style="color:var(--muted);font-size:0.75rem;line-height:1.6;margin:0;">
@@ -1721,6 +1747,7 @@
     saveTicker();
     saveFooter();
     saveSettings();
+    saveNotify();
     _readCategories();
 
     const allBtns = document.querySelectorAll('[onclick*="publishSite"]');
@@ -2723,6 +2750,10 @@
     if (eta) eta.value = n.pickupEtaMin || '';
     const name = document.getElementById('ntf-name');
     if (name) name.value = n.restaurantName || '';
+    const voiceUrl = document.getElementById('ntf-voice-url');
+    if (voiceUrl) voiceUrl.value = n.voiceUrl || 'https://louwok.com/api/voice-incoming';
+    const smsUrl = document.getElementById('ntf-sms-url');
+    if (smsUrl) smsUrl.value = n.smsUrl || 'https://louwok.com/api/sms-incoming';
   }
   // Normalize a phone string to E.164 (US default). Returns '' if unusable.
   function _toE164(raw) {
@@ -2753,6 +2784,8 @@
 
     n.pickupEtaMin = document.getElementById('ntf-eta').value.trim() || '10-12';
     n.restaurantName = document.getElementById('ntf-name').value.trim() || 'Lou Wok Rice House';
+    n.voiceUrl = document.getElementById('ntf-voice-url').value.trim();
+    n.smsUrl   = document.getElementById('ntf-sms-url').value.trim();
 
     settingsData.notify = n;
     // Reflect cleaned values back into the inputs so the user sees the normalized form.
@@ -2813,6 +2846,96 @@
     } catch (err) {
       status.style.color = 'var(--wok)';
       status.textContent = 'Network error reaching /api/notify-test — check the endpoint is deployed.';
+      showToast('Could not reach the server','error');
+    } finally {
+      btn.disabled = false;
+      btn.textContent = original;
+    }
+  }
+
+  // Pulls the Voice/SMS URLs currently configured on the Twilio number and
+  // fills the fields with them, so you can see what's live before changing it.
+  async function loadTwilioConfig() {
+    const btn    = document.getElementById('ntf-twilio-load-btn');
+    const status = document.getElementById('ntf-twilio-status');
+    btn.disabled = true;
+    const original = btn.textContent;
+    btn.textContent = 'Loading…';
+    status.style.color = 'var(--muted)';
+    status.textContent = 'Fetching current config from Twilio…';
+
+    try {
+      const r = await fetch('/api/twilio-config');
+      const data = await r.json().catch(() => ({}));
+
+      if (data.twilioReady === false) {
+        status.style.color = 'var(--wok)';
+        status.textContent = `Twilio isn't configured in Vercel — missing: ${(data.missingEnvVars||[]).join(', ') || 'unknown'}`;
+      } else if (!data.ok) {
+        status.style.color = 'var(--wok)';
+        status.textContent = data.reason || 'Could not load current config.';
+      } else {
+        const voiceEl = document.getElementById('ntf-voice-url');
+        const smsEl   = document.getElementById('ntf-sms-url');
+        if (voiceEl) voiceEl.value = data.voiceUrl || '';
+        if (smsEl)   smsEl.value   = data.smsUrl   || '';
+        status.style.color = 'var(--gold)';
+        status.textContent = `✅ Loaded current config for ${data.phoneNumber}.`;
+      }
+    } catch (err) {
+      status.style.color = 'var(--wok)';
+      status.textContent = 'Network error reaching /api/twilio-config — check the endpoint is deployed.';
+    } finally {
+      btn.disabled = false;
+      btn.textContent = original;
+    }
+  }
+
+  // Pushes the Voice/SMS URL fields straight to the Twilio number via the
+  // Twilio API — no manual Twilio Console step. Reuses TWILIO_ACCOUNT_SID /
+  // TWILIO_AUTH_TOKEN / TWILIO_CALLER_ID already set in Vercel.
+  async function applyTwilioConfig() {
+    const btn      = document.getElementById('ntf-twilio-apply-btn');
+    const status   = document.getElementById('ntf-twilio-status');
+    const voiceUrl = document.getElementById('ntf-voice-url').value.trim();
+    const smsUrl   = document.getElementById('ntf-sms-url').value.trim();
+
+    if (!voiceUrl && !smsUrl) {
+      status.style.color = 'var(--wok)';
+      status.textContent = 'Enter at least one URL first.';
+      return;
+    }
+
+    btn.disabled = true;
+    const original = btn.textContent;
+    btn.textContent = 'Applying…';
+    status.style.color = 'var(--muted)';
+    status.textContent = 'Pushing to Twilio…';
+
+    try {
+      const r = await fetch('/api/twilio-config', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ voiceUrl, smsUrl }),
+      });
+      const data = await r.json().catch(() => ({}));
+
+      if (data.twilioReady === false) {
+        status.style.color = 'var(--wok)';
+        status.textContent = `Twilio isn't configured in Vercel — missing: ${(data.missingEnvVars||[]).join(', ') || 'unknown'}`;
+        showToast('Twilio env vars missing in Vercel','error');
+      } else if (!data.ok) {
+        status.style.color = 'var(--wok)';
+        status.textContent = data.reason || data.error || 'Apply failed.';
+        showToast('Could not update Twilio','error');
+      } else {
+        status.style.color = 'var(--gold)';
+        status.textContent = `✅ Applied to ${data.phoneNumber}. Twilio now calls these URLs live — no redeploy needed.`;
+        showToast('Twilio webhook URLs updated!','success');
+      }
+    } catch (err) {
+      status.style.color = 'var(--wok)';
+      status.textContent = 'Network error reaching /api/twilio-config — check the endpoint is deployed.';
       showToast('Could not reach the server','error');
     } finally {
       btn.disabled = false;
