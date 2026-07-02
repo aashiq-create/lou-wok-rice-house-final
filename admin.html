@@ -1338,6 +1338,10 @@
             <label class="field-label">Staff alert numbers — get the order ticket by text</label>
             <input class="field-input" id="ntf-admin-sms" placeholder="+16025551234, +16025555678" />
             <p style="color:var(--muted);font-size:0.72rem;margin:0.3rem 0 0;">Comma-separated, E.164. Each gets a text with the full order when a customer checks out. Customers always get their own order-number text regardless of this.</p>
+            <div style="margin-top:0.6rem;display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+              <button type="button" class="btn btn-sm" id="ntf-test-btn" onclick="sendTestText()" style="border:1px solid var(--border);background:transparent;color:var(--rice);">📱 Send Test Text</button>
+              <span id="ntf-test-status" style="font-size:0.74rem;color:var(--muted);"></span>
+            </div>
           </div>
 
           <div class="field-group">
@@ -2754,6 +2758,66 @@
     // Reflect cleaned values back into the inputs so the user sees the normalized form.
     _populateNotify();
     setUnsaved(); showToast('Call & text settings saved — Deploy to publish','success');
+  }
+
+  // Fires a real (but harmless) test text to whatever numbers are currently
+  // typed in "Staff alert numbers" — no need to save or place an order first.
+  async function sendTestText() {
+    const btn    = document.getElementById('ntf-test-btn');
+    const status = document.getElementById('ntf-test-status');
+    const rawList = document.getElementById('ntf-admin-sms').value.split(',').map(s=>s.trim()).filter(Boolean);
+    const phones = [], bad = [];
+    rawList.forEach(r => { const e = _toE164(r); if (e) phones.push(e); else bad.push(r); });
+
+    if (!phones.length) {
+      status.style.color = 'var(--wok)';
+      status.textContent = bad.length ? `Invalid number: ${bad.join(', ')}` : 'Enter a number above first.';
+      return;
+    }
+
+    btn.disabled = true;
+    const original = btn.textContent;
+    btn.textContent = 'Sending…';
+    status.style.color = 'var(--muted)';
+    status.textContent = `Texting ${phones.join(', ')}…`;
+
+    try {
+      const r = await fetch('/api/notify-test', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ phones }),
+      });
+      const data = await r.json().catch(() => ({}));
+
+      if (data.twilioReady === false) {
+        status.style.color = 'var(--wok)';
+        status.textContent = `Twilio isn't configured in Vercel — missing: ${(data.missingEnvVars||[]).join(', ') || 'unknown'}`;
+        showToast('Twilio env vars missing in Vercel','error');
+      } else {
+        const failed = (data.results||[]).filter(x=>!x.ok);
+        const passed = (data.results||[]).filter(x=>x.ok);
+        if (passed.length && !failed.length) {
+          status.style.color = 'var(--gold)';
+          status.textContent = `✅ Sent to ${passed.map(p=>p.to).join(', ')} — check your phone.`;
+          showToast('Test text sent!','success');
+        } else if (passed.length && failed.length) {
+          status.style.color = 'var(--gold)';
+          status.textContent = `Sent to ${passed.map(p=>p.to).join(', ')}. Failed: ${failed.map(f=>`${f.to} (${f.reason})`).join(', ')}`;
+          showToast('Partial send — see details below the field','error');
+        } else {
+          status.style.color = 'var(--wok)';
+          status.textContent = `Failed: ${failed.map(f=>`${f.to} — ${f.reason}`).join(', ')}`;
+          showToast('Test text failed — see details','error');
+        }
+      }
+    } catch (err) {
+      status.style.color = 'var(--wok)';
+      status.textContent = 'Network error reaching /api/notify-test — check the endpoint is deployed.';
+      showToast('Could not reach the server','error');
+    } finally {
+      btn.disabled = false;
+      btn.textContent = original;
+    }
   }
 
   // ══════════════════════════════════════════════════════════════
