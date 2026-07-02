@@ -1,6 +1,6 @@
 {
   "_info": "Written by louwok.com/admin. index.html reads this at runtime.",
-  "_updated": "2026-07-02T06:11:20.190Z",
+  "_updated": "2026-07-02T19:32:51.095Z",
   "menu": [
     {
       "id": 1,
@@ -525,7 +525,19 @@
     "pickupInstructions": "Pickup only. Estimated Wait Time 10-15 minutes",
     "squareAppId": "",
     "squareLocationId": "",
-    "paymentBackendUrl": ""
+    "paymentBackendUrl": "",
+    "notify": {
+      "personalPhone": "+13143565596",
+      "screenRequireKey": true,
+      "adminSms": [
+        "+13143565596",
+        "+13132361717"
+      ],
+      "pickupEtaMin": "10-15",
+      "restaurantName": "Lou Wok Rice House",
+      "voiceUrl": "https://louwok.com/api/voice-incoming",
+      "smsUrl": "https://louwok.com/api/sms-incoming"
+    }
   },
   "users": [
     {
