@@ -1,12 +1,14 @@
 // /api/notify.js
 // ────────────────────────────────────────────────────────────────────────────
-// The endpoint index-5.html already POSTs to. Handles two payload types:
+// The endpoint index.html already POSTs to. Handles two payload types:
 //
 //   type: 'order'     → texts the CUSTOMER their order number + confirmation,
 //                       texts/emails the ADMINS the full order ticket.
 //   type: 'catering'  → texts/emails the ADMINS a catering inquiry.
 //
 // SMS via Twilio. Email via Resend (optional — only fires if RESEND_API_KEY set).
+// Twilio being unconfigured no longer blocks email — each channel is optional
+// on its own.
 //
 // ENV VARS
 //   TWILIO_ACCOUNT_SID
@@ -39,7 +41,6 @@ function toE164(raw) {
 }
 
 async function sendSMS(client, from, to, body) {
-  if (!client) return { ok: false, reason: 'twilio_not_configured', to };
   const dest = toE164(to);
   if (!dest) return { ok: false, reason: 'bad_number', to };
   try {
@@ -87,14 +88,17 @@ module.exports = async (req, res) => {
   const RESTAURANT_NAME = cfg.restaurantName;
   const PICKUP_ETA      = cfg.pickupEtaMin;
 
-  // Twilio is optional per-request now — a missing/misconfigured Twilio
-  // account should never block admin email from going out. sendSMS() below
-  // reports 'twilio_not_configured' for each recipient instead of throwing.
+  // Twilio is optional now — missing env vars just skip SMS, they no longer
+  // block the whole request (email still fires either way).
   const twilioReady = !!(accountSid && authToken && smsFrom);
   const client = twilioReady ? twilio(accountSid, authToken) : null;
   if (!twilioReady) {
-    console.warn('notify: Twilio env vars missing — SMS will be skipped, email will still attempt to send.');
+    console.warn('notify: Twilio not configured (missing TWILIO_ACCOUNT_SID/AUTH_TOKEN/CALLER_ID) — SMS skipped, email will still attempt.');
   }
+
+  const smsOrSkip = (to, body) =>
+    twilioReady ? sendSMS(client, smsFrom, to, body)
+                : Promise.resolve({ ok: false, reason: 'twilio_not_configured', to });
 
   const p    = readBody(req);
   const type = p.type || 'order';
@@ -104,9 +108,6 @@ module.exports = async (req, res) => {
   const fromPage   = Array.isArray(recipients.sms) ? recipients.sms : [];
   const adminSms   = Array.from(new Set([...cfg.adminSms, ...fromPage]));
   const adminEmail = Array.isArray(recipients.email) ? recipients.email : [];
-  if (!adminSms.length) {
-    console.warn('notify: no admin SMS numbers configured — add one in admin.html → Calls & Texts, or set ADMIN_SMS.');
-  }
 
   const results = { customer: null, admins: [], email: null };
 
@@ -123,7 +124,7 @@ module.exports = async (req, res) => {
           `${RESTAURANT_NAME}: Order ${orderNo} received! ✅\n` +
           `Total ${total}. Ready for pickup in about ${PICKUP_ETA} min. ` +
           `We'll text you when it's ready. Reply STOP to opt out.`;
-        results.customer = await sendSMS(client, smsFrom, cust.phone, custBody);
+        results.customer = await smsOrSkip(cust.phone, custBody);
       }
 
       // 2) Admin ticket — full order details to each admin cell.
@@ -135,7 +136,7 @@ module.exports = async (req, res) => {
         `Notes: ${p.notes || '—'}\n` +
         `${p.order_time || ''}`;
       for (const a of adminSms) {
-        results.admins.push(await sendSMS(client, smsFrom, a, adminBody));
+        results.admins.push(await smsOrSkip(a, adminBody));
       }
 
       // 3) Admin email (optional).
@@ -145,18 +146,18 @@ module.exports = async (req, res) => {
         adminBody
       );
     } else if (type === 'catering') {
+      // NOTE: the catering form (submitCatering() in index.html) sends FLAT
+      // fields — client_name, client_phone, client_email, guest_count, etc —
+      // not a nested "customer" object. Read them flat here to match.
       const body =
         `🎉 CATERING INQUIRY\n` +
         `${p.client_name || '—'} · ${p.client_phone || '—'} · ${p.client_email || '—'}\n` +
         `Event: ${p.event_date || '—'} ${p.event_time || ''} · Guests: ${p.guest_count || '—'}\n` +
-        `Type: ${p.event_type || '—'} · Style: ${p.service_style || '—'}\n` +
-        `Package: ${p.package || '—'}\n` +
-        `Venue: ${p.venue || '—'}\n` +
-        `Add-Ons: ${p.addons || '—'}\n` +
-        `Notes: ${p.notes || '—'}\n` +
-        `Source: ${p.source || '—'}`;
+        `Type: ${p.event_type || '—'} · Style: ${p.service_style || '—'} · Venue: ${p.venue || '—'}\n` +
+        `Package: ${p.package || '—'} · Addons: ${p.addons || '—'}\n` +
+        `Notes: ${p.notes || '—'}`;
       for (const a of adminSms) {
-        results.admins.push(await sendSMS(client, smsFrom, a, body));
+        results.admins.push(await smsOrSkip(a, body));
       }
       results.email = await sendEmail(
         adminEmail,
@@ -167,7 +168,7 @@ module.exports = async (req, res) => {
       return res.status(400).json({ error: 'Unknown type: ' + type });
     }
 
-    return res.status(200).json({ ok: true, results });
+    return res.status(200).json({ ok: true, twilioReady, results });
   } catch (err) {
     console.error('notify error:', err && err.message);
     return res.status(500).json({ error: 'notify_failed', detail: err && err.message });
