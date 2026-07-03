@@ -431,6 +431,7 @@
       margin-bottom: 1.8rem;
     }
     .hero-title .accent { color: var(--wok); }
+    .hero-title .gold { color: var(--gold); }
     .hero-title .italic {
       font-family: 'Playfair Display', serif;
       font-style: italic;
@@ -4612,8 +4613,14 @@
           let html = '';
           if(h.titleLead) html += `<span class="italic">${esc(h.titleLead)}</span>\n`;
           lines.forEach((ln,i) => {
+            const isFirst = i===0;
             const isLast = i===lines.length-1;
-            html += isLast ? `<span class="accent">${esc(ln)}</span>` : `${esc(ln)}<br>\n`;
+            // First line = brand name → gold. Last line = punch word → red/accent.
+            // (When there's only one line, isFirst===isLast, so it stays accent —
+            // preserves the original single-line behavior.)
+            const cls = isLast ? 'accent' : (isFirst ? 'gold' : '');
+            const span = cls ? `<span class="${cls}">${esc(ln)}</span>` : esc(ln);
+            html += isLast ? span : `${span}<br>\n`;
           });
           titleEl.innerHTML = html;
         }
