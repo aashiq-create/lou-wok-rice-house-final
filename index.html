@@ -2514,7 +2514,7 @@
         <div class="detail-item"><div class="detail-label">Bread</div><div class="detail-value">Soft White</div></div>
         <div class="detail-item"><div class="detail-label">Sauce</div><div class="detail-value">Mayo + Pickles</div></div>
       </div>
-      <a href="#order" class="btn-primary" id="featCta">Order the St. Paul</a>
+      <a href="#menu" class="btn-primary" id="featCta" data-menu-category="sandwiches" onclick="goToMenuCategory(event)">Order the St. Paul</a>
     </div>
   </section>
 
@@ -3136,6 +3136,27 @@
         window.applyMenuFilter(f);
       });
     }
+
+    // Used by the Featured Item CTA ("Order the St. Paul" etc.) so clicking it
+    // jumps straight to #menu AND pre-filters to the right category tab —
+    // instead of landing on the full unfiltered menu. Reads the category off
+    // data-menu-category on the button itself (defaults to 'sandwiches'),
+    // so it keeps working if the admin swaps which item is featured, as long
+    // as that data attribute is updated to match.
+    window.goToMenuCategory = function (e) {
+      const el = e.currentTarget;
+      const cat = (el && el.dataset && el.dataset.menuCategory) || 'sandwiches';
+      const bar = document.querySelector('.menu-tabs');
+      if (bar) {
+        const targetTab = bar.querySelector(`.tab[data-filter="${cat}"]`);
+        if (targetTab) {
+          bar.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+          targetTab.classList.add('active');
+        }
+      }
+      if (typeof window.applyMenuFilter === 'function') window.applyMenuFilter(cat);
+      // href="#menu" on the element handles the actual scroll — no preventDefault needed.
+    };
 
     // ── BOTTOM NAV ACTIVE STATE ──────────────────────────────
     function setActiveNav(el) {
