@@ -1,6 +1,6 @@
 {
   "_info": "Written by louwok.com/admin. index.html reads this at runtime.",
-  "_updated": "2026-07-03T06:55:29.622Z",
+  "_updated": "2026-07-03T16:25:49.920Z",
   "menu": [
     {
       "id": 1,
@@ -530,8 +530,7 @@
       "personalPhone": "+13143565596",
       "screenRequireKey": true,
       "adminSms": [
-        "+13143565596",
-        "+13132361717"
+        "+18773797974"
       ],
       "pickupEtaMin": "10-15",
       "restaurantName": "Lou Wok Rice House",
