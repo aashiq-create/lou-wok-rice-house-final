@@ -4612,15 +4612,18 @@
           const lines = String(h.titleLines||'').split(/\n/).map(s=>s.trim()).filter(Boolean);
           let html = '';
           if(h.titleLead) html += `<span class="italic">${esc(h.titleLead)}</span>\n`;
+          // Color by half: top half of the stacked lines = gold (brand name,
+          // e.g. LOU / WOK), bottom half = red/accent (descriptor, e.g. RICE /
+          // HOUSE). Works whether it's typed as 2 lines ("LOU WOK" / "RICE
+          // HOUSE") or 4 ("LOU" / "WOK" / "RICE" / "HOUSE") — split just
+          // adjusts. A single-line title stays red, matching the original
+          // single-line behavior.
+          const goldCount = lines.length === 1 ? 0 : Math.ceil(lines.length / 2);
           lines.forEach((ln,i) => {
-            const isFirst = i===0;
-            const isLast = i===lines.length-1;
-            // First line = brand name → gold. Last line = punch word → red/accent.
-            // (When there's only one line, isFirst===isLast, so it stays accent —
-            // preserves the original single-line behavior.)
-            const cls = isLast ? 'accent' : (isFirst ? 'gold' : '');
-            const span = cls ? `<span class="${cls}">${esc(ln)}</span>` : esc(ln);
-            html += isLast ? span : `${span}<br>\n`;
+            const isLastForBr = i === lines.length - 1;
+            const cls = i < goldCount ? 'gold' : 'accent';
+            const span = `<span class="${cls}">${esc(ln)}</span>`;
+            html += isLastForBr ? span : `${span}<br>\n`;
           });
           titleEl.innerHTML = html;
         }
