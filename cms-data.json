@@ -1,6 +1,6 @@
 {
   "_info": "Written by louwok.com/admin. index.html reads this at runtime.",
-  "_updated": "2026-07-03T06:41:35.687Z",
+  "_updated": "2026-07-03T06:54:26.296Z",
   "menu": [
     {
       "id": 1,
@@ -324,8 +324,8 @@
   },
   "hero": {
     "eyebrow": "Phoenix, Arizona · Est. 2026",
-    "titleLead": "bold",
-    "titleLines": "WOK\nRICE\nHOUSE",
+    "titleLead": "",
+    "titleLines": "LOU\nWOK\nRICE\nHOUSE",
     "sub": "Fired over high heat. Built on flavor. Lou Wok serves up wok-tossed rice, fried chicken, crab rangoon, egg rolls and the legendary St. Paul sandwich — every plate made to order, every time.",
     "bowlLabel": "Wok-fired daily",
     "cta1Text": "View Menu",
