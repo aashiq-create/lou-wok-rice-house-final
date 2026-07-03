@@ -2641,7 +2641,10 @@
               <div class="cat-group"><label class="cat-lbl" for="cf-email">Email <span>*</span></label><input class="cat-input" id="cf-email" type="email" inputmode="email" autocomplete="email" placeholder="you@email.com"/></div>
               <div class="cat-group"><label class="cat-lbl" for="cf-phone">Phone <span>*</span></label><input class="cat-input" id="cf-phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="(602) 555-0100" maxlength="14"/></div>
             </div>
-            <p style="font-size:0.72rem;color:var(--muted);line-height:1.5;margin:-4px 0 12px;">By providing your number, you agree to receive catering texts from Lou Wok Rice House. Msg &amp; data rates may apply. Reply STOP to opt out. <a href="#terms" style="color:var(--gold);">Terms</a> &amp; <a href="#privacy" style="color:var(--gold);">Privacy</a>.</p>
+            <label class="cart-consent-row" for="catSmsConsent" style="display:flex;gap:8px;align-items:flex-start;font-size:0.72rem;color:var(--muted);line-height:1.5;margin:-4px 0 12px;cursor:pointer;">
+              <input type="checkbox" id="catSmsConsent" style="margin-top:3px;flex-shrink:0;width:15px;height:15px;accent-color:var(--wok);">
+              <span>I agree to receive catering texts from Lou Wok Rice House. Msg &amp; data rates may apply. Reply STOP to opt out. <a href="#terms" style="color:var(--gold);">Terms</a> &amp; <a href="#privacy" style="color:var(--gold);">Privacy</a>.</span>
+            </label>
             <div class="cat-row">
               <div class="cat-group cat-date-field">
                 <label class="cat-lbl" for="cf-date-btn">Event Date <span>*</span></label>
@@ -3053,7 +3056,10 @@
         <input class="cart-input" id="custName" type="text" autocomplete="name" placeholder="Name *" aria-label="Your name (required)">
         <input class="cart-input" id="custPhone" type="tel" autocomplete="tel" inputmode="tel" placeholder="Mobile number *" aria-label="Mobile number (required)">
         <input class="cart-input" id="custEmail" type="email" autocomplete="email" inputmode="email" placeholder="Email (optional)" aria-label="Email (optional)">
-        <p class="cart-contact-note">By providing your number, you agree to receive order &amp; pickup texts from Lou Wok Rice House. Msg &amp; data rates may apply. Reply STOP to opt out. <a href="#terms" style="color:var(--gold);">Terms</a> &amp; <a href="#privacy" style="color:var(--gold);">Privacy</a>.</p>
+        <label class="cart-consent-row" for="smsConsent" style="display:flex;gap:8px;align-items:flex-start;font-size:0.72rem;color:var(--muted);line-height:1.5;margin-top:2px;cursor:pointer;">
+          <input type="checkbox" id="smsConsent" style="margin-top:3px;flex-shrink:0;width:15px;height:15px;accent-color:var(--wok);">
+          <span>I agree to receive order &amp; pickup texts from Lou Wok Rice House. Msg &amp; data rates may apply. Reply STOP to opt out. <a href="#terms" style="color:var(--gold);">Terms</a> &amp; <a href="#privacy" style="color:var(--gold);">Privacy</a>.</span>
+        </label>
       </div>
       <button class="cart-place-btn" id="cartPlaceBtn" onclick="placeOrder()">Place Order — $0.00</button>
       <p class="cart-fine-print">Pickup in-store · Est. ready 10–15 min</p>
@@ -3614,6 +3620,7 @@
       const nameEl  = document.getElementById('custName');
       const phoneEl = document.getElementById('custPhone');
       const emailEl = document.getElementById('custEmail');
+      const consentEl = document.getElementById('smsConsent');
       const custName  = (nameEl  && nameEl.value  || '').trim();
       const custPhone = (phoneEl && phoneEl.value || '').trim();
       const custEmail = (emailEl && emailEl.value || '').trim();
@@ -3625,6 +3632,7 @@
       if (!phoneE164)           { phoneEl && phoneEl.classList.add('invalid'); bad = true; }
       if (custEmail && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(custEmail)) { emailEl && emailEl.classList.add('invalid'); bad = true; }
       if (bad) { showToast('Please add your name and a valid mobile number.', 'error'); return; }
+      if (consentEl && !consentEl.checked) { showToast('Please check the box to receive order texts.', 'error'); return; }
 
       const notes    = (document.getElementById('cartNotes') || {}).value || '';
       const subtotal = cartItems.reduce((s,i) => s + i.price * i.qty, 0);
@@ -4328,6 +4336,11 @@
         showToast('Please confirm the inquiry terms.', 'error');
         return;
       }
+      const smsConsent = document.getElementById('catSmsConsent');
+      if (!smsConsent || !smsConsent.checked) {
+        showToast('Please check the box to receive catering texts.', 'error');
+        return;
+      }
 
       const v = id => { const el = document.getElementById(id); return el ? el.value : ''; };
       const addons = Array.from(document.querySelectorAll('.addon-chip.checked'))
@@ -4411,6 +4424,8 @@
       catCalView = new Date(catCalToday + 'T00:00:00');
       const terms = document.getElementById('catTerms');
       if (terms) terms.checked = false;
+      const smsConsent = document.getElementById('catSmsConsent');
+      if (smsConsent) smsConsent.checked = false;
       catPkg = '';
       updateCatTicket();
       for (let i = 2; i <= 4; i++) {
