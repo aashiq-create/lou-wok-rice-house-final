@@ -1685,26 +1685,6 @@
     }
     .cart-overlay.open { display: block; }
 
-    /* Legal (Terms / Privacy) modal */
-    .legal-overlay {
-      display: none; position: fixed; inset: 0; z-index: 400;
-      background: rgba(0,0,0,0.75); backdrop-filter: blur(6px);
-      align-items: center; justify-content: center; padding: 1.25rem;
-    }
-    .legal-overlay.open { display: flex; }
-    .legal-modal {
-      background: var(--smoke); border: 1px solid var(--border);
-      border-radius: 4px; max-width: 720px; width: 100%;
-      max-height: min(80vh, 720px); overflow-y: auto;
-      padding: 2rem 2rem 2.25rem; position: relative;
-    }
-    .legal-modal-close {
-      position: sticky; top: 0; float: right; margin-top: -0.5rem;
-      background: transparent; border: none; color: var(--muted);
-      font-size: 1.3rem; cursor: pointer; line-height: 1;
-      padding: 0.4rem; z-index: 1;
-    }
-    .legal-modal-close:hover { color: var(--rice); }
     .cart-drawer {
       position: fixed; top: 0; right: 0; bottom: 0;
       width: min(420px, 100vw); z-index: 301;
@@ -2665,7 +2645,7 @@
             </div>
             <label class="cart-consent-row" for="catSmsConsent" style="display:flex;gap:8px;align-items:flex-start;font-size:0.72rem;color:var(--muted);line-height:1.5;margin:-4px 0 12px;cursor:pointer;">
               <input type="checkbox" id="catSmsConsent" style="margin-top:3px;flex-shrink:0;width:15px;height:15px;accent-color:var(--wok);">
-              <span>I agree to receive catering texts from Lou Wok Rice House. Msg &amp; data rates may apply. Reply STOP to opt out. <a href="#" onclick="openLegalModal('terms');return false;" style="color:var(--gold);">Terms</a> &amp; <a href="#" onclick="openLegalModal('privacy');return false;" style="color:var(--gold);">Privacy</a>.</span>
+              <span>I agree to receive catering texts from Lou Wok Rice House. Msg &amp; data rates may apply. Reply STOP to opt out. <a href="/terms.html" style="color:var(--gold);">Terms</a> &amp; <a href="/privacy.html" style="color:var(--gold);">Privacy</a>.</span>
             </label>
             <div class="cat-row">
               <div class="cat-group cat-date-field">
@@ -2822,77 +2802,6 @@
   </main>
 
   <!-- ── FOOTER ── -->
-  <!-- ── LEGAL (Terms & Privacy) — hidden by default, opened via footer links or checkbox links ── -->
-  <div class="legal-overlay" id="termsOverlay" onclick="if(event.target===this) closeLegalModal('terms')">
-    <div class="legal-modal">
-      <button class="legal-modal-close" onclick="closeLegalModal('terms')" aria-label="Close">&#10005;</button>
-      <div class="section-label">Legal</div>
-      <h2 style="font-family:'Bebas Neue','Bebas Fallback',sans-serif;font-size:clamp(2.2rem,5vw,2.8rem);letter-spacing:0.02em;margin-bottom:1.4rem;">TERMS &amp; CONDITIONS</h2>
-
-      <p class="about-text"><strong style="color:var(--rice);">Last updated:</strong> July 2026</p>
-
-      <p class="about-text">These Terms &amp; Conditions govern your use of louwok.com and any orders, catering inquiries, or communications made through it. By placing an order, submitting a catering inquiry, or providing your phone number or email on this site, you agree to these terms.</p>
-
-      <p class="about-text" style="color:var(--rice);font-weight:600;margin-top:1.6rem;margin-bottom:0.4rem;">About Lou Wok Rice House</p>
-      <p class="about-text">Lou Wok Rice House is a mobile food truck operating in the Phoenix, Arizona area. Our location, hours, and menu availability can change day to day and are subject to change without notice.</p>
-
-      <p class="about-text" style="color:var(--rice);font-weight:600;margin-top:1.6rem;margin-bottom:0.4rem;">Orders &amp; Payment</p>
-      <p class="about-text">Online orders are for pickup at our current truck location only, unless separately arranged as part of a catering agreement. Prices, menu items, and estimated pickup times are subject to change and are not guaranteed. Catering bookings may require a deposit, paid via a Square payment link sent to you directly by Lou Wok Rice House.</p>
-
-      <p class="about-text" style="color:var(--rice);font-weight:600;margin-top:1.6rem;margin-bottom:0.4rem;">Text Message (SMS) Terms</p>
-      <p class="about-text">By providing your phone number when placing an order or submitting a catering inquiry, you consent to receive text messages from Lou Wok Rice House related to that order or inquiry, including order confirmations, pickup readiness alerts, and catering follow-up. Message frequency varies based on your order activity. Message and data rates may apply. Reply <strong style="color:var(--rice);">STOP</strong> at any time to opt out of further messages, or <strong style="color:var(--rice);">HELP</strong> for assistance. Carriers are not liable for delayed or undelivered messages. Consent to receive texts is not a condition of any purchase.</p>
-
-      <p class="about-text" style="color:var(--rice);font-weight:600;margin-top:1.6rem;margin-bottom:0.4rem;">Third-Party Delivery</p>
-      <p class="about-text">Lou Wok Rice House is also available through third-party delivery platforms (currently DoorDash, Grubhub, and Uber Eats). Orders placed through those platforms are subject to that platform's own terms, pricing, and fees — Lou Wok Rice House is not responsible for delivery delays, order accuracy issues, or platform outages once an order has been handed off to a third-party courier.</p>
-
-      <p class="about-text" style="color:var(--rice);font-weight:600;margin-top:1.6rem;margin-bottom:0.4rem;">Limitation of Liability</p>
-      <p class="about-text">Lou Wok Rice House provides this website and its ordering functionality on an "as-is" basis and is not liable for indirect, incidental, or consequential damages arising from your use of the site, including missed messages, technical outages, or order errors, to the fullest extent permitted by law.</p>
-
-      <p class="about-text" style="color:var(--rice);font-weight:600;margin-top:1.6rem;margin-bottom:0.4rem;">Changes to These Terms</p>
-      <p class="about-text">We may update these terms from time to time. Continued use of the site after changes are posted constitutes acceptance of the updated terms.</p>
-
-      <p class="about-text" style="color:var(--rice);font-weight:600;margin-top:1.6rem;margin-bottom:0.4rem;">Contact</p>
-      <p class="about-text">Questions about these terms? Reach us at <a href="mailto:aashiq@louwok.com" style="color:var(--gold);">aashiq@louwok.com</a>.</p>
-    </div>
-  </div>
-
-  <div class="legal-overlay" id="privacyOverlay" onclick="if(event.target===this) closeLegalModal('privacy')">
-    <div class="legal-modal">
-      <button class="legal-modal-close" onclick="closeLegalModal('privacy')" aria-label="Close">&#10005;</button>
-      <div class="section-label">Legal</div>
-      <h2 style="font-family:'Bebas Neue','Bebas Fallback',sans-serif;font-size:clamp(2.2rem,5vw,2.8rem);letter-spacing:0.02em;margin-bottom:1.4rem;">PRIVACY POLICY</h2>
-
-      <p class="about-text"><strong style="color:var(--rice);">Last updated:</strong> July 2026</p>
-
-      <p class="about-text">This Privacy Policy explains what information Lou Wok Rice House collects through louwok.com, how we use it, and your choices.</p>
-
-      <p class="about-text" style="color:var(--rice);font-weight:600;margin-top:1.6rem;margin-bottom:0.4rem;">Information We Collect</p>
-      <p class="about-text">When you place an order or submit a catering inquiry, we collect the information you provide directly: your name, phone number, email address, order or event details, and any notes you include. We do not collect payment card information directly — card payments are processed securely by Square.</p>
-
-      <p class="about-text" style="color:var(--rice);font-weight:600;margin-top:1.6rem;margin-bottom:0.4rem;">How We Use Your Information</p>
-      <p class="about-text">We use your information to fulfill and confirm orders, send pickup-ready notifications, follow up on catering inquiries, and respond to questions you send us. We do not use your information for anything beyond communicating about your own order or inquiry.</p>
-
-      <p class="about-text" style="color:var(--rice);font-weight:600;margin-top:1.6rem;margin-bottom:0.4rem;">Text Messaging &amp; Mobile Information</p>
-      <p class="about-text">No mobile phone numbers or opt-in consent data collected for text messaging purposes are shared with, sold to, or rented to any third party or affiliate for marketing or promotional purposes. This information is used solely to send you the order and catering messages described in these policies. Standard message and data rates may apply, and you can opt out at any time by replying STOP.</p>
-
-      <p class="about-text" style="color:var(--rice);font-weight:600;margin-top:1.6rem;margin-bottom:0.4rem;">Who We Share Information With</p>
-      <p class="about-text">We share limited order information with the service providers that power this site's functionality: Square (payment processing), and our messaging/email providers (to deliver order and catering notifications on our behalf). If you order through DoorDash, Grubhub, or Uber Eats, your information is collected and handled under that platform's own privacy policy, not ours.</p>
-
-      <p class="about-text" style="color:var(--rice);font-weight:600;margin-top:1.6rem;margin-bottom:0.4rem;">Data Retention &amp; Security</p>
-      <p class="about-text">We retain order and inquiry information only as long as reasonably needed to fulfill your order, respond to your inquiry, and maintain basic business records. We take reasonable measures to protect your information but cannot guarantee absolute security of any data transmitted online.</p>
-
-      <p class="about-text" style="color:var(--rice);font-weight:600;margin-top:1.6rem;margin-bottom:0.4rem;">Children's Privacy</p>
-      <p class="about-text">This site is not directed at children under 13, and we do not knowingly collect information from children under 13.</p>
-
-      <p class="about-text" style="color:var(--rice);font-weight:600;margin-top:1.6rem;margin-bottom:0.4rem;">Changes to This Policy</p>
-      <p class="about-text">We may update this policy from time to time; the "Last updated" date above will reflect the most recent revision.</p>
-
-      <p class="about-text" style="color:var(--rice);font-weight:600;margin-top:1.6rem;margin-bottom:0.4rem;">Contact</p>
-      <p class="about-text">Questions about this policy or your information? Reach us at <a href="mailto:aashiq@louwok.com" style="color:var(--gold);">aashiq@louwok.com</a>.</p>
-    </div>
-  </div>
-
-
   <footer>
     <div class="footer-top">
       <div>
@@ -2965,8 +2874,8 @@
     <div class="footer-bottom">
       <span>© 2025 Lou Wok Rice House</span>
       <span style="display:flex;gap:1.2rem;">
-        <a href="#" onclick="openLegalModal('terms');return false;" style="color:inherit;text-decoration:none;">Terms &amp; Conditions</a>
-        <a href="#" onclick="openLegalModal('privacy');return false;" style="color:inherit;text-decoration:none;">Privacy Policy</a>
+        <a href="/terms.html" style="color:inherit;text-decoration:none;">Terms &amp; Conditions</a>
+        <a href="/privacy.html" style="color:inherit;text-decoration:none;">Privacy Policy</a>
       </span>
       <span>Built with 🔥 in the Valley</span>
     </div>
@@ -3085,7 +2994,7 @@
         <input class="cart-input" id="custEmail" type="email" autocomplete="email" inputmode="email" placeholder="Email (optional)" aria-label="Email (optional)">
         <label class="cart-consent-row" for="smsConsent" style="display:flex;gap:8px;align-items:flex-start;font-size:0.72rem;color:var(--muted);line-height:1.5;margin-top:2px;cursor:pointer;">
           <input type="checkbox" id="smsConsent" style="margin-top:3px;flex-shrink:0;width:15px;height:15px;accent-color:var(--wok);">
-          <span>I agree to receive order &amp; pickup texts from Lou Wok Rice House. Msg &amp; data rates may apply. Reply STOP to opt out. <a href="#" onclick="openLegalModal('terms');return false;" style="color:var(--gold);">Terms</a> &amp; <a href="#" onclick="openLegalModal('privacy');return false;" style="color:var(--gold);">Privacy</a>.</span>
+          <span>I agree to receive order &amp; pickup texts from Lou Wok Rice House. Msg &amp; data rates may apply. Reply STOP to opt out. <a href="/terms.html" style="color:var(--gold);">Terms</a> &amp; <a href="/privacy.html" style="color:var(--gold);">Privacy</a>.</span>
         </label>
       </div>
       <button class="cart-place-btn" id="cartPlaceBtn" onclick="placeOrder()">Place Order — $0.00</button>
@@ -3639,31 +3548,6 @@
       if (cd) cd.classList.remove('open');
       document.body.style.overflow = '';
     }
-
-    // Terms/Privacy modals — hidden by default, opened only from footer links or
-    // the SMS consent checkboxes. Kept off the normal page flow per UX best
-    // practice (customers don't need to scroll past legal text), but still
-    // reachable at a real URL: visiting louwok.com/#terms or /#privacy directly
-    // (e.g. from a carrier/Twilio review link) auto-opens the right modal.
-    function openLegalModal(which) {
-      const overlay = document.getElementById(which === 'privacy' ? 'privacyOverlay' : 'termsOverlay');
-      if (!overlay) return;
-      overlay.classList.add('open');
-      document.body.style.overflow = 'hidden';
-    }
-    function closeLegalModal(which) {
-      const overlay = document.getElementById(which === 'privacy' ? 'privacyOverlay' : 'termsOverlay');
-      if (!overlay) return;
-      overlay.classList.remove('open');
-      document.body.style.overflow = '';
-    }
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') { closeLegalModal('terms'); closeLegalModal('privacy'); }
-    });
-    (function () {
-      const h = (window.location.hash || '').replace('#', '');
-      if (h === 'terms' || h === 'privacy') openLegalModal(h);
-    })();
 
     function placeOrder() {
       if (cartItems.length === 0) return;
