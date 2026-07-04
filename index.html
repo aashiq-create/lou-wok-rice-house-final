@@ -1684,6 +1684,27 @@
       background: rgba(0,0,0,0.7); backdrop-filter: blur(4px);
     }
     .cart-overlay.open { display: block; }
+
+    /* Legal (Terms / Privacy) modal */
+    .legal-overlay {
+      display: none; position: fixed; inset: 0; z-index: 400;
+      background: rgba(0,0,0,0.75); backdrop-filter: blur(6px);
+      align-items: center; justify-content: center; padding: 1.25rem;
+    }
+    .legal-overlay.open { display: flex; }
+    .legal-modal {
+      background: var(--smoke); border: 1px solid var(--border);
+      border-radius: 4px; max-width: 720px; width: 100%;
+      max-height: min(80vh, 720px); overflow-y: auto;
+      padding: 2rem 2rem 2.25rem; position: relative;
+    }
+    .legal-modal-close {
+      position: sticky; top: 0; float: right; margin-top: -0.5rem;
+      background: transparent; border: none; color: var(--muted);
+      font-size: 1.3rem; cursor: pointer; line-height: 1;
+      padding: 0.4rem; z-index: 1;
+    }
+    .legal-modal-close:hover { color: var(--rice); }
     .cart-drawer {
       position: fixed; top: 0; right: 0; bottom: 0;
       width: min(420px, 100vw); z-index: 301;
@@ -2644,7 +2665,7 @@
             </div>
             <label class="cart-consent-row" for="catSmsConsent" style="display:flex;gap:8px;align-items:flex-start;font-size:0.72rem;color:var(--muted);line-height:1.5;margin:-4px 0 12px;cursor:pointer;">
               <input type="checkbox" id="catSmsConsent" style="margin-top:3px;flex-shrink:0;width:15px;height:15px;accent-color:var(--wok);">
-              <span>I agree to receive catering texts from Lou Wok Rice House. Msg &amp; data rates may apply. Reply STOP to opt out. <a href="#terms" style="color:var(--gold);">Terms</a> &amp; <a href="#privacy" style="color:var(--gold);">Privacy</a>.</span>
+              <span>I agree to receive catering texts from Lou Wok Rice House. Msg &amp; data rates may apply. Reply STOP to opt out. <a href="#" onclick="openLegalModal('terms');return false;" style="color:var(--gold);">Terms</a> &amp; <a href="#" onclick="openLegalModal('privacy');return false;" style="color:var(--gold);">Privacy</a>.</span>
             </label>
             <div class="cat-row">
               <div class="cat-group cat-date-field">
@@ -2801,9 +2822,10 @@
   </main>
 
   <!-- ── FOOTER ── -->
-  <!-- ── LEGAL (Terms & Privacy) ── -->
-  <section id="legal" style="padding-top:3rem;padding-bottom:1rem;">
-    <div id="terms" style="max-width:760px;margin:0 auto 4.5rem;">
+  <!-- ── LEGAL (Terms & Privacy) — hidden by default, opened via footer links or checkbox links ── -->
+  <div class="legal-overlay" id="termsOverlay" onclick="if(event.target===this) closeLegalModal('terms')">
+    <div class="legal-modal">
+      <button class="legal-modal-close" onclick="closeLegalModal('terms')" aria-label="Close">&#10005;</button>
       <div class="section-label">Legal</div>
       <h2 style="font-family:'Bebas Neue','Bebas Fallback',sans-serif;font-size:clamp(2.2rem,5vw,2.8rem);letter-spacing:0.02em;margin-bottom:1.4rem;">TERMS &amp; CONDITIONS</h2>
 
@@ -2832,8 +2854,11 @@
       <p class="about-text" style="color:var(--rice);font-weight:600;margin-top:1.6rem;margin-bottom:0.4rem;">Contact</p>
       <p class="about-text">Questions about these terms? Reach us at <a href="mailto:aashiq@louwok.com" style="color:var(--gold);">aashiq@louwok.com</a>.</p>
     </div>
+  </div>
 
-    <div id="privacy" style="max-width:760px;margin:0 auto;">
+  <div class="legal-overlay" id="privacyOverlay" onclick="if(event.target===this) closeLegalModal('privacy')">
+    <div class="legal-modal">
+      <button class="legal-modal-close" onclick="closeLegalModal('privacy')" aria-label="Close">&#10005;</button>
       <div class="section-label">Legal</div>
       <h2 style="font-family:'Bebas Neue','Bebas Fallback',sans-serif;font-size:clamp(2.2rem,5vw,2.8rem);letter-spacing:0.02em;margin-bottom:1.4rem;">PRIVACY POLICY</h2>
 
@@ -2865,7 +2890,8 @@
       <p class="about-text" style="color:var(--rice);font-weight:600;margin-top:1.6rem;margin-bottom:0.4rem;">Contact</p>
       <p class="about-text">Questions about this policy or your information? Reach us at <a href="mailto:aashiq@louwok.com" style="color:var(--gold);">aashiq@louwok.com</a>.</p>
     </div>
-  </section>
+  </div>
+
 
   <footer>
     <div class="footer-top">
@@ -2939,8 +2965,8 @@
     <div class="footer-bottom">
       <span>© 2025 Lou Wok Rice House</span>
       <span style="display:flex;gap:1.2rem;">
-        <a href="#terms" style="color:inherit;text-decoration:none;">Terms &amp; Conditions</a>
-        <a href="#privacy" style="color:inherit;text-decoration:none;">Privacy Policy</a>
+        <a href="#" onclick="openLegalModal('terms');return false;" style="color:inherit;text-decoration:none;">Terms &amp; Conditions</a>
+        <a href="#" onclick="openLegalModal('privacy');return false;" style="color:inherit;text-decoration:none;">Privacy Policy</a>
       </span>
       <span>Built with 🔥 in the Valley</span>
     </div>
@@ -3059,7 +3085,7 @@
         <input class="cart-input" id="custEmail" type="email" autocomplete="email" inputmode="email" placeholder="Email (optional)" aria-label="Email (optional)">
         <label class="cart-consent-row" for="smsConsent" style="display:flex;gap:8px;align-items:flex-start;font-size:0.72rem;color:var(--muted);line-height:1.5;margin-top:2px;cursor:pointer;">
           <input type="checkbox" id="smsConsent" style="margin-top:3px;flex-shrink:0;width:15px;height:15px;accent-color:var(--wok);">
-          <span>I agree to receive order &amp; pickup texts from Lou Wok Rice House. Msg &amp; data rates may apply. Reply STOP to opt out. <a href="#terms" style="color:var(--gold);">Terms</a> &amp; <a href="#privacy" style="color:var(--gold);">Privacy</a>.</span>
+          <span>I agree to receive order &amp; pickup texts from Lou Wok Rice House. Msg &amp; data rates may apply. Reply STOP to opt out. <a href="#" onclick="openLegalModal('terms');return false;" style="color:var(--gold);">Terms</a> &amp; <a href="#" onclick="openLegalModal('privacy');return false;" style="color:var(--gold);">Privacy</a>.</span>
         </label>
       </div>
       <button class="cart-place-btn" id="cartPlaceBtn" onclick="placeOrder()">Place Order — $0.00</button>
@@ -3613,6 +3639,31 @@
       if (cd) cd.classList.remove('open');
       document.body.style.overflow = '';
     }
+
+    // Terms/Privacy modals — hidden by default, opened only from footer links or
+    // the SMS consent checkboxes. Kept off the normal page flow per UX best
+    // practice (customers don't need to scroll past legal text), but still
+    // reachable at a real URL: visiting louwok.com/#terms or /#privacy directly
+    // (e.g. from a carrier/Twilio review link) auto-opens the right modal.
+    function openLegalModal(which) {
+      const overlay = document.getElementById(which === 'privacy' ? 'privacyOverlay' : 'termsOverlay');
+      if (!overlay) return;
+      overlay.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeLegalModal(which) {
+      const overlay = document.getElementById(which === 'privacy' ? 'privacyOverlay' : 'termsOverlay');
+      if (!overlay) return;
+      overlay.classList.remove('open');
+      document.body.style.overflow = '';
+    }
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') { closeLegalModal('terms'); closeLegalModal('privacy'); }
+    });
+    (function () {
+      const h = (window.location.hash || '').replace('#', '');
+      if (h === 'terms' || h === 'privacy') openLegalModal(h);
+    })();
 
     function placeOrder() {
       if (cartItems.length === 0) return;
