@@ -1,4 +1,5 @@
 // /api/notify-test.js
+// v2.0 — 2026-07-04 — now verifies actual DELIVERY status, not just queueing
 // ────────────────────────────────────────────────────────────────────────────
 // Sends a single test text via Twilio so the admin dashboard's "Send Test
 // Text" button can confirm the SMS pipeline actually works — no real order
@@ -7,10 +8,25 @@
 // POST body: { phones: ["+16025551234", ...] }
 // Uses the same Twilio env vars / cms-data.json config as /api/notify.js,
 // so a passing test here means real order/catering texts will work too.
+//
+// v2 change: after sending, we wait ~4s and fetch each message back from
+// Twilio. "Sent" only means Twilio queued it — carriers can still block it
+// (e.g. error 30032: unverified toll-free number). Now the dashboard shows
+// the real outcome instead of a false green checkmark.
 // ────────────────────────────────────────────────────────────────────────────
 
 const twilio = require('twilio');
 const { loadConfig } = require('./_config');
+
+// Friendly explanations for the Twilio error codes we're most likely to hit.
+const ERROR_HINTS = {
+  30032: 'toll-free number not verified yet — finish/await Twilio verification',
+  30007: 'blocked by carrier spam filtering',
+  30006: 'landline or unreachable carrier',
+  30005: 'unknown or inactive destination number',
+  30003: 'destination phone unreachable or off',
+  21610: 'this number replied STOP — text START to it to re-subscribe',
+};
 
 function toE164(raw) {
   const s = String(raw || '').trim();
@@ -29,6 +45,8 @@ function readBody(req) {
   }
   return {};
 }
+
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
 module.exports = async (req, res) => {
   if (req.method !== 'POST') {
@@ -65,13 +83,46 @@ module.exports = async (req, res) => {
   const client = twilio(cfg.accountSid, cfg.authToken);
   const body = `${cfg.restaurantName || 'Lou Wok Rice House'}: this is a test text from your admin dashboard ✅ If you got this, order & catering alerts will reach this number too.`;
 
-  const results = [];
+  // ── Step 1: queue every message ────────────────────────────────────────
+  const sent = [];    // { to, sid }
+  const results = []; // final per-number outcomes
   for (const to of phones) {
     try {
       const msg = await client.messages.create({ from: cfg.callerId, to, body });
-      results.push({ ok: true, to, sid: msg.sid });
+      sent.push({ to, sid: msg.sid });
     } catch (err) {
+      // Failed before it even queued (bad from-number, auth, etc.)
       results.push({ ok: false, to, reason: (err && err.message) || 'send_failed' });
+    }
+  }
+
+  // ── Step 2: give carriers a moment, then check what really happened ────
+  if (sent.length) await sleep(4000);
+
+  for (const { to, sid } of sent) {
+    try {
+      const m = await client.messages(sid).fetch();
+
+      if (m.status === 'delivered') {
+        results.push({ ok: true, to, sid, status: m.status });
+      } else if (m.status === 'undelivered' || m.status === 'failed') {
+        const hint = ERROR_HINTS[m.errorCode] || m.errorMessage || 'carrier rejected the message';
+        results.push({
+          ok: false, to, sid, status: m.status, errorCode: m.errorCode,
+          reason: `${m.status} (error ${m.errorCode}: ${hint})`,
+        });
+      } else {
+        // queued / sending / sent — Twilio pushed it out but the carrier
+        // hasn't confirmed delivery yet. Treat as tentative success and
+        // point at the logs for the final word.
+        results.push({
+          ok: true, to, sid, status: m.status,
+          note: 'accepted by Twilio — final delivery pending, confirm in Twilio Monitor > Logs > Messaging',
+        });
+      }
+    } catch (err) {
+      // Couldn't fetch status — the send itself still went through.
+      results.push({ ok: true, to, sid, status: 'unknown', note: 'status check failed; check Twilio logs' });
     }
   }
 
