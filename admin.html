@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- ✅ LOU-WOK-ADMIN vTICKER-SAFE | _readTicker no longer drops typed rows; empty-ticker publish guard added | 2026-07-05 -->
+<!-- ✅ LOU-WOK-ADMIN vTOAST-FIX | Publish flush no longer shows the wrong (Calls&Texts) toast; single Published! confirmation | 2026-07-05 -->
 
 <html lang="en">
 <head>
@@ -1768,7 +1768,9 @@
     const token = getToken();
     if (!token) { document.getElementById('tokenModal').style.display='flex'; return; }
 
-    // flush open editors
+    // flush open editors — silence their per-section toasts so the only
+    // confirmation the user sees is the single "Published!" message below.
+    _suppressToasts = true;
     if (selectedItemId) saveMenuItem();
     saveHours();
     saveOrderLinks();
@@ -1783,6 +1785,7 @@
     saveSettings();
     saveNotify();
     _readCategories();
+    _suppressToasts = false; // flush done — real user-facing toasts allowed again
 
     // GUARD: don't silently publish an empty ticker. The ticker bar reads
     // published items; an empty array hides all of them on the live site.
@@ -3045,7 +3048,13 @@
     _status('Unsaved changes — publish to go live');
   }
 
+  let _suppressToasts = false;
   function showToast(msg, type='success') {
+    // During a full Publish we flush every section; their individual
+    // "X saved" toasts would otherwise stack and the LAST one (Calls & Texts)
+    // would wrongly appear as the confirmation for whatever you actually did.
+    // Suppress them so only the real "Published!" toast shows.
+    if (_suppressToasts) return;
     const t = document.getElementById('toast');
     if (!t) return;
     t.textContent = msg; t.className = 'toast '+type+' show';
