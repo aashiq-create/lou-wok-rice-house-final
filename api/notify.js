@@ -1,4 +1,5 @@
 // /api/notify.js
+// v-EMOJI-TRIM2 2026-07-04 — customer confirmation trimmed for segment headroom (~17 chars spare)
 // ────────────────────────────────────────────────────────────────────────────
 // The endpoint index-5.html already POSTs to. Handles two payload types:
 //
@@ -112,9 +113,9 @@ module.exports = async (req, res) => {
       // 1) Customer confirmation — the order number + pickup ETA.
       if (cust.phone) {
         const custBody =
-          `${RESTAURANT_NAME}: Order ${orderNo} received! ✅\n` +
-          `Total ${total}. Ready for pickup in about ${PICKUP_ETA} min. ` +
-          `We'll text you when it's ready. Reply STOP to opt out.`;
+          `${RESTAURANT_NAME}: Order ${orderNo} received. ` +
+          `Total ${total}. Pickup ready in ~${PICKUP_ETA} min. ` +
+          `We'll text when it's ready. Reply STOP to opt out.`;
         results.customer = await sendSMS(client, smsFrom, cust.phone, custBody);
       }
 
