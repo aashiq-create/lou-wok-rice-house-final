@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- ✅ LOU-WOK-ADMIN vTOAST-FIX | Publish flush no longer shows the wrong (Calls&Texts) toast; single Published! confirmation | 2026-07-05 -->
+<!-- ✅ LOU-WOK-ADMIN vINVENTORY | adds 📦 Inventory panel (stock counts + low-stock alerts) on top of vTOAST-FIX | 2026-07-05 -->
 
 <html lang="en">
 <head>
@@ -594,7 +594,10 @@
     </button>
 
     <div class="nav-section-label">Site Content</div>
-    <button class="nav-item" onclick="switchSection('hours', this)">
+    <button class="nav-item" onclick="switchSection('inventory', this)">
+      <span class="icon">📦</span> Inventory
+    </button>
+        <button class="nav-item" onclick="switchSection('hours', this)">
       <span class="icon">🕐</span> Hours & Location
     </button>
     <button class="nav-item" onclick="switchSection('announcements', this)">
@@ -666,6 +669,7 @@
 
     <!-- ── OVERVIEW ── -->
     <div id="section-overview" class="section active">
+      <div id="dash-inv-alert" style="margin:0 0 1rem;"></div>
       <div class="panel-grid panel-grid-4 mb-15">
         <div class="panel">
           <div class="stat-value" id="stat-menu-count">—</div>
@@ -850,6 +854,26 @@
     </div>
 
     <!-- ── HOURS & LOCATION ── -->
+    <div id="section-inventory" class="section">
+      <div class="panel">
+        <div class="panel-header">
+          <span class="panel-title">📦 Inventory</span>
+          <button class="btn btn-primary btn-sm" onclick="saveInventory()">Save</button>
+        </div>
+        <p style="color:var(--muted);font-size:0.82rem;line-height:1.6;margin:0 0 1rem;">
+          Track how much of each item you have on hand. Set a <strong style="color:var(--rice);">low-stock threshold</strong>
+          per item &mdash; when the count hits it or below, you'll get an alert on the Dashboard.
+          Remember to <strong style="color:var(--rice);">Publish</strong> after saving.
+        </p>
+        <div id="inv-alert-banner" style="display:none;margin-bottom:1rem;padding:0.75rem 1rem;border-radius:2px;background:rgba(200,57,10,0.12);border:1px solid var(--wok);color:var(--rice);font-size:0.85rem;"></div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:1rem;">
+          <button class="btn btn-ghost btn-sm" onclick="invSyncFromMenu()" style="border:1px solid var(--border);">&#8635; Sync items from menu</button>
+          <button class="btn btn-ghost btn-sm" onclick="invMarkAllStocked()" style="border:1px solid var(--border);">Restock all to default</button>
+        </div>
+        <div id="inventory-rows"></div>
+      </div>
+    </div>
+
     <div id="section-hours" class="section">
       <div class="panel-grid panel-grid-2">
         <div class="panel">
@@ -1731,7 +1755,7 @@
       _status('Offline — loaded defaults');
     }
     renderMenuList(); renderHours(); renderAnnouncements();
-    _populateOrderLinks(); _populateFeatured(); _populateHero(); _populateSEO(); _populateLocation(); _populateBranding(); _populateSocials(); _populateTicker(); _populateFooter(); _populateSettings(); _populateNotify(); renderCategoryManager(); _fillCategoryDropdown();
+    _populateOrderLinks(); _populateFeatured(); _populateHero(); _populateSEO(); _populateLocation(); _populateBranding(); _populateSocials(); _populateTicker(); _populateFooter(); _populateSettings(); _populateNotify(); _populateInventory(); _renderDashboardInvAlert(); renderCategoryManager(); _fillCategoryDropdown();
     _refreshOverview();
     updateTokenStatus();
   }
@@ -1749,6 +1773,9 @@
     brandingData      = d.branding      || DEFAULTS.branding;
     socialsData       = d.socials       || DEFAULTS.socials;
     tickerData        = d.ticker         || DEFAULTS.ticker;
+    inventoryData     = (d.inventory && typeof d.inventory === 'object')
+                          ? { items: d.inventory.items || {}, updated: d.inventory.updated || null }
+                          : { items: {}, updated: null };
     footerData        = d.footer         || DEFAULTS.footer;
     settingsData      = d.settings        || DEFAULTS.settings;
     if (Array.isArray(d.users) && d.users.length) usersData = d.users;
@@ -1784,6 +1811,7 @@
     saveFooter();
     saveSettings();
     saveNotify();
+    saveInventory();
     _readCategories();
     _suppressToasts = false; // flush done — real user-facing toasts allowed again
 
@@ -1818,7 +1846,7 @@
       hero: heroData,
       location: locationData, branding: brandingData,
       socials: socialsData,
-      ticker: _tickerForPublish(), footer: footerData,
+      ticker: _tickerForPublish(), inventory: inventoryData, footer: footerData,
       settings: settingsData,
       users: usersData
     };
@@ -2720,6 +2748,110 @@
   }
   function addTickerRow() { _readTicker(); tickerData.push({text:'', hot:false}); _populateTicker(); }
   function removeTickerRow(i) { _readTicker(); tickerData.splice(i,1); _populateTicker(); }
+  /* ── 📦 INVENTORY TRACKING ─────────────────────────────────────────── */
+  let inventoryData = { items: {}, updated: null };
+  const INV_DEFAULT_QTY = 20, INV_DEFAULT_LOW = 6, INV_DEFAULT_UNIT = 'orders';
+
+  function invSyncFromMenu() {
+    _readInventory();
+    const menu = Array.isArray(menuData) ? menuData : [];
+    const next = {};
+    menu.forEach(item => {
+      const key = String(item.id);
+      next[key] = inventoryData.items[key] || { qty: INV_DEFAULT_QTY, unit: INV_DEFAULT_UNIT, low: INV_DEFAULT_LOW };
+    });
+    inventoryData.items = next;
+    _populateInventory();
+    showToast('Inventory synced with menu', 'success');
+  }
+  function invMarkAllStocked() {
+    _readInventory();
+    Object.keys(inventoryData.items).forEach(k => { inventoryData.items[k].qty = INV_DEFAULT_QTY; });
+    _populateInventory();
+    showToast('All items restocked to default', 'success');
+  }
+  function invLowStockList() {
+    const menu = Array.isArray(menuData) ? menuData : [];
+    const nameById = {}; menu.forEach(m => nameById[String(m.id)] = m.name);
+    const low = [];
+    Object.entries(inventoryData.items || {}).forEach(([id, v]) => {
+      if (v && typeof v.qty === 'number' && v.qty <= (v.low != null ? v.low : INV_DEFAULT_LOW)) {
+        low.push({ id, name: nameById[id] || ('Item ' + id), qty: v.qty });
+      }
+    });
+    return low;
+  }
+  function _populateInventory() {
+    const wrap = document.getElementById('inventory-rows');
+    if (!wrap) return;
+    const menu = Array.isArray(menuData) ? menuData : [];
+    if (!menu.length) {
+      wrap.innerHTML = '<p style="color:var(--muted);font-size:0.82rem;">No menu items yet &mdash; add items in Menu Items first, then hit &ldquo;Sync items from menu&rdquo;.</p>';
+      _renderInvAlertBanner();
+      return;
+    }
+    wrap.innerHTML = menu.map(item => {
+      const key = String(item.id);
+      const rec = (inventoryData.items && inventoryData.items[key]) || { qty: INV_DEFAULT_QTY, unit: INV_DEFAULT_UNIT, low: INV_DEFAULT_LOW };
+      const lowThr = (rec.low != null ? rec.low : INV_DEFAULT_LOW);
+      const isLow = typeof rec.qty === 'number' && rec.qty <= lowThr;
+      const esc = s => String(s == null ? '' : s).replace(/"/g, '&quot;');
+      return '<div class="lk-row" data-inv-id="' + key + '" style="display:flex;gap:0.6rem;align-items:center;margin-bottom:0.55rem;padding:0.5rem 0.65rem;border-radius:2px;background:' + (isLow ? 'rgba(200,57,10,0.10)' : 'var(--smoke)') + ';border:1px solid ' + (isLow ? 'var(--wok)' : 'var(--border)') + ';">' +
+        '<span style="flex:1;min-width:0;font-size:0.9rem;color:var(--rice);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + (isLow ? '&#9888;&#65039; ' : '') + esc(item.name) + '</span>' +
+        '<label style="display:flex;align-items:center;gap:0.3rem;font-size:0.7rem;color:var(--muted);">On hand<input class="field-input" type="number" min="0" id="inv-qty-' + key + '" value="' + (Number(rec.qty) || 0) + '" style="width:76px;text-align:center;" /></label>' +
+        '<label style="display:flex;align-items:center;gap:0.3rem;font-size:0.7rem;color:var(--muted);">Low at<input class="field-input" type="number" min="0" id="inv-low-' + key + '" value="' + lowThr + '" style="width:64px;text-align:center;" /></label>' +
+        '<button class="btn btn-ghost btn-sm" title="minus 1" onclick="invBump(\'' + key + '\',-1)" style="border:1px solid var(--border);padding:0.3rem 0.6rem;">&minus;</button>' +
+        '<button class="btn btn-ghost btn-sm" title="plus 1" onclick="invBump(\'' + key + '\',1)" style="border:1px solid var(--border);padding:0.3rem 0.6rem;">+</button>' +
+      '</div>';
+    }).join('');
+    _renderInvAlertBanner();
+  }
+  function invBump(key, delta) {
+    _readInventory();
+    if (!inventoryData.items[key]) inventoryData.items[key] = { qty: 0, unit: INV_DEFAULT_UNIT, low: INV_DEFAULT_LOW };
+    inventoryData.items[key].qty = Math.max(0, (Number(inventoryData.items[key].qty) || 0) + delta);
+    _populateInventory();
+  }
+  function _renderInvAlertBanner() {
+    const banner = document.getElementById('inv-alert-banner');
+    if (!banner) return;
+    const low = invLowStockList();
+    if (!low.length) { banner.style.display = 'none'; return; }
+    banner.style.display = 'block';
+    banner.innerHTML = '&#9888;&#65039; <strong>Low stock:</strong> ' + low.map(l => l.name + ' (' + l.qty + ' left)').join(' &middot; ') + '. Restock soon.';
+  }
+  function _readInventory() {
+    const wrap = document.getElementById('inventory-rows');
+    if (!wrap) return;
+    wrap.querySelectorAll('[data-inv-id]').forEach(row => {
+      const key = row.getAttribute('data-inv-id');
+      const qtyEl = document.getElementById('inv-qty-' + key);
+      const lowEl = document.getElementById('inv-low-' + key);
+      if (!qtyEl || !lowEl) return;
+      const prev = inventoryData.items[key] || {};
+      inventoryData.items[key] = {
+        qty:  Math.max(0, parseInt(qtyEl.value, 10) || 0),
+        unit: prev.unit || INV_DEFAULT_UNIT,
+        low:  Math.max(0, parseInt(lowEl.value, 10) || 0),
+      };
+    });
+  }
+  function saveInventory() {
+    _readInventory();
+    inventoryData.updated = new Date().toISOString();
+    setUnsaved();
+    _renderInvAlertBanner();
+    _renderDashboardInvAlert();
+    showToast('Inventory saved', 'success');
+  }
+  function _renderDashboardInvAlert() {
+    const el = document.getElementById('dash-inv-alert');
+    if (!el) return;
+    const low = invLowStockList();
+    if (!low.length) { el.innerHTML = '<span style="color:var(--muted);font-size:0.85rem;">&#9989; All items above their low-stock threshold.</span>'; return; }
+    el.innerHTML = '<span style="color:var(--wok);font-weight:600;">&#9888;&#65039; ' + low.length + ' item(s) low on stock:</span> <span style="color:var(--rice);font-size:0.85rem;">' + low.map(l => l.name + ' (' + l.qty + ')').join(' &middot; ') + '</span>';
+  }
+
   function saveTicker() { _readTicker(); setUnsaved(); showToast('Ticker saved','success'); }
 
   // ══════════════════════════════════════════════════════════════
