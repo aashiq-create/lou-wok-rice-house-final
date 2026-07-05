@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- ✅ LOU-WOK-ADMIN vTWILIO-CONTROL | adds 🎛️ Twilio Control card (passcode-gated /api/twilio-admin) | 2026-07-04 -->
+<!-- ✅ LOU-WOK-ADMIN vTICKER-SAFE | _readTicker no longer drops typed rows; empty-ticker publish guard added | 2026-07-05 -->
 
 <html lang="en">
 <head>
@@ -1784,6 +1784,22 @@
     saveNotify();
     _readCategories();
 
+    // GUARD: don't silently publish an empty ticker. The ticker bar reads
+    // published items; an empty array hides all of them on the live site.
+    // If there are no ticker items, make the user confirm it's intentional.
+    if (_tickerForPublish().length === 0) {
+      const ok = confirm(
+        'Heads up: your Ticker Bar has no items, so the scrolling bar will be '
+        + 'EMPTY on the live site.\n\nIf you meant to add items, click Cancel, '
+        + 'go to Ticker Bar, add them, and Save first.\n\nPublish with an empty '
+        + 'ticker anyway?'
+      );
+      if (!ok) {
+        showToast('Publish canceled — add your ticker items, Save, then Publish.', 'info');
+        return;
+      }
+    }
+
     const allBtns = document.querySelectorAll('[onclick*="publishSite"]');
     allBtns.forEach(b => { b.disabled=true; b.textContent='⏳ Publishing…'; });
     const _done = () => allBtns.forEach(b => { b.disabled=false; b.innerHTML='🚀 &nbsp;Publish to louwok.com'; });
@@ -1799,7 +1815,7 @@
       hero: heroData,
       location: locationData, branding: brandingData,
       socials: socialsData,
-      ticker: tickerData, footer: footerData,
+      ticker: _tickerForPublish(), footer: footerData,
       settings: settingsData,
       users: usersData
     };
@@ -2680,14 +2696,24 @@
   function _readTicker() {
     const wrap = document.getElementById('ticker-rows');
     if (!wrap) return;
+    // Read EVERY visible row straight from its inputs. We keep rows even when
+    // the text is momentarily blank (e.g. a row you just added but haven't
+    // typed into yet) so editing never destroys work. Purely-empty rows are
+    // filtered out only at publish time, not here.
     const rows=[]; let i=0;
     while (document.getElementById('ticker-text-'+i)) {
-      const t=document.getElementById('ticker-text-'+i).value.trim();
+      const t=(document.getElementById('ticker-text-'+i).value||'').trim();
       const hot=document.getElementById('ticker-hot-'+i).checked;
-      if (t) rows.push({text:t, hot});
+      rows.push({text:t, hot});
       i++;
     }
     tickerData = rows;
+  }
+  // Returns only the ticker rows that actually have text — used at publish so
+  // we never write blank entries, without mutating what you're editing.
+  function _tickerForPublish() {
+    _readTicker();
+    return (Array.isArray(tickerData) ? tickerData : []).filter(it => it && String(it.text||'').trim());
   }
   function addTickerRow() { _readTicker(); tickerData.push({text:'', hot:false}); _populateTicker(); }
   function removeTickerRow(i) { _readTicker(); tickerData.splice(i,1); _populateTicker(); }
