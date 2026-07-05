@@ -1,6 +1,6 @@
 {
   "_info": "Written by louwok.com/admin. index.html reads this at runtime.",
-  "_updated": "2026-07-04T16:22:07.716Z",
+  "_updated": "2026-07-05T15:03:27.718Z",
   "menu": [
     {
       "id": 1,
@@ -437,23 +437,27 @@
       "hot": true
     },
     {
-      "text": "Crab Rangoon",
-      "hot": true
-    },
-    {
       "text": "St. Paul Sandwiches",
       "hot": true
     },
     {
-      "text": "Wok Fired Fried Rice Daily",
+      "text": "Fried Chicken",
       "hot": true
     },
     {
-      "text": "Phoenix, AZ",
+      "text": "Crab Rangoon",
       "hot": true
     },
     {
-      "text": "Fried Chicken Wings",
+      "text": "Egg Rolls",
+      "hot": true
+    },
+    {
+      "text": "Hot Braised Boneless Chicken",
+      "hot": true
+    },
+    {
+      "text": "Funnel Cake",
       "hot": true
     },
     {
@@ -462,10 +466,6 @@
     },
     {
       "text": "Mystic Carrot Juice",
-      "hot": true
-    },
-    {
-      "text": "Funnel Cake",
       "hot": true
     }
   ],
