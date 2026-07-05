@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- ✅ LOU-WOK-INDEX vTICKER-FRESH | ticker always re-renders from freshly fetched cms-data.json (no stale flash) | 2026-07-05 -->
+<!-- ✅ LOU-WOK-INDEX vFRESH-FIRST | waits for server before painting CMS (no stale flash); localStorage is offline-only fallback | 2026-07-05 -->
 
 <html lang="en">
 <head>
@@ -4768,13 +4768,11 @@
         }catch(err){ console.error('[CMS] failed to apply content from', source, err); return false; }
       }
 
-      // 1) Instant local preview (same browser as the admin), if present.
-      try{
-        const local = localStorage.getItem('louwok-cms');
-        if(local){ applyContent(JSON.parse(local), 'localStorage'); }
-      }catch(e){ /* ignore bad local cache */ }
-
-      // 2) Remote sources, in priority order. First OK response wins.
+      // FRESH-FIRST loading (changed per brand decision 2026-07-05):
+      // The site now WAITS for the server before painting CMS content, so a
+      // visitor never sees a stale menu/ticker flash. localStorage is kept ONLY
+      // as an offline fallback — if the network fails entirely, a returning
+      // visitor still sees their last-seen real content instead of raw defaults.
       const bust = '?_=' + Date.now();
       const SOURCES = [
         // Same-origin file committed next to index.html — most reliable.
@@ -4791,17 +4789,26 @@
             if(!r.ok){ console.info('[CMS] skip', url.split('?')[0], '→ HTTP', r.status); continue; }
             const d = await r.json();
             if(applyContent(d, url.split('?')[0])){
-              // lw_ticker_fresh_guard: make sure the marquee reflects the freshly
-              // fetched data even if an early code path skipped it, so newly
-              // published ticker items never get stuck behind a stale local copy.
               try{ renderTicker(d.ticker); }catch(e){}
+              // Cache the fresh copy purely as an OFFLINE fallback for next time.
               try{ localStorage.setItem('louwok-cms', JSON.stringify(d)); }catch(e){}
-              return; // success — stop trying further sources
+              return; // success — freshest data is now on screen
             }
           }catch(err){
             console.info('[CMS] skip', url.split('?')[0], '→', err.message);
           }
         }
+        // Every remote source failed (offline / server down). NOW fall back to
+        // the last-seen copy so a spotty-signal visitor still sees real content.
+        try{
+          const local = localStorage.getItem('louwok-cms');
+          if(local){
+            applyContent(JSON.parse(local), 'localStorage-offline-fallback');
+            console.info('[CMS] offline — showing last-seen content from localStorage.');
+            return;
+          }
+        }catch(e){ /* ignore bad local cache */ }
+
         console.warn('[CMS] No published cms-data.json could be loaded from any source. '
           + 'The site is showing built-in defaults. Check that the admin publishes '
           + 'cms-data.json to a PUBLIC location the site can read (same folder as '
