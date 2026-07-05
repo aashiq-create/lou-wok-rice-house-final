@@ -1,6 +1,6 @@
 {
   "_info": "Written by louwok.com/admin. index.html reads this at runtime.",
-  "_updated": "2026-07-05T15:05:04.628Z",
+  "_updated": "2026-07-05T15:08:33.577Z",
   "menu": [
     {
       "id": 1,
@@ -314,7 +314,7 @@
       },
       {
         "label": "Bread",
-        "value": "Soft White"
+        "value": "Texast Toast"
       },
       {
         "label": "The Original St. Paul Sandwich. Built Different.",
@@ -330,7 +330,7 @@
     "bowlLabel": "Wok-fired daily",
     "cta1Text": "View Menu",
     "cta1Href": "#menu",
-    "cta2Text": "Order Online",
+    "cta2Text": "Order Now",
     "cta2Href": "#order"
   },
   "location": {
