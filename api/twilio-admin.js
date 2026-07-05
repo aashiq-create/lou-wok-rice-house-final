@@ -1,129 +1,163 @@
-<!-- ══════════════════════════════════════════════════════════════════════
-  PART 1 of 2 — HTML card
-  PASTE LOCATION: admin.html, inside the Calls & Texts panel, directly
-  AFTER the closing </div> of the "🔗 Twilio Webhook URLs" card (the line
-  right after <p id="ntf-twilio-status" ...></p> and its closing </div>)
-  and BEFORE the "🔒 Secrets" card.
-═══════════════════════════════════════════════════════════════════════ -->
+// /api/twilio-admin.js
+// v1.0 — 2026-07-04 — full messaging & voice control for the admin dashboard
+// ────────────────────────────────────────────────────────────────────────────
+// One endpoint, many actions. POST { action, ...params } with header
+// "x-admin-token" matching the ADMIN_API_TOKEN env var, or you get a 401.
+//
+// Actions:
+//   "number_get"       → current config on the Twilio number
+//   "number_update"    → { voiceUrl?, smsUrl?, friendlyName? }
+//   "messages_recent"  → last 20 SMS with REAL status + error codes
+//   "calls_recent"     → last 20 calls
+//   "sms_send"         → { to, body } — send any text from the business number
+//
+// Auth to Twilio uses an API Key (TWILIO_API_KEY_SID / TWILIO_API_KEY_SECRET)
+// so the master auth token can stay untouched; falls back to the account
+// SID + auth token if the key vars aren't set.
+// ────────────────────────────────────────────────────────────────────────────
 
-<div style="margin-bottom:1rem;padding:0.85rem 1rem;background:var(--smoke);border-radius:2px;border:1px solid var(--border);">
-  <div style="font-size:0.68rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted);margin-bottom:0.4rem;">🎛️ Twilio Control</div>
-  <p style="color:var(--muted);font-size:0.72rem;margin:0 0 0.7rem;line-height:1.5;">
-    Full messaging &amp; voice control without opening the Twilio Console. Locked behind your admin
-    passcode (the <strong style="color:var(--rice);">ADMIN_API_TOKEN</strong> you set in Vercel) —
-    it's saved in this browser only, never published to the site.
-  </p>
+const twilio = require('twilio');
+const { loadConfig } = require('./_config');
 
-  <div class="field-group">
-    <label class="field-label">Admin passcode</label>
-    <div style="display:flex;gap:8px;">
-      <input class="field-input" type="password" id="tw-admin-token" placeholder="Paste your ADMIN_API_TOKEN" style="flex:1;" />
-      <button type="button" class="btn btn-sm" onclick="twSaveToken()" style="border:1px solid var(--border);background:transparent;color:var(--rice);">💾 Save</button>
-    </div>
-  </div>
-
-  <div style="margin-top:0.6rem;display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
-    <button type="button" class="btn btn-sm" onclick="twRecentMessages()" style="border:1px solid var(--border);background:transparent;color:var(--rice);">💬 Recent Texts + Delivery Status</button>
-    <button type="button" class="btn btn-sm" onclick="twRecentCalls()" style="border:1px solid var(--border);background:transparent;color:var(--rice);">📞 Recent Calls</button>
-  </div>
-
-  <div class="field-group" style="margin-top:0.9rem;">
-    <label class="field-label">Send a text from the business number</label>
-    <input class="field-input" id="tw-sms-to" placeholder="To — e.g. 6025551234" style="margin-bottom:0.5rem;" />
-    <textarea class="field-input" id="tw-sms-body" rows="2" placeholder="Message… (plain text, no emoji = 1 segment)"></textarea>
-    <div style="margin-top:0.5rem;">
-      <button type="button" class="btn btn-sm" id="tw-sms-send-btn" onclick="twSendSms()" style="border:1px solid var(--border);background:transparent;color:var(--rice);">📤 Send SMS</button>
-    </div>
-  </div>
-
-  <p id="tw-admin-status" style="font-size:0.74rem;color:var(--muted);margin:0.6rem 0 0;"></p>
-  <div id="tw-admin-output" style="margin-top:0.6rem;font-family:monospace;font-size:0.72rem;line-height:1.7;color:var(--rice);max-height:260px;overflow-y:auto;"></div>
-</div>
-
-
-<!-- ══════════════════════════════════════════════════════════════════════
-  PART 2 of 2 — JavaScript
-  PASTE LOCATION: admin.html, inside the existing <script> block, directly
-  ABOVE the line:  async function loadTwilioConfig() {
-═══════════════════════════════════════════════════════════════════════ -->
-
-<script>
-/* ─── Twilio Control panel ──────────────────────────────────────────── */
-
-function twToken() { return localStorage.getItem('lw_admin_token') || ''; }
-
-function twSaveToken() {
-  const v = document.getElementById('tw-admin-token').value.trim();
-  const s = document.getElementById('tw-admin-status');
-  if (!v) { s.style.color = 'var(--wok)'; s.textContent = 'Paste the passcode first.'; return; }
-  localStorage.setItem('lw_admin_token', v);
-  s.style.color = 'var(--gold)';
-  s.textContent = '✅ Passcode saved in this browser.';
+function readBody(req) {
+  if (req.body && typeof req.body === 'object') return req.body;
+  if (typeof req.body === 'string') {
+    try { return JSON.parse(req.body); } catch { /* fall through */ }
+  }
+  return {};
 }
 
-// One helper for every action. Returns parsed JSON or throws.
-async function twAdmin(action, params = {}) {
-  const r = await fetch('/api/twilio-admin', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'x-admin-token': twToken() },
-    body: JSON.stringify({ action, ...params }),
-  });
-  if (r.status === 401) throw new Error('Wrong or missing passcode — paste your ADMIN_API_TOKEN above and hit Save.');
-  return r.json();
+function isValidHttpsUrl(u) {
+  try { return new URL(u).protocol === 'https:'; } catch { return false; }
 }
 
-function twOut(html) { document.getElementById('tw-admin-output').innerHTML = html; }
-function twStatus(msg, bad) {
-  const s = document.getElementById('tw-admin-status');
-  s.style.color = bad ? 'var(--wok)' : 'var(--muted)';
-  s.textContent = msg;
+function toE164(raw) {
+  const s = String(raw || '').trim();
+  if (!s) return '';
+  if (s[0] === '+') { const d = s.replace(/[^\d]/g, ''); return d ? '+' + d : ''; }
+  const d = s.replace(/\D/g, '');
+  if (d.length === 10) return '+1' + d;
+  if (d.length === 11 && d[0] === '1') return '+' + d;
+  return '';
 }
 
-async function twRecentMessages() {
-  twStatus('Loading recent texts…');
-  twOut('');
+function makeClient(cfg) {
+  const keySid    = process.env.TWILIO_API_KEY_SID;
+  const keySecret = process.env.TWILIO_API_KEY_SECRET;
+  if (keySid && keySecret && cfg.accountSid) {
+    return twilio(keySid, keySecret, { accountSid: cfg.accountSid });
+  }
+  return twilio(cfg.accountSid, cfg.authToken); // fallback
+}
+
+async function findNumberSid(client, phoneNumber) {
+  const list = await client.incomingPhoneNumbers.list({ phoneNumber, limit: 1 });
+  return list.length ? list[0].sid : null;
+}
+
+module.exports = async (req, res) => {
+  if (req.method !== 'POST') {
+    res.setHeader('Allow', 'POST');
+    return res.status(405).json({ error: 'Method Not Allowed' });
+  }
+
+  // ── Gate: admin token required ─────────────────────────────────────────
+  const expected = process.env.ADMIN_API_TOKEN || '';
+  const provided = req.headers['x-admin-token'] || '';
+  if (!expected) {
+    return res.status(200).json({ ok: false, reason: 'ADMIN_API_TOKEN is not set in Vercel — add it and redeploy.' });
+  }
+  if (provided !== expected) {
+    return res.status(401).json({ ok: false, reason: 'bad_admin_token' });
+  }
+
+  const cfg = await loadConfig();
+  if (!cfg.accountSid || !cfg.callerId) {
+    return res.status(200).json({ ok: false, reason: 'Twilio env vars missing (TWILIO_ACCOUNT_SID / TWILIO_CALLER_ID).' });
+  }
+
+  const client = makeClient(cfg);
+  const { action } = readBody(req);
+  const p = readBody(req);
+
   try {
-    const d = await twAdmin('messages_recent');
-    if (!d.ok) return twStatus(d.reason || 'Failed.', true);
-    if (!d.messages.length) return twStatus('No messages yet.');
-    twStatus(`Last ${d.messages.length} texts — status is the carrier's final word.`);
-    twOut(d.messages.map(m => {
-      const when = new Date(m.date).toLocaleString();
-      const good = m.status === 'delivered';
-      const icon = good ? '✅' : (m.status === 'undelivered' || m.status === 'failed') ? '❌' : '⏳';
-      const err  = m.errorCode ? ` <span style="color:var(--wok);">err ${m.errorCode}</span>` : '';
-      return `${icon} ${when} · ${m.direction} · ${m.from} → ${m.to} · <strong>${m.status}</strong>${err} · ${m.segments} seg<br><span style="color:var(--muted);">${m.body}</span>`;
-    }).join('<hr style="border:none;border-top:1px solid var(--border);margin:6px 0;">'));
-  } catch (e) { twStatus(e.message, true); }
-}
+    // ── Number: read current config ──────────────────────────────────────
+    if (action === 'number_get') {
+      const sid = await findNumberSid(client, cfg.callerId);
+      if (!sid) return res.status(200).json({ ok: false, reason: `Number ${cfg.callerId} not found on this account.` });
+      const n = await client.incomingPhoneNumbers(sid).fetch();
+      return res.status(200).json({
+        ok: true,
+        phoneNumber: n.phoneNumber,
+        friendlyName: n.friendlyName,
+        voiceUrl: n.voiceUrl || '',
+        smsUrl: n.smsUrl || '',
+      });
+    }
 
-async function twRecentCalls() {
-  twStatus('Loading recent calls…');
-  twOut('');
-  try {
-    const d = await twAdmin('calls_recent');
-    if (!d.ok) return twStatus(d.reason || 'Failed.', true);
-    if (!d.calls.length) return twStatus('No calls yet.');
-    twStatus(`Last ${d.calls.length} calls.`);
-    twOut(d.calls.map(c => {
-      const when = new Date(c.date).toLocaleString();
-      return `📞 ${when} · ${c.direction} · ${c.from} → ${c.to} · <strong>${c.status}</strong> · ${c.duration || 0}s`;
-    }).join('<hr style="border:none;border-top:1px solid var(--border);margin:6px 0;">'));
-  } catch (e) { twStatus(e.message, true); }
-}
+    // ── Number: update webhooks / name ───────────────────────────────────
+    if (action === 'number_update') {
+      const sid = await findNumberSid(client, cfg.callerId);
+      if (!sid) return res.status(200).json({ ok: false, reason: `Number ${cfg.callerId} not found on this account.` });
+      const update = {};
+      if (p.voiceUrl) {
+        if (!isValidHttpsUrl(p.voiceUrl)) return res.status(200).json({ ok: false, reason: 'voiceUrl must be a valid https:// URL' });
+        update.voiceUrl = p.voiceUrl;
+      }
+      if (p.smsUrl) {
+        if (!isValidHttpsUrl(p.smsUrl)) return res.status(200).json({ ok: false, reason: 'smsUrl must be a valid https:// URL' });
+        update.smsUrl = p.smsUrl;
+      }
+      if (p.friendlyName) update.friendlyName = String(p.friendlyName).slice(0, 64);
+      if (!Object.keys(update).length) return res.status(200).json({ ok: false, reason: 'Nothing to update.' });
+      const n = await client.incomingPhoneNumbers(sid).update(update);
+      return res.status(200).json({ ok: true, voiceUrl: n.voiceUrl || '', smsUrl: n.smsUrl || '', friendlyName: n.friendlyName });
+    }
 
-async function twSendSms() {
-  const btn  = document.getElementById('tw-sms-send-btn');
-  const to   = document.getElementById('tw-sms-to').value.trim();
-  const body = document.getElementById('tw-sms-body').value.trim();
-  if (!to || !body) return twStatus('Fill in both the number and the message.', true);
-  btn.disabled = true;
-  twStatus('Sending…');
-  try {
-    const d = await twAdmin('sms_send', { to, body });
-    if (d.ok) { twStatus(`✅ Queued (${d.status}) — click "Recent Texts" in ~5s to confirm delivery.`); document.getElementById('tw-sms-body').value = ''; }
-    else twStatus(d.reason || 'Send failed.', true);
-  } catch (e) { twStatus(e.message, true); }
-  finally { btn.disabled = false; }
-}
-</script>
+    // ── Messaging: recent log with real delivery status ──────────────────
+    if (action === 'messages_recent') {
+      const msgs = await client.messages.list({ limit: 20 });
+      return res.status(200).json({
+        ok: true,
+        messages: msgs.map(m => ({
+          date: m.dateSent || m.dateCreated,
+          direction: m.direction,
+          from: m.from, to: m.to,
+          status: m.status,
+          errorCode: m.errorCode || null,
+          segments: m.numSegments,
+          body: (m.body || '').slice(0, 80),
+        })),
+      });
+    }
+
+    // ── Voice: recent calls ──────────────────────────────────────────────
+    if (action === 'calls_recent') {
+      const calls = await client.calls.list({ limit: 20 });
+      return res.status(200).json({
+        ok: true,
+        calls: calls.map(c => ({
+          date: c.startTime || c.dateCreated,
+          direction: c.direction,
+          from: c.from, to: c.to,
+          status: c.status,
+          duration: c.duration,
+        })),
+      });
+    }
+
+    // ── Messaging: send an arbitrary SMS from the business number ────────
+    if (action === 'sms_send') {
+      const to = toE164(p.to);
+      const body = String(p.body || '').trim();
+      if (!to)   return res.status(200).json({ ok: false, reason: 'Invalid "to" number.' });
+      if (!body) return res.status(200).json({ ok: false, reason: 'Message body is empty.' });
+      const msg = await client.messages.create({ from: cfg.callerId, to, body });
+      return res.status(200).json({ ok: true, sid: msg.sid, status: msg.status });
+    }
+
+    return res.status(200).json({ ok: false, reason: `Unknown action "${action}".` });
+  } catch (err) {
+    return res.status(200).json({ ok: false, reason: (err && err.message) || 'twilio_error' });
+  }
+};
