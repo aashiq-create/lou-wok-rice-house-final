@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- ✅ LOU-WOK-INDEX vFRESH-FIRST | waits for server before painting CMS (no stale flash); localStorage is offline-only fallback | 2026-07-05 -->
+<!-- ✅ LOU-WOK-INDEX vHERO-CTA-FIT | hero CTAs stay visible on desktop landing (all widths) + ticker from cms | 2026-07-05 -->
 
 <html lang="en">
 <head>
@@ -396,11 +396,29 @@
       /* When the logo (href="#hero") is tapped, land below the fixed nav. */
       scroll-margin-top: var(--nav-height);
     }
-    /* On short desktop/laptop windows, centering pushes the CTA buttons off
-       screen. Below ~760px tall, top-align so View Menu / Order Online stay
-       in view on landing. */
-    @media (min-width: 900px) and (max-height: 760px) {
-      #hero { align-items: start; padding-top: calc(var(--nav-height) + 2.5rem); }
+    /* Desktop landing: keep the whole left column (eyebrow, title, sub, and
+       BOTH CTAs) inside the first screenful. The hero title uses a large clamp;
+       on wide/short windows that pushed "View Menu / Order Online" below the
+       fold. We top-align the content and let the left column scroll internally
+       only if a very small window truly can't fit it, so the CTAs stay visible
+       on normal desktop landings. */
+    @media (min-width: 900px) {
+      #hero { align-items: center; }
+    }
+    /* If the viewport is not tall enough to comfortably center everything,
+       switch to top alignment and gently cap the title so the CTAs never clip.
+       Covers laptops, landscape tablets, and short browser windows. */
+    @media (min-width: 900px) and (max-height: 900px) {
+      #hero { align-items: start; padding-top: calc(var(--nav-height) + 2rem); }
+      #hero .hero-left { max-height: calc(100vh - var(--nav-height) - 3rem); }
+      .hero-title { font-size: clamp(3.5rem, 6.5vw, 6.5rem); }
+      .hero-sub { margin-bottom: 1.5rem; }
+    }
+    /* Ensure the left column is a column flexbox so the CTA row sits directly
+       under the text with predictable spacing (not floating in grid whitespace). */
+    #hero .hero-left { display: flex; flex-direction: column; justify-content: center; }
+    @media (min-width: 900px) and (max-height: 900px) {
+      #hero .hero-left { justify-content: flex-start; }
     }
     .hero-bg {
       position: absolute;
