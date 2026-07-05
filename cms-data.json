@@ -1,6 +1,6 @@
 {
   "_info": "Written by louwok.com/admin. index.html reads this at runtime.",
-  "_updated": "2026-07-05T22:44:04.111Z",
+  "_updated": "2026-07-05T22:54:00.804Z",
   "menu": [
     {
       "id": 1,
@@ -431,44 +431,7 @@
     "youtube": "louwokphx",
     "yelp": ""
   },
-  "ticker": [
-    {
-      "text": "Fried Rice",
-      "hot": true
-    },
-    {
-      "text": "St. Paul Sandwiches",
-      "hot": true
-    },
-    {
-      "text": "Fried Chicken",
-      "hot": true
-    },
-    {
-      "text": "Crab Rangoon",
-      "hot": true
-    },
-    {
-      "text": "Egg Rolls",
-      "hot": true
-    },
-    {
-      "text": "Hot Braised Boneless Chicken",
-      "hot": true
-    },
-    {
-      "text": "Funnel Cake",
-      "hot": true
-    },
-    {
-      "text": "Vess Soda",
-      "hot": true
-    },
-    {
-      "text": "Mystic Carrot Juice",
-      "hot": true
-    }
-  ],
+  "ticker": [],
   "footer": {
     "menuLinks": [
       {
