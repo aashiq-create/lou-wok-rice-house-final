@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- ✅ LOU-WOK-TRACKER vCATERING-DATEPICKER | custom calendar picker w/ recommended-window + quick-pick chips | 2026-07-01 -->
+<!-- ✅ LOU-WOK-INDEX vHERO-LANDING+TICKER-CMS | hero CTAs framed on landing (desktop+mobile) + ticker reads cms-data.json | 2026-07-04 -->
 
 <html lang="en">
 <head>
@@ -393,6 +393,14 @@
       padding-top: 90px;
       position: relative;
       overflow: hidden;
+      /* When the logo (href="#hero") is tapped, land below the fixed nav. */
+      scroll-margin-top: var(--nav-height);
+    }
+    /* On short desktop/laptop windows, centering pushes the CTA buttons off
+       screen. Below ~760px tall, top-align so View Menu / Order Online stay
+       in view on landing. */
+    @media (min-width: 900px) and (max-height: 760px) {
+      #hero { align-items: start; padding-top: calc(var(--nav-height) + 2.5rem); }
     }
     .hero-bg {
       position: absolute;
@@ -1080,18 +1088,28 @@
 
       /* Adjust page top padding for mobile topbar */
       #hero {
+        /* Land with title + CTAs framed in the first screenful: align content
+           to the top under the nav rather than vertically centering it, and
+           reserve space for the bottom nav so "View Menu / Order Online"
+           never hide behind it or fall below the fold. */
+        align-items: start;
         padding-top: calc(var(--nav-height) + var(--safe-top) + 1rem);
+        padding-bottom: calc(var(--bottom-nav-height) + 1.25rem);
         min-height: 100svh;
         padding-left: 1.4rem;
         padding-right: 1.4rem;
+        scroll-margin-top: calc(var(--nav-height) + var(--safe-top));
       }
+      /* Keep the CTA row from being the thing that overflows: give it a little
+         breathing room above and ensure it's always part of the first view. */
+      #hero .hero-actions { margin-top: 0.4rem; width: 100%; }
 
       /* Add bottom padding so content isn't behind bottom nav */
       footer {
         padding-bottom: calc(var(--bottom-nav-height) + 2rem);
       }
 
-      .hero-title { font-size: clamp(3.8rem, 16vw, 5rem); }
+      .hero-title { font-size: clamp(3rem, 13vw, 4rem); line-height: 0.95; }
       .hero-eyebrow { font-size: 0.65rem; }
 
       section { padding: 4rem 1.4rem; }
@@ -2203,8 +2221,10 @@
   </section>
 
   <!-- ── TICKER ── -->
+  <!-- Items are populated by renderTicker() from cms-data.json (key: "ticker").
+       The markup below is a static fallback if the CMS fails to load. -->
   <div class="ticker-wrap">
-    <div class="ticker">
+    <div class="ticker" id="tickerTrack">
       <span class="ticker-item hot">🍚 Fried Rice</span>
       <span class="ticker-item">·</span>
       <span class="ticker-item hot">🦀 Crab Rangoon</span>
@@ -2905,7 +2925,7 @@
   </nav>
 
   <!-- ── SCROLL TO TOP FAB ── -->
-  <button class="fab-top" id="fabTop" aria-label="Scroll back to top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+  <button class="fab-top" id="fabTop" aria-label="Scroll back to top" onclick="goHomeFramed()">↑</button>
 
   <!-- ── ADD TO HOME SCREEN BANNER ── -->
   <div class="a2hs-banner" id="a2hsBanner">
@@ -4620,6 +4640,22 @@
       // a field is omitted, so partial edits are safe.
       // Renders the hero text block from cms.hero. Each field is optional;
       // when absent the hardcoded default in the markup is kept.
+      // Scrolling ticker bar. Reads the "ticker" array published by /admin
+      // ([{text, hot}, ...]) and rebuilds the marquee. Items are output TWICE
+      // back-to-back because the CSS scrolls by -50% for a seamless loop.
+      function renderTicker(items){
+        const track = document.getElementById('tickerTrack');
+        if(!track || !Array.isArray(items) || !items.length) return;
+        const esc = s => String(s==null?'':s).replace(/[&<>"]/g, c=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;' }[c]));
+        const clean = items.filter(it => it && String(it.text||'').trim());
+        if(!clean.length) return;
+        const onePass = clean.map(it => {
+          const cls = it.hot ? 'ticker-item hot' : 'ticker-item';
+          return `<span class="${cls}">${esc(it.text)}</span>`;
+        }).join('<span class="ticker-item">·</span>');
+        track.innerHTML = onePass + '<span class="ticker-item">·</span>' + onePass + '<span class="ticker-item">·</span>';
+      }
+
       function renderHero(h){
         if(!h || typeof h!=='object') return;
         const setText = (id,val) => { if(val==null||val==='') return; const el=document.getElementById(id); if(el) el.textContent=val; };
@@ -4726,6 +4762,7 @@
           renderFeatured(d.featured);
           renderSEO(d.seo);
           renderAnnouncements(d.announcements);
+          renderTicker(d.ticker);
           console.info('[CMS] content applied from', source);
           return true;
         }catch(err){ console.error('[CMS] failed to apply content from', source, err); return false; }
@@ -4769,5 +4806,24 @@
     })();
 
   </script>
+
+<script>
+/* Land "home" with the hero framed so View Menu + Order Online are visible,
+   on both desktop and mobile. Uses the #hero element's scroll-margin-top so it
+   sits just under the fixed nav instead of scrolling to a raw top:0 (which hid
+   the CTAs behind the bar on mobile). */
+function goHomeFramed() {
+  const hero = document.getElementById('hero');
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (hero && hero.scrollIntoView) {
+    hero.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+  } else {
+    window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' });
+  }
+  // Reflect the Home tab as active in the bottom nav.
+  const bnHome = document.getElementById('bnHome');
+  if (bnHome && typeof setActiveNav === 'function') setActiveNav(bnHome);
+}
+</script>
 </body>
 </html>
