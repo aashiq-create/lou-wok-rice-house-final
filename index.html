@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- ✅ LOU-WOK-INDEX vHERO-LANDING+TICKER-CMS | hero CTAs framed on landing (desktop+mobile) + ticker reads cms-data.json | 2026-07-04 -->
+<!-- ✅ LOU-WOK-INDEX vTICKER-FRESH | ticker always re-renders from freshly fetched cms-data.json (no stale flash) | 2026-07-05 -->
 
 <html lang="en">
 <head>
@@ -4791,6 +4791,10 @@
             if(!r.ok){ console.info('[CMS] skip', url.split('?')[0], '→ HTTP', r.status); continue; }
             const d = await r.json();
             if(applyContent(d, url.split('?')[0])){
+              // lw_ticker_fresh_guard: make sure the marquee reflects the freshly
+              // fetched data even if an early code path skipped it, so newly
+              // published ticker items never get stuck behind a stale local copy.
+              try{ renderTicker(d.ticker); }catch(e){}
               try{ localStorage.setItem('louwok-cms', JSON.stringify(d)); }catch(e){}
               return; // success — stop trying further sources
             }
