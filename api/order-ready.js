@@ -1,4 +1,5 @@
 // /api/order-ready.js
+// v-EMOJI-TRIM 2026-07-04 — pickup text now GSM-7 (1 seg instead of 2)
 // ────────────────────────────────────────────────────────────────────────────
 // Call this from the admin dashboard ("Order Ready" button) to text a customer
 // that their food is ready for pickup. Keeps the order number consistent with
@@ -59,7 +60,7 @@ module.exports = async (req, res) => {
   if (!dest) return res.status(400).json({ error: 'bad_phone' });
 
   const body =
-    `${RESTAURANT_NAME}: ${name ? name + ', y' : 'Y'}our order ${order} is ready for pickup! 🍚 ` +
+    `${RESTAURANT_NAME}: ${name ? name + ', y' : 'Y'}our order ${order} is ready for pickup. ` +
     `Come grab it while it's hot. See you soon!`;
 
   try {
