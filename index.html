@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- LOU-WOK-INDEX vHERO-LS-DVH | iOS/Android landscape fix: dvh + width-independent landscape rule so CTAs always show | 2026-07-06 -->
+<!-- LOU-WOK-INDEX vTICKER-SMOOTH | seamless ticker loop (A+A, baked separators) + all-white text | 2026-07-06 -->
 
 <html lang="en">
 <head>
@@ -593,9 +593,18 @@
     }
     .ticker {
       display: flex;
-      gap: 4rem;
+      gap: 0;                 /* spacing comes from separators for a seamless seam */
       width: max-content;
-      animation: ticker 22s linear infinite;
+      animation: ticker 30s linear infinite;
+      will-change: transform; /* smoother GPU-accelerated scroll */
+    }
+    .ticker-sep {
+      display: inline-block;
+      padding: 0 2rem;        /* uniform space around each dot, incl. wrap point */
+      color: #ffffff;
+      opacity: 0.5;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.15rem;
     }
     @keyframes ticker { from { transform: translateX(0); } to { transform: translateX(-50%); } }
     .ticker-item {
@@ -603,10 +612,10 @@
       font-size: 1.15rem;
       letter-spacing: 0.1em;
       white-space: nowrap;
-      color: var(--rice);
-      opacity: 0.5;
+      color: #ffffff;   /* all ticker text white */
+      opacity: 1;
     }
-    .ticker-item.hot { color: var(--wok); opacity: 1; }
+    .ticker-item.hot { color: #ffffff; opacity: 1; }  /* white regardless of hot */
 
     /* ── SECTION BASE ── */
     section { padding: 7rem 6vw; }
@@ -2315,27 +2324,8 @@
        The markup below is a static fallback if the CMS fails to load. -->
   <div class="ticker-wrap">
     <div class="ticker" id="tickerTrack">
-      <span class="ticker-item hot">🍚 Fried Rice</span>
-      <span class="ticker-item">·</span>
-      <span class="ticker-item hot">🦀 Crab Rangoon</span>
-      <span class="ticker-item">·</span>
-      <span class="ticker-item hot">🥪 St. Paul Sandwich</span>
-      <span class="ticker-item">·</span>
-      <span class="ticker-item">Wok-Fired Daily</span>
-      <span class="ticker-item">·</span>
-      <span class="ticker-item">Phoenix, AZ</span>
-      <span class="ticker-item">·</span>
-      <span class="ticker-item hot">🍚 Fried Rice</span>
-      <span class="ticker-item">·</span>
-      <span class="ticker-item hot">🦀 Crab Rangoon</span>
-      <span class="ticker-item">·</span>
-      <span class="ticker-item hot">🥪 St. Paul Sandwich</span>
-      <span class="ticker-item">·</span>
-      <span class="ticker-item">Wok-Fired Daily</span>
-      <span class="ticker-item">·</span>
-      <span class="ticker-item">Phoenix, AZ</span>
-      <span class="ticker-item">·</span>
-    </div>
+        <span class="ticker-item">🍚 Fried Rice</span><span class="ticker-sep">·</span><span class="ticker-item">🦀 Crab Rangoon</span><span class="ticker-sep">·</span><span class="ticker-item">🥪 St. Paul Sandwich</span><span class="ticker-sep">·</span><span class="ticker-item">Wok-Fired Daily</span><span class="ticker-sep">·</span><span class="ticker-item">Phoenix, AZ</span><span class="ticker-sep">·</span><span class="ticker-item">🍚 Fried Rice</span><span class="ticker-sep">·</span><span class="ticker-item">🦀 Crab Rangoon</span><span class="ticker-sep">·</span><span class="ticker-item">🥪 St. Paul Sandwich</span><span class="ticker-sep">·</span><span class="ticker-item">Wok-Fired Daily</span><span class="ticker-sep">·</span><span class="ticker-item">Phoenix, AZ</span><span class="ticker-sep">·</span>
+      </div>
   </div>
 
   <!-- ── MENU ── -->
@@ -4739,11 +4729,14 @@
         const esc = s => String(s==null?'':s).replace(/[&<>"]/g, c=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;' }[c]));
         const clean = items.filter(it => it && String(it.text||'').trim());
         if(!clean.length) return;
+        // Each item is followed by its own separator, so spacing is identical
+        // everywhere — including the wrap-around point. Output the sequence
+        // TWICE, exactly. The animation scrolls -50% (one full copy) then loops;
+        // because both copies are pixel-identical, the reset is invisible.
         const onePass = clean.map(it => {
-          const cls = it.hot ? 'ticker-item hot' : 'ticker-item';
-          return `<span class="${cls}">${esc(it.text)}</span>`;
-        }).join('<span class="ticker-item">·</span>');
-        track.innerHTML = onePass + '<span class="ticker-item">·</span>' + onePass + '<span class="ticker-item">·</span>';
+          return `<span class="ticker-item">${esc(it.text)}</span><span class="ticker-sep">·</span>`;
+        }).join('');
+        track.innerHTML = onePass + onePass;
       }
 
       function renderHero(h){
