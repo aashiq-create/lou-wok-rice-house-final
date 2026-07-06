@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- LOU-WOK-INDEX vHERO-FIT3 | desktop hero capped to 100vh + top-aligned + vh-sized title so BOTH CTAs always visible | 2026-07-06 -->
+<!-- LOU-WOK-INDEX vHERO-LS-DVH | iOS/Android landscape fix: dvh + width-independent landscape rule so CTAs always show | 2026-07-06 -->
 
 <html lang="en">
 <head>
@@ -417,13 +417,16 @@
        ~56vh for nav, eyebrow, sub, buttons, and padding — comfortably fits. */
     @media (min-width: 900px) {
       #hero {
-        height: 100vh;                /* exactly one screen, not min-height */
+        height: 100vh;
+        height: 100dvh;               /* dvh = iOS-safe, accounts for Safari toolbars */
         min-height: 0;
         align-items: start;           /* top-align, never center */
         padding-top: calc(var(--nav-height) + 1.5rem);
         padding-bottom: 2rem;
         box-sizing: border-box;
       }
+
+
       #hero .hero-left {
         display: flex;
         flex-direction: column;
@@ -431,10 +434,10 @@
         height: 100%;
         min-height: 0;
       }
-      .hero-title {
-        font-size: min(11vh, 8vw, 7.5rem);  /* height-first so it always fits */
+      #hero .hero-title {
+        font-size: min(10vh, 7vw, 6.5rem);
         line-height: 0.9;
-        margin-bottom: 1.2rem;
+        margin-bottom: 1rem;
       }
       .hero-eyebrow { margin-bottom: 0.75rem; }
       .hero-sub { margin-bottom: 1.5rem; font-size: 1rem; }
@@ -1118,6 +1121,13 @@
     }
 
     /* ── MOBILE STYLES ── */
+    /* Tablet / large-phone portrait (641-899px): base title clamp is too big.
+       Cap it so the hero fits without the desktop rules (which start at 900px). */
+    @media (min-width: 641px) and (max-width: 899px) and (orientation: portrait) {
+      #hero { min-height: 100dvh; }
+      #hero .hero-title { font-size: min(11vw, 12vh, 5rem); line-height: 0.9; }
+    }
+
     @media (max-width: 640px) {
       nav.desktop-nav { display: none; }
       .mobile-topbar { display: flex; }
@@ -2217,7 +2227,33 @@
     html.is-standalone body { min-height: 100vh; min-height: 100dvh; }
     html.is-standalone .bottom-nav { padding-bottom: var(--safe-bot); }
 
-  </style>
+  
+    /* ── SHORT LANDSCAPE (phones/tablets sideways) — iOS + Android safe ──────
+       WIDTH-INDEPENDENT: an iPhone in landscape is ~844px wide, so a rule gated
+       by max-width:640px never fires for it. This one triggers purely on short
+       height + landscape orientation, at ANY width, so it catches phones that
+       are wider than the mobile breakpoint when rotated.
+       Uses dvh (dynamic viewport height) so it respects Safari's toolbars —
+       the reason 100vh let the buttons slip under the toolbar on real iPhones. */
+    @media (orientation: landscape) and (max-height: 600px) {
+      #hero {
+        height: 100dvh;
+        min-height: 0;
+        display: block;
+        align-items: start;
+        padding: calc(var(--nav-height) + 0.4rem) 6vw 0.75rem;
+        box-sizing: border-box;
+        overflow: hidden;
+      }
+      #hero .hero-left { height: auto; display: block; }
+      #hero .hero-title { font-size: min(6vh, 1.8rem); line-height: 0.85; margin-bottom: 0.25rem; }
+      #hero .hero-eyebrow { margin-bottom: 0.2rem; font-size: 0.55rem; }
+      #hero .hero-sub { margin-bottom: 0.5rem; font-size: 0.72rem; max-width: 55%; line-height: 1.35; }
+      #hero .hero-actions { margin-top: 0.2rem; display: flex; gap: 0.6rem; }
+      #hero .hero-visual { display: none; }   /* reclaim vertical room */
+      .ticker-wrap { display: none; }          /* hide ticker in cramped landscape */
+    }
+</style>
   <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js" defer></script>
   <!-- Leaflet — interactive map with a custom truck marker (free OSM tiles, no API key) -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
