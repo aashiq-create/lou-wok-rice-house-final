@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- ✅ LOU-WOK-ADMIN vINVENTORY | adds 📦 Inventory panel (stock counts + low-stock alerts) on top of vTOAST-FIX | 2026-07-05 -->
+<!-- LOU-WOK-ADMIN vTICKER-COLOR | per-item ticker text color picker (default white) on top of vINVENTORY | 2026-07-06 -->
 
 <html lang="en">
 <head>
@@ -2715,14 +2715,26 @@
     const wrap = document.getElementById('ticker-rows');
     if (!wrap) return;
     if (!Array.isArray(tickerData)) tickerData = [];
-    wrap.innerHTML = tickerData.map((it,i)=>`
+    wrap.innerHTML = tickerData.map((it,i)=>{
+      // Default swatch is white; if the item has a saved hex color, show it.
+      const hex = (typeof it.color === 'string' && /^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/.test(it.color.trim())) ? it.color.trim() : '#ffffff';
+      return `
       <div class="lk-row" style="display:flex;gap:0.5rem;align-items:center;margin-bottom:0.5rem;">
         <input class="field-input" id="ticker-text-${i}" value="${(it.text||'').replace(/"/g,'&quot;')}" placeholder="e.g. 🍚 Fried Rice" style="flex:1;" />
-        <label style="display:flex;align-items:center;gap:0.3rem;font-size:0.75rem;color:var(--muted);white-space:nowrap;">
-          <input type="checkbox" id="ticker-hot-${i}" ${it.hot?'checked':''}/> Highlight
+        <label style="display:flex;align-items:center;gap:0.35rem;font-size:0.75rem;color:var(--muted);white-space:nowrap;" title="Text color for this item on the site">
+          <span style="opacity:0.8;">Color</span>
+          <input type="color" id="ticker-color-${i}" value="${hex}" style="width:34px;height:26px;padding:0;border:1px solid var(--border);border-radius:2px;background:transparent;cursor:pointer;" />
         </label>
+        <button class="btn btn-ghost btn-sm" onclick="tickerResetColor(${i})" title="Reset this item to white" style="border:1px solid var(--border);">White</button>
         <button class="btn btn-ghost btn-sm" onclick="removeTickerRow(${i})" title="Remove">✕</button>
-      </div>`).join('') || '<p style="color:var(--muted);font-size:0.82rem;">No ticker items yet.</p>';
+      </div>`;
+    }).join('') || '<p style="color:var(--muted);font-size:0.82rem;">No ticker items yet.</p>';
+  }
+  // Reset one item's color back to white.
+  function tickerResetColor(i){
+    _readTicker();
+    if (tickerData[i]) tickerData[i].color = '#ffffff';
+    _populateTicker();
   }
   function _readTicker() {
     const wrap = document.getElementById('ticker-rows');
@@ -2734,8 +2746,12 @@
     const rows=[]; let i=0;
     while (document.getElementById('ticker-text-'+i)) {
       const t=(document.getElementById('ticker-text-'+i).value||'').trim();
-      const hot=document.getElementById('ticker-hot-'+i).checked;
-      rows.push({text:t, hot});
+      const colorEl=document.getElementById('ticker-color-'+i);
+      const color=(colorEl && colorEl.value) ? colorEl.value : '#ffffff';
+      // Preserve any existing hot flag from prior data (checkbox was replaced
+      // by the color picker; hot stays for backward compatibility).
+      const prev = tickerData[i] || {};
+      rows.push({text:t, color, hot: !!prev.hot});
       i++;
     }
     tickerData = rows;
