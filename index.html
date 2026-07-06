@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- LOU-WOK-INDEX vHERO-FIT2 | title sized from viewport height so CTAs always visible on desktop + shorter subline | 2026-07-06 -->
+<!-- LOU-WOK-INDEX vHERO-LANDSCAPE | phone landscape + portrait + desktop all keep CTAs visible (height-based title) | 2026-07-06 -->
 
 <html lang="en">
 <head>
@@ -1134,12 +1134,29 @@
          breathing room above and ensure it's always part of the first view. */
       #hero .hero-actions { margin-top: 0.4rem; width: 100%; }
 
+      /* PHONE LANDSCAPE: very short height. Shrink everything from viewport
+         height so eyebrow, title, sub, and BOTH CTAs stay visible without
+         scrolling. Triggers on short, wide, touch-oriented viewports. */
+      @media (max-height: 500px) and (orientation: landscape) {
+        #hero {
+          padding-top: calc(var(--nav-height) + 0.5rem);
+          padding-bottom: 1rem;
+          min-height: 100svh;
+        }
+        .hero-title { font-size: min(9vh, 2.6rem); line-height: 0.9; margin-bottom: 0.5rem; }
+        .hero-eyebrow { font-size: 0.6rem; margin-bottom: 0.4rem; }
+        .hero-sub { font-size: 0.85rem; margin-bottom: 0.75rem; max-width: 70%; }
+        #hero .hero-actions { margin-top: 0.25rem; }
+        /* Hide the decorative bowl visual in landscape to reclaim vertical room. */
+        .hero-visual { display: none; }
+      }
+
       /* Add bottom padding so content isn't behind bottom nav */
       footer {
         padding-bottom: calc(var(--bottom-nav-height) + 2rem);
       }
 
-      .hero-title { font-size: clamp(3rem, 13vw, 4rem); line-height: 0.95; }
+      .hero-title { font-size: min(13vw, 12vh, 4rem); line-height: 0.92; }
       .hero-eyebrow { font-size: 0.65rem; }
 
       section { padding: 4rem 1.4rem; }
