@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- ✅ LOU-WOK-INDEX vHERO-CTA-FIT | hero CTAs stay visible on desktop landing (all widths) + ticker from cms | 2026-07-05 -->
+<!-- LOU-WOK-INDEX vRENDER-ISOLATED | each CMS section renders independently so one failure cannot block the ticker | 2026-07-06 -->
 
 <html lang="en">
 <head>
@@ -4769,21 +4769,25 @@
       // localStorage copy so the admin's own preview updates instantly.
       function applyContent(d, source){
         if(!d || typeof d!=='object') return false;
-        try{
-          renderCategoryTabs(d.categories, d.menu);
-          renderMenu(d.menu);
-          renderHero(d.hero);
-          renderHours(d.hours);
-          renderLocation(d.location);
-          renderSocials(d.socials);
-          renderOrderLinks(d.orderLinks);
-          renderFeatured(d.featured);
-          renderSEO(d.seo);
-          renderAnnouncements(d.announcements);
-          renderTicker(d.ticker);
-          console.info('[CMS] content applied from', source);
-          return true;
-        }catch(err){ console.error('[CMS] failed to apply content from', source, err); return false; }
+        // Each section renders INDEPENDENTLY: a helper runs one render and
+        // swallows its own errors, so a failure in (say) renderMenu can never
+        // stop renderTicker from running. Previously all renders shared one
+        // try/catch and the ticker (last in line) was silently skipped
+        // whenever anything earlier threw.
+        const step = (label, fn) => { try { fn(); } catch(err){ console.error('[CMS] render failed:', label, err); } };
+        step('categoryTabs',  () => renderCategoryTabs(d.categories, d.menu));
+        step('menu',          () => renderMenu(d.menu));
+        step('hero',          () => renderHero(d.hero));
+        step('hours',         () => renderHours(d.hours));
+        step('location',      () => renderLocation(d.location));
+        step('socials',       () => renderSocials(d.socials));
+        step('orderLinks',    () => renderOrderLinks(d.orderLinks));
+        step('featured',      () => renderFeatured(d.featured));
+        step('seo',           () => renderSEO(d.seo));
+        step('announcements', () => renderAnnouncements(d.announcements));
+        step('ticker',        () => renderTicker(d.ticker));
+        console.info('[CMS] content applied from', source);
+        return true;
       }
 
       // FRESH-FIRST loading (changed per brand decision 2026-07-05):
