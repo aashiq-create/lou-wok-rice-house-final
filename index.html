@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- LOU-WOK-INDEX vHERO-LANDSCAPE | phone landscape + portrait + desktop all keep CTAs visible (height-based title) | 2026-07-06 -->
+<!-- LOU-WOK-INDEX vHERO-FIT3 | desktop hero capped to 100vh + top-aligned + vh-sized title so BOTH CTAs always visible | 2026-07-06 -->
 
 <html lang="en">
 <head>
@@ -402,35 +402,43 @@
        fold. We top-align the content and let the left column scroll internally
        only if a very small window truly can't fit it, so the CTAs stay visible
        on normal desktop landings. */
+    /* ── DESKTOP HERO (>=900px) ─────────────────────────────────────────
+       GOAL: eyebrow + title + sub + BOTH buttons visible on landing, no scroll,
+       on ANY window height (tall or short).
+
+       ROOT CAUSE of the old bug: the hero was `min-height:100vh` with content
+       vertically CENTERED. The content (4-line title + sub + buttons) is taller
+       than many viewports, so centering pushed the buttons below the fold on
+       every height — not just short ones.
+
+       FIX: cap the hero to exactly one viewport tall, TOP-align the content,
+       and size the title from viewport height (vh) so the whole stack always
+       fits. The number 11vh per line x4 lines = 44vh for the title, leaving
+       ~56vh for nav, eyebrow, sub, buttons, and padding — comfortably fits. */
     @media (min-width: 900px) {
-      #hero { align-items: center; }
-    }
-    /* Guarantee the whole left column (eyebrow, title, sub, BOTH CTAs) fits the
-       first screenful on desktop. The title is sized from viewport HEIGHT — not
-       just width — so four stacked lines (LOU/WOK/RICE/HOUSE) plus the sub and
-       buttons always fit, exactly like the mobile hero. min() clamps against
-       width too so it never gets absurd on ultra-wide screens. */
-    @media (min-width: 900px) {
-      #hero { align-items: center; }
+      #hero {
+        height: 100vh;                /* exactly one screen, not min-height */
+        min-height: 0;
+        align-items: start;           /* top-align, never center */
+        padding-top: calc(var(--nav-height) + 1.5rem);
+        padding-bottom: 2rem;
+        box-sizing: border-box;
+      }
+      #hero .hero-left {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;      /* center the text block within its column */
+        height: 100%;
+        min-height: 0;
+      }
       .hero-title {
-        font-size: min(8.5vw, 13vh, 8rem);
-        line-height: 0.88;
-        margin-bottom: 1.25rem;
+        font-size: min(11vh, 8vw, 7.5rem);  /* height-first so it always fits */
+        line-height: 0.9;
+        margin-bottom: 1.2rem;
       }
       .hero-eyebrow { margin-bottom: 0.75rem; }
       .hero-sub { margin-bottom: 1.5rem; font-size: 1rem; }
-    }
-    /* Shorter windows: top-align and tighten a touch more so nothing clips. */
-    @media (min-width: 900px) and (max-height: 860px) {
-      #hero { align-items: start; padding-top: calc(var(--nav-height) + 1.5rem); }
-      .hero-title { font-size: min(7vw, 12vh, 6.5rem); }
-      .hero-sub { margin-bottom: 1.25rem; }
-    }
-    /* Ensure the left column is a column flexbox so the CTA row sits directly
-       under the text with predictable spacing (not floating in grid whitespace). */
-    #hero .hero-left { display: flex; flex-direction: column; justify-content: center; }
-    @media (min-width: 900px) and (max-height: 900px) {
-      #hero .hero-left { justify-content: flex-start; }
+      .hero-actions { margin-top: 0; }
     }
     .hero-bg {
       position: absolute;
