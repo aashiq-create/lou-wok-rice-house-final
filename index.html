@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- LOU-WOK-INDEX vRENDER-ISOLATED | each CMS section renders independently so one failure cannot block the ticker | 2026-07-06 -->
+<!-- LOU-WOK-INDEX vHERO-FIT2 | title sized from viewport height so CTAs always visible on desktop + shorter subline | 2026-07-06 -->
 
 <html lang="en">
 <head>
@@ -405,14 +405,26 @@
     @media (min-width: 900px) {
       #hero { align-items: center; }
     }
-    /* If the viewport is not tall enough to comfortably center everything,
-       switch to top alignment and gently cap the title so the CTAs never clip.
-       Covers laptops, landscape tablets, and short browser windows. */
-    @media (min-width: 900px) and (max-height: 900px) {
-      #hero { align-items: start; padding-top: calc(var(--nav-height) + 2rem); }
-      #hero .hero-left { max-height: calc(100vh - var(--nav-height) - 3rem); }
-      .hero-title { font-size: clamp(3.5rem, 6.5vw, 6.5rem); }
-      .hero-sub { margin-bottom: 1.5rem; }
+    /* Guarantee the whole left column (eyebrow, title, sub, BOTH CTAs) fits the
+       first screenful on desktop. The title is sized from viewport HEIGHT — not
+       just width — so four stacked lines (LOU/WOK/RICE/HOUSE) plus the sub and
+       buttons always fit, exactly like the mobile hero. min() clamps against
+       width too so it never gets absurd on ultra-wide screens. */
+    @media (min-width: 900px) {
+      #hero { align-items: center; }
+      .hero-title {
+        font-size: min(8.5vw, 13vh, 8rem);
+        line-height: 0.88;
+        margin-bottom: 1.25rem;
+      }
+      .hero-eyebrow { margin-bottom: 0.75rem; }
+      .hero-sub { margin-bottom: 1.5rem; font-size: 1rem; }
+    }
+    /* Shorter windows: top-align and tighten a touch more so nothing clips. */
+    @media (min-width: 900px) and (max-height: 860px) {
+      #hero { align-items: start; padding-top: calc(var(--nav-height) + 1.5rem); }
+      .hero-title { font-size: min(7vw, 12vh, 6.5rem); }
+      .hero-sub { margin-bottom: 1.25rem; }
     }
     /* Ensure the left column is a column flexbox so the CTA row sits directly
        under the text with predictable spacing (not floating in grid whitespace). */
@@ -2219,9 +2231,8 @@
         <span class="accent">HOUSE</span>
       </h1>
       <p class="hero-sub" id="heroSub">
-        Fired over high heat. Built on flavor. Lou Wok serves up
-        wok-tossed rice, crab rangoon, and the legendary St. Paul
-        sandwich — every plate made to order, every time.
+        Wok-fired rice, crab rangoon, and the legendary St. Paul
+        sandwich — made to order, every time.
       </p>
       <div class="hero-actions">
         <a href="#menu" class="btn-primary" id="heroCta1">View Menu</a>
