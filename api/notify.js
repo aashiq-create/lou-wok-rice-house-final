@@ -1,5 +1,5 @@
 // /api/notify.js
-// v-EMOJI-TRIM2 2026-07-04 — customer confirmation trimmed for segment headroom (~17 chars spare)
+// v-PRINT 2026-07-06 — auto-prints kitchen ticket via PrintNode on each order (non-fatal)
 // ────────────────────────────────────────────────────────────────────────────
 // The endpoint index-5.html already POSTs to. Handles two payload types:
 //
@@ -21,6 +21,8 @@
 
 const twilio = require('twilio');
 const { loadConfig } = require('./_config');
+let printOrder;
+try { printOrder = require('./print-order').printOrder; } catch (e) { printOrder = null; }
 
 function readBody(req) {
   if (req.body && typeof req.body === 'object') return req.body;
@@ -137,6 +139,24 @@ module.exports = async (req, res) => {
         `New order ${orderNo} — ${cust.name || 'Guest'}`,
         adminBody
       );
+
+      // 4) Auto-print the kitchen ticket (PrintNode). Never let a printer
+      //    problem break order submission — wrapped and non-fatal.
+      if (printOrder) {
+        try {
+          results.print = await printOrder({
+            orderNo,
+            items,
+            total,
+            customerName: cust.name || '',
+            phone: cust.phone || '',
+            pickupEta: PICKUP_ETA,
+            placedAt: new Date(),
+          }, cfg);
+        } catch (e) {
+          results.print = { ok: false, reason: (e && e.message) || 'print error' };
+        }
+      }
     } else if (type === 'catering') {
       const c    = p.customer || {};
       const body =
