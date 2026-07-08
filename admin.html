@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- LOU-WOK-ADMIN vTICKER-COLOR | per-item ticker text color picker (default white) on top of vINVENTORY | 2026-07-06 -->
+<!-- LOU-WOK-ADMIN vPRINTING | 🧾 Receipt Printing panel (PrintNode: detect printers, receipt content, test) on top of vTICKER-COLOR | 2026-07-06 -->
 
 <html lang="en">
 <head>
@@ -629,7 +629,10 @@
     <button class="nav-item" onclick="switchSection('checkout', this)">
       <span class="icon">💳</span> Checkout &amp; Payments
     </button>
-    <button class="nav-item" onclick="switchSection('notify', this)">
+    <button class="nav-item" onclick="switchSection('printing', this)">
+      <span class="icon">🧾</span> Receipt Printing
+    </button>
+        <button class="nav-item" onclick="switchSection('notify', this)">
       <span class="icon">📲</span> Calls &amp; Texts
     </button>
     <button class="nav-item" onclick="switchSection('users', this)">
@@ -854,6 +857,61 @@
     </div>
 
     <!-- ── HOURS & LOCATION ── -->
+    <div id="section-printing" class="section">
+      <div class="panel">
+        <div class="panel-header">
+          <span class="panel-title">🧾 Receipt Printing</span>
+          <button class="btn btn-primary btn-sm" onclick="savePrinting()">Save</button>
+        </div>
+        <p style="color:var(--muted);font-size:0.82rem;line-height:1.6;margin:0 0 1rem;">
+          Auto-print every online order to a receipt printer in the truck so cooks can track orders.
+          Powered by <strong style="color:var(--rice);">PrintNode</strong> (cloud printing) &mdash; your
+          PrintNode API key lives in Vercel (<strong style="color:var(--rice);">PRINTNODE_API_KEY</strong>),
+          never on the public site. Remember to <strong style="color:var(--rice);">Publish</strong> after saving.
+        </p>
+
+        <div class="field-group">
+          <label class="field-label" style="display:flex;align-items:center;gap:0.5rem;">
+            <input type="checkbox" id="pr-enabled" /> Auto-print online orders
+          </label>
+        </div>
+
+        <div style="margin:0.6rem 0 1rem;display:flex;gap:8px;flex-wrap:wrap;">
+          <button type="button" class="btn btn-sm" onclick="prLoadPrinters()" style="border:1px solid var(--border);background:transparent;color:var(--rice);">🔍 Detect printers</button>
+          <button type="button" class="btn btn-sm" onclick="prTest()" style="border:1px solid var(--border);background:transparent;color:var(--rice);">🧾 Print test receipt</button>
+        </div>
+        <p id="pr-status" style="font-size:0.74rem;color:var(--muted);margin:0 0 0.8rem;"></p>
+
+        <div style="font-size:0.68rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin:0.5rem 0;">Printers</div>
+        <div id="pr-printer-rows"></div>
+        <p style="color:var(--muted);font-size:0.72rem;margin:0.4rem 0 1.2rem;">
+          Tip: click &ldquo;Detect printers&rdquo; to pull printers from your PrintNode account, then enable the ones in the truck.
+        </p>
+
+        <div style="font-size:0.68rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin:0.5rem 0;">Receipt content</div>
+        <div class="field-group">
+          <label class="field-label">Header (business name)</label>
+          <input class="field-input" id="pr-header" placeholder="LOU WOK RICE HOUSE" />
+        </div>
+        <div class="field-group">
+          <label class="field-label">Subheader</label>
+          <input class="field-input" id="pr-subheader" placeholder="ONLINE ORDER" />
+        </div>
+        <div class="field-group">
+          <label class="field-label">Footer line</label>
+          <input class="field-input" id="pr-footer" placeholder="Fire it up!" />
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:0.4rem;margin:0.6rem 0 0.4rem;">
+          <label style="display:flex;align-items:center;gap:0.5rem;font-size:0.82rem;color:var(--rice);"><input type="checkbox" id="pr-showItemsBig" /> Print items large (easier for cooks to read)</label>
+          <label style="display:flex;align-items:center;gap:0.5rem;font-size:0.82rem;color:var(--rice);"><input type="checkbox" id="pr-showTotal" /> Show order total</label>
+          <label style="display:flex;align-items:center;gap:0.5rem;font-size:0.82rem;color:var(--rice);"><input type="checkbox" id="pr-showCustomer" /> Show customer name &amp; phone</label>
+          <label style="display:flex;align-items:center;gap:0.5rem;font-size:0.82rem;color:var(--rice);"><input type="checkbox" id="pr-beep" /> Beep on new order</label>
+          <label style="display:flex;align-items:center;gap:0.5rem;font-size:0.82rem;color:var(--rice);"><input type="checkbox" id="pr-cutPaper" /> Auto-cut paper after each ticket</label>
+        </div>
+      </div>
+    </div>
+
     <div id="section-inventory" class="section">
       <div class="panel">
         <div class="panel-header">
@@ -1755,7 +1813,7 @@
       _status('Offline — loaded defaults');
     }
     renderMenuList(); renderHours(); renderAnnouncements();
-    _populateOrderLinks(); _populateFeatured(); _populateHero(); _populateSEO(); _populateLocation(); _populateBranding(); _populateSocials(); _populateTicker(); _populateFooter(); _populateSettings(); _populateNotify(); _populateInventory(); _renderDashboardInvAlert(); renderCategoryManager(); _fillCategoryDropdown();
+    _populateOrderLinks(); _populateFeatured(); _populateHero(); _populateSEO(); _populateLocation(); _populateBranding(); _populateSocials(); _populateTicker(); _populateFooter(); _populateSettings(); _populateNotify(); _populateInventory(); _renderDashboardInvAlert(); _populatePrinting(); renderCategoryManager(); _fillCategoryDropdown();
     _refreshOverview();
     updateTokenStatus();
   }
@@ -1773,7 +1831,10 @@
     brandingData      = d.branding      || DEFAULTS.branding;
     socialsData       = d.socials       || DEFAULTS.socials;
     tickerData        = d.ticker         || DEFAULTS.ticker;
-    inventoryData     = (d.inventory && typeof d.inventory === 'object')
+    printingData      = (d.printing && typeof d.printing === 'object')
+                          ? Object.assign({ enabled:false, printers:[], header:'LOU WOK RICE HOUSE', subheader:'ONLINE ORDER', footer:'Fire it up!', showItemsBig:true, showTotal:true, showCustomer:true, beep:true, cutPaper:true }, d.printing)
+                          : printingData;
+        inventoryData     = (d.inventory && typeof d.inventory === 'object')
                           ? { items: d.inventory.items || {}, updated: d.inventory.updated || null }
                           : { items: {}, updated: null };
     footerData        = d.footer         || DEFAULTS.footer;
@@ -1812,6 +1873,7 @@
     saveSettings();
     saveNotify();
     saveInventory();
+    savePrinting();
     _readCategories();
     _suppressToasts = false; // flush done — real user-facing toasts allowed again
 
@@ -1846,7 +1908,7 @@
       hero: heroData,
       location: locationData, branding: brandingData,
       socials: socialsData,
-      ticker: _tickerForPublish(), inventory: inventoryData, footer: footerData,
+      ticker: _tickerForPublish(), inventory: inventoryData, printing: printingData, footer: footerData,
       settings: settingsData,
       users: usersData
     };
@@ -2852,6 +2914,105 @@
       };
     });
   }
+  /* ── 🧾 RECEIPT PRINTING ───────────────────────────────────────────── */
+  let printingData = {
+    enabled: false, printers: [],
+    header: 'LOU WOK RICE HOUSE', subheader: 'ONLINE ORDER', footer: 'Fire it up!',
+    showItemsBig: true, showTotal: true, showCustomer: true, beep: true, cutPaper: true,
+  };
+
+  function _populatePrinting() {
+    const d = printingData || {};
+    const set = (id, val) => { const el=document.getElementById(id); if(el) el.checked = !!val; };
+    const setv = (id, val) => { const el=document.getElementById(id); if(el) el.value = val==null?'':val; };
+    set('pr-enabled', d.enabled);
+    setv('pr-header', d.header); setv('pr-subheader', d.subheader); setv('pr-footer', d.footer);
+    set('pr-showItemsBig', d.showItemsBig); set('pr-showTotal', d.showTotal);
+    set('pr-showCustomer', d.showCustomer); set('pr-beep', d.beep); set('pr-cutPaper', d.cutPaper);
+    _renderPrinterRows();
+  }
+
+  function _renderPrinterRows() {
+    const wrap = document.getElementById('pr-printer-rows');
+    if (!wrap) return;
+    const printers = (printingData.printers || []);
+    if (!printers.length) {
+      wrap.innerHTML = '<p style="color:var(--muted);font-size:0.8rem;">No printers yet. Click &ldquo;Detect printers&rdquo; to load them from PrintNode, or they\'ll appear here once detected.</p>';
+      return;
+    }
+    wrap.innerHTML = printers.map((p,i)=>
+      '<div class="lk-row" style="display:flex;gap:0.6rem;align-items:center;margin-bottom:0.5rem;padding:0.5rem 0.65rem;border-radius:2px;background:var(--smoke);border:1px solid var(--border);">' +
+        '<label style="display:flex;align-items:center;gap:0.4rem;flex:1;min-width:0;font-size:0.85rem;color:var(--rice);">' +
+          '<input type="checkbox" id="pr-on-'+i+'" '+(p.enabled?'checked':'')+' /> ' +
+          '<span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">'+(p.name||('Printer '+p.id))+'</span>' +
+        '</label>' +
+        '<span style="font-size:0.7rem;color:var(--muted);">ID '+p.id+'</span>' +
+        '<label style="display:flex;align-items:center;gap:0.3rem;font-size:0.7rem;color:var(--muted);">Copies<input class="field-input" type="number" min="1" max="5" id="pr-copies-'+i+'" value="'+(p.copies||1)+'" style="width:52px;text-align:center;" /></label>' +
+        '<button class="btn btn-ghost btn-sm" onclick="prRemovePrinter('+i+')" title="Remove" style="border:1px solid var(--border);">✕</button>' +
+      '</div>'
+    ).join('');
+  }
+
+  function _readPrinting() {
+    const g = id => { const el=document.getElementById(id); return el?el.checked:false; };
+    const gv = id => { const el=document.getElementById(id); return el?el.value.trim():''; };
+    printingData.enabled = g('pr-enabled');
+    printingData.header = gv('pr-header') || 'LOU WOK RICE HOUSE';
+    printingData.subheader = gv('pr-subheader');
+    printingData.footer = gv('pr-footer');
+    printingData.showItemsBig = g('pr-showItemsBig');
+    printingData.showTotal = g('pr-showTotal');
+    printingData.showCustomer = g('pr-showCustomer');
+    printingData.beep = g('pr-beep');
+    printingData.cutPaper = g('pr-cutPaper');
+    (printingData.printers||[]).forEach((p,i)=>{
+      const on=document.getElementById('pr-on-'+i); const cp=document.getElementById('pr-copies-'+i);
+      if(on) p.enabled = on.checked;
+      if(cp) p.copies = Math.max(1, parseInt(cp.value,10)||1);
+    });
+  }
+
+  function prRemovePrinter(i){ _readPrinting(); printingData.printers.splice(i,1); _renderPrinterRows(); }
+
+  async function prLoadPrinters() {
+    const s = document.getElementById('pr-status');
+    s.style.color='var(--muted)'; s.textContent='Detecting printers from PrintNode…';
+    try {
+      const r = await fetch('/api/print-order', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ action:'list' }) });
+      const d = await r.json();
+      if(!d.ok){ s.style.color='var(--wok)'; s.textContent = d.reason || 'Could not list printers.'; return; }
+      if(!d.printers.length){ s.style.color='var(--wok)'; s.textContent='No printers found. Make sure the PrintNode client app is running on a device connected to your printer.'; return; }
+      _readPrinting();
+      // merge: keep existing enabled/copies, add any new
+      const existing = {}; (printingData.printers||[]).forEach(p=>existing[p.id]=p);
+      printingData.printers = d.printers.map(p => existing[p.id]
+        ? { ...existing[p.id], name:p.name }
+        : { id:p.id, name:p.name, enabled:false, copies:1 });
+      _renderPrinterRows();
+      s.style.color='var(--gold)'; s.textContent='Found '+d.printers.length+' printer(s). Enable the one(s) in your truck, then Save + Publish.';
+    } catch(e){ s.style.color='var(--wok)'; s.textContent='Error: '+e.message; }
+  }
+
+  async function prTest() {
+    const s = document.getElementById('pr-status');
+    _readPrinting();
+    const enabled = (printingData.printers||[]).filter(p=>p.enabled);
+    if(!enabled.length){ s.style.color='var(--wok)'; s.textContent='Enable a printer first (and Detect if none listed).'; return; }
+    s.style.color='var(--muted)'; s.textContent='Sending test receipt…';
+    try {
+      const r = await fetch('/api/print-order', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ action:'test', printerId: enabled[0].id }) });
+      const d = await r.json();
+      if(d.ok){ s.style.color='var(--gold)'; s.textContent='✅ Test sent to '+(enabled[0].name||('printer '+enabled[0].id))+' — check the printer.'; }
+      else { s.style.color='var(--wok)'; s.textContent='Test failed: '+(d.reason||'unknown'); }
+    } catch(e){ s.style.color='var(--wok)'; s.textContent='Error: '+e.message; }
+  }
+
+  function savePrinting() {
+    _readPrinting();
+    setUnsaved();
+    showToast('Receipt printing settings saved', 'success');
+  }
+
   function saveInventory() {
     _readInventory();
     inventoryData.updated = new Date().toISOString();
