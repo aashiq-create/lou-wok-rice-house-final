@@ -1,6 +1,6 @@
 {
   "_info": "Written by louwok.com/admin. index.html reads this at runtime.",
-  "_updated": "2026-07-06T04:18:50.086Z",
+  "_updated": "2026-07-08T23:53:06.376Z",
   "menu": [
     {
       "id": 1,
@@ -434,41 +434,152 @@
   "ticker": [
     {
       "text": "Fried Rice",
+      "color": "#ffffff",
       "hot": true
     },
     {
       "text": "St. Paul Sandwiches",
+      "color": "#ffffff",
       "hot": true
     },
     {
       "text": "Fried Chicken",
+      "color": "#ffffff",
       "hot": true
     },
     {
       "text": "Hot Braised Chicken",
+      "color": "#ffffff",
       "hot": true
     },
     {
       "text": "Crab Rangoon",
+      "color": "#ffffff",
       "hot": true
     },
     {
       "text": "Egg Rolls",
+      "color": "#ffffff",
       "hot": true
     },
     {
       "text": "Funnel Cake",
+      "color": "#ffffff",
       "hot": true
     },
     {
       "text": "Vess Soda",
+      "color": "#ffffff",
       "hot": true
     },
     {
       "text": "Mystic Carrot Juice",
+      "color": "#ffffff",
       "hot": true
     }
   ],
+  "inventory": {
+    "items": {
+      "1": {
+        "qty": 20,
+        "unit": "orders",
+        "low": 6
+      },
+      "2": {
+        "qty": 20,
+        "unit": "orders",
+        "low": 6
+      },
+      "3": {
+        "qty": 20,
+        "unit": "orders",
+        "low": 6
+      },
+      "4": {
+        "qty": 20,
+        "unit": "orders",
+        "low": 6
+      },
+      "6": {
+        "qty": 20,
+        "unit": "orders",
+        "low": 6
+      },
+      "7": {
+        "qty": 20,
+        "unit": "orders",
+        "low": 6
+      },
+      "8": {
+        "qty": 20,
+        "unit": "orders",
+        "low": 6
+      },
+      "10": {
+        "qty": 20,
+        "unit": "orders",
+        "low": 6
+      },
+      "11": {
+        "qty": 20,
+        "unit": "orders",
+        "low": 6
+      },
+      "12": {
+        "qty": 20,
+        "unit": "orders",
+        "low": 6
+      },
+      "14": {
+        "qty": 20,
+        "unit": "orders",
+        "low": 6
+      },
+      "15": {
+        "qty": 20,
+        "unit": "orders",
+        "low": 6
+      },
+      "16": {
+        "qty": 20,
+        "unit": "orders",
+        "low": 6
+      },
+      "17": {
+        "qty": 20,
+        "unit": "orders",
+        "low": 6
+      },
+      "18": {
+        "qty": 20,
+        "unit": "orders",
+        "low": 6
+      },
+      "20": {
+        "qty": 20,
+        "unit": "orders",
+        "low": 6
+      },
+      "21": {
+        "qty": 20,
+        "unit": "orders",
+        "low": 6
+      }
+    },
+    "updated": "2026-07-08T23:53:06.375Z"
+  },
+  "printing": {
+    "enabled": false,
+    "printers": [],
+    "header": "LOU WOK RICE HOUSE",
+    "subheader": "ONLINE ORDER",
+    "footer": "Let's Wok It!",
+    "showItemsBig": true,
+    "showTotal": true,
+    "showCustomer": true,
+    "beep": true,
+    "cutPaper": true
+  },
   "footer": {
     "menuLinks": [
       {
