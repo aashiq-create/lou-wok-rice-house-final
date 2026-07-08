@@ -1,14 +1,13 @@
 // /api/notify.js
+// v-PRINT 2026-07-06 — auto-prints kitchen ticket via PrintNode on each order (non-fatal)
 // ────────────────────────────────────────────────────────────────────────────
-// The endpoint index.html already POSTs to. Handles two payload types:
+// The endpoint index-5.html already POSTs to. Handles two payload types:
 //
 //   type: 'order'     → texts the CUSTOMER their order number + confirmation,
 //                       texts/emails the ADMINS the full order ticket.
 //   type: 'catering'  → texts/emails the ADMINS a catering inquiry.
 //
 // SMS via Twilio. Email via Resend (optional — only fires if RESEND_API_KEY set).
-// Twilio being unconfigured no longer blocks email — each channel is optional
-// on its own.
 //
 // ENV VARS
 //   TWILIO_ACCOUNT_SID
@@ -22,6 +21,8 @@
 
 const twilio = require('twilio');
 const { loadConfig } = require('./_config');
+let printOrder;
+try { printOrder = require('./print-order').printOrder; } catch (e) { printOrder = null; }
 
 function readBody(req) {
   if (req.body && typeof req.body === 'object') return req.body;
@@ -88,17 +89,10 @@ module.exports = async (req, res) => {
   const RESTAURANT_NAME = cfg.restaurantName;
   const PICKUP_ETA      = cfg.pickupEtaMin;
 
-  // Twilio is optional now — missing env vars just skip SMS, they no longer
-  // block the whole request (email still fires either way).
-  const twilioReady = !!(accountSid && authToken && smsFrom);
-  const client = twilioReady ? twilio(accountSid, authToken) : null;
-  if (!twilioReady) {
-    console.warn('notify: Twilio not configured (missing TWILIO_ACCOUNT_SID/AUTH_TOKEN/CALLER_ID) — SMS skipped, email will still attempt.');
+  if (!accountSid || !authToken || !smsFrom) {
+    return res.status(500).json({ error: 'Twilio not configured' });
   }
-
-  const smsOrSkip = (to, body) =>
-    twilioReady ? sendSMS(client, smsFrom, to, body)
-                : Promise.resolve({ ok: false, reason: 'twilio_not_configured', to });
+  const client = twilio(accountSid, authToken);
 
   const p    = readBody(req);
   const type = p.type || 'order';
@@ -121,10 +115,10 @@ module.exports = async (req, res) => {
       // 1) Customer confirmation — the order number + pickup ETA.
       if (cust.phone) {
         const custBody =
-          `${RESTAURANT_NAME}: Order ${orderNo} received! ✅\n` +
-          `Total ${total}. Ready for pickup in about ${PICKUP_ETA} min. ` +
-          `We'll text you when it's ready. Reply STOP to opt out.`;
-        results.customer = await smsOrSkip(cust.phone, custBody);
+          `${RESTAURANT_NAME}: Order ${orderNo} received. ` +
+          `Total ${total}. Pickup ready in ~${PICKUP_ETA} min. ` +
+          `We'll text when it's ready. Reply STOP to opt out.`;
+        results.customer = await sendSMS(client, smsFrom, cust.phone, custBody);
       }
 
       // 2) Admin ticket — full order details to each admin cell.
@@ -136,7 +130,7 @@ module.exports = async (req, res) => {
         `Notes: ${p.notes || '—'}\n` +
         `${p.order_time || ''}`;
       for (const a of adminSms) {
-        results.admins.push(await smsOrSkip(a, adminBody));
+        results.admins.push(await sendSMS(client, smsFrom, a, adminBody));
       }
 
       // 3) Admin email (optional).
@@ -145,30 +139,44 @@ module.exports = async (req, res) => {
         `New order ${orderNo} — ${cust.name || 'Guest'}`,
         adminBody
       );
+
+      // 4) Auto-print the kitchen ticket (PrintNode). Never let a printer
+      //    problem break order submission — wrapped and non-fatal.
+      if (printOrder) {
+        try {
+          results.print = await printOrder({
+            orderNo,
+            items,
+            total,
+            customerName: cust.name || '',
+            phone: cust.phone || '',
+            pickupEta: PICKUP_ETA,
+            placedAt: new Date(),
+          }, cfg);
+        } catch (e) {
+          results.print = { ok: false, reason: (e && e.message) || 'print error' };
+        }
+      }
     } else if (type === 'catering') {
-      // NOTE: the catering form (submitCatering() in index.html) sends FLAT
-      // fields — client_name, client_phone, client_email, guest_count, etc —
-      // not a nested "customer" object. Read them flat here to match.
+      const c    = p.customer || {};
       const body =
         `🎉 CATERING INQUIRY\n` +
-        `${p.client_name || '—'} · ${p.client_phone || '—'} · ${p.client_email || '—'}\n` +
-        `Event: ${p.event_date || '—'} ${p.event_time || ''} · Guests: ${p.guest_count || '—'}\n` +
-        `Type: ${p.event_type || '—'} · Style: ${p.service_style || '—'} · Venue: ${p.venue || '—'}\n` +
-        `Package: ${p.package || '—'} · Addons: ${p.addons || '—'}\n` +
-        `Notes: ${p.notes || '—'}`;
+        `${c.name || '—'} · ${c.phone || '—'} · ${c.email || '—'}\n` +
+        `Event: ${p.event_date || '—'} · Guests: ${p.guests || '—'}\n` +
+        `${p.details || ''}`;
       for (const a of adminSms) {
-        results.admins.push(await smsOrSkip(a, body));
+        results.admins.push(await sendSMS(client, smsFrom, a, body));
       }
       results.email = await sendEmail(
         adminEmail,
-        `Catering inquiry — ${p.client_name || 'Guest'}`,
+        `Catering inquiry — ${c.name || 'Guest'}`,
         body
       );
     } else {
       return res.status(400).json({ error: 'Unknown type: ' + type });
     }
 
-    return res.status(200).json({ ok: true, twilioReady, results });
+    return res.status(200).json({ ok: true, results });
   } catch (err) {
     console.error('notify error:', err && err.message);
     return res.status(500).json({ error: 'notify_failed', detail: err && err.message });
