@@ -1,6 +1,6 @@
 {
   "_info": "Written by louwok.com/admin. index.html reads this at runtime.",
-  "_updated": "2026-07-08T23:53:06.376Z",
+  "_updated": "2026-07-09T00:10:24.251Z",
   "menu": [
     {
       "id": 1,
@@ -546,9 +546,9 @@
         "low": 6
       },
       "17": {
-        "qty": 20,
+        "qty": 96,
         "unit": "orders",
-        "low": 6
+        "low": 32
       },
       "18": {
         "qty": 20,
@@ -566,7 +566,8 @@
         "low": 6
       }
     },
-    "updated": "2026-07-08T23:53:06.375Z"
+    "updated": "2026-07-09T00:10:24.250Z",
+    "supplies": []
   },
   "printing": {
     "enabled": false,
