@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- LOU-WOK-INDEX vTICKER-GOLD | ticker text brand gold (var(--gold)) | 2026-07-06 -->
+<!-- LOU-WOK-INDEX vREORDER | localStorage reorder-your-usual (device-only, no account) | 2026-07-09 -->
 
 <html lang="en">
 <head>
@@ -1811,6 +1811,31 @@
     .cart-empty-emoji { font-size: 3rem; margin-bottom: 1rem; filter: grayscale(0.3) opacity(0.6); }
     .cart-empty-title { font-family: 'Bebas Neue', sans-serif; font-size: 1.6rem; letter-spacing: 0.04em; color: var(--rice); margin-bottom: 0.4rem; }
     .cart-empty-sub { font-size: 0.82rem; color: var(--muted); line-height: 1.6; }
+    .reorder-card {
+      margin: 0.5rem 1rem 1.25rem; padding: 1.1rem 1.1rem 1rem;
+      border: 1px solid rgba(232,160,32,0.35); border-radius: 8px;
+      background: rgba(232,160,32,0.06); text-align: center;
+    }
+    .reorder-head {
+      font-family: 'Bebas Neue', sans-serif; font-size: 1.25rem;
+      letter-spacing: 0.04em; color: var(--gold); margin-bottom: 0.35rem;
+    }
+    .reorder-summary { font-size: 0.78rem; color: var(--muted); line-height: 1.5; margin-bottom: 0.9rem; }
+    .reorder-btn {
+      width: 100%; background: var(--wok); color: var(--rice); border: none;
+      font-family: 'DM Sans', sans-serif; font-weight: 700; font-size: 0.78rem;
+      letter-spacing: 0.08em; text-transform: uppercase; padding: 0.85rem 1rem;
+      border-radius: 4px; cursor: pointer; transition: background 0.2s, transform 0.1s;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .reorder-btn:hover { background: var(--gold); color: var(--black); }
+    .reorder-btn:active { transform: scale(0.97); }
+    .reorder-clear {
+      margin-top: 0.6rem; background: none; border: none; color: var(--muted);
+      font-size: 0.7rem; letter-spacing: 0.03em; cursor: pointer; text-decoration: underline;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .reorder-clear:hover { color: var(--rice); }
     .cart-item {
       display: flex; align-items: center; gap: 12px;
       padding: 1rem 0; border-bottom: 1px solid rgba(232,160,32,0.08);
@@ -3208,6 +3233,9 @@
     // this delegated handler doesn't double-fire. It closes any open overlays
     // (menu sheet, cart drawer) before smooth-scrolling to the target section.
     document.addEventListener('DOMContentLoaded', () => {
+      // Refresh the cart UI once so a returning customer's "reorder your usual"
+      // card (from localStorage) is present the first time they open the cart.
+      if (typeof updateCartUI === 'function') { try { updateCartUI(); } catch(_) {} }
       document.querySelectorAll('a[href^="#"]').forEach(a => {
         const href = a.getAttribute('href');
         if (!href || href.length < 2) return;
@@ -3590,7 +3618,8 @@
           + '<div class="cart-empty-emoji">🛒</div>'
           + '<div class="cart-empty-title">Nothing Yet</div>'
           + '<div class="cart-empty-sub">Add items from the menu<br>to start your order.</div>'
-          + '</div>';
+          + '</div>'
+          + reorderCardHTML();
         if (footer) footer.style.display = 'none';
       } else {
         body.innerHTML = cartItems.map((item, idx) => `
@@ -3622,6 +3651,56 @@
           placeBtn.disabled    = false;
         }
       }
+    }
+
+    // ── Reorder "your usual" (localStorage, device-only, no account) ──────
+    function getLastOrder() {
+      try {
+        const raw = localStorage.getItem('louwok-last-order');
+        if (!raw) return null;
+        const o = JSON.parse(raw);
+        if (!o || !Array.isArray(o.items) || o.items.length === 0) return null;
+        return o;
+      } catch(_) { return null; }
+    }
+
+    function reorderCardHTML() {
+      const last = getLastOrder();
+      if (!last) return '';
+      const count = last.items.reduce((s,i) => s + (i.qty||1), 0);
+      const summary = last.items
+        .map(i => (i.qty > 1 ? i.qty + '× ' : '') + i.name)
+        .slice(0, 3).join(', ') + (last.items.length > 3 ? '…' : '');
+      return '<div class="reorder-card">'
+        + '<div class="reorder-head">Order your usual again</div>'
+        + '<div class="reorder-summary">' + summary + '</div>'
+        + '<button class="reorder-btn" onclick="reorderLast()">'
+        + 'Add ' + count + ' item' + (count !== 1 ? 's' : '') + ' to cart</button>'
+        + '<button class="reorder-clear" onclick="clearLastOrder()" aria-label="Forget my last order">Forget this</button>'
+        + '</div>';
+    }
+
+    function reorderLast() {
+      const last = getLastOrder();
+      if (!last) return;
+      cartItems = last.items.map(i => ({
+        id:i.id, name:i.name, emoji:i.emoji, price:i.price, sizeMeta:i.sizeMeta, qty:(i.qty||1)
+      }));
+      // Prefill contact fields for a faster checkout.
+      if (last.customer) {
+        const set = (id,v) => { const el=document.getElementById(id); if(el && v) el.value=v; };
+        set('custName',  last.customer.name);
+        set('custPhone', last.customer.phone);
+        set('custEmail', last.customer.email);
+      }
+      updateCartUI();
+      openCart();
+      showToast('Your usual is in the cart — prices reflect today’s menu at checkout.', 'success');
+    }
+
+    function clearLastOrder() {
+      try { localStorage.removeItem('louwok-last-order'); } catch(_) {}
+      updateCartUI();
     }
 
     function changeQty(idx, delta) {
@@ -3703,6 +3782,15 @@
         let smsOk = null; // null = unknown (fallback path)
         try {
           if (resp && resp.results && resp.results.customer) smsOk = !!resp.results.customer.ok;
+        } catch(_) {}
+        // Remember this order on THIS device only (no server, no account) so the
+        // customer can one-tap reorder next time. Stores cart lines + contact.
+        try {
+          localStorage.setItem('louwok-last-order', JSON.stringify({
+            savedAt : Date.now(),
+            items   : cartItems.map(i => ({ id:i.id, name:i.name, emoji:i.emoji, price:i.price, sizeMeta:i.sizeMeta, qty:i.qty })),
+            customer: { name: custName, phone: custPhone, email: custEmail }
+          }));
         } catch(_) {}
         showOrderSuccess(orderNumber, custEmail, smsOk);
       };
