@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- LOU-WOK-ADMIN vINV-SUPPLIES2 | added how-to-scan hint to supplies panel, on top of vINV-SUPPLIES | 2026-07-06 -->
+<!-- LOU-WOK-ADMIN vEVENTS | 📅 Upcoming Events + .ics/.csv calendar import feeding Find-the-Truck, on top of vINV-SUPPLIES2 | 2026-07-06 -->
 
 <html lang="en">
 <head>
@@ -1016,6 +1016,42 @@
           </div>
         </div>
       </div>
+
+      <!-- Upcoming Events / Find-the-Truck locations -->
+      <div class="panel" style="margin-top:1rem;">
+        <div class="panel-header">
+          <span class="panel-title">📅 Upcoming Events &amp; Locations</span>
+          <button class="btn btn-primary btn-sm" onclick="saveEvents()">Save</button>
+        </div>
+        <p style="color:var(--muted);font-size:0.82rem;line-height:1.6;margin:0 0 1rem;">
+          Date-specific events (festivals, markets, brewery slots) shown in the site's
+          <strong style="color:var(--rice);">Find the Truck</strong> section as upcoming locations.
+          Import a calendar file (<strong>.ics</strong> or <strong>.csv</strong>), or add events by hand.
+          Remember to <strong style="color:var(--rice);">Publish</strong> after saving.
+        </p>
+
+        <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:0.5rem;">
+          <label class="btn btn-sm" style="border:1px solid var(--border);cursor:pointer;">
+            📥 Import calendar (.ics / .csv)
+            <input type="file" accept=".ics,.csv,text/calendar,text/csv" onchange="evImportFile(event)" style="display:none;" />
+          </label>
+          <button type="button" class="btn btn-sm" onclick="evAddManual()" style="border:1px solid var(--border);background:transparent;color:var(--rice);">+ Add event</button>
+          <button type="button" class="btn btn-sm" onclick="evClearPast()" style="border:1px solid var(--border);background:transparent;color:var(--rice);">Clear past events</button>
+        </div>
+        <p id="ev-import-status" style="font-size:0.74rem;color:var(--muted);margin:0 0 0.9rem;"></p>
+
+        <details style="margin:0 0 0.9rem;background:var(--smoke);border:1px solid var(--border);border-radius:4px;padding:0.55rem 0.75rem;">
+          <summary style="cursor:pointer;color:var(--gold);font-size:0.76rem;font-weight:600;list-style:none;">📎 CSV format &amp; import help (tap)</summary>
+          <div style="margin-top:0.5rem;color:var(--muted);font-size:0.73rem;line-height:1.6;">
+            <p style="margin:0 0 0.4rem;"><strong style="color:var(--rice);">.ics files</strong> from Google/Apple/Outlook calendars import directly &mdash; every event with a date, title, and location is picked up.</p>
+            <p style="margin:0 0 0.4rem;"><strong style="color:var(--rice);">.csv files</strong> should have a header row with these columns (any order): <code>date, time, title, location, note</code>. Example row:<br>
+            <code style="color:var(--rice);">2026-11-07,17:00,Canal Convergence,Scottsdale Waterfront,Apply to vend</code></p>
+            <p style="margin:0;">Imported events are <strong>added</strong> to your list (duplicates by date+title are skipped), so you can import multiple files.</p>
+          </div>
+        </details>
+
+        <div id="ev-rows"></div>
+      </div>
     </div>
 
     <!-- ── ANNOUNCEMENTS ── -->
@@ -1861,7 +1897,7 @@
       _status('Offline — loaded defaults');
     }
     renderMenuList(); renderHours(); renderAnnouncements();
-    _populateOrderLinks(); _populateFeatured(); _populateHero(); _populateSEO(); _populateLocation(); _populateBranding(); _populateSocials(); _populateTicker(); _populateFooter(); _populateSettings(); _populateNotify(); _populateInventory(); _populateSupplies(); _renderDashboardInvAlert(); _populatePrinting(); renderCategoryManager(); _fillCategoryDropdown();
+    _populateOrderLinks(); _populateFeatured(); _populateHero(); _populateSEO(); _populateLocation(); _populateEvents(); _populateBranding(); _populateSocials(); _populateTicker(); _populateFooter(); _populateSettings(); _populateNotify(); _populateInventory(); _populateSupplies(); _renderDashboardInvAlert(); _populatePrinting(); renderCategoryManager(); _fillCategoryDropdown();
     _refreshOverview();
     updateTokenStatus();
   }
@@ -1876,6 +1912,7 @@
     heroData          = d.hero          || DEFAULTS.hero;
     seoData           = d.seo           || DEFAULTS.seo;
     locationData      = d.location      || DEFAULTS.location;
+    eventsData        = Array.isArray(d.events) ? d.events : [];
     brandingData      = d.branding      || DEFAULTS.branding;
     socialsData       = d.socials       || DEFAULTS.socials;
     tickerData        = d.ticker         || DEFAULTS.ticker;
@@ -1940,6 +1977,7 @@
     saveNotify();
     saveInventory();
     savePrinting();
+    _readEvents();
     _readCategories();
     _suppressToasts = false; // flush done — real user-facing toasts allowed again
 
@@ -1972,7 +2010,7 @@
       orderLinks: orderLinksData, seo: seoData,
       featured: featuredData,
       hero: heroData,
-      location: locationData, branding: brandingData,
+      location: locationData, events: eventsData, branding: brandingData,
       socials: socialsData,
       ticker: _tickerForPublish(), inventory: inventoryData, printing: printingData, footer: footerData,
       settings: settingsData,
@@ -2445,6 +2483,168 @@
       if (el) locationData[key] = el.value.trim();
     });
     setUnsaved(); showToast('Location info saved','success');
+  }
+
+  // ══════════════════════════════════════════════════════════════
+  //  📅 UPCOMING EVENTS  (date-specific → site "Find the Truck")
+  //  Stored in cms-data.json under "events": [ {date,time,title,location,note} ]
+  let eventsData = [];
+
+  function _populateEvents() {
+    const wrap = document.getElementById('ev-rows');
+    if (!wrap) return;
+    if (!Array.isArray(eventsData)) eventsData = [];
+    // sort by date
+    eventsData.sort((a,b)=> String(a.date||'').localeCompare(String(b.date||'')) || String(a.time||'').localeCompare(String(b.time||'')));
+    if (!eventsData.length) {
+      wrap.innerHTML = '<p style="color:var(--muted);font-size:0.8rem;">No events yet. Import a .ics/.csv calendar or add one by hand.</p>';
+      return;
+    }
+    const esc = s => String(s==null?'':s).replace(/"/g,'&quot;');
+    const today = new Date().toISOString().slice(0,10);
+    wrap.innerHTML = eventsData.map((e,i)=>{
+      const past = (e.date||'') < today;
+      return '<div class="lk-row" data-ev-i="'+i+'" style="display:flex;gap:0.4rem;align-items:center;margin-bottom:0.45rem;padding:0.45rem 0.55rem;border-radius:2px;background:'+(past?'rgba(138,132,117,0.08)':'var(--smoke)')+';border:1px solid var(--border);flex-wrap:wrap;opacity:'+(past?'0.6':'1')+';">' +
+        '<input class="field-input" type="date" id="ev-date-'+i+'" value="'+esc(e.date)+'" style="width:140px;" />' +
+        '<input class="field-input" type="time" id="ev-time-'+i+'" value="'+esc(e.time||'')+'" style="width:104px;" />' +
+        '<input class="field-input" id="ev-title-'+i+'" value="'+esc(e.title)+'" placeholder="Event title" style="flex:1;min-width:120px;" />' +
+        '<input class="field-input" id="ev-loc-'+i+'" value="'+esc(e.location||'')+'" placeholder="Location / address" style="flex:1;min-width:120px;" />' +
+        '<input class="field-input" id="ev-note-'+i+'" value="'+esc(e.note||'')+'" placeholder="Note (optional)" style="flex:1;min-width:100px;" />' +
+        '<button class="btn btn-ghost btn-sm" title="Remove" onclick="evRemove('+i+')" style="border:1px solid var(--border);">✕</button>' +
+      '</div>';
+    }).join('');
+  }
+  function _readEvents() {
+    if (!Array.isArray(eventsData)) return;
+    eventsData.forEach((e,i)=>{
+      const g = id => { const el=document.getElementById(id); return el?el.value.trim():undefined; };
+      const d=g('ev-date-'+i), t=g('ev-time-'+i), ti=g('ev-title-'+i), lo=g('ev-loc-'+i), no=g('ev-note-'+i);
+      if(d!==undefined) e.date=d; if(t!==undefined) e.time=t; if(ti!==undefined) e.title=ti;
+      if(lo!==undefined) e.location=lo; if(no!==undefined) e.note=no;
+    });
+  }
+  function evAddManual() {
+    _readEvents();
+    const today = new Date().toISOString().slice(0,10);
+    eventsData.push({ date: today, time:'', title:'', location:'', note:'' });
+    _populateEvents();
+  }
+  function evRemove(i){ _readEvents(); eventsData.splice(i,1); _populateEvents(); }
+  function evClearPast(){
+    _readEvents();
+    const today = new Date().toISOString().slice(0,10);
+    const before = eventsData.length;
+    eventsData = eventsData.filter(e => (e.date||'') >= today);
+    _populateEvents();
+    showToast('Removed '+(before-eventsData.length)+' past event(s)','success');
+  }
+  function saveEvents(){ _readEvents(); setUnsaved(); showToast('Events saved','success'); }
+
+  // Merge parsed events into eventsData, skipping duplicates (date+title).
+  function _mergeEvents(parsed) {
+    _readEvents();
+    const key = e => (e.date||'')+'|'+(e.title||'').toLowerCase().trim();
+    const have = new Set(eventsData.map(key));
+    let added = 0;
+    parsed.forEach(e => { if(e.date && e.title && !have.has(key(e))){ eventsData.push(e); have.add(key(e)); added++; } });
+    _populateEvents();
+    return added;
+  }
+
+  function evImportFile(evt) {
+    const file = evt.target.files && evt.target.files[0];
+    const status = document.getElementById('ev-import-status');
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      try {
+        const text = String(reader.result||'');
+        let parsed;
+        if (/^\s*BEGIN:VCALENDAR/i.test(text) || file.name.toLowerCase().endsWith('.ics')) {
+          parsed = _parseICS(text);
+        } else {
+          parsed = _parseCSV(text);
+        }
+        if (!parsed.length) { status.style.color='var(--wok)'; status.textContent='No events found in that file. Check the format (see help).'; }
+        else {
+          const added = _mergeEvents(parsed);
+          status.style.color='var(--gold)';
+          status.textContent='Imported '+parsed.length+' event(s), added '+added+' new. Review below, then Save + Publish.';
+        }
+      } catch(err) {
+        status.style.color='var(--wok)'; status.textContent='Could not read that file: '+err.message;
+      }
+      evt.target.value=''; // allow re-importing the same file
+    };
+    reader.readAsText(file);
+  }
+
+  // Minimal RFC5545 .ics parser: unfolds lines, reads VEVENTs.
+  function _parseICS(text) {
+    // unfold: a line starting with space/tab continues the previous line
+    const raw = text.replace(/\r\n/g,'\n').replace(/\n[ \t]/g,'');
+    const lines = raw.split('\n');
+    const out = []; let cur = null;
+    const unesc = s => String(s).replace(/\\n/gi,' ').replace(/\\,/g,',').replace(/\\;/g,';').replace(/\\\\/g,'\\');
+    for (const line of lines) {
+      if (/^BEGIN:VEVENT/i.test(line)) { cur = {}; continue; }
+      if (/^END:VEVENT/i.test(line)) {
+        if (cur && cur._dt && cur.SUMMARY) {
+          out.push({ date: cur._dt.slice(0,10), time: cur._dt.length>10?cur._dt.slice(11,16):'',
+                     title: unesc(cur.SUMMARY), location: unesc(cur.LOCATION||''), note: unesc(cur.DESCRIPTION||'') });
+        }
+        cur = null; continue;
+      }
+      if (!cur) continue;
+      const idx = line.indexOf(':'); if (idx<0) return_or_continue: { continue; }
+      const nameRaw = line.slice(0,idx); const val = line.slice(idx+1);
+      const name = nameRaw.split(';')[0].toUpperCase();
+      if (name === 'DTSTART') {
+        // val like 20261107T170000 or 20261107 ; may have TZID param (ignored)
+        const m = val.match(/(\d{4})(\d{2})(\d{2})(?:T(\d{2})(\d{2}))?/);
+        if (m) cur._dt = m[4] ? (m[1]+'-'+m[2]+'-'+m[3]+' '+m[4]+':'+m[5]) : (m[1]+'-'+m[2]+'-'+m[3]);
+      } else if (['SUMMARY','LOCATION','DESCRIPTION'].includes(name)) {
+        cur[name] = val;
+      }
+    }
+    return out;
+  }
+
+  // CSV parser: header row with date,time,title,location,note (any order).
+  function _parseCSV(text) {
+    const rows = _csvRows(text);
+    if (!rows.length) return [];
+    const header = rows[0].map(h => h.toLowerCase().trim());
+    const ci = name => header.indexOf(name);
+    const di=ci('date'), ti=ci('time'), tli=ci('title'), li=ci('location'), ni=ci('note');
+    if (di<0 || tli<0) return []; // need at least date + title
+    const out=[];
+    for (let r=1;r<rows.length;r++){
+      const row=rows[r]; if(!row.length || row.every(c=>!c.trim())) continue;
+      const date=_normDate(row[di]||''); if(!date) continue;
+      out.push({ date, time:(ti>=0?row[ti]:'')||'', title:(row[tli]||'').trim(),
+                 location:(li>=0?row[li]:'')||'', note:(ni>=0?row[ni]:'')||'' });
+    }
+    return out;
+  }
+  function _normDate(s){
+    s=String(s).trim();
+    let m=s.match(/^(\d{4})-(\d{2})-(\d{2})/); if(m) return m[1]+'-'+m[2]+'-'+m[3];
+    m=s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{2,4})/); // M/D/YYYY
+    if(m){ let y=m[3].length===2?('20'+m[3]):m[3]; return y+'-'+String(m[1]).padStart(2,'0')+'-'+String(m[2]).padStart(2,'0'); }
+    return '';
+  }
+  // Tiny CSV splitter that respects quotes.
+  function _csvRows(text){
+    const rows=[]; let row=[], cur='', q=false;
+    text=text.replace(/\r\n/g,'\n');
+    for(let i=0;i<text.length;i++){
+      const c=text[i];
+      if(q){ if(c==='"'){ if(text[i+1]==='"'){cur+='"';i++;} else q=false; } else cur+=c; }
+      else { if(c==='"') q=true; else if(c===','){ row.push(cur); cur=''; } else if(c==='\n'){ row.push(cur); rows.push(row); row=[]; cur=''; } else cur+=c; }
+    }
+    if(cur.length||row.length){ row.push(cur); rows.push(row); }
+    return rows.filter(r=>r.length);
   }
 
   // ══════════════════════════════════════════════════════════════
