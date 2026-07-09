@@ -1,6 +1,6 @@
 {
   "_info": "Written by louwok.com/admin. index.html reads this at runtime.",
-  "_updated": "2026-07-09T16:13:11.168Z",
+  "_updated": "2026-07-09T16:16:50.312Z",
   "menu": [
     {
       "id": 1,
@@ -180,6 +180,16 @@
       "priceFull": 7,
       "tag": "",
       "desc": "Tender boneless chicken simmered in our signature savory brown sauce for a bold St. Louis takeout classic. Served with a half order box of plain white rice. ",
+      "options": []
+    },
+    {
+      "id": 23,
+      "name": "The Show-Me Combo",
+      "category": "combos",
+      "priceHalf": null,
+      "priceFull": 20,
+      "tag": "",
+      "desc": "A St. Louis rice house favorite featuring a whole order of plain Fried Rice, tender Boneless Hot Braised Chicken, 2 egg rolls, 4 Crab Rangoons, and your choice of beverage—a hearty taste of the Show-Me State, served fresh at Lou Wok.",
       "options": []
     }
   ],
@@ -1586,7 +1596,7 @@
         "low": 6
       }
     },
-    "updated": "2026-07-09T16:13:11.165Z",
+    "updated": "2026-07-09T16:16:50.309Z",
     "supplies": []
   },
   "printing": {
