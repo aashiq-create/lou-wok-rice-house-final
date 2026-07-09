@@ -1,6 +1,6 @@
 {
   "_info": "Written by louwok.com/admin. index.html reads this at runtime.",
-  "_updated": "2026-07-09T16:16:50.312Z",
+  "_updated": "2026-07-09T16:17:38.937Z",
   "menu": [
     {
       "id": 1,
@@ -1596,7 +1596,7 @@
         "low": 6
       }
     },
-    "updated": "2026-07-09T16:16:50.309Z",
+    "updated": "2026-07-09T16:17:38.935Z",
     "supplies": []
   },
   "printing": {
