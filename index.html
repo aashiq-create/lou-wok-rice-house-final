@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- LOU-WOK-INDEX vSTORY-STL | our-story: St. Louis roots + fried rice/St. Paul reputation | 2026-07-09 -->
+<!-- LOU-WOK-INDEX vTAGS-FULL | all 6 menu tags styled+labeled (popular/best-seller/new/spicy/classic/fan-fave) | 2026-07-09 -->
 
 <html lang="en">
 <head>
@@ -767,6 +767,9 @@
     .tag-popular { background: rgba(200,57,10,0.2); color: var(--wok); }
     .tag-new     { background: rgba(232,160,32,0.15); color: var(--gold); }
     .tag-classic { background: rgba(245,238,216,0.08); color: rgba(245,238,216,0.55); }
+    .tag-best-seller { background: rgba(232,160,32,0.22); color: var(--gold); }
+    .tag-spicy   { background: rgba(214,60,32,0.22); color: #ff6a3d; }
+    .tag-fan-fave { background: rgba(232,160,32,0.15); color: var(--gold); }
 
     /* ── FEATURED ── */
     #featured {
@@ -4696,7 +4699,7 @@
         }
       }
       const tagClass = t => 'tag-'+(t||'').replace(/[^a-z0-9-]/gi,'');
-      const tagLabel = t => ({popular:'Best Seller','fan-fave':'Fan Fave',classic:'Classic',spicy:'Spicy',new:'New'}[t]||t);
+      const tagLabel = t => ({popular:'Popular','best-seller':'Best Seller','fan-fave':'Fan Fave',classic:'Classic',spicy:'Spicy',new:'New'}[t]||t);
 
       function renderMenu(menu){
         if(!Array.isArray(menu)||!menu.length) return;
