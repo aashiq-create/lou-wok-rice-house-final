@@ -1,6 +1,6 @@
 {
   "_info": "Written by louwok.com/admin. index.html reads this at runtime.",
-  "_updated": "2026-07-09T14:24:51.015Z",
+  "_updated": "2026-07-09T16:11:20.641Z",
   "menu": [
     {
       "id": 1,
@@ -170,6 +170,16 @@
       "priceFull": 5,
       "tag": "popular",
       "desc": "Golden, crispy, and made from our signature sweet cream batter, then dusted with powdered sugar. A warm, fresh-fried classic that's the perfect finish to your Lou Wok feast.",
+      "options": []
+    },
+    {
+      "id": 22,
+      "name": "Boneless Hot Braised Chicken",
+      "category": "appetizers",
+      "priceHalf": null,
+      "priceFull": 7,
+      "tag": "",
+      "desc": "Tender boneless chicken simmered in our signature savory brown sauce for a bold St. Louis takeout classic. Served with a half order box of plain white rice. ",
       "options": []
     }
   ],
@@ -1576,7 +1586,7 @@
         "low": 6
       }
     },
-    "updated": "2026-07-09T14:24:51.013Z",
+    "updated": "2026-07-09T16:11:20.639Z",
     "supplies": []
   },
   "printing": {
