@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- LOU-WOK-ADMIN vPRINTING | 🧾 Receipt Printing panel (PrintNode: detect printers, receipt content, test) on top of vTICKER-COLOR | 2026-07-06 -->
+<!-- LOU-WOK-ADMIN vINV-SUPPLIES2 | added how-to-scan hint to supplies panel, on top of vINV-SUPPLIES | 2026-07-06 -->
 
 <html lang="en">
 <head>
@@ -929,6 +929,54 @@
           <button class="btn btn-ghost btn-sm" onclick="invMarkAllStocked()" style="border:1px solid var(--border);">Restock all to default</button>
         </div>
         <div id="inventory-rows"></div>
+
+        <div style="margin-top:1.6rem;padding-top:1.2rem;border-top:1px solid var(--border);">
+          <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:0.5rem;">
+            <span style="font-size:0.68rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);">Supplies &amp; Packaging</span>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;">
+              <button class="btn btn-ghost btn-sm" onclick="invAddSupply()" style="border:1px solid var(--border);">+ Add supply</button>
+              <button class="btn btn-ghost btn-sm" onclick="invScanStart()" style="border:1px solid var(--border);">📷 Scan barcode</button>
+            </div>
+          </div>
+          <p style="color:var(--muted);font-size:0.72rem;line-height:1.5;margin:0 0 0.7rem;">
+            Track anything that isn't a menu item &mdash; plasticware, napkins, sandwich wax paper, half/order boxes, etc.
+            Add manually, or tap &ldquo;Scan barcode&rdquo; to attach a product barcode so you can restock it by scanning next time.
+          </p>
+
+          <!-- How-to-scan hint (collapsible) -->
+          <details style="margin:0 0 0.9rem;background:var(--smoke);border:1px solid var(--border);border-radius:4px;padding:0.55rem 0.75rem;">
+            <summary style="cursor:pointer;color:var(--gold);font-size:0.76rem;font-weight:600;list-style:none;">
+              &#128247; How does scanning work? (tap to read)
+            </summary>
+            <div style="margin-top:0.55rem;color:var(--muted);font-size:0.73rem;line-height:1.6;">
+              <p style="margin:0 0 0.5rem;"><strong style="color:var(--rice);">First time you scan an item:</strong> point your phone camera at the barcode. It creates a new supply row with the barcode attached &mdash; just type in the name (e.g. &ldquo;8oz plastic cups&rdquo;) and set your quantity.</p>
+              <p style="margin:0 0 0.5rem;"><strong style="color:var(--rice);">Every time after:</strong> scan that same barcode and it instantly finds the item and adds <strong>+1</strong> to the count &mdash; fast for restocking a delivery.</p>
+              <p style="margin:0 0 0.5rem;"><strong style="color:var(--rice);">On iPhone:</strong> the camera scans <em>QR codes</em> directly. For regular product barcodes (the striped UPC kind), iPhone can't scan them in the browser &mdash; use the <strong>&ldquo;enter by hand&rdquo;</strong> box that appears and type the number under the barcode. On Android it scans both automatically.</p>
+              <p style="margin:0;color:var(--muted);font-size:0.68rem;">Tip: the barcode is just a number that identifies the product &mdash; you always name the item yourself. Allow camera access when your phone asks. Remember to <strong style="color:var(--rice);">Save</strong> and <strong style="color:var(--rice);">Publish</strong> when done.</p>
+            </div>
+          </details>
+
+          <div id="supply-rows"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Barcode scanner modal -->
+    <div id="scanModal" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.85);align-items:center;justify-content:center;">
+      <div style="background:var(--smoke);border:1px solid var(--border);border-radius:6px;max-width:440px;width:92%;padding:1.1rem;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.7rem;">
+          <span style="font-weight:600;color:var(--rice);font-size:0.95rem;">📷 Scan a barcode</span>
+          <button class="btn btn-ghost btn-sm" onclick="invScanStop()" style="border:1px solid var(--border);">✕ Close</button>
+        </div>
+        <video id="scanVideo" playsinline style="width:100%;border-radius:4px;background:#000;aspect-ratio:4/3;object-fit:cover;"></video>
+        <p id="scanStatus" style="font-size:0.78rem;color:var(--muted);margin:0.6rem 0 0;">Point the camera at a barcode…</p>
+        <div id="scanManual" style="margin-top:0.7rem;display:none;">
+          <p style="font-size:0.76rem;color:var(--muted);margin:0 0 0.4rem;">Camera scanning isn't available on this device. Enter the barcode number by hand:</p>
+          <div style="display:flex;gap:8px;">
+            <input class="field-input" id="scanManualInput" placeholder="Barcode number" style="flex:1;" />
+            <button class="btn btn-sm" onclick="invScanManualSubmit()" style="border:1px solid var(--border);background:transparent;color:var(--rice);">Use</button>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -1813,7 +1861,7 @@
       _status('Offline — loaded defaults');
     }
     renderMenuList(); renderHours(); renderAnnouncements();
-    _populateOrderLinks(); _populateFeatured(); _populateHero(); _populateSEO(); _populateLocation(); _populateBranding(); _populateSocials(); _populateTicker(); _populateFooter(); _populateSettings(); _populateNotify(); _populateInventory(); _renderDashboardInvAlert(); _populatePrinting(); renderCategoryManager(); _fillCategoryDropdown();
+    _populateOrderLinks(); _populateFeatured(); _populateHero(); _populateSEO(); _populateLocation(); _populateBranding(); _populateSocials(); _populateTicker(); _populateFooter(); _populateSettings(); _populateNotify(); _populateInventory(); _populateSupplies(); _renderDashboardInvAlert(); _populatePrinting(); renderCategoryManager(); _fillCategoryDropdown();
     _refreshOverview();
     updateTokenStatus();
   }
@@ -1852,6 +1900,24 @@
   // ══════════════════════════════════════════════════════════════
   //  PUBLISH — writes ONLY cms-data.json; index.html untouched
   // ══════════════════════════════════════════════════════════════
+  // Fire a low-stock email alert to the team when items are at/below threshold.
+  // De-duplicates: only emails when the set of low items has CHANGED since the
+  // last alert (so re-publishing the same low state doesn't spam inboxes).
+  async function _maybeLowStockAlert() {
+    try {
+      const low = (typeof invLowStockList === 'function') ? invLowStockList() : [];
+      if (!low.length) { localStorage.removeItem('lw_lastLowSet'); return; }
+      const sig = low.map(l => l.id + '=' + l.qty).sort().join('|');
+      if (localStorage.getItem('lw_lastLowSet') === sig) return; // unchanged, skip
+      const resp = await fetch('/api/low-stock-alert', {
+        method:'POST', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({ items: low.map(l => ({ name: l.name, qty: l.qty })) })
+      });
+      const d = await resp.json().catch(()=>({}));
+      if (d && d.ok) { localStorage.setItem('lw_lastLowSet', sig); }
+    } catch(e) { /* never block publishing on an alert failure */ }
+  }
+
   async function publishSite() {
     const token = getToken();
     if (!token) { document.getElementById('tokenModal').style.display='flex'; return; }
@@ -1961,6 +2027,7 @@
         unsavedChanges = false;
         _refreshOverview();
         showToast('🎉 Published! Live on next page refresh','success');
+        _maybeLowStockAlert();
         _done();
         return;
       }
@@ -1992,6 +2059,7 @@
             _status('✅ Published to "'+GITHUB_BRANCH+'" — '+ new Date().toLocaleTimeString());
             unsavedChanges = false; _refreshOverview();
             showToast('🎉 Published! Live on next page refresh','success');
+            _maybeLowStockAlert();
             _done();
             return;
           }
@@ -2827,8 +2895,9 @@
   function addTickerRow() { _readTicker(); tickerData.push({text:'', hot:false}); _populateTicker(); }
   function removeTickerRow(i) { _readTicker(); tickerData.splice(i,1); _populateTicker(); }
   /* ── 📦 INVENTORY TRACKING ─────────────────────────────────────────── */
-  let inventoryData = { items: {}, updated: null };
+  let inventoryData = { items: {}, supplies: [], updated: null };
   const INV_DEFAULT_QTY = 20, INV_DEFAULT_LOW = 6, INV_DEFAULT_UNIT = 'orders';
+  let _scanStream = null, _scanRAF = null, _scanDetector = null, _scanJsQR = null;
 
   function invSyncFromMenu() {
     _readInventory();
@@ -2855,6 +2924,12 @@
     Object.entries(inventoryData.items || {}).forEach(([id, v]) => {
       if (v && typeof v.qty === 'number' && v.qty <= (v.low != null ? v.low : INV_DEFAULT_LOW)) {
         low.push({ id, name: nameById[id] || ('Item ' + id), qty: v.qty });
+      }
+    });
+    // Include supplies (plasticware, napkins, boxes, etc.)
+    (inventoryData.supplies || []).forEach(s => {
+      if (s && typeof s.qty === 'number' && s.qty <= (s.low != null ? s.low : INV_DEFAULT_LOW)) {
+        low.push({ id: 'supply:' + (s.barcode || s.name), name: s.name || 'Supply', qty: s.qty });
       }
     });
     return low;
@@ -2913,6 +2988,135 @@
         low:  Math.max(0, parseInt(lowEl.value, 10) || 0),
       };
     });
+  }
+
+  /* ── SUPPLIES & PACKAGING (manual + barcode) ─────────────────────────── */
+  function _populateSupplies() {
+    const wrap = document.getElementById('supply-rows');
+    if (!wrap) return;
+    if (!Array.isArray(inventoryData.supplies)) inventoryData.supplies = [];
+    const list = inventoryData.supplies;
+    if (!list.length) {
+      wrap.innerHTML = '<p style="color:var(--muted);font-size:0.8rem;">No supplies yet. Use &ldquo;+ Add supply&rdquo; or &ldquo;Scan barcode&rdquo; to add plasticware, napkins, wax paper, boxes, etc.</p>';
+      return;
+    }
+    const esc = s => String(s==null?'':s).replace(/"/g,'&quot;');
+    wrap.innerHTML = list.map((s,i)=>{
+      const lowThr = (s.low!=null?s.low:INV_DEFAULT_LOW);
+      const isLow = typeof s.qty==='number' && s.qty<=lowThr;
+      return '<div class="lk-row" data-sup-i="'+i+'" style="display:flex;gap:0.5rem;align-items:center;margin-bottom:0.5rem;padding:0.5rem 0.6rem;border-radius:2px;background:'+(isLow?'rgba(200,57,10,0.10)':'var(--smoke)')+';border:1px solid '+(isLow?'var(--wok)':'var(--border)')+';">' +
+        '<input class="field-input" id="sup-name-'+i+'" value="'+esc(s.name)+'" placeholder="e.g. 8oz plastic cups" style="flex:1;min-width:0;" />' +
+        '<label style="display:flex;align-items:center;gap:0.25rem;font-size:0.68rem;color:var(--muted);">Qty<input class="field-input" type="number" min="0" id="sup-qty-'+i+'" value="'+(Number(s.qty)||0)+'" style="width:64px;text-align:center;" /></label>' +
+        '<label style="display:flex;align-items:center;gap:0.25rem;font-size:0.68rem;color:var(--muted);">Low<input class="field-input" type="number" min="0" id="sup-low-'+i+'" value="'+lowThr+'" style="width:54px;text-align:center;" /></label>' +
+        '<button class="btn btn-ghost btn-sm" title="minus 1" onclick="supBump('+i+',-1)" style="border:1px solid var(--border);padding:0.3rem 0.55rem;">&minus;</button>' +
+        '<button class="btn btn-ghost btn-sm" title="plus 1" onclick="supBump('+i+',1)" style="border:1px solid var(--border);padding:0.3rem 0.55rem;">+</button>' +
+        '<button class="btn btn-ghost btn-sm" title="Remove" onclick="supRemove('+i+')" style="border:1px solid var(--border);">✕</button>' +
+        (s.barcode ? '<span title="Barcode: '+esc(s.barcode)+'" style="font-size:0.6rem;color:var(--muted);">▮'+String(s.barcode).slice(-4)+'</span>' : '') +
+      '</div>';
+    }).join('');
+  }
+  function _readSupplies() {
+    if (!Array.isArray(inventoryData.supplies)) return;
+    inventoryData.supplies.forEach((s,i)=>{
+      const n=document.getElementById('sup-name-'+i), q=document.getElementById('sup-qty-'+i), l=document.getElementById('sup-low-'+i);
+      if(n) s.name = n.value.trim();
+      if(q) s.qty  = Math.max(0, parseInt(q.value,10)||0);
+      if(l) s.low  = Math.max(0, parseInt(l.value,10)||0);
+    });
+  }
+  function invAddSupply(prefill) {
+    _readSupplies();
+    if (!Array.isArray(inventoryData.supplies)) inventoryData.supplies = [];
+    inventoryData.supplies.push(Object.assign({ name:'', qty:INV_DEFAULT_QTY, low:INV_DEFAULT_LOW, barcode:'' }, prefill||{}));
+    _populateSupplies();
+  }
+  function supBump(i,d){ _readSupplies(); const s=inventoryData.supplies[i]; if(s){ s.qty=Math.max(0,(Number(s.qty)||0)+d); } _populateSupplies(); }
+  function supRemove(i){ _readSupplies(); inventoryData.supplies.splice(i,1); _populateSupplies(); }
+
+  /* ── BARCODE SCANNING (native BarcodeDetector; jsQR fallback for iOS) ── */
+  async function invScanStart() {
+    const modal = document.getElementById('scanModal');
+    const video = document.getElementById('scanVideo');
+    const status = document.getElementById('scanStatus');
+    const manual = document.getElementById('scanManual');
+    modal.style.display = 'flex'; manual.style.display='none';
+    status.style.color='var(--muted)'; status.textContent='Starting camera…';
+    try {
+      _scanStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
+      video.srcObject = _scanStream; await video.play();
+    } catch (e) {
+      status.style.color='var(--wok)'; status.textContent='Camera unavailable ('+e.name+'). Enter the barcode by hand.';
+      manual.style.display='block'; return;
+    }
+    // Prefer native BarcodeDetector (Android Chrome). Fallback to jsQR on iOS.
+    if ('BarcodeDetector' in window) {
+      try {
+        const fmts = await window.BarcodeDetector.getSupportedFormats();
+        _scanDetector = new window.BarcodeDetector({ formats: fmts });
+        status.textContent='Point the camera at a barcode…';
+        _scanLoopNative();
+        return;
+      } catch(e){ /* fall through to jsQR */ }
+    }
+    // iOS / unsupported: load jsQR (QR codes) + offer manual for 1D barcodes.
+    status.textContent='Point at a QR code — or enter a product barcode by hand below.';
+    manual.style.display='block';
+    try {
+      if (!_scanJsQR) {
+        const mod = await import('https://cdn.jsdelivr.net/npm/jsqr@1.4.0/+esm');
+        _scanJsQR = mod.default || mod;
+      }
+      _scanLoopJsQR();
+    } catch(e){ /* manual entry still available */ }
+  }
+  async function _scanLoopNative() {
+    const video = document.getElementById('scanVideo');
+    if (!_scanDetector || !video || video.readyState < 2) { _scanRAF = requestAnimationFrame(_scanLoopNative); return; }
+    try {
+      const codes = await _scanDetector.detect(video);
+      if (codes && codes.length) { _onBarcode(codes[0].rawValue); return; }
+    } catch(e){}
+    _scanRAF = requestAnimationFrame(_scanLoopNative);
+  }
+  function _scanLoopJsQR() {
+    const video = document.getElementById('scanVideo');
+    if (!_scanJsQR || !video || video.readyState < 2) { _scanRAF = requestAnimationFrame(_scanLoopJsQR); return; }
+    const c = document.createElement('canvas'); c.width=video.videoWidth; c.height=video.videoHeight;
+    const ctx = c.getContext('2d'); ctx.drawImage(video,0,0,c.width,c.height);
+    try {
+      const img = ctx.getImageData(0,0,c.width,c.height);
+      const code = _scanJsQR(img.data, img.width, img.height);
+      if (code && code.data) { _onBarcode(code.data); return; }
+    } catch(e){}
+    _scanRAF = requestAnimationFrame(_scanLoopJsQR);
+  }
+  function invScanManualSubmit() {
+    const v = (document.getElementById('scanManualInput').value||'').trim();
+    if (v) _onBarcode(v);
+  }
+  function _onBarcode(code) {
+    invScanStop();
+    _readSupplies();
+    if (!Array.isArray(inventoryData.supplies)) inventoryData.supplies = [];
+    // If a supply already has this barcode, bump its qty; else add a new one.
+    const existing = inventoryData.supplies.find(s => s.barcode && String(s.barcode) === String(code));
+    if (existing) {
+      existing.qty = (Number(existing.qty)||0) + 1;
+      _populateSupplies();
+      showToast('Scanned: +1 to "' + (existing.name||'supply') + '"', 'success');
+    } else {
+      invAddSupply({ name:'', qty:1, barcode:String(code) });
+      showToast('New barcode added — name this supply', 'success');
+      // focus the new row's name field
+      setTimeout(()=>{ const i=inventoryData.supplies.length-1; const el=document.getElementById('sup-name-'+i); if(el) el.focus(); }, 60);
+    }
+  }
+  function invScanStop() {
+    const modal = document.getElementById('scanModal');
+    if (_scanRAF) { cancelAnimationFrame(_scanRAF); _scanRAF=null; }
+    if (_scanStream) { _scanStream.getTracks().forEach(t=>t.stop()); _scanStream=null; }
+    _scanDetector=null;
+    if (modal) modal.style.display='none';
   }
   /* ── 🧾 RECEIPT PRINTING ───────────────────────────────────────────── */
   let printingData = {
@@ -3015,6 +3219,7 @@
 
   function saveInventory() {
     _readInventory();
+    _readSupplies();
     inventoryData.updated = new Date().toISOString();
     setUnsaved();
     _renderInvAlertBanner();
