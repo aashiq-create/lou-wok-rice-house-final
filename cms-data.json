@@ -1,6 +1,6 @@
 {
   "_info": "Written by louwok.com/admin. index.html reads this at runtime.",
-  "_updated": "2026-07-10T02:35:43.970Z",
+  "_updated": "2026-07-10T02:40:54.341Z",
   "menu": [
     {
       "id": 1,
@@ -1596,8 +1596,15 @@
         "low": 6
       }
     },
-    "updated": "2026-07-10T02:35:43.967Z",
-    "supplies": []
+    "updated": "2026-07-10T02:40:54.339Z",
+    "supplies": [
+      {
+        "name": "32 oz. Boxes",
+        "qty": 500,
+        "low": 250,
+        "barcode": ""
+      }
+    ]
   },
   "printing": {
     "enabled": false,
