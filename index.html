@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- LOU-WOK-INDEX vSTORY-WHITE | Our Story text solid white (.about-text) | 2026-07-09 -->
+<!-- LOU-WOK-INDEX vCATERING-CONSENT | step-2 SMS consent checkbox synced + white catering helper text | 2026-07-09 -->
 
 <html lang="en">
 <head>
@@ -1443,7 +1443,7 @@
     .cat-divider { height: 1px; background: var(--border); margin: 1.5rem 0; }
     .cat-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
     .cat-group { display: flex; flex-direction: column; gap: 5px; }
-    .cat-lbl { font-size: 0.64rem; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); }
+    .cat-lbl { font-size: 0.64rem; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: var(--rice); }
     .cat-lbl span { color: var(--wok); }
     .cat-input, .cat-select, .cat-textarea {
       width: 100%; background: var(--black); border: 1px solid var(--border);
@@ -1516,7 +1516,7 @@
     .cat-terms-wrap { display: flex; align-items: flex-start; gap: 10px; margin: 1rem 0 0.5rem; }
     .cat-terms-wrap input[type=checkbox] { margin-top: 3px; accent-color: var(--wok); flex-shrink: 0; }
     .cat-terms-wrap label { font-size: 0.76rem; color: var(--muted); line-height: 1.65; cursor: pointer; }
-    .cat-form-note { font-size: 0.7rem; color: var(--muted); text-align: center; margin-top: 0.75rem; line-height: 1.6; }
+    .cat-form-note { font-size: 0.7rem; color: var(--rice); text-align: center; margin-top: 0.75rem; line-height: 1.6; }
     .cat-form-note a { color: var(--gold); text-decoration: none; }
     /* SIDEBAR */
     .cat-sidebar { display: flex; flex-direction: column; gap: 2px; }
@@ -2783,8 +2783,8 @@
               <div class="cat-group"><label class="cat-lbl" for="cf-email">Email <span>*</span></label><input class="cat-input" id="cf-email" type="email" inputmode="email" autocomplete="email" placeholder="you@email.com"/></div>
               <div class="cat-group"><label class="cat-lbl" for="cf-phone">Phone <span>*</span></label><input class="cat-input" id="cf-phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="(602) 555-0100" maxlength="14"/></div>
             </div>
-            <label class="cart-consent-row" for="catSmsConsent" style="display:flex;gap:8px;align-items:flex-start;font-size:0.72rem;color:var(--muted);line-height:1.5;margin:-4px 0 12px;cursor:pointer;">
-              <input type="checkbox" id="catSmsConsent" style="margin-top:3px;flex-shrink:0;width:15px;height:15px;accent-color:var(--wok);">
+            <label class="cart-consent-row" for="catSmsConsent" style="display:flex;gap:8px;align-items:flex-start;font-size:0.72rem;color:var(--rice);line-height:1.5;margin:-4px 0 12px;cursor:pointer;">
+              <input type="checkbox" id="catSmsConsent" onchange="syncCatConsent(this)" style="margin-top:3px;flex-shrink:0;width:15px;height:15px;accent-color:var(--wok);">
               <span>I agree to receive catering texts from Lou Wok Rice House. Msg &amp; data rates may apply. Reply STOP to opt out. <a href="/terms.html" style="color:var(--gold);">Terms</a> &amp; <a href="/privacy.html" style="color:var(--gold);">Privacy</a>.</span>
             </label>
             <div class="cat-row">
@@ -2880,6 +2880,10 @@
             <div class="cat-form-title">Review</div>
             <div class="cat-review" id="catReviewBlock"></div>
             <div class="cat-terms-wrap"><input type="checkbox" id="catTerms"/><label for="catTerms">I understand this is an inquiry form only. Lou Wok will follow up within 48 hours to confirm availability and finalize details, then send a secure link to pay a 25% deposit that locks in the date.</label></div>
+            <label class="cart-consent-row" for="catSmsConsent2" style="display:flex;gap:8px;align-items:flex-start;font-size:0.72rem;color:var(--rice);line-height:1.5;margin:0 0 12px;cursor:pointer;">
+              <input type="checkbox" id="catSmsConsent2" onchange="syncCatConsent(this)" style="margin-top:3px;flex-shrink:0;width:15px;height:15px;accent-color:var(--wok);">
+              <span>I agree to receive catering texts from Lou Wok Rice House. Msg &amp; data rates may apply. Reply STOP to opt out. <a href="/terms.html" style="color:var(--gold);">Terms</a> &amp; <a href="/privacy.html" style="color:var(--gold);">Privacy</a>.</span>
+            </label>
             <div class="cat-btn-row"><button class="cat-back-btn" onclick="catNextStep(1)">&larr; Back</button><button class="cat-next-btn" onclick="submitCatering()">Fire the Order &#128293;</button></div>
             <p class="cat-form-note">We respond within 48 hours &middot; Questions? <a href="mailto:catering@louwok.com">catering@louwok.com</a></p>
           </div>
@@ -4469,15 +4473,28 @@
         `<span class="rv-lbl">Add-Ons</span><span class="rv-val">${addons}</span>`;
     }
 
+    function syncCatConsent(src) {
+      // Keep the step-1 and step-2 SMS consent checkboxes in sync so consent
+      // given on either step counts, and the box is always visible where the
+      // user is when they submit.
+      const checked = !!(src && src.checked);
+      const a = document.getElementById('catSmsConsent');
+      const b = document.getElementById('catSmsConsent2');
+      if (a) a.checked = checked;
+      if (b) b.checked = checked;
+    }
+
     function submitCatering() {
       const terms = document.getElementById('catTerms');
       if (!terms || !terms.checked) {
-        showToast('Please confirm the inquiry terms.', 'error');
+        showToast('Please confirm the inquiry terms above the button.', 'error');
         return;
       }
-      const smsConsent = document.getElementById('catSmsConsent');
-      if (!smsConsent || !smsConsent.checked) {
-        showToast('Please check the box to receive catering texts.', 'error');
+      const c1 = document.getElementById('catSmsConsent');
+      const c2 = document.getElementById('catSmsConsent2');
+      const consented = (c1 && c1.checked) || (c2 && c2.checked);
+      if (!consented) {
+        showToast('Please check the box agreeing to receive catering texts.', 'error');
         return;
       }
 
@@ -4565,6 +4582,8 @@
       if (terms) terms.checked = false;
       const smsConsent = document.getElementById('catSmsConsent');
       if (smsConsent) smsConsent.checked = false;
+      const smsConsent2 = document.getElementById('catSmsConsent2');
+      if (smsConsent2) smsConsent2.checked = false;
       catPkg = '';
       updateCatTicket();
       for (let i = 2; i <= 4; i++) {
