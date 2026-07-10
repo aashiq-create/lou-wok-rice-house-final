@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- LOU-WOK-INDEX vSHARE-PERSONALIZED | rounded catering-success buttons + personalized themed share message | 2026-07-09 -->
+<!-- LOU-WOK-INDEX vGUESTS-CUSTOM | catering guest count adds Custom exact-number option | 2026-07-09 -->
 
 <html lang="en">
 <head>
@@ -2852,6 +2852,10 @@
                 <div class="cat-chip" onclick="pickChip(this,'cf-guests','101 – 200')">101&ndash;200</div>
                 <div class="cat-chip" onclick="pickChip(this,'cf-guests','201 – 350')">201&ndash;350</div>
                 <div class="cat-chip" onclick="pickChip(this,'cf-guests','350+')">350+</div>
+                <div class="cat-chip" id="guestsCustomChip" onclick="pickGuestsCustom(this)">Custom</div>
+              </div>
+              <div id="guestsCustomWrap" style="display:none;margin-top:8px;">
+                <input class="cat-input" id="cf-guests-custom" type="number" min="20" inputmode="numeric" placeholder="Enter exact number of guests (min 20)" oninput="setCustomGuests(this.value)"/>
               </div>
               <input type="hidden" id="cf-guests"/>
             </div>
@@ -4327,6 +4331,41 @@
       el.parentElement.classList.remove('cat-err');
       const hidden = document.getElementById(hiddenId);
       if (hidden) hidden.value = value;
+      // If a preset (non-custom) chip was chosen, hide the custom input.
+      if (hiddenId === 'cf-guests' && el.id !== 'guestsCustomChip') {
+        const wrap = document.getElementById('guestsCustomWrap');
+        if (wrap) wrap.style.display = 'none';
+        const ci = document.getElementById('cf-guests-custom');
+        if (ci) ci.value = '';
+      }
+      updateCatTicket();
+    }
+
+    // "Custom" guest-count chip: highlight it, reveal the number input, and
+    // clear cf-guests until they type a value.
+    function pickGuestsCustom(el) {
+      const group = el.parentElement;
+      group.querySelectorAll('.cat-chip').forEach(c => c.classList.remove('selected'));
+      el.classList.add('selected');
+      group.classList.remove('cat-err');
+      const wrap = document.getElementById('guestsCustomWrap');
+      if (wrap) wrap.style.display = 'block';
+      const ci = document.getElementById('cf-guests-custom');
+      const hidden = document.getElementById('cf-guests');
+      if (hidden) hidden.value = ci && ci.value ? String(ci.value) : '';
+      if (ci) ci.focus();
+      updateCatTicket();
+    }
+
+    // Writes the typed custom headcount into cf-guests as the source of truth.
+    // Stored as a bare number (like the preset chips) so the " guests" suffix
+    // added by the ticket/review renders once, not twice.
+    function setCustomGuests(val) {
+      const hidden = document.getElementById('cf-guests');
+      const n = parseInt(val, 10);
+      if (hidden) hidden.value = (val && !isNaN(n)) ? String(n) : '';
+      const grp = document.getElementById('grp-guests');
+      if (grp && hidden && hidden.value) grp.classList.remove('cat-err');
       updateCatTicket();
     }
 
@@ -4500,7 +4539,7 @@
         `<span class="rv-lbl">Email</span><span class="rv-val">${v('cf-email')}</span>` +
         `<span class="rv-lbl">Phone</span><span class="rv-val">${v('cf-phone')}</span>` +
         `<span class="rv-lbl">Date</span><span class="rv-val">${document.getElementById('cf-date').value ? catCalFmt(v('cf-date')) : '\u2014'} ${v('cf-time')}</span>` +
-        `<span class="rv-lbl">Guests</span><span class="rv-val">${v('cf-guests')}</span>` +
+        `<span class="rv-lbl">Guests</span><span class="rv-val">${v('cf-guests') ? v('cf-guests') + ' guests' : '\u2014'}</span>` +
         `<span class="rv-lbl">Event</span><span class="rv-val">${v('cf-type')}</span>` +
         `<span class="rv-lbl">Style</span><span class="rv-val">${v('cf-style')}</span>` +
         `<span class="rv-lbl">Package</span><span class="rv-val" style="color:var(--wok)">${catPkg || '\u2014'}</span>` +
