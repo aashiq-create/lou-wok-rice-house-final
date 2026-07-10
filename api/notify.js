@@ -1,5 +1,5 @@
 // /api/notify.js
-// v-SMS-COPY 2026-07-09 — updated customer order confirmation wording + added customer catering auto-reply (STOP-compliant); on top of v-PRINT PrintNode auto-print
+// v-EMAIL-BRAND 2026-07-09 — branded HTML emails w/ circular logo for admin+customer (order & catering); SMS stays text-only; on top of v-SMS-COPY + v-PRINT
 // ────────────────────────────────────────────────────────────────────────────
 // The endpoint index-5.html already POSTs to. Handles two payload types:
 //
@@ -53,18 +53,67 @@ async function sendSMS(client, from, to, body) {
   }
 }
 
-async function sendEmail(to, subject, text) {
+const LOGO_URL = 'https://louwok.com/favicon-512.png';
+const BRAND = { black:'#0a0a08', rice:'#f5eed8', wok:'#c8390a', gold:'#e8a020', smoke:'#1e1c18' };
+
+// HTML-escape for safe insertion into email templates.
+function esc(s) {
+  return String(s == null ? '' : s)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+
+// Builds a branded HTML email with the circular Lou Wok logo up top.
+// `rows` is an array of [label, value] pairs rendered as a clean ticket.
+function emailHTML({ heading, intro, rows, footerNote }) {
+  const rowHtml = (rows || [])
+    .filter(r => r && r[1] != null && String(r[1]).trim() !== '')
+    .map(r => `<tr>
+        <td style="padding:6px 0;color:${BRAND.gold};font-size:12px;letter-spacing:0.08em;text-transform:uppercase;font-weight:700;vertical-align:top;white-space:nowrap;">${esc(r[0])}</td>
+        <td style="padding:6px 0 6px 18px;color:${BRAND.black};font-size:15px;font-weight:600;vertical-align:top;">${esc(r[1]).replace(/\n/g,'<br>')}</td>
+      </tr>`).join('');
+  return `<!DOCTYPE html><html><body style="margin:0;padding:0;background:${BRAND.smoke};">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:${BRAND.smoke};padding:28px 12px;">
+      <tr><td align="center">
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:480px;background:${BRAND.rice};border-radius:14px;overflow:hidden;font-family:Arial,Helvetica,sans-serif;">
+          <tr><td align="center" style="padding:28px 24px 8px;">
+            <img src="${LOGO_URL}" width="84" height="84" alt="Lou Wok Rice House" style="display:block;border-radius:50%;border:3px solid ${BRAND.wok};" />
+          </td></tr>
+          <tr><td align="center" style="padding:4px 24px 0;">
+            <div style="font-size:13px;letter-spacing:0.16em;text-transform:uppercase;color:${BRAND.wok};font-weight:700;">Lou Wok Rice House</div>
+          </td></tr>
+          <tr><td align="center" style="padding:10px 24px 2px;">
+            <div style="font-size:26px;font-weight:800;color:${BRAND.black};letter-spacing:0.02em;">${esc(heading)}</div>
+          </td></tr>
+          ${intro ? `<tr><td align="center" style="padding:6px 32px 12px;"><div style="font-size:14px;color:#4a463c;line-height:1.6;">${esc(intro)}</div></td></tr>` : ''}
+          <tr><td style="padding:8px 32px 4px;">
+            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-top:1px dashed ${BRAND.wok};border-bottom:1px dashed ${BRAND.wok};margin:4px 0;">
+              ${rowHtml}
+            </table>
+          </td></tr>
+          <tr><td align="center" style="padding:16px 32px 28px;">
+            <div style="font-size:12px;color:#7a7466;line-height:1.6;">${esc(footerNote || 'St. Louis-style Chinese-American · Phoenix, AZ')}</div>
+          </td></tr>
+        </table>
+      </td></tr>
+    </table>
+  </body></html>`;
+}
+
+async function sendEmail(to, subject, text, html) {
   const key  = process.env.RESEND_API_KEY;
   const from = process.env.RESEND_FROM || 'Lou Wok <orders@louwok.com>';
   if (!key || !to || !to.length) return { ok: false, reason: 'email_disabled' };
   try {
+    const payload = { from, to, subject, text };
+    if (html) payload.html = html;
     const r = await fetch('https://api.resend.com/emails', {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${key}`,
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ from, to, subject, text }),
+      body: JSON.stringify(payload),
     });
     if (!r.ok) {
       const t = await r.text().catch(() => '');
@@ -135,12 +184,47 @@ module.exports = async (req, res) => {
         results.admins.push(await sendSMS(client, smsFrom, a, adminBody));
       }
 
-      // 3) Admin email (optional).
+      // 3) Admin email — branded HTML ticket with logo.
+      const orderRows = [
+        ['Order #', orderNo],
+        ['Customer', cust.name || '—'],
+        ['Phone', cust.phone || '—'],
+        ['Items', items],
+        ['Total', total],
+        ['Notes', p.notes || ''],
+        ['Placed', p.order_time || ''],
+      ];
       results.email = await sendEmail(
         adminEmail,
         `New order ${orderNo} — ${cust.name || 'Guest'}`,
-        adminBody
+        adminBody,
+        emailHTML({
+          heading: 'New Order',
+          intro: `A new online order just came in.`,
+          rows: orderRows,
+          footerNote: 'Kitchen ticket · Lou Wok Rice House',
+        })
       );
+
+      // 3b) Customer email confirmation — branded, if we have their email.
+      if (cust.email) {
+        results.customerEmail = await sendEmail(
+          [cust.email],
+          `${RESTAURANT_NAME}: Order ${orderNo} received`,
+          `We received your order #${orderNo}. Total ${total}. Pickup ready in ~${PICKUP_ETA} min. We'll text you when it's ready.`,
+          emailHTML({
+            heading: `Order Received!`,
+            intro: `Thanks ${(cust.name || '').split(' ')[0] || 'friend'}! Every order is cooked fresh and wok-fired to order. We'll text you the moment it's ready for pickup.`,
+            rows: [
+              ['Order #', orderNo],
+              ['Items', items],
+              ['Total', total],
+              ['Pickup', `~${PICKUP_ETA} min`],
+            ],
+            footerNote: 'Wok-fired fresh · St. Louis-style · Phoenix, AZ',
+          })
+        );
+      }
 
       // 4) Auto-print the kitchen ticket (PrintNode). Never let a printer
       //    problem break order submission — wrapped and non-fatal.
@@ -172,7 +256,22 @@ module.exports = async (req, res) => {
       results.email = await sendEmail(
         adminEmail,
         `Catering inquiry — ${c.name || 'Guest'}`,
-        body
+        body,
+        emailHTML({
+          heading: 'Catering Inquiry',
+          intro: 'A new catering inquiry just came in.',
+          rows: [
+            ['Name', c.name || '—'],
+            ['Phone', c.phone || '—'],
+            ['Email', c.email || '—'],
+            ['Event', p.event_date || '—'],
+            ['Guests', p.guests || '—'],
+            ['Package', p.package || ''],
+            ['Add-Ons', p.addons || ''],
+            ['Details', p.details || ''],
+          ],
+          footerNote: 'Catering inquiry · Lou Wok Rice House',
+        })
       );
 
       // Customer auto-reply — confirms we received the inquiry (STOP required).
@@ -186,6 +285,27 @@ module.exports = async (req, res) => {
           `We'll reach out shortly to plan the details. ` +
           `Reply STOP to opt out.`;
         results.customer = await sendSMS(client, smsFrom, c.phone, custBody);
+      }
+
+      // Customer catering confirmation — branded HTML, if we have their email.
+      if (c.email) {
+        const firstName = (c.name || '').trim().split(/\s+/)[0] || 'there';
+        results.customerEmail = await sendEmail(
+          [c.email],
+          `${RESTAURANT_NAME}: We got your catering inquiry`,
+          `Thanks ${firstName}! We received your catering inquiry. We'll follow up within 48 hours to confirm your date and finalize details.`,
+          emailHTML({
+            heading: 'Inquiry Received!',
+            intro: `Thanks ${firstName}! We got your catering request and we're fired up. Within 48 hours we'll confirm your date and email a secure link to pay your 25% deposit — that's what locks it in.`,
+            rows: [
+              ['Event', p.event_date || ''],
+              ['Guests', p.guests || ''],
+              ['Package', p.package || ''],
+              ['Add-Ons', p.addons || ''],
+            ],
+            footerNote: 'Questions? catering@louwok.com',
+          })
+        );
       }
     } else {
       return res.status(400).json({ error: 'Unknown type: ' + type });
