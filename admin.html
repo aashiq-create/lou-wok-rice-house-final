@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- LOU-WOK-ADMIN vTAGBORDER | tag-option outlines more visible (0.15->0.4) on top of vEVENTS | 2026-07-09 -->
+<!-- LOU-WOK-ADMIN vINV-BULK | inventory now bulk Ingredients & Supplies (add/delete); menu-linked itemized list hidden; on top of vTAGBORDER -->
 
 <html lang="en">
 <head>
@@ -919,28 +919,33 @@
           <button class="btn btn-primary btn-sm" onclick="saveInventory()">Save</button>
         </div>
         <p style="color:var(--muted);font-size:0.82rem;line-height:1.6;margin:0 0 1rem;">
-          Track how much of each item you have on hand. Set a <strong style="color:var(--rice);">low-stock threshold</strong>
+          Track how much of each ingredient and supply you have on hand, in bulk. Set a <strong style="color:var(--rice);">low-stock threshold</strong>
           per item &mdash; when the count hits it or below, you'll get an alert on the Dashboard.
           Remember to <strong style="color:var(--rice);">Publish</strong> after saving.
         </p>
         <div id="inv-alert-banner" style="display:none;margin-bottom:1rem;padding:0.75rem 1rem;border-radius:2px;background:rgba(200,57,10,0.12);border:1px solid var(--wok);color:var(--rice);font-size:0.85rem;"></div>
-        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:1rem;">
-          <button class="btn btn-ghost btn-sm" onclick="invSyncFromMenu()" style="border:1px solid var(--border);">&#8635; Sync items from menu</button>
-          <button class="btn btn-ghost btn-sm" onclick="invMarkAllStocked()" style="border:1px solid var(--border);">Restock all to default</button>
+        <!-- Menu-linked itemized inventory hidden by design — Lou Wok tracks by bulk
+             ingredients/supplies below, not per menu dish. Kept in DOM (display:none)
+             so existing sync/low-stock functions remain wired without errors. -->
+        <div style="display:none;">
+          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:1rem;">
+            <button class="btn btn-ghost btn-sm" onclick="invSyncFromMenu()" style="border:1px solid var(--border);">&#8635; Sync items from menu</button>
+            <button class="btn btn-ghost btn-sm" onclick="invMarkAllStocked()" style="border:1px solid var(--border);">Restock all to default</button>
+          </div>
+          <div id="inventory-rows"></div>
         </div>
-        <div id="inventory-rows"></div>
 
         <div style="margin-top:1.6rem;padding-top:1.2rem;border-top:1px solid var(--border);">
           <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:0.5rem;">
-            <span style="font-size:0.68rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);">Supplies &amp; Packaging</span>
+            <span style="font-size:0.68rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);">Ingredients &amp; Supplies</span>
             <div style="display:flex;gap:8px;flex-wrap:wrap;">
-              <button class="btn btn-ghost btn-sm" onclick="invAddSupply()" style="border:1px solid var(--border);">+ Add supply</button>
+              <button class="btn btn-ghost btn-sm" onclick="invAddSupply()" style="border:1px solid var(--border);">+ Add item</button>
               <button class="btn btn-ghost btn-sm" onclick="invScanStart()" style="border:1px solid var(--border);">📷 Scan barcode</button>
             </div>
           </div>
           <p style="color:var(--muted);font-size:0.72rem;line-height:1.5;margin:0 0 0.7rem;">
-            Track anything that isn't a menu item &mdash; plasticware, napkins, sandwich wax paper, half/order boxes, etc.
-            Add manually, or tap &ldquo;Scan barcode&rdquo; to attach a product barcode so you can restock it by scanning next time.
+            Track everything you buy in bulk &mdash; rice, oil, soy sauce, eggs, bread, produce, plus plasticware, napkins, boxes, etc.
+            Tap &ldquo;+ Add item&rdquo; to add one, or &ldquo;Scan barcode&rdquo; to attach a product barcode so you can restock it by scanning next time. Use the &times; to delete anything you no longer track.
           </p>
 
           <!-- How-to-scan hint (collapsible) -->
@@ -3197,7 +3202,7 @@
     if (!Array.isArray(inventoryData.supplies)) inventoryData.supplies = [];
     const list = inventoryData.supplies;
     if (!list.length) {
-      wrap.innerHTML = '<p style="color:var(--muted);font-size:0.8rem;">No supplies yet. Use &ldquo;+ Add supply&rdquo; or &ldquo;Scan barcode&rdquo; to add plasticware, napkins, wax paper, boxes, etc.</p>';
+      wrap.innerHTML = '<p style="color:var(--muted);font-size:0.8rem;">No items yet. Use &ldquo;+ Add item&rdquo; or &ldquo;Scan barcode&rdquo; to add ingredients &amp; supplies &mdash; rice, oil, eggs, bread, cups, napkins, boxes, etc.</p>';
       return;
     }
     const esc = s => String(s==null?'':s).replace(/"/g,'&quot;');
