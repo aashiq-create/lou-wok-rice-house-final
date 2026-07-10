@@ -1,5 +1,5 @@
 // /api/notify.js
-// v-EMAIL-BRAND 2026-07-09 — branded HTML emails w/ circular logo for admin+customer (order & catering); SMS stays text-only; on top of v-SMS-COPY + v-PRINT
+// v-CATERING-FIX 2026-07-09 — FIX: catering admin notify read flat frontend fields (client_name/guest_count/etc) that were coming through blank; themed complete SMS; on top of v-EMAIL-BRAND
 // ────────────────────────────────────────────────────────────────────────────
 // The endpoint index-5.html already POSTs to. Handles two payload types:
 //
@@ -244,64 +244,94 @@ module.exports = async (req, res) => {
         }
       }
     } else if (type === 'catering') {
-      const c    = p.customer || {};
-      const body =
-        `🎉 CATERING INQUIRY\n` +
-        `${c.name || '—'} · ${c.phone || '—'} · ${c.email || '—'}\n` +
-        `Event: ${p.event_date || '—'} · Guests: ${p.guests || '—'}\n` +
-        `${p.details || ''}`;
+      // Normalize fields — frontend sends FLAT snake_case (client_name,
+      // guest_count, …); older payloads used p.customer.*. Read both.
+      const c = p.customer || {};
+      const name    = p.client_name  || c.name  || '';
+      const phone   = p.client_phone || c.phone || '';
+      const email   = p.client_email || c.email || '';
+      const guests  = p.guest_count  || p.guests || '';
+      const evDate  = p.event_date   || '';
+      const evTime  = p.event_time   || '';
+      const evType  = p.event_type   || '';
+      const style   = p.service_style|| '';
+      const pkg     = p.package      || '';
+      const addons  = (p.addons && p.addons !== 'None') ? p.addons : '';
+      const venue   = p.venue        || '';
+      const details = p.notes || p.details || '';
+
+      // Admin SMS — Lou Wok-themed, complete, skips blank lines.
+      const line = (label, val) => val ? `${label}: ${val}\n` : '';
+      const body = (
+        `🔥 NEW CATERING INQUIRY — LOU WOK\n` +
+        `${name || 'Guest'}\n` +
+        line('📞', phone) +
+        line('✉️', email) +
+        line('📅 Event', [evDate, evTime].filter(Boolean).join(' · ')) +
+        line('👥 Guests', guests ? `${guests} guests` : '') +
+        line('🎉 Type', evType) +
+        line('🍽️ Style', style) +
+        line('📦 Package', pkg) +
+        line('➕ Add-Ons', addons) +
+        (venue ? `📍 ${venue}\n` : '') +
+        (details ? `📝 ${details}\n` : '') +
+        `— Follow up within 48 hrs to lock it in.`
+      ).trim();
       for (const a of adminSms) {
         results.admins.push(await sendSMS(client, smsFrom, a, body));
       }
       results.email = await sendEmail(
         adminEmail,
-        `Catering inquiry — ${c.name || 'Guest'}`,
+        `Catering inquiry — ${name || 'Guest'}`,
         body,
         emailHTML({
           heading: 'Catering Inquiry',
           intro: 'A new catering inquiry just came in.',
           rows: [
-            ['Name', c.name || '—'],
-            ['Phone', c.phone || '—'],
-            ['Email', c.email || '—'],
-            ['Event', p.event_date || '—'],
-            ['Guests', p.guests || '—'],
-            ['Package', p.package || ''],
-            ['Add-Ons', p.addons || ''],
-            ['Details', p.details || ''],
+            ['Name', name || '—'],
+            ['Phone', phone || '—'],
+            ['Email', email || '—'],
+            ['Event', [evDate, evTime].filter(Boolean).join(' · ') || '—'],
+            ['Guests', guests ? `${guests} guests` : '—'],
+            ['Type', evType],
+            ['Style', style],
+            ['Package', pkg],
+            ['Add-Ons', addons],
+            ['Venue', venue],
+            ['Details', details],
           ],
           footerNote: 'Catering inquiry · Lou Wok Rice House',
         })
       );
 
       // Customer auto-reply — confirms we received the inquiry (STOP required).
-      if (c.phone) {
-        const firstName = (c.name || '').trim().split(/\s+/)[0] || 'there';
+      if (phone) {
+        const firstName = (name || '').trim().split(/\s+/)[0] || 'there';
         const custBody =
           `${RESTAURANT_NAME}: Thanks ${firstName}! ` +
           `We received your catering inquiry` +
-          (p.event_date ? ` for ${p.event_date}` : '') +
-          (p.guests ? ` (${p.guests} guests)` : '') + `. ` +
+          (evDate ? ` for ${evDate}` : '') +
+          (guests ? ` (${guests} guests)` : '') + `. ` +
           `We'll reach out shortly to plan the details. ` +
           `Reply STOP to opt out.`;
-        results.customer = await sendSMS(client, smsFrom, c.phone, custBody);
+        results.customer = await sendSMS(client, smsFrom, phone, custBody);
       }
 
       // Customer catering confirmation — branded HTML, if we have their email.
-      if (c.email) {
-        const firstName = (c.name || '').trim().split(/\s+/)[0] || 'there';
+      if (email) {
+        const firstName = (name || '').trim().split(/\s+/)[0] || 'there';
         results.customerEmail = await sendEmail(
-          [c.email],
+          [email],
           `${RESTAURANT_NAME}: We got your catering inquiry`,
           `Thanks ${firstName}! We received your catering inquiry. We'll follow up within 48 hours to confirm your date and finalize details.`,
           emailHTML({
             heading: 'Inquiry Received!',
             intro: `Thanks ${firstName}! We got your catering request and we're fired up. Within 48 hours we'll confirm your date and email a secure link to pay your 25% deposit — that's what locks it in.`,
             rows: [
-              ['Event', p.event_date || ''],
-              ['Guests', p.guests || ''],
-              ['Package', p.package || ''],
-              ['Add-Ons', p.addons || ''],
+              ['Event', [evDate, evTime].filter(Boolean).join(' · ')],
+              ['Guests', guests ? `${guests} guests` : ''],
+              ['Package', pkg],
+              ['Add-Ons', addons],
             ],
             footerNote: 'Questions? catering@louwok.com',
           })
