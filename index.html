@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- LOU-WOK-INDEX vCATERING-CONSENT | step-2 SMS consent checkbox synced + white catering helper text | 2026-07-09 -->
+<!-- LOU-WOK-INDEX vSHARE-PERSONALIZED | rounded catering-success buttons + personalized themed share message | 2026-07-09 -->
 
 <html lang="en">
 <head>
@@ -1543,7 +1543,7 @@
     .cat-success.show { display: block; }
     .cat-success-icon { font-size: 3rem; margin-bottom: 1rem; }
     .cat-success-title { font-family: 'Bebas Neue', sans-serif; font-size: 2.5rem; letter-spacing: 0.06em; color: var(--gold); margin-bottom: 0.5rem; }
-    .cat-success-sub { font-size: 0.88rem; color: rgba(245,238,216,0.55); line-height: 1.7; margin-bottom: 1.5rem; }
+    .cat-success-sub { font-size: 0.88rem; color: var(--rice); line-height: 1.7; margin-bottom: 1.5rem; }
     @media (max-width: 900px) {
       .cat-layout { grid-template-columns: 1fr; }
       .cat-offer-grid { grid-template-columns: repeat(3,1fr); }
@@ -1607,6 +1607,38 @@
       margin-left: 10px; transition: border-color 0.2s, color 0.2s;
     }
     .cat-share-btn:hover { border-color: var(--gold); color: var(--gold); }
+    /* Polished, rounded catering-success buttons (replaces hard rectangles) */
+    .cat-success-actions { display: flex; gap: 0.85rem; justify-content: center; flex-wrap: wrap; }
+    .cat-success .btn-primary,
+    .cat-success .cat-share-btn {
+      border-radius: 999px;
+      padding: 0.95rem 1.9rem;
+      min-height: 52px;
+      display: inline-flex; align-items: center; justify-content: center;
+      margin-left: 0;
+      transition: transform 0.15s ease, box-shadow 0.2s ease, background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+    }
+    .cat-success .btn-primary {
+      background: linear-gradient(135deg, var(--wok) 0%, #e8631a 100%);
+      box-shadow: 0 6px 18px rgba(200,57,10,0.35), inset 0 1px 0 rgba(255,255,255,0.15);
+      border: none;
+    }
+    .cat-success .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 26px rgba(200,57,10,0.45), inset 0 1px 0 rgba(255,255,255,0.2);
+    }
+    .cat-success .btn-primary:active { transform: translateY(0) scale(0.98); }
+    .cat-success .cat-share-btn {
+      border: 1.5px solid rgba(232,160,32,0.5);
+      color: var(--gold);
+      background: rgba(232,160,32,0.06);
+    }
+    .cat-success .cat-share-btn:hover {
+      transform: translateY(-2px);
+      background: var(--gold); color: var(--black); border-color: var(--gold);
+      box-shadow: 0 8px 20px rgba(232,160,32,0.3);
+    }
+    .cat-success .cat-share-btn:active { transform: translateY(0) scale(0.98); }
     /* ── CONFETTI ── */
     .cat-confetti-piece { position: fixed; top: -10px; width: 8px; height: 14px; z-index: 999; pointer-events: none; animation: catConfettiFall linear forwards; }
     @keyframes catConfettiFall { to { transform: translateY(110vh) rotate(540deg); opacity: 0.9; } }
@@ -2893,8 +2925,10 @@
           <div class="cat-success-icon">&#128293;</div>
           <div class="cat-success-title">Inquiry Sent!</div>
           <p class="cat-success-sub">We got your catering request and we're fired up. Within 48 hours we'll confirm your date and email a secure link to pay your 25% deposit &mdash; that's what locks it in.</p>
-          <button class="btn-primary" onclick="resetCatering()">Submit Another Inquiry</button>
-          <button class="cat-share-btn" onclick="shareCatering()">Share Lou Wok &#128228;</button>
+          <div class="cat-success-actions">
+            <button class="btn-primary" onclick="resetCatering()">Submit Another Inquiry</button>
+            <button class="cat-share-btn" onclick="shareCatering()">Share Lou Wok &#128228;</button>
+          </div>
         </div>
       </div>
       <!-- SIDEBAR -->
@@ -4529,6 +4563,15 @@
       };
 
       const _onSuccess = () => {
+        // Stash the details so the share button can build a personalized,
+        // themed message about what they actually ordered.
+        _lastCatShare = {
+          pkg     : catPkg || '',
+          event   : v('cf-type') || '',
+          guests  : v('cf-guests') || '',
+          addons  : addons && addons !== 'None' ? addons : '',
+          style   : v('cf-style') || '',
+        };
         const formCard  = document.getElementById('catFormCard');
         const catSuccess= document.getElementById('catSuccess');
         if (formCard)   formCard.style.display = 'none';
@@ -4627,17 +4670,49 @@
 
     // Share button on the success screen — lets a happy inquirer forward
     // Lou Wok to whoever's planning their next event.
+    let _lastCatShare = null;
+
+    function buildCatShareText() {
+      const d = _lastCatShare || {};
+      const pkgRaw = d.pkg    || '';
+      const event  = d.event  || '';
+      const guests = d.guests || '';
+      const addons = d.addons || '';
+
+      // Strip a leading "The " so we don't get "the The Classic Spread".
+      const pkgName = pkgRaw.replace(/^the\s+/i, '');
+
+      // Bits that only appear when we actually have the data.
+      const pkgLower  = pkgName ? `the ${pkgName}` : 'the full St. Louis spread';
+      const pkgCap    = pkgName ? `The ${pkgName}` : 'The full St. Louis spread';
+      const eventBit  = event  ? ` for our ${event.toLowerCase()}` : '';
+      const guestsBit = guests ? ` (${guests} hungry folks)` : '';
+      const addonBit  = addons ? ` Loaded up with ${addons.toLowerCase()} too. ` : ' ';
+
+      // Themed templates — one is picked at random so each share feels fresh.
+      // pkgCap is used where the package starts a clause; pkgLower mid-sentence.
+      const templates = [
+        `🔥 Just booked Lou Wok Rice House to cater${eventBit}${guestsBit} — wok-fired fried rice, crab rangoon & the legendary St. Paul sandwich. Went with ${pkgLower}.${addonBit}St. Louis flavor comes to the desert. 🍚`,
+        `We're getting Lou Wok catered${eventBit}!${guestsBit ? guestsBit + ' —' : ''} ${pkgCap} incoming, day-old wok-fired rice done the St. Louis way. No peas, no carrots. 🔥🍚`,
+        `Catering locked in with Lou Wok Rice House 🔥 ${pkgCap}${eventBit}${guestsBit}. If you know St. Louis-style fried rice & St. Paul sandwiches, you know. 🍚`,
+        `Big move: Lou Wok is catering${eventBit}${guestsBit}. ${pkgCap}, wok-charred to order.${addonBit}Phoenix, meet the Midwest. 🔥`,
+        `Told everyone the food's handled${eventBit} — Lou Wok Rice House, ${pkgLower}${guestsBit}. Crispy rangoon, smoky fried rice, St. Paul sandwiches. This is the one. 🍚🔥`,
+      ];
+      const pick = templates[Math.floor(Math.random() * templates.length)];
+      return pick.replace(/\s+/g, ' ').trim();
+    }
+
     function shareCatering() {
       const shareData = {
         title : 'Lou Wok Rice House Catering',
-        text  : 'Just booked Lou Wok for our event — wok-fired fried rice & St. Louis-style Chinese-American food, catered. 🔥',
+        text  : buildCatShareText(),
         url   : window.location.origin + window.location.pathname + '#catering',
       };
       if (navigator.share) {
         navigator.share(shareData).catch(() => {});
       } else if (navigator.clipboard) {
-        navigator.clipboard.writeText(shareData.url)
-          .then(() => showToast('Link copied — share away!'))
+        navigator.clipboard.writeText(shareData.text + ' ' + shareData.url)
+          .then(() => showToast('Message copied — share away! 🔥'))
           .catch(() => showToast('Visit louwok.com/#catering'));
       } else {
         showToast('Visit louwok.com/#catering');
