@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<!-- LOU-WOK-DEPOSIT v1 2026-07-09 — admin tool: generate Square catering deposit links from a reference # + quote total -->
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Lou Wok · Catering Deposit Generator</title>
+  <style>
+    :root {
+      --black:#0a0a08; --rice:#f5eed8; --wok:#c8390a; --gold:#e8a020;
+      --smoke:#1e1c18; --muted:#8a8475; --border:#2a2824;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; background: var(--black); color: var(--rice);
+      font-family: 'DM Sans', -apple-system, sans-serif; line-height: 1.6;
+      min-height: 100vh; padding: 2rem 1rem;
+    }
+    .wrap { max-width: 520px; margin: 0 auto; }
+    .logo-row { display: flex; align-items: center; gap: 0.75rem; justify-content: center; margin-bottom: 0.5rem; }
+    .logo-row img { width: 52px; height: 52px; border-radius: 50%; border: 2px solid var(--wok); }
+    h1 { font-family: 'Bebas Neue', sans-serif; font-size: 1.8rem; letter-spacing: 0.04em; color: var(--gold); text-align: center; margin: 0.25rem 0; }
+    .sub { text-align: center; color: var(--muted); font-size: 0.82rem; margin-bottom: 2rem; }
+    .card { background: var(--smoke); border: 1px solid var(--border); border-radius: 14px; padding: 1.5rem; }
+    label { display: block; font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold); font-weight: 700; margin: 1rem 0 0.4rem; }
+    label:first-child { margin-top: 0; }
+    input {
+      width: 100%; background: var(--black); border: 1px solid var(--border);
+      border-radius: 8px; padding: 0.85rem 1rem; color: var(--rice);
+      font-size: 1rem; font-family: inherit; -webkit-tap-highlight-color: transparent;
+    }
+    input:focus { outline: none; border-color: var(--gold); }
+    .row { display: flex; gap: 0.75rem; }
+    .row > div { flex: 1; }
+    .calc {
+      margin: 1.25rem 0 0.5rem; padding: 1rem; border: 1px dashed var(--gold);
+      border-radius: 8px; background: rgba(232,160,32,0.06); text-align: center;
+    }
+    .calc-amt { font-family: 'Bebas Neue', sans-serif; font-size: 2rem; color: var(--gold); letter-spacing: 0.02em; }
+    .calc-lbl { font-size: 0.72rem; color: var(--muted); }
+    button {
+      width: 100%; margin-top: 1.25rem; background: linear-gradient(135deg, var(--wok), #e8631a);
+      color: #fff; border: none; border-radius: 999px; padding: 1rem;
+      font-size: 0.9rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+      cursor: pointer; box-shadow: 0 6px 18px rgba(200,57,10,0.35);
+      transition: transform 0.15s; -webkit-tap-highlight-color: transparent;
+    }
+    button:hover { transform: translateY(-2px); }
+    button:disabled { opacity: 0.6; cursor: wait; transform: none; }
+    .result { margin-top: 1.5rem; display: none; }
+    .result.show { display: block; }
+    .result-link {
+      background: var(--black); border: 1px solid var(--gold); border-radius: 8px;
+      padding: 1rem; word-break: break-all; font-size: 0.9rem; color: var(--gold);
+      margin-bottom: 0.75rem;
+    }
+    .result-actions { display: flex; gap: 0.6rem; }
+    .result-actions button { margin-top: 0; font-size: 0.75rem; padding: 0.75rem; }
+    .btn-copy { background: var(--gold) !important; color: var(--black) !important; box-shadow: none !important; }
+    .btn-sms { background: var(--smoke) !important; border: 1px solid var(--border) !important; box-shadow: none !important; }
+    .err { color: #ff6a3d; font-size: 0.82rem; margin-top: 1rem; text-align: center; display: none; }
+    .err.show { display: block; }
+    .note { font-size: 0.7rem; color: var(--muted); text-align: center; margin-top: 1.5rem; line-height: 1.6; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="logo-row">
+      <img src="https://louwok.com/favicon-512.png" alt="Lou Wok" />
+    </div>
+    <h1>Catering Deposit Generator</h1>
+    <div class="sub">Enter a reference number and quote total to create a Square deposit link.</div>
+
+    <div class="card">
+      <label for="ref">Reference Number</label>
+      <input id="ref" type="text" placeholder="LW-CAT-4821" autocomplete="off" />
+
+      <label for="name">Customer Name (optional)</label>
+      <input id="name" type="text" placeholder="Antione Brown" autocomplete="off" />
+
+      <div class="row">
+        <div>
+          <label for="total">Quote Total ($)</label>
+          <input id="total" type="number" min="1" step="0.01" placeholder="2000.00" oninput="recalc()" />
+        </div>
+        <div>
+          <label for="pct">Deposit %</label>
+          <input id="pct" type="number" min="1" max="100" step="1" value="25" oninput="recalc()" />
+        </div>
+      </div>
+
+      <div class="calc">
+        <div class="calc-amt" id="calcAmt">$0.00</div>
+        <div class="calc-lbl" id="calcLbl">deposit due</div>
+      </div>
+
+      <label for="key">Admin Key</label>
+      <input id="key" type="password" placeholder="Your ADMIN_DEPOSIT_KEY" autocomplete="off" />
+
+      <button id="genBtn" onclick="generate()">Generate Deposit Link</button>
+      <div class="err" id="err"></div>
+
+      <div class="result" id="result">
+        <div class="result-link" id="resultLink"></div>
+        <div class="result-actions">
+          <button class="btn-copy" onclick="copyLink()">Copy Link</button>
+          <button class="btn-sms" onclick="textLink()">Text to Customer</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="note">
+      Links are generated through Square. The deposit amount is calculated automatically.<br>
+      Keep your admin key private — anyone with it can create payment links.
+    </div>
+  </div>
+
+  <script>
+    const ENDPOINT = '/api/catering-deposit';
+    let lastUrl = '';
+
+    function recalc() {
+      const total = parseFloat(document.getElementById('total').value) || 0;
+      const pct = parseFloat(document.getElementById('pct').value) || 0;
+      const dep = Math.round(total * (pct / 100) * 100) / 100;
+      document.getElementById('calcAmt').textContent = '$' + dep.toFixed(2);
+      document.getElementById('calcLbl').textContent = pct + '% deposit due';
+    }
+
+    function showErr(msg) {
+      const e = document.getElementById('err');
+      e.textContent = msg; e.classList.add('show');
+    }
+    function clearErr() { document.getElementById('err').classList.remove('show'); }
+
+    async function generate() {
+      clearErr();
+      document.getElementById('result').classList.remove('show');
+      const reference = document.getElementById('ref').value.trim();
+      const customerName = document.getElementById('name').value.trim();
+      const total = parseFloat(document.getElementById('total').value);
+      const depositPct = parseFloat(document.getElementById('pct').value) || 25;
+      const adminKey = document.getElementById('key').value;
+
+      if (!reference) return showErr('Enter a reference number.');
+      if (!total || total <= 0) return showErr('Enter a valid quote total.');
+      if (!adminKey) return showErr('Enter your admin key.');
+
+      const btn = document.getElementById('genBtn');
+      btn.disabled = true; btn.textContent = 'Generating…';
+
+      try {
+        const r = await fetch(ENDPOINT, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ reference, customerName, total, depositPct, adminKey }),
+        });
+        const data = await r.json();
+        if (!r.ok || !data.url) {
+          showErr(data.detail ? JSON.stringify(data.detail) : (data.error || 'Failed to generate link.'));
+        } else {
+          lastUrl = data.url;
+          document.getElementById('resultLink').textContent = data.url;
+          document.getElementById('result').classList.add('show');
+        }
+      } catch (e) {
+        showErr('Network error: ' + e.message);
+      } finally {
+        btn.disabled = false; btn.textContent = 'Generate Deposit Link';
+      }
+    }
+
+    function copyLink() {
+      if (!lastUrl) return;
+      navigator.clipboard.writeText(lastUrl).then(() => {
+        const b = event.target; const t = b.textContent;
+        b.textContent = 'Copied!'; setTimeout(() => b.textContent = t, 1500);
+      });
+    }
+
+    function textLink() {
+      if (!lastUrl) return;
+      const ref = document.getElementById('ref').value.trim();
+      const msg = `Lou Wok Rice House: Here's your catering deposit link for ${ref}. Pay securely to lock in your date: ${lastUrl}`;
+      window.location.href = 'sms:?&body=' + encodeURIComponent(msg);
+    }
+  </script>
+</body>
+</html>
