@@ -1,5 +1,5 @@
 // /api/notify.js
-// v-PRINT 2026-07-06 — auto-prints kitchen ticket via PrintNode on each order (non-fatal)
+// v-SMS-COPY 2026-07-09 — updated customer order confirmation wording + added customer catering auto-reply (STOP-compliant); on top of v-PRINT PrintNode auto-print
 // ────────────────────────────────────────────────────────────────────────────
 // The endpoint index-5.html already POSTs to. Handles two payload types:
 //
@@ -115,9 +115,11 @@ module.exports = async (req, res) => {
       // 1) Customer confirmation — the order number + pickup ETA.
       if (cust.phone) {
         const custBody =
-          `${RESTAURANT_NAME}: Order ${orderNo} received. ` +
-          `Total ${total}. Pickup ready in ~${PICKUP_ETA} min. ` +
-          `We'll text when it's ready. Reply STOP to opt out.`;
+          `${RESTAURANT_NAME}: We received your order #${orderNo}! ` +
+          `Your total is ${total}. Every order is cooked fresh and wok-fired to order. ` +
+          `Your pickup time is approximately ${PICKUP_ETA} minutes. ` +
+          `We'll send you another text as soon as your order is ready. ` +
+          `Reply STOP to opt out.`;
         results.customer = await sendSMS(client, smsFrom, cust.phone, custBody);
       }
 
@@ -172,6 +174,19 @@ module.exports = async (req, res) => {
         `Catering inquiry — ${c.name || 'Guest'}`,
         body
       );
+
+      // Customer auto-reply — confirms we received the inquiry (STOP required).
+      if (c.phone) {
+        const firstName = (c.name || '').trim().split(/\s+/)[0] || 'there';
+        const custBody =
+          `${RESTAURANT_NAME}: Thanks ${firstName}! ` +
+          `We received your catering inquiry` +
+          (p.event_date ? ` for ${p.event_date}` : '') +
+          (p.guests ? ` (${p.guests} guests)` : '') + `. ` +
+          `We'll reach out shortly to plan the details. ` +
+          `Reply STOP to opt out.`;
+        results.customer = await sendSMS(client, smsFrom, c.phone, custBody);
+      }
     } else {
       return res.status(400).json({ error: 'Unknown type: ' + type });
     }
