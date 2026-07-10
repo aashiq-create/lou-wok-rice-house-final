@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- LOU-WOK-INDEX vGUESTS-CUSTOM | catering guest count adds Custom exact-number option | 2026-07-09 -->
+<!-- LOU-WOK-INDEX vSHARE-SHEET | explicit share menu (FB/X/WhatsApp/IG/TikTok/SMS/Email/Copy) | 2026-07-09 -->
 
 <html lang="en">
 <head>
@@ -1544,6 +1544,42 @@
     .cat-success-icon { font-size: 3rem; margin-bottom: 1rem; }
     .cat-success-title { font-family: 'Bebas Neue', sans-serif; font-size: 2.5rem; letter-spacing: 0.06em; color: var(--gold); margin-bottom: 0.5rem; }
     .cat-success-sub { font-size: 0.88rem; color: var(--rice); line-height: 1.7; margin-bottom: 1.5rem; }
+    /* ── Share sheet modal ── */
+    .share-sheet-overlay {
+      display: none; position: fixed; inset: 0; z-index: 3000;
+      background: rgba(0,0,0,0.7); backdrop-filter: blur(3px);
+      align-items: flex-end; justify-content: center;
+    }
+    .share-sheet-overlay.open { display: flex; }
+    @media (min-width: 600px) { .share-sheet-overlay.open { align-items: center; } }
+    .share-sheet {
+      background: var(--smoke); border: 1px solid var(--border);
+      border-radius: 18px 18px 0 0; width: 100%; max-width: 480px;
+      padding: 1.25rem 1.25rem 1.75rem; animation: shareUp 0.25s ease;
+    }
+    @media (min-width: 600px) { .share-sheet { border-radius: 18px; } }
+    @keyframes shareUp { from { transform: translateY(30px); opacity: 0.6; } to { transform: translateY(0); opacity: 1; } }
+    .share-sheet-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.75rem; }
+    .share-sheet-title { font-family: 'Bebas Neue', sans-serif; font-size: 1.4rem; letter-spacing: 0.04em; color: var(--gold); }
+    .share-sheet-close { background: none; border: none; color: var(--rice); font-size: 1.8rem; line-height: 1; cursor: pointer; padding: 0 0.25rem; }
+    .share-preview {
+      background: var(--black); border: 1px dashed rgba(232,160,32,0.4); border-radius: 8px;
+      padding: 0.85rem 1rem; font-size: 0.82rem; color: var(--rice); line-height: 1.5;
+      margin-bottom: 1rem; max-height: 120px; overflow-y: auto;
+    }
+    .share-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.6rem; }
+    @media (max-width: 380px) { .share-grid { grid-template-columns: repeat(3, 1fr); } }
+    .share-opt {
+      display: flex; flex-direction: column; align-items: center; gap: 0.35rem;
+      background: var(--black); border: 1px solid var(--border); border-radius: 10px;
+      padding: 0.85rem 0.4rem; color: var(--rice); font-size: 0.68rem; font-weight: 600;
+      cursor: pointer; transition: border-color 0.15s, transform 0.1s; font-family: 'DM Sans', sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .share-opt:hover { border-color: var(--gold); transform: translateY(-2px); }
+    .share-opt:active { transform: scale(0.96); }
+    .share-ico { font-size: 1.3rem; font-weight: 700; line-height: 1; }
+    .share-note { margin-top: 1rem; font-size: 0.68rem; color: var(--muted); text-align: center; line-height: 1.5; }
     @media (max-width: 900px) {
       .cat-layout { grid-template-columns: 1fr; }
       .cat-offer-grid { grid-template-columns: repeat(3,1fr); }
@@ -4742,20 +4778,64 @@
     }
 
     function shareCatering() {
-      const shareData = {
-        title : 'Lou Wok Rice House Catering',
-        text  : buildCatShareText(),
-        url   : window.location.origin + window.location.pathname + '#catering',
-      };
-      if (navigator.share) {
-        navigator.share(shareData).catch(() => {});
-      } else if (navigator.clipboard) {
-        navigator.clipboard.writeText(shareData.text + ' ' + shareData.url)
-          .then(() => showToast('Message copied — share away! 🔥'))
-          .catch(() => showToast('Visit louwok.com/#catering'));
-      } else {
+      const text = buildCatShareText();
+      const url  = window.location.origin + window.location.pathname + '#catering';
+      window._catShare = { text, url, full: text + ' ' + url };
+      const sheet = document.getElementById('shareSheet');
+      const preview = document.getElementById('sharePreviewText');
+      if (preview) preview.textContent = text;
+      if (sheet) sheet.classList.add('open');
+    }
+
+    function closeShareSheet() {
+      const sheet = document.getElementById('shareSheet');
+      if (sheet) sheet.classList.remove('open');
+    }
+
+    function shareTo(platform) {
+      const s = window._catShare || { text: '', url: window.location.href, full: '' };
+      const t = encodeURIComponent(s.text);
+      const u = encodeURIComponent(s.url);
+      const full = encodeURIComponent(s.full);
+      let link = '';
+      switch (platform) {
+        case 'facebook':
+          link = `https://www.facebook.com/sharer/sharer.php?u=${u}&quote=${t}`; break;
+        case 'x':
+          link = `https://twitter.com/intent/tweet?text=${t}&url=${u}`; break;
+        case 'whatsapp':
+          link = `https://wa.me/?text=${full}`; break;
+        case 'sms':
+          link = `sms:?&body=${full}`; break;
+        case 'email':
+          link = `mailto:?subject=${encodeURIComponent('Lou Wok Rice House Catering')}&body=${full}`; break;
+        case 'native':
+          if (navigator.share) { navigator.share({ title:'Lou Wok Rice House', text:s.text, url:s.url }).catch(()=>{}); closeShareSheet(); return; }
+          break;
+        case 'instagram':
+        case 'tiktok':
+          // No pre-fill web share exists for these — copy, then open the app.
+          copyShareText(true);
+          link = platform === 'instagram' ? 'https://instagram.com' : 'https://tiktok.com';
+          showToast('Message copied! Paste it into ' + (platform==='instagram'?'Instagram':'TikTok') + '. 🔥');
+          window.open(link, '_blank', 'noopener');
+          closeShareSheet();
+          return;
+      }
+      if (link) { window.open(link, '_blank', 'noopener'); closeShareSheet(); }
+    }
+
+    function copyShareText(silent) {
+      const s = window._catShare || {};
+      const txt = s.full || '';
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(txt)
+          .then(() => { if (!silent) showToast('Message copied — share away! 🔥'); })
+          .catch(() => { if (!silent) showToast('Visit louwok.com/#catering'); });
+      } else if (!silent) {
         showToast('Visit louwok.com/#catering');
       }
+      if (!silent) closeShareSheet();
     }
 
     // ── WEB SHARE API ───────────────────────────────────────
@@ -5158,6 +5238,27 @@ function goHomeFramed() {
   const bnHome = document.getElementById('bnHome');
   if (bnHome && typeof setActiveNav === 'function') setActiveNav(bnHome);
 }
-</script>
+</script>  <!-- ── SHARE SHEET (explicit platform options) ── -->
+  <div class="share-sheet-overlay" id="shareSheet" onclick="if(event.target===this)closeShareSheet()">
+    <div class="share-sheet">
+      <div class="share-sheet-head">
+        <div class="share-sheet-title">Share Lou Wok 🔥</div>
+        <button class="share-sheet-close" onclick="closeShareSheet()" aria-label="Close">&times;</button>
+      </div>
+      <div class="share-preview" id="sharePreviewText"></div>
+      <div class="share-grid">
+        <button class="share-opt" onclick="shareTo('facebook')"><span class="share-ico" style="color:#1877F2;">f</span>Facebook</button>
+        <button class="share-opt" onclick="shareTo('x')"><span class="share-ico">𝕏</span>X</button>
+        <button class="share-opt" onclick="shareTo('whatsapp')"><span class="share-ico" style="color:#25D366;">✆</span>WhatsApp</button>
+        <button class="share-opt" onclick="shareTo('instagram')"><span class="share-ico" style="color:#E1306C;">📷</span>Instagram</button>
+        <button class="share-opt" onclick="shareTo('tiktok')"><span class="share-ico">🎵</span>TikTok</button>
+        <button class="share-opt" onclick="shareTo('sms')"><span class="share-ico" style="color:var(--gold);">💬</span>Text</button>
+        <button class="share-opt" onclick="shareTo('email')"><span class="share-ico" style="color:var(--gold);">✉️</span>Email</button>
+        <button class="share-opt" onclick="copyShareText(false)"><span class="share-ico" style="color:var(--gold);">🔗</span>Copy</button>
+      </div>
+      <div class="share-note">Instagram &amp; TikTok: we'll copy your message — just paste it in the app.</div>
+    </div>
+  </div>
+
 </body>
 </html>
