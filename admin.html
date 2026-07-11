@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- LOU-WOK-ADMIN vSMS-TEMPLATE | editable order-confirmation SMS template (locked STOP) + bulk inventory; on top of vINV-BULK -->
+<!-- LOU-WOK-ADMIN vINV-SAVEFIX | FIX: adding/removing/bumping inventory items now marks form dirty (setUnsaved) so Deploy works; on top of vSMS-TEMPLATE -->
 
 <html lang="en">
 <head>
@@ -3256,9 +3256,10 @@
     if (!Array.isArray(inventoryData.supplies)) inventoryData.supplies = [];
     inventoryData.supplies.push(Object.assign({ name:'', qty:INV_DEFAULT_QTY, low:INV_DEFAULT_LOW, barcode:'' }, prefill||{}));
     _populateSupplies();
+    setUnsaved();
   }
-  function supBump(i,d){ _readSupplies(); const s=inventoryData.supplies[i]; if(s){ s.qty=Math.max(0,(Number(s.qty)||0)+d); } _populateSupplies(); }
-  function supRemove(i){ _readSupplies(); inventoryData.supplies.splice(i,1); _populateSupplies(); }
+  function supBump(i,d){ _readSupplies(); const s=inventoryData.supplies[i]; if(s){ s.qty=Math.max(0,(Number(s.qty)||0)+d); } _populateSupplies(); setUnsaved(); }
+  function supRemove(i){ _readSupplies(); inventoryData.supplies.splice(i,1); _populateSupplies(); setUnsaved(); }
 
   /* ── BARCODE SCANNING (native BarcodeDetector; jsQR fallback for iOS) ── */
   async function invScanStart() {
