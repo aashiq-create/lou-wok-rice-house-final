@@ -1,6 +1,6 @@
 {
   "_info": "Written by louwok.com/admin. index.html reads this at runtime.",
-  "_updated": "2026-07-11T05:21:14.214Z",
+  "_updated": "2026-07-11T05:26:14.557Z",
   "menu": [
     {
       "id": 1,
@@ -1606,10 +1606,10 @@
         "low": 6
       }
     },
-    "updated": "2026-07-11T05:21:14.213Z",
+    "updated": "2026-07-11T05:26:14.555Z",
     "supplies": [
       {
-        "name": "26oz Boxes (White)",
+        "name": "26 oz Boxes (White)",
         "qty": 200,
         "low": 100,
         "barcode": ""
@@ -1618,6 +1618,24 @@
         "name": "32oz Boxes (Black)",
         "qty": 20,
         "low": 6,
+        "barcode": ""
+      },
+      {
+        "name": "Gusseted Take-Out Bags",
+        "qty": 1000,
+        "low": 500,
+        "barcode": ""
+      },
+      {
+        "name": "Insulated Foil Wraps",
+        "qty": 2000,
+        "low": 500,
+        "barcode": ""
+      },
+      {
+        "name": "4-in-1 Plastic Utensil Kit",
+        "qty": 250,
+        "low": 50,
         "barcode": ""
       }
     ]
