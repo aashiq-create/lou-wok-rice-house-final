@@ -1,6 +1,6 @@
 {
   "_info": "Written by louwok.com/admin. index.html reads this at runtime.",
-  "_updated": "2026-07-11T05:26:46.732Z",
+  "_updated": "2026-07-11T05:27:45.069Z",
   "menu": [
     {
       "id": 1,
@@ -1608,13 +1608,13 @@
     },
     "supplies": [
       {
-        "name": "26oz Boxes (White)",
+        "name": "26oz Chinese Take-Out Boxes (White)",
         "qty": 200,
         "low": 100,
         "barcode": ""
       },
       {
-        "name": "32oz Boxes (Black)",
+        "name": "32oz Chinese Take-Out Boxes (Black)",
         "qty": 20,
         "low": 6,
         "barcode": ""
@@ -1638,7 +1638,7 @@
         "barcode": ""
       }
     ],
-    "updated": "2026-07-11T05:26:46.730Z"
+    "updated": "2026-07-11T05:27:45.067Z"
   },
   "printing": {
     "enabled": false,
