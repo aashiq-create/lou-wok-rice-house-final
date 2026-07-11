@@ -1,4 +1,4 @@
-// /api/notify.js
+// v-SMS-TEMPLATE 2026-07-09 — customer order SMS now from admin-editable template (settings.notify.orderSmsTemplate) w/ locked STOP suffix + default fallback; on top of v-CATERING-REF
 // v-CATERING-FIX 2026-07-09 — FIX: catering admin notify read flat frontend fields (client_name/guest_count/etc) that were coming through blank; themed complete SMS; on top of v-EMAIL-BRAND
 // ────────────────────────────────────────────────────────────────────────────
 // The endpoint index-5.html already POSTs to. Handles two payload types:
@@ -163,13 +163,40 @@ module.exports = async (req, res) => {
 
       // 1) Customer confirmation — the order number + pickup ETA.
       if (cust.phone) {
-        const custBody =
-          `${RESTAURANT_NAME}: We received your order #${orderNo}! ` +
-          `Your total is ${total}. Every order is cooked fresh and wok-fired to order. ` +
-          `Your pickup time is approximately ${PICKUP_ETA} minutes. ` +
-          `We'll send you another text as soon as your order is ready. ` +
-          `Reply STOP to opt out.`;
-        results.customer = await sendSMS(client, smsFrom, cust.phone, custBody);
+        // Default wording (used if the admin hasn't set a custom template, or
+        // if a custom one somehow renders empty). The "Reply STOP to opt out."
+        // line is appended separately below and can never be edited away.
+        const DEFAULT_ORDER_SMS =
+          `${RESTAURANT_NAME}: We received your order #{orderNo}! ` +
+          `Your total is {total}. Every order is cooked fresh and wok-fired to order. ` +
+          `Your pickup time is approximately {pickupEta} minutes. ` +
+          `We'll send you another text as soon as your order is ready.`;
+
+        const tpl = (cfg.orderSmsTemplate && cfg.orderSmsTemplate.trim())
+          ? cfg.orderSmsTemplate
+          : DEFAULT_ORDER_SMS;
+
+        // Substitute placeholders. {restaurant}/{name} also supported.
+        let msg = tpl
+          .replace(/\{restaurant\}/gi, RESTAURANT_NAME)
+          .replace(/\{name\}/gi, (cust.name || '').split(' ')[0] || 'there')
+          .replace(/\{orderNo\}/gi, orderNo)
+          .replace(/\{total\}/gi, total)
+          .replace(/\{pickupEta\}/gi, PICKUP_ETA)
+          .trim();
+
+        // Safety net: if the rendered template is empty, use the default.
+        if (!msg) {
+          msg = DEFAULT_ORDER_SMS
+            .replace(/\{orderNo\}/gi, orderNo)
+            .replace(/\{total\}/gi, total)
+            .replace(/\{pickupEta\}/gi, PICKUP_ETA);
+        }
+
+        // Locked, always-appended TCPA opt-out (never editable from admin).
+        if (!/reply stop/i.test(msg)) msg += ' Reply STOP to opt out.';
+
+        results.customer = await sendSMS(client, smsFrom, cust.phone, msg);
       }
 
       // 2) Admin ticket — full order details to each admin cell.
