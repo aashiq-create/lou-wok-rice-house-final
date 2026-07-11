@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- LOU-WOK-ADMIN vINV-SAVEFIX | FIX: adding/removing/bumping inventory items now marks form dirty (setUnsaved) so Deploy works; on top of vSMS-TEMPLATE -->
+<!-- LOU-WOK-ADMIN vINV-SAVEFIX2 | FIX: inventory load was dropping the supplies array (items saved to GitHub but vanished on reload); now preserved. On top of vINV-SAVEFIX -->
 
 <html lang="en">
 <head>
@@ -1947,8 +1947,8 @@
                           ? Object.assign({ enabled:false, printers:[], header:'LOU WOK RICE HOUSE', subheader:'ONLINE ORDER', footer:'Fire it up!', showItemsBig:true, showTotal:true, showCustomer:true, beep:true, cutPaper:true }, d.printing)
                           : printingData;
         inventoryData     = (d.inventory && typeof d.inventory === 'object')
-                          ? { items: d.inventory.items || {}, updated: d.inventory.updated || null }
-                          : { items: {}, updated: null };
+                          ? { items: d.inventory.items || {}, supplies: Array.isArray(d.inventory.supplies) ? d.inventory.supplies : [], updated: d.inventory.updated || null }
+                          : { items: {}, supplies: [], updated: null };
     footerData        = d.footer         || DEFAULTS.footer;
     settingsData      = d.settings        || DEFAULTS.settings;
     if (Array.isArray(d.users) && d.users.length) usersData = d.users;
