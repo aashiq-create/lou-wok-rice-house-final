@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- LOU-WOK-ADMIN vINV-BULK | inventory now bulk Ingredients & Supplies (add/delete); menu-linked itemized list hidden; on top of vTAGBORDER -->
+<!-- LOU-WOK-ADMIN vSMS-TEMPLATE | editable order-confirmation SMS template (locked STOP) + bulk inventory; on top of vINV-BULK -->
 
 <html lang="en">
 <head>
@@ -1524,6 +1524,28 @@
           <div class="field-group">
             <label class="field-label">Business name in messages</label>
             <input class="field-input" id="ntf-name" placeholder="Lou Wok Rice House" />
+          </div>
+
+          <div class="field-group">
+            <label class="field-label">Order confirmation text message</label>
+            <p style="color:var(--muted);font-size:0.72rem;margin:0 0 0.5rem;">
+              This is the SMS a customer gets after ordering. Tap a tag to insert it &mdash; it auto-fills with real order info.
+            </p>
+            <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:0.5rem;">
+              <button type="button" class="btn btn-ghost btn-sm" style="border:1px solid var(--border);font-size:0.68rem;" onclick="insertSmsTag('{orderNo}')">{orderNo}</button>
+              <button type="button" class="btn btn-ghost btn-sm" style="border:1px solid var(--border);font-size:0.68rem;" onclick="insertSmsTag('{total}')">{total}</button>
+              <button type="button" class="btn btn-ghost btn-sm" style="border:1px solid var(--border);font-size:0.68rem;" onclick="insertSmsTag('{pickupEta}')">{pickupEta}</button>
+              <button type="button" class="btn btn-ghost btn-sm" style="border:1px solid var(--border);font-size:0.68rem;" onclick="insertSmsTag('{name}')">{name}</button>
+              <button type="button" class="btn btn-ghost btn-sm" style="border:1px solid var(--border);font-size:0.68rem;" onclick="insertSmsTag('{restaurant}')">{restaurant}</button>
+            </div>
+            <textarea class="field-input" id="ntf-order-sms" rows="4" style="resize:vertical;font-family:inherit;line-height:1.5;" placeholder="Lou Wok Rice House: We received your order #{orderNo}! Your total is {total}..." oninput="updateSmsPreview()"></textarea>
+            <div style="margin-top:0.6rem;padding:0.7rem 0.9rem;background:var(--black);border:1px dashed var(--gold);border-radius:6px;">
+              <div style="font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);font-weight:700;margin-bottom:0.35rem;">Preview</div>
+              <div id="ntf-sms-preview" style="font-size:0.8rem;color:var(--rice);line-height:1.5;"></div>
+            </div>
+            <p style="color:var(--muted);font-size:0.68rem;margin:0.5rem 0 0;">
+              &#128274; &ldquo;Reply STOP to opt out.&rdquo; is added automatically and can&rsquo;t be removed &mdash; it&rsquo;s legally required. Leave blank to use the default message.
+            </p>
           </div>
         </div>
 
@@ -3519,6 +3541,43 @@
 
   // ══════════════════════════════════════════════════════════════
   //  CALLS & TEXTS  (data-backed; secrets stay in Vercel)
+  function insertSmsTag(tag) {
+    const el = document.getElementById('ntf-order-sms');
+    if (!el) return;
+    const s = el.selectionStart || el.value.length;
+    const e = el.selectionEnd || el.value.length;
+    el.value = el.value.slice(0, s) + tag + el.value.slice(e);
+    el.focus();
+    el.selectionStart = el.selectionEnd = s + tag.length;
+    updateSmsPreview();
+  }
+
+  function updateSmsPreview() {
+    const el = document.getElementById('ntf-order-sms');
+    const out = document.getElementById('ntf-sms-preview');
+    if (!out) return;
+    const nameEl = document.getElementById('ntf-name');
+    const etaEl  = document.getElementById('ntf-eta');
+    const restaurant = (nameEl && nameEl.value.trim()) || 'Lou Wok Rice House';
+    const eta = (etaEl && etaEl.value.trim()) || '10-12';
+    const DEFAULT = restaurant + ': We received your order #{orderNo}! Your total is {total}. ' +
+      'Every order is cooked fresh and wok-fired to order. Your pickup time is approximately {pickupEta} minutes. ' +
+      "We'll send you another text as soon as your order is ready.";
+    let msg = (el && el.value.trim()) ? el.value : DEFAULT;
+    // Fill with sample data for the preview.
+    msg = msg
+      .replace(/\{restaurant\}/gi, restaurant)
+      .replace(/\{name\}/gi, 'Alex')
+      .replace(/\{orderNo\}/gi, 'LW-260710-4821')
+      .replace(/\{total\}/gi, '$24.50')
+      .replace(/\{pickupEta\}/gi, eta)
+      .trim();
+    if (!/reply stop/i.test(msg)) msg += ' Reply STOP to opt out.';
+    // The locked part shown in gold.
+    out.innerHTML = msg.replace(/(Reply STOP to opt out\.)/i,
+      '<span style="color:var(--gold);">$1</span>');
+  }
+
   function _populateNotify() {
     if(!settingsData) settingsData={};
     const n = settingsData.notify || {};
@@ -3532,6 +3591,8 @@
     if (eta) eta.value = n.pickupEtaMin || '';
     const name = document.getElementById('ntf-name');
     if (name) name.value = n.restaurantName || '';
+    const orderSms = document.getElementById('ntf-order-sms');
+    if (orderSms) { orderSms.value = n.orderSmsTemplate || ''; updateSmsPreview(); }
     const voiceUrl = document.getElementById('ntf-voice-url');
     if (voiceUrl) voiceUrl.value = n.voiceUrl || 'https://louwok.com/api/voice-incoming';
     const smsUrl = document.getElementById('ntf-sms-url');
@@ -3566,6 +3627,7 @@
 
     n.pickupEtaMin = document.getElementById('ntf-eta').value.trim() || '10-12';
     n.restaurantName = document.getElementById('ntf-name').value.trim() || 'Lou Wok Rice House';
+    n.orderSmsTemplate = document.getElementById('ntf-order-sms').value.trim();
     n.voiceUrl = document.getElementById('ntf-voice-url').value.trim();
     n.smsUrl   = document.getElementById('ntf-sms-url').value.trim();
 
