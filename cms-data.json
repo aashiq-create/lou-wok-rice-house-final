@@ -1,6 +1,6 @@
 {
   "_info": "Written by louwok.com/admin. index.html reads this at runtime.",
-  "_updated": "2026-07-11T21:59:23.257Z",
+  "_updated": "2026-07-11T22:06:20.499Z",
   "menu": [
     {
       "id": 1,
@@ -1638,13 +1638,13 @@
         "barcode": ""
       },
       {
-        "name": "Long Grain Rice (50 lb bags)",
-        "qty": 20,
-        "low": 6,
+        "name": "Extra Long Grain Rice (50 lb bags)",
+        "qty": 300,
+        "low": 10,
         "barcode": ""
       }
     ],
-    "updated": "2026-07-11T21:59:23.254Z"
+    "updated": "2026-07-11T22:06:20.497Z"
   },
   "printing": {
     "enabled": false,
