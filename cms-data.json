@@ -1,6 +1,6 @@
 {
   "_info": "Written by louwok.com/admin. index.html reads this at runtime.",
-  "_updated": "2026-07-10T23:47:03.255Z",
+  "_updated": "2026-07-11T04:50:49.056Z",
   "menu": [
     {
       "id": 1,
@@ -1606,75 +1606,8 @@
         "low": 6
       }
     },
-    "updated": "2026-07-10T23:47:03.253Z",
-    "supplies": [
-      {
-        "name": "Long Grain Rice",
-        "qty": 20,
-        "low": 6,
-        "barcode": ""
-      },
-      {
-        "name": "Chicken (Bone-In)",
-        "qty": 20,
-        "low": 6,
-        "barcode": ""
-      },
-      {
-        "name": "Chicken (Boneless)",
-        "qty": 20,
-        "low": 6,
-        "barcode": ""
-      },
-      {
-        "name": "Egg Rolls",
-        "qty": 20,
-        "low": 6,
-        "barcode": ""
-      },
-      {
-        "name": "Beef Cutlets",
-        "qty": 20,
-        "low": 6,
-        "barcode": ""
-      },
-      {
-        "name": "Pineapples",
-        "qty": 20,
-        "low": 6,
-        "barcode": ""
-      },
-      {
-        "name": "Plasticware",
-        "qty": 20,
-        "low": 6,
-        "barcode": ""
-      },
-      {
-        "name": "Sweet n' Sour Packets",
-        "qty": 20,
-        "low": 6,
-        "barcode": ""
-      },
-      {
-        "name": "Arrowhead Water  (32 count)",
-        "qty": 20,
-        "low": 6,
-        "barcode": ""
-      },
-      {
-        "name": "Imitation Crab ( count)",
-        "qty": 20,
-        "low": 6,
-        "barcode": ""
-      },
-      {
-        "name": "Eggs (18 Count)",
-        "qty": 20,
-        "low": 6,
-        "barcode": ""
-      }
-    ]
+    "updated": "2026-07-11T04:50:49.053Z",
+    "supplies": []
   },
   "printing": {
     "enabled": false,
@@ -1747,7 +1680,7 @@
     "paymentBackendUrl": "",
     "notify": {
       "personalPhone": "+13143565596",
-      "screenRequireKey": true,
+      "screenRequireKey": false,
       "adminSms": [
         "+13132361717",
         "+13143565596"
@@ -1755,7 +1688,8 @@
       "pickupEtaMin": "15-20",
       "restaurantName": "Lou Wok Rice House",
       "voiceUrl": "https://louwok.com/api/voice-incoming",
-      "smsUrl": "https://louwok.com/api/sms-incoming"
+      "smsUrl": "https://louwok.com/api/sms-incoming",
+      "orderSmsTemplate": "Lou Wok Rice House: Order #LW-260710-4821 is in the wok!\n\nTotal: $24.50. Your order will be freshly prepared and ready for pickup in approximately 15–20 minutes. We'll text you when it's ready. Reply STOP to opt out."
     }
   },
   "users": [
