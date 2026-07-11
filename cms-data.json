@@ -1,6 +1,6 @@
 {
   "_info": "Written by louwok.com/admin. index.html reads this at runtime.",
-  "_updated": "2026-07-11T22:39:10.318Z",
+  "_updated": "2026-07-11T22:40:02.019Z",
   "menu": [
     {
       "id": 1,
@@ -1780,9 +1780,15 @@
         "qty": 3,
         "low": 1,
         "barcode": ""
+      },
+      {
+        "name": "Cabbage ( 1 lb.)",
+        "qty": 4,
+        "low": 1,
+        "barcode": ""
       }
     ],
-    "updated": "2026-07-11T22:39:10.317Z"
+    "updated": "2026-07-11T22:40:02.017Z"
   },
   "printing": {
     "enabled": false,
