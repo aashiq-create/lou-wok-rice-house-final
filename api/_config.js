@@ -1,4 +1,4 @@
-// /api/_config.js
+// /api/_config.js — v-SMS-TEMPLATE: reads settings.notify.orderSmsTemplate (admin-editable order confirmation)
 // ────────────────────────────────────────────────────────────────────────────
 // Shared settings loader. Reads the non-secret notification settings the admin
 // dashboard publishes into cms-data.json (under settings.notify), and falls back
@@ -67,6 +67,13 @@ async function loadConfig() {
     (n.restaurantName && String(n.restaurantName).trim()) ||
     process.env.RESTAURANT_NAME || 'Lou Wok Rice House';
 
+  // Admin-editable customer order-confirmation template. Placeholders:
+  //   {name} {orderNo} {total} {pickupEta}
+  // The required "Reply STOP to opt out." suffix is appended in notify.js and
+  // is NOT part of this template (so it can never be edited away).
+  const orderSmsTemplate =
+    (n.orderSmsTemplate && String(n.orderSmsTemplate).trim()) || '';
+
   const screenRequireKey =
     typeof n.screenRequireKey === 'boolean'
       ? n.screenRequireKey
@@ -78,6 +85,7 @@ async function loadConfig() {
     adminSms,
     pickupEtaMin,
     restaurantName,
+    orderSmsTemplate,
     screenRequireKey,
     // secrets (env only)
     accountSid: process.env.TWILIO_ACCOUNT_SID || '',
