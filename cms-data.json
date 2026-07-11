@@ -1,6 +1,6 @@
 {
   "_info": "Written by louwok.com/admin. index.html reads this at runtime.",
-  "_updated": "2026-07-11T22:15:26.838Z",
+  "_updated": "2026-07-11T22:20:17.106Z",
   "menu": [
     {
       "id": 1,
@@ -1672,9 +1672,69 @@
         "qty": 4,
         "low": 2,
         "barcode": ""
+      },
+      {
+        "name": "Dark Soy Sauce",
+        "qty": 20,
+        "low": 6,
+        "barcode": ""
+      },
+      {
+        "name": "Light Soy Sauce",
+        "qty": 20,
+        "low": 6,
+        "barcode": ""
+      },
+      {
+        "name": "White Pepper",
+        "qty": 20,
+        "low": 6,
+        "barcode": ""
+      },
+      {
+        "name": "Garlic Pepper",
+        "qty": 20,
+        "low": 6,
+        "barcode": ""
+      },
+      {
+        "name": "Onion Powder",
+        "qty": 20,
+        "low": 6,
+        "barcode": ""
+      },
+      {
+        "name": "MSG",
+        "qty": 20,
+        "low": 6,
+        "barcode": ""
+      },
+      {
+        "name": "Sugar",
+        "qty": 20,
+        "low": 6,
+        "barcode": ""
+      },
+      {
+        "name": "Salt",
+        "qty": 20,
+        "low": 6,
+        "barcode": ""
+      },
+      {
+        "name": "Cornstarch",
+        "qty": 20,
+        "low": 6,
+        "barcode": ""
+      },
+      {
+        "name": "",
+        "qty": 20,
+        "low": 6,
+        "barcode": ""
       }
     ],
-    "updated": "2026-07-11T22:15:26.835Z"
+    "updated": "2026-07-11T22:20:17.103Z"
   },
   "printing": {
     "enabled": false,
