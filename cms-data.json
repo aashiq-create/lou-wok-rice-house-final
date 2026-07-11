@@ -1,6 +1,6 @@
 {
   "_info": "Written by louwok.com/admin. index.html reads this at runtime.",
-  "_updated": "2026-07-11T04:50:49.056Z",
+  "_updated": "2026-07-11T04:55:35.128Z",
   "menu": [
     {
       "id": 1,
@@ -1606,7 +1606,7 @@
         "low": 6
       }
     },
-    "updated": "2026-07-11T04:50:49.053Z",
+    "updated": "2026-07-11T04:55:35.125Z",
     "supplies": []
   },
   "printing": {
@@ -1689,7 +1689,7 @@
       "restaurantName": "Lou Wok Rice House",
       "voiceUrl": "https://louwok.com/api/voice-incoming",
       "smsUrl": "https://louwok.com/api/sms-incoming",
-      "orderSmsTemplate": "Lou Wok Rice House: Order #LW-260710-4821 is in the wok!\n\nTotal: $24.50. Your order will be freshly prepared and ready for pickup in approximately 15–20 minutes. We'll text you when it's ready. Reply STOP to opt out."
+      "orderSmsTemplate": "Lou Wok Rice House{restaurant}: Order #LW-260710-4821{orderNo} is in the wok!\n\nTotal: $24.50{total}. Your order will be freshly prepared and ready for pickup in approximately 15–20 minutes. We'll text you when it's ready. Reply STOP to opt out."
     }
   },
   "users": [
