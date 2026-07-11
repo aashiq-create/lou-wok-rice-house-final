@@ -1,6 +1,6 @@
 {
   "_info": "Written by louwok.com/admin. index.html reads this at runtime.",
-  "_updated": "2026-07-11T22:24:18.286Z",
+  "_updated": "2026-07-11T22:27:27.014Z",
   "menu": [
     {
       "id": 1,
@@ -1728,13 +1728,43 @@
         "barcode": ""
       },
       {
+        "name": "Imitation Crab (10 lbs.)",
+        "qty": 10,
+        "low": 2,
+        "barcode": ""
+      },
+      {
+        "name": "Cream Cheese (30 lbs.)",
+        "qty": 10,
+        "low": 2,
+        "barcode": ""
+      },
+      {
+        "name": "",
+        "qty": 20,
+        "low": 6,
+        "barcode": ""
+      },
+      {
+        "name": "",
+        "qty": 20,
+        "low": 6,
+        "barcode": ""
+      },
+      {
+        "name": "",
+        "qty": 20,
+        "low": 6,
+        "barcode": ""
+      },
+      {
         "name": "",
         "qty": 20,
         "low": 6,
         "barcode": ""
       }
     ],
-    "updated": "2026-07-11T22:24:18.284Z"
+    "updated": "2026-07-11T22:27:27.011Z"
   },
   "printing": {
     "enabled": false,
