@@ -1,6 +1,6 @@
 {
   "_info": "Written by louwok.com/admin. index.html reads this at runtime.",
-  "_updated": "2026-07-11T22:40:02.019Z",
+  "_updated": "2026-07-11T22:40:34.111Z",
   "menu": [
     {
       "id": 1,
@@ -1786,9 +1786,21 @@
         "qty": 4,
         "low": 1,
         "barcode": ""
+      },
+      {
+        "name": "Lettuce (1 lb.)",
+        "qty": 4,
+        "low": 1,
+        "barcode": ""
+      },
+      {
+        "name": "",
+        "qty": 20,
+        "low": 6,
+        "barcode": ""
       }
     ],
-    "updated": "2026-07-11T22:40:02.017Z"
+    "updated": "2026-07-11T22:40:34.110Z"
   },
   "printing": {
     "enabled": false,
