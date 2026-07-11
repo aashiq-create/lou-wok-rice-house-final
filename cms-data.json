@@ -1,6 +1,6 @@
 {
   "_info": "Written by louwok.com/admin. index.html reads this at runtime.",
-  "_updated": "2026-07-11T05:19:34.723Z",
+  "_updated": "2026-07-11T05:21:08.737Z",
   "menu": [
     {
       "id": 1,
@@ -1606,18 +1606,18 @@
         "low": 6
       }
     },
-    "updated": "2026-07-11T05:19:34.721Z",
+    "updated": "2026-07-11T05:21:08.733Z",
     "supplies": [
       {
-        "name": "26 oz. Boxes (White)",
+        "name": "26oz Boxes (White)",
         "qty": 200,
         "low": 100,
         "barcode": ""
       },
       {
-        "name": "32 oz. Boxes (Black)",
-        "qty": 200,
-        "low": 100,
+        "name": "32oz Boxes (Black)",
+        "qty": 20,
+        "low": 6,
         "barcode": ""
       }
     ]
