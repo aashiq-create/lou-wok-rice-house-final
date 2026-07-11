@@ -1,6 +1,6 @@
 {
   "_info": "Written by louwok.com/admin. index.html reads this at runtime.",
-  "_updated": "2026-07-11T22:06:20.499Z",
+  "_updated": "2026-07-11T22:10:20.633Z",
   "menu": [
     {
       "id": 1,
@@ -1638,13 +1638,31 @@
         "barcode": ""
       },
       {
-        "name": "Extra Long Grain Rice (50 lb bags)",
+        "name": "Extra Long Grain Rice (50 lb. bags)",
         "qty": 300,
         "low": 10,
         "barcode": ""
+      },
+      {
+        "name": "Green Onion (10 lb. case)",
+        "qty": 30,
+        "low": 10,
+        "barcode": ""
+      },
+      {
+        "name": "Bean Sprouts (20 lb. case)",
+        "qty": 30,
+        "low": 10,
+        "barcode": ""
+      },
+      {
+        "name": "Eggs (24 count)",
+        "qty": 72,
+        "low": 24,
+        "barcode": ""
       }
     ],
-    "updated": "2026-07-11T22:06:20.497Z"
+    "updated": "2026-07-11T22:10:20.631Z"
   },
   "printing": {
     "enabled": false,
