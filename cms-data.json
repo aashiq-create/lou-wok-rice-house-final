@@ -1,6 +1,6 @@
 {
   "_info": "Written by louwok.com/admin. index.html reads this at runtime.",
-  "_updated": "2026-07-11T22:32:35.505Z",
+  "_updated": "2026-07-11T22:34:33.291Z",
   "menu": [
     {
       "id": 1,
@@ -1768,9 +1768,15 @@
         "qty": 4,
         "low": 2,
         "barcode": ""
+      },
+      {
+        "name": "Mayo ( 1 gal.)",
+        "qty": 3,
+        "low": 1,
+        "barcode": ""
       }
     ],
-    "updated": "2026-07-11T22:32:35.503Z"
+    "updated": "2026-07-11T22:34:33.288Z"
   },
   "printing": {
     "enabled": false,
