@@ -1,6 +1,6 @@
 {
   "_info": "Written by louwok.com/admin. index.html reads this at runtime.",
-  "_updated": "2026-07-11T22:22:45.528Z",
+  "_updated": "2026-07-11T22:24:18.286Z",
   "menu": [
     {
       "id": 1,
@@ -1675,56 +1675,56 @@
       },
       {
         "name": "Dark Soy Sauce (1 gal.)",
-        "qty": 20,
-        "low": 6,
+        "qty": 10,
+        "low": 2,
         "barcode": ""
       },
       {
         "name": "Light Soy Sauce (1 gal.)",
-        "qty": 20,
-        "low": 6,
+        "qty": 10,
+        "low": 2,
         "barcode": ""
       },
       {
         "name": "White Pepper (5 lbs.)",
-        "qty": 20,
-        "low": 6,
+        "qty": 10,
+        "low": 2,
         "barcode": ""
       },
       {
         "name": "Garlic Pepper (5 lbs.)",
-        "qty": 20,
-        "low": 6,
+        "qty": 10,
+        "low": 2,
         "barcode": ""
       },
       {
         "name": "Onion Powder (5 lbs.)",
-        "qty": 20,
-        "low": 6,
+        "qty": 10,
+        "low": 2,
         "barcode": ""
       },
       {
         "name": "MSG ( 10 lbs.)",
-        "qty": 20,
-        "low": 6,
+        "qty": 10,
+        "low": 2,
         "barcode": ""
       },
       {
         "name": "Sugar (25 lbs.)",
-        "qty": 20,
-        "low": 6,
+        "qty": 10,
+        "low": 2,
         "barcode": ""
       },
       {
         "name": "Salt (25 lbs.)",
-        "qty": 20,
-        "low": 6,
+        "qty": 10,
+        "low": 2,
         "barcode": ""
       },
       {
         "name": "Cornstarch (25 lbs.)",
-        "qty": 20,
-        "low": 6,
+        "qty": 10,
+        "low": 2,
         "barcode": ""
       },
       {
@@ -1734,7 +1734,7 @@
         "barcode": ""
       }
     ],
-    "updated": "2026-07-11T22:22:45.525Z"
+    "updated": "2026-07-11T22:24:18.284Z"
   },
   "printing": {
     "enabled": false,
