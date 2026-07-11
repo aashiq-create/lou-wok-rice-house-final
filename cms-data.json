@@ -1,6 +1,6 @@
 {
   "_info": "Written by louwok.com/admin. index.html reads this at runtime.",
-  "_updated": "2026-07-11T22:21:14.523Z",
+  "_updated": "2026-07-11T22:22:45.528Z",
   "menu": [
     {
       "id": 1,
@@ -1704,25 +1704,25 @@
         "barcode": ""
       },
       {
-        "name": "MSG",
+        "name": "MSG ( 10 lbs.)",
         "qty": 20,
         "low": 6,
         "barcode": ""
       },
       {
-        "name": "Sugar",
+        "name": "Sugar (25 lbs.)",
         "qty": 20,
         "low": 6,
         "barcode": ""
       },
       {
-        "name": "Salt",
+        "name": "Salt (25 lbs.)",
         "qty": 20,
         "low": 6,
         "barcode": ""
       },
       {
-        "name": "Cornstarch",
+        "name": "Cornstarch (25 lbs.)",
         "qty": 20,
         "low": 6,
         "barcode": ""
@@ -1734,7 +1734,7 @@
         "barcode": ""
       }
     ],
-    "updated": "2026-07-11T22:21:14.519Z"
+    "updated": "2026-07-11T22:22:45.525Z"
   },
   "printing": {
     "enabled": false,
