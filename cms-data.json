@@ -183,6 +183,16 @@
       "options": []
     },
     {
+      "id": 24,
+      "name": "Bone-In Hot Braised Chicken",
+      "category": "appetizers",
+      "priceHalf": null,
+      "priceFull": 7,
+      "tag": "",
+      "desc": "Bone-in chicken simmered in our signature savory brown sauce for deeper, richer flavor. Served over a half box of white rice.",
+      "options": []
+    },
+    {
       "id": 23,
       "name": "The Show-Me Combo",
       "category": "combos",
