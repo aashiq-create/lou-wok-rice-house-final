@@ -1,6 +1,6 @@
 {
   "_info": "Written by louwok.com/admin. index.html reads this at runtime.",
-  "_updated": "2026-07-11T22:10:20.633Z",
+  "_updated": "2026-07-11T22:15:26.838Z",
   "menu": [
     {
       "id": 1,
@@ -1660,9 +1660,21 @@
         "qty": 72,
         "low": 24,
         "barcode": ""
+      },
+      {
+        "name": "Sesame Oil (1 gal.)",
+        "qty": 5,
+        "low": 2,
+        "barcode": ""
+      },
+      {
+        "name": "Vegetable Oil (35 lbs.)",
+        "qty": 4,
+        "low": 2,
+        "barcode": ""
       }
     ],
-    "updated": "2026-07-11T22:10:20.631Z"
+    "updated": "2026-07-11T22:15:26.835Z"
   },
   "printing": {
     "enabled": false,
