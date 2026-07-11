@@ -1,6 +1,6 @@
 {
   "_info": "Written by louwok.com/admin. index.html reads this at runtime.",
-  "_updated": "2026-07-11T22:31:23.519Z",
+  "_updated": "2026-07-11T22:32:35.505Z",
   "menu": [
     {
       "id": 1,
@@ -1762,9 +1762,15 @@
         "qty": 5,
         "low": 2,
         "barcode": ""
+      },
+      {
+        "name": "Dill Pickles (1 gal.)",
+        "qty": 4,
+        "low": 2,
+        "barcode": ""
       }
     ],
-    "updated": "2026-07-11T22:31:23.516Z"
+    "updated": "2026-07-11T22:32:35.503Z"
   },
   "printing": {
     "enabled": false,
