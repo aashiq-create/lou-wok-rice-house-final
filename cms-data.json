@@ -1,6 +1,6 @@
 {
   "_info": "Written by louwok.com/admin. index.html reads this at runtime.",
-  "_updated": "2026-07-11T05:29:10.609Z",
+  "_updated": "2026-07-11T21:59:23.257Z",
   "menu": [
     {
       "id": 1,
@@ -9,7 +9,7 @@
       "priceHalf": 4,
       "priceFull": 8,
       "tag": "classic",
-      "desc": "The rice house foundation — dark, wok-charred rice with egg, bean sprouts, and green onion. Soy-deep and smoky, no peas, no carrots.",
+      "desc": "The St. Louis rice house foundation. Egg, bean sprouts, and green onion wok-tossed in a screaming-hot wok with seasoned rice, cooked fast and fresh to order. Straightforward, satisfying, and rooted in the classic STL scene.",
       "options": []
     },
     {
@@ -19,7 +19,7 @@
       "priceHalf": 5,
       "priceFull": 10,
       "tag": "classic",
-      "desc": "All-white chicken seared into that signature brown STL rice with egg and sprouts. Simple, bold, built for the carryout box.",
+      "desc": "All-white chicken wok-fired with seasoned rice, egg, bean sprouts, soy, and green onion. A St. Louis rice house classic—simple, bold, and built on the kind of no-frills flavors that made Midwest takeout a staple. Cooked fresh to order and served hot, Lou Wok style.",
       "options": []
     },
     {
@@ -29,7 +29,7 @@
       "priceHalf": 5,
       "priceFull": 10,
       "tag": "classic",
-      "desc": "Sliced beef and soy-lacquered rice hit with high wok heat until smoky at the edges. Midwest carryout, Phoenix-fired.",
+      "desc": "Sliced beef wok-fired with seasoned rice, egg, bean sprouts, and green onion, finished in a savory soy-based blend. A St. Louis rice house staple built on simple, bold ingredients—classic Midwest takeout flavor, cooked fresh to order and served hot in true Lou Wok style.",
       "options": []
     },
     {
@@ -39,7 +39,7 @@
       "priceHalf": 5,
       "priceFull": 10,
       "tag": "classic",
-      "desc": "Plump shrimp folded through smoky brown rice with egg and green onion. The dish that put St. Louis fried rice on the map.",
+      "desc": "Plump shrimp wok-fired with rice, egg, green onion, and our signature blend of seasonings. Inspired by the neighborhood rice houses of St. Louis, this Midwest takeout favorite is cooked fresh to order and packed with the bold, savory flavor that put St. Louis-style fried rice on the map.",
       "options": []
     },
     {
@@ -49,7 +49,7 @@
       "priceHalf": 4,
       "priceFull": 6,
       "tag": "popular",
-      "desc": "Golden, blistered shells stuffed with sweet cream cheese crab filling. The city's favorite crunch — order 4 or 8.",
+      "desc": "Available in 4 or 8 pieces. Crispy golden crab rangoon filled with a rich, sweet creamy crab blend and fried to perfection. A St. Louis Chinese takeout favorite and the perfect side to our wok-fired fried rice.\n",
       "options": []
     },
     {
@@ -59,7 +59,7 @@
       "priceHalf": null,
       "priceFull": 6,
       "tag": "classic",
-      "desc": "St. Louis' hometown legend: a golden egg foo young patty with seasoned chicken, pickle, lettuce, tomato, onion, and mayo on soft white bread.",
+      "desc": "Our signature egg foo young patty topped with seasoned chicken, crisp lettuce, tomato, red onion, pickles, and mayo on soft white bread. A legendary St. Louis takeout classic, now served fresh in Phoenix.",
       "options": []
     },
     {
@@ -69,7 +69,7 @@
       "priceHalf": 5,
       "priceFull": 10,
       "tag": "new",
-      "desc": "Sweet pineapple and tender chicken cut through smoky wok rice — the sweet-savory balance that keeps regulars coming back.",
+      "desc": "Tender chicken, sweet pineapple, and wok-fired rice come together in the perfect balance of savory and sweet. A bold twist on a Midwest favorite, cooked fresh to order with Lou Wok flavor in every bite.",
       "options": []
     },
     {
@@ -79,7 +79,7 @@
       "priceHalf": 6,
       "priceFull": 12,
       "tag": "popular",
-      "desc": "Everything, loaded: chicken, shrimp, beef, egg, and veg piled into one screaming-hot wok of brown rice. The whole rice house in a box.",
+      "desc": "A loaded feast of our signature St. Louis-style fried rice piled high with egg, tender chicken, juicy shrimp, savory beef, and fresh vegetables, all wok-fired together with our house seasoning for the ultimate Rice House experience.",
       "options": []
     },
     {
@@ -89,7 +89,7 @@
       "priceHalf": null,
       "priceFull": 7,
       "tag": "popular",
-      "desc": "Eight pieces fried golden and crackling, seasoned and served hot straight from the fryer.",
+      "desc": "Crispy, seasoned chicken fried golden brown and served hot and fresh. 8-piece",
       "options": []
     },
     {
@@ -99,7 +99,7 @@
       "priceHalf": null,
       "priceFull": 2,
       "tag": "",
-      "desc": "The St. Louis original, ice-cold and nostalgic. Black Cherry, Cream, Orange, Grape, Strawberry, or Pineapple.",
+      "desc": "A St. Louis original and a staple in every rice house across the city. Ice-cold, bold, and nostalgic, Vess Soda has been a Midwest carryout favorite for generations. Black Cherry, Cream Soda, Orange, Grape, Strawberry, & Pineapple..",
       "options": []
     },
     {
@@ -109,7 +109,7 @@
       "priceHalf": null,
       "priceFull": 5,
       "tag": "fan-fave",
-      "desc": "The St. Paul, meat-free — our golden egg foo young patty stacked with pickle, lettuce, tomato, onion, and mayo on pillowy white bread.",
+      "desc": "A St. Louis Chinese takeout classic featuring our signature golden egg foo young patty on soft white bread with crisp lettuce, tomato, red onion, pickles, and mayo. A Midwest favorite, served fresh at Lou Wok Rice House in Phoenix.\n\n",
       "options": []
     },
     {
@@ -119,7 +119,7 @@
       "priceHalf": null,
       "priceFull": 7,
       "tag": "fan-fave",
-      "desc": "Double up: any two proteins — chicken, shrimp, or beef — on the egg foo young patty with the full St. Paul fixings.",
+      "desc": "Build your perfect St. Paul Sandwich with any two proteins—chicken, shrimp, or beef—stacked on our signature egg foo young patty with lettuce, tomato, red onion, pickles, and mayo on soft white bread. A St. Louis takeout classic, now served fresh in Phoenix.",
       "options": []
     },
     {
@@ -129,7 +129,7 @@
       "priceHalf": null,
       "priceFull": 3,
       "tag": "",
-      "desc": "A bright, naturally sweet carrot-and-fruit blend served ice-cold. The Midwest sidekick to a box of fried rice.",
+      "desc": "A bright, refreshing blend of carrot and fruit juices with a smooth, naturally sweet finish. Served ice-cold, it’s the nostalgic Midwest drink that pairs perfectly with fried rice, St. Paul sandwiches, and crispy wings—Lou Wok style.",
       "options": []
     },
     {
@@ -139,7 +139,7 @@
       "priceHalf": null,
       "priceFull": 1,
       "tag": "none",
-      "desc": "16.9 fl oz, on chill.",
+      "desc": "16.9 fl oz. bottle of water on chill.",
       "options": []
     },
     {
@@ -149,7 +149,7 @@
       "priceHalf": null,
       "priceFull": 20,
       "tag": "fan-fave",
-      "desc": "The one that started it all — a full box of brown fried rice, an Original St. Paul, four wings, four rangoon, and a drink.",
+      "desc": "The combo that inspired it all. A full order of our signature St. Louis-style fried rice, an Original St. Paul Sandwich, four pieces of golden fried chicken, four crispy crab rangoons, and your choice of Vess Soda or Mystic Carrot Juice. Straight from the St. Louis rice house tradition, brought to Phoenix and cooked fresh to order with Midwest flavor and wok-fired soul.",
       "options": []
     },
     {
@@ -159,7 +159,7 @@
       "priceHalf": null,
       "priceFull": 4,
       "tag": "",
-      "desc": "Two crisp, hand-rolled shells packed with cabbage, carrot, and veg. The perfect crunch alongside your rice.",
+      "desc": "Fresh cabbage, carrots, and vegetables wrapped in a crispy shell and fried golden brown. Two  light, crunchy, and the perfect sidekicks to a box of Lou Wok fried rice.",
       "options": []
     },
     {
@@ -169,7 +169,7 @@
       "priceHalf": null,
       "priceFull": 5,
       "tag": "popular",
-      "desc": "Sweet cream batter fried golden and dusted in powdered sugar. A warm St. Louis fair-food finish to your feast.",
+      "desc": "Golden, crispy, and made from our signature sweet cream batter, then dusted with powdered sugar. A warm, fresh-fried classic that's the perfect finish to your Lou Wok feast.",
       "options": []
     },
     {
@@ -179,17 +179,7 @@
       "priceHalf": null,
       "priceFull": 7,
       "tag": "",
-      "desc": "Tender boneless chicken simmered in our signature savory brown sauce, served over a half box of white rice.",
-      "options": []
-    },
-    {
-      "id": 24,
-      "name": "Bone-In Hot Braised Chicken",
-      "category": "appetizers",
-      "priceHalf": null,
-      "priceFull": 7,
-      "tag": "",
-      "desc": "Bone-in chicken simmered in our signature savory brown sauce for deeper, richer flavor. Served over a half box of white rice.",
+      "desc": "Tender boneless chicken simmered in our signature savory brown sauce for a bold St. Louis takeout classic. Served with a half order box of plain white rice. ",
       "options": []
     },
     {
@@ -199,7 +189,7 @@
       "priceHalf": null,
       "priceFull": 20,
       "tag": "fan-fave",
-      "desc": "Plain fried rice, hot braised chicken, two egg rolls, four rangoon, and a drink — a hearty taste of the Show-Me State.",
+      "desc": "A St. Louis rice house favorite featuring a whole order of plain Fried Rice, tender Boneless Hot Braised Chicken, 2 egg rolls, 4 Crab Rangoons, and your choice of beverage—a hearty taste of the Show-Me State, served fresh at Lou Wok.",
       "options": []
     }
   ],
@@ -1618,25 +1608,25 @@
     },
     "supplies": [
       {
-        "name": "26oz Chinese Take-Out Boxes (White)",
+        "name": "White Chinese Take-Out Boxes (26oz )",
         "qty": 200,
         "low": 100,
         "barcode": ""
       },
       {
-        "name": "32oz Chinese Take-Out Boxes (Black)",
+        "name": "Black Chinese Take-Out Boxes (32oz)",
         "qty": 20,
         "low": 6,
         "barcode": ""
       },
       {
-        "name": "Gusseted Take-Out Bags",
+        "name": "Gusseted Take-Out Bags (12\" x 13\" x 5\")",
         "qty": 1000,
         "low": 500,
         "barcode": ""
       },
       {
-        "name": "Insulated Foil Wraps",
+        "name": "Insulated Foil Wraps (12\" x 12\")",
         "qty": 2000,
         "low": 500,
         "barcode": ""
@@ -1646,9 +1636,15 @@
         "qty": 250,
         "low": 50,
         "barcode": ""
+      },
+      {
+        "name": "Long Grain Rice (50 lb bags)",
+        "qty": 20,
+        "low": 6,
+        "barcode": ""
       }
     ],
-    "updated": "2026-07-11T05:29:10.607Z"
+    "updated": "2026-07-11T21:59:23.254Z"
   },
   "printing": {
     "enabled": false,
