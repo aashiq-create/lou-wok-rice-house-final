@@ -1,6 +1,6 @@
 {
   "_info": "Written by louwok.com/admin. index.html reads this at runtime.",
-  "_updated": "2026-07-11T05:27:45.069Z",
+  "_updated": "2026-07-11T05:28:42.116Z",
   "menu": [
     {
       "id": 1,
@@ -1638,7 +1638,7 @@
         "barcode": ""
       }
     ],
-    "updated": "2026-07-11T05:27:45.067Z"
+    "updated": "2026-07-11T05:28:42.114Z"
   },
   "printing": {
     "enabled": false,
@@ -1705,7 +1705,7 @@
   "settings": {
     "taxRate": 0.086,
     "onlineOrderingEnabled": true,
-    "pickupInstructions": "Pickup only. Estimated Wait Time 10-15 minutes",
+    "pickupInstructions": "Pickup only. Estimated Wait Time 15-20 minutes",
     "squareAppId": "",
     "squareLocationId": "",
     "paymentBackendUrl": "",
