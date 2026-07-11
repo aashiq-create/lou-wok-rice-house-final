@@ -1,6 +1,6 @@
 {
   "_info": "Written by louwok.com/admin. index.html reads this at runtime.",
-  "_updated": "2026-07-11T22:27:27.014Z",
+  "_updated": "2026-07-11T22:31:23.519Z",
   "menu": [
     {
       "id": 1,
@@ -1740,31 +1740,31 @@
         "barcode": ""
       },
       {
-        "name": "",
-        "qty": 20,
-        "low": 6,
+        "name": "Boneless Chicken (40 lbs.)",
+        "qty": 5,
+        "low": 2,
         "barcode": ""
       },
       {
-        "name": "",
-        "qty": 20,
-        "low": 6,
+        "name": "Beef (20 lbs.)",
+        "qty": 5,
+        "low": 2,
         "barcode": ""
       },
       {
-        "name": "",
-        "qty": 20,
-        "low": 6,
+        "name": "Shrimp (20 lbs.)",
+        "qty": 5,
+        "low": 2,
         "barcode": ""
       },
       {
-        "name": "",
-        "qty": 20,
-        "low": 6,
+        "name": "Chicken Wings (80 lbs.)",
+        "qty": 5,
+        "low": 2,
         "barcode": ""
       }
     ],
-    "updated": "2026-07-11T22:27:27.011Z"
+    "updated": "2026-07-11T22:31:23.516Z"
   },
   "printing": {
     "enabled": false,
