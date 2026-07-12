@@ -1,6 +1,6 @@
 {
   "_info": "Written by louwok.com/admin. index.html reads this at runtime.",
-  "_updated": "2026-07-12T05:05:20.093Z",
+  "_updated": "2026-07-12T05:17:47.436Z",
   "menu": [
     {
       "id": 1,
@@ -1740,7 +1740,7 @@
         "barcode": ""
       },
       {
-        "name": "Boneless Chicken (40 lbs.)",
+        "name": "Chicken Breast (40 lbs.)",
         "qty": 5,
         "low": 2,
         "barcode": ""
@@ -1800,7 +1800,7 @@
         "barcode": ""
       }
     ],
-    "updated": "2026-07-12T05:05:20.089Z"
+    "updated": "2026-07-12T05:17:47.431Z"
   },
   "printing": {
     "enabled": false,
