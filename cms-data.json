@@ -1,6 +1,6 @@
 {
   "_info": "Written by louwok.com/admin. index.html reads this at runtime.",
-  "_updated": "2026-07-12T05:17:47.436Z",
+  "_updated": "2026-07-12T05:18:28.806Z",
   "menu": [
     {
       "id": 1,
@@ -1798,9 +1798,15 @@
         "qty": 10,
         "low": 2,
         "barcode": ""
+      },
+      {
+        "name": "Tomatoes",
+        "qty": 10,
+        "low": 2,
+        "barcode": ""
       }
     ],
-    "updated": "2026-07-12T05:17:47.431Z"
+    "updated": "2026-07-12T05:18:28.805Z"
   },
   "printing": {
     "enabled": false,
