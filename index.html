@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- LOU-WOK-INDEX vTITLE-RED | menu item titles red (were white) + card numbers red | 2026-07-09 -->
+<!-- LOU-WOK-INDEX vEVENTS-TRUCK | booked events override the weekly truck schedule on Find-the-Truck | 2026-07-09 -->
 
 <html lang="en">
 <head>
@@ -4129,6 +4129,20 @@
       }
     }
 
+    // Events published from the admin. Only entries flagged booked:true with
+    // coordinates are allowed to drive the public Find-the-Truck section —
+    // unconfirmed leads must never tell customers where to show up.
+    let _cmsEvents = [];
+
+    function _bookedEventFor(dateStr) {
+      if (!Array.isArray(_cmsEvents)) return null;
+      return _cmsEvents.find(e =>
+        e && e.booked === true &&
+        (e.date || '') === dateStr &&
+        e.lat != null && e.lng != null
+      ) || null;
+    }
+
     function renderTruckTracker(schedule){
       _truckSchedule = (Array.isArray(schedule) && schedule.length) ? schedule : DEFAULT_TRUCK_SCHEDULE;
       const order=['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
@@ -4138,6 +4152,29 @@
       // Sort schedule into Mon–Sun display order.
       const byDay={}; _truckSchedule.forEach(s=>{ if(s&&s.day) byDay[s.day]=s; });
       _truckSchedule = order.map(d=> byDay[d] || {day:d, spot:'—', closed:true});
+
+      // Overlay any BOOKED events for the next 7 days onto the weekly schedule,
+      // so a confirmed event takes over that day's stop.
+      const now = new Date();
+      for (let n = 0; n < 7; n++) {
+        const dt = new Date(now.getFullYear(), now.getMonth(), now.getDate() + n);
+        const ds = dt.toISOString().slice(0,10);
+        const ev = _bookedEventFor(ds);
+        if (!ev) continue;
+        const dName = dayNames[dt.getDay()];
+        const idx = _truckSchedule.findIndex(s => s.day === dName);
+        if (idx === -1) continue;
+        _truckSchedule[idx] = Object.assign({}, _truckSchedule[idx], {
+          day    : dName,
+          spot   : ev.title || ev.location || 'Special Event',
+          address: ev.location || '',
+          lat    : ev.lat,
+          lng    : ev.lng,
+          closed : false,
+          isEvent: true,
+          open   : ev.time || _truckSchedule[idx].open,
+        });
+      }
 
       const todayIdx = _truckSchedule.findIndex(s=>s.day===todayName);
       const today = _truckSchedule[todayIdx] || {};
@@ -5150,6 +5187,9 @@
       // localStorage copy so the admin's own preview updates instantly.
       function applyContent(d, source){
         if(!d || typeof d!=='object') return false;
+        // Stash published events so the truck tracker can surface BOOKED ones.
+        // (Unbooked leads are ignored — see _bookedEventFor.)
+        try { _cmsEvents = Array.isArray(d.events) ? d.events : []; } catch(_) { _cmsEvents = []; }
         // Each section renders INDEPENDENTLY: a helper runs one render and
         // swallows its own errors, so a failure in (say) renderMenu can never
         // stop renderTicker from running. Previously all renders shared one
