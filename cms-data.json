@@ -1,6 +1,6 @@
 {
   "_info": "Written by louwok.com/admin. index.html reads this at runtime.",
-  "_updated": "2026-07-12T05:20:43.429Z",
+  "_updated": "2026-07-12T05:24:42.318Z",
   "menu": [
     {
       "id": 1,
@@ -354,8 +354,8 @@
     "cta2Href": "#order"
   },
   "location": {
-    "street": "S. 51 st. & E. Elliott Rd. (Ahwatukee Plaza)",
-    "cityStateZip": "Phoenix, AZ 85044",
+    "street": "",
+    "cityStateZip": "Phoenix, AZ 85040",
     "phone": "314-356-5596",
     "email": "orders@louwok.com",
     "mapsEmbed": "https://maps.google.com/maps?q=2406%20S%2024th%20St%20%23212A%2C%20Phoenix%2C%20AZ%2085034&z=15&output=embed",
@@ -1806,7 +1806,7 @@
         "barcode": ""
       }
     ],
-    "updated": "2026-07-12T05:20:43.427Z"
+    "updated": "2026-07-12T05:24:42.315Z"
   },
   "printing": {
     "enabled": false,
