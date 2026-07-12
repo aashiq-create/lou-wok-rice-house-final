@@ -1,6 +1,6 @@
 {
   "_info": "Written by louwok.com/admin. index.html reads this at runtime.",
-  "_updated": "2026-07-11T22:47:19.866Z",
+  "_updated": "2026-07-12T05:05:20.093Z",
   "menu": [
     {
       "id": 1,
@@ -1794,13 +1794,13 @@
         "barcode": ""
       },
       {
-        "name": "",
-        "qty": 20,
-        "low": 6,
+        "name": "Wonton Wrappers (1 case)",
+        "qty": 10,
+        "low": 2,
         "barcode": ""
       }
     ],
-    "updated": "2026-07-11T22:47:19.862Z"
+    "updated": "2026-07-12T05:05:20.089Z"
   },
   "printing": {
     "enabled": false,
