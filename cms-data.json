@@ -1,6 +1,6 @@
 {
   "_info": "Written by louwok.com/admin. index.html reads this at runtime.",
-  "_updated": "2026-07-12T05:24:42.318Z",
+  "_updated": "2026-07-12T23:19:59.625Z",
   "menu": [
     {
       "id": 1,
@@ -438,1008 +438,1152 @@
       "time": "09:00",
       "title": "APPLY: submit fall festival vendor applications",
       "location": "Lou Wok Rice House — planning",
-      "note": "[APPLY] Get FoodieLand, State Fair, and market vendor apps in now for the fall season."
+      "note": "[APPLY] Get FoodieLand, State Fair, and market vendor apps in now for the fall season.",
+      "booked": false
     },
     {
       "date": "2026-09-04",
       "time": "16:00",
       "title": "Four Peaks Brewery — Food Truck Slot (apply)",
       "location": "Four Peaks Brewing, 1340 E 8th St, Tempe, AZ 85281",
-      "note": "[BREWERY] Brewery vendor program with dedicated food truck area; craft-beer crowd pairs well with wok/fried menu. Apply directly to Four Peaks vendor program."
+      "note": "[BREWERY] Brewery vendor program with dedicated food truck area; craft-beer crowd pairs well with wok/fried menu. Apply directly to Four Peaks vendor program.",
+      "booked": false
     },
     {
       "date": "2026-09-04",
       "time": "17:00",
       "title": "First Friday — Roosevelt Row Food Truck Court",
       "location": "Roosevelt Row Arts District, Phoenix, AZ 85004",
-      "note": "[FESTIVAL] Monthly First Friday art walk with a dedicated food truck court; big evening crowd, dessert & late-night friendly (good for funnel cake). Apply to RoRo food truck court."
+      "note": "[FESTIVAL] Monthly First Friday art walk with a dedicated food truck court; big evening crowd, dessert & late-night friendly (good for funnel cake). Apply to RoRo food truck court.",
+      "booked": false
     },
     {
       "date": "2026-09-04",
       "time": "17:00",
       "title": "Queen Creek Friday Night Food Truck Festival",
       "location": "Downtown Queen Creek, AZ 85142",
-      "note": "[FESTIVAL] Weekly Friday-evening festival, 15-25 trucks, live music, family crowd. Fast-growing east-valley suburb. Apply to organizer for a spot."
+      "note": "[FESTIVAL] Weekly Friday-evening festival, 15-25 trucks, live music, family crowd. Fast-growing east-valley suburb. Apply to organizer for a spot.",
+      "booked": false
     },
     {
       "date": "2026-09-05",
       "time": "08:00",
       "title": "Uptown Farmers Market (apply/vend)",
       "location": "Uptown Plaza, 5757 N Central Ave, Phoenix, AZ 85012",
-      "note": "[MARKET] Weekly Saturday market with rotating food trucks; upscale north-central crowd. Apply to vendor program in advance. Verify weekly attendance before committing."
+      "note": "[MARKET] Weekly Saturday market with rotating food trucks; upscale north-central crowd. Apply to vendor program in advance. Verify weekly attendance before committing.",
+      "booked": false
     },
     {
       "date": "2026-09-05",
       "time": "08:00",
       "title": "Downtown Phoenix Farmers Market (Open Air)",
       "location": "721 N Central Ave, Phoenix, AZ 85004",
-      "note": "[MARKET] Weekend Open Air Market; ~5 food trucks each Saturday, strong local foot traffic. Apply through market vendor coordinator."
+      "note": "[MARKET] Weekend Open Air Market; ~5 food trucks each Saturday, strong local foot traffic. Apply through market vendor coordinator.",
+      "booked": false
     },
     {
       "date": "2026-09-11",
       "time": "17:00",
       "title": "Queen Creek Friday Night Food Truck Festival",
       "location": "Downtown Queen Creek, AZ 85142",
-      "note": "[FESTIVAL] Weekly Friday-evening festival, 15-25 trucks, live music, family crowd. Fast-growing east-valley suburb. Apply to organizer for a spot."
+      "note": "[FESTIVAL] Weekly Friday-evening festival, 15-25 trucks, live music, family crowd. Fast-growing east-valley suburb. Apply to organizer for a spot.",
+      "booked": false
     },
     {
       "date": "2026-09-12",
       "time": "08:00",
       "title": "Uptown Farmers Market (apply/vend)",
       "location": "Uptown Plaza, 5757 N Central Ave, Phoenix, AZ 85012",
-      "note": "[MARKET] Weekly Saturday market with rotating food trucks; upscale north-central crowd. Apply to vendor program in advance. Verify weekly attendance before committing."
+      "note": "[MARKET] Weekly Saturday market with rotating food trucks; upscale north-central crowd. Apply to vendor program in advance. Verify weekly attendance before committing.",
+      "booked": false
     },
     {
       "date": "2026-09-12",
       "time": "08:00",
       "title": "Downtown Phoenix Farmers Market (Open Air)",
       "location": "721 N Central Ave, Phoenix, AZ 85004",
-      "note": "[MARKET] Weekend Open Air Market; ~5 food trucks each Saturday, strong local foot traffic. Apply through market vendor coordinator."
+      "note": "[MARKET] Weekend Open Air Market; ~5 food trucks each Saturday, strong local foot traffic. Apply through market vendor coordinator.",
+      "booked": false
     },
     {
       "date": "2026-09-18",
       "time": "16:00",
       "title": "Four Peaks Brewery — Food Truck Slot (apply)",
       "location": "Four Peaks Brewing, 1340 E 8th St, Tempe, AZ 85281",
-      "note": "[BREWERY] Brewery vendor program with dedicated food truck area; craft-beer crowd pairs well with wok/fried menu. Apply directly to Four Peaks vendor program."
+      "note": "[BREWERY] Brewery vendor program with dedicated food truck area; craft-beer crowd pairs well with wok/fried menu. Apply directly to Four Peaks vendor program.",
+      "booked": false
     },
     {
       "date": "2026-09-18",
       "time": "17:00",
       "title": "Queen Creek Friday Night Food Truck Festival",
       "location": "Downtown Queen Creek, AZ 85142",
-      "note": "[FESTIVAL] Weekly Friday-evening festival, 15-25 trucks, live music, family crowd. Fast-growing east-valley suburb. Apply to organizer for a spot."
+      "note": "[FESTIVAL] Weekly Friday-evening festival, 15-25 trucks, live music, family crowd. Fast-growing east-valley suburb. Apply to organizer for a spot.",
+      "booked": false
     },
     {
       "date": "2026-09-19",
       "time": "08:00",
       "title": "Uptown Farmers Market (apply/vend)",
       "location": "Uptown Plaza, 5757 N Central Ave, Phoenix, AZ 85012",
-      "note": "[MARKET] Weekly Saturday market with rotating food trucks; upscale north-central crowd. Apply to vendor program in advance. Verify weekly attendance before committing."
+      "note": "[MARKET] Weekly Saturday market with rotating food trucks; upscale north-central crowd. Apply to vendor program in advance. Verify weekly attendance before committing.",
+      "booked": false
     },
     {
       "date": "2026-09-19",
       "time": "08:00",
       "title": "Downtown Phoenix Farmers Market (Open Air)",
       "location": "721 N Central Ave, Phoenix, AZ 85004",
-      "note": "[MARKET] Weekend Open Air Market; ~5 food trucks each Saturday, strong local foot traffic. Apply through market vendor coordinator."
+      "note": "[MARKET] Weekend Open Air Market; ~5 food trucks each Saturday, strong local foot traffic. Apply through market vendor coordinator.",
+      "booked": false
     },
     {
       "date": "2026-09-25",
       "time": "11:00",
       "title": "FoodieLand Food Festival — Phoenix",
       "location": "State Farm Stadium area, Glendale, AZ",
-      "note": "[FESTIVAL] Large multi-day food festival (typically late Sep). High attendance; apply early as a vendor. [CONFIRM DATE]"
+      "note": "[FESTIVAL] Large multi-day food festival (typically late Sep). High attendance; apply early as a vendor. [CONFIRM DATE]",
+      "booked": false
     },
     {
       "date": "2026-09-25",
       "time": "17:00",
       "title": "Queen Creek Friday Night Food Truck Festival",
       "location": "Downtown Queen Creek, AZ 85142",
-      "note": "[FESTIVAL] Weekly Friday-evening festival, 15-25 trucks, live music, family crowd. Fast-growing east-valley suburb. Apply to organizer for a spot."
+      "note": "[FESTIVAL] Weekly Friday-evening festival, 15-25 trucks, live music, family crowd. Fast-growing east-valley suburb. Apply to organizer for a spot.",
+      "booked": false
     },
     {
       "date": "2026-09-26",
       "time": "08:00",
       "title": "Uptown Farmers Market (apply/vend)",
       "location": "Uptown Plaza, 5757 N Central Ave, Phoenix, AZ 85012",
-      "note": "[MARKET] Weekly Saturday market with rotating food trucks; upscale north-central crowd. Apply to vendor program in advance. Verify weekly attendance before committing."
+      "note": "[MARKET] Weekly Saturday market with rotating food trucks; upscale north-central crowd. Apply to vendor program in advance. Verify weekly attendance before committing.",
+      "booked": false
     },
     {
       "date": "2026-09-26",
       "time": "08:00",
       "title": "Downtown Phoenix Farmers Market (Open Air)",
       "location": "721 N Central Ave, Phoenix, AZ 85004",
-      "note": "[MARKET] Weekend Open Air Market; ~5 food trucks each Saturday, strong local foot traffic. Apply through market vendor coordinator."
+      "note": "[MARKET] Weekend Open Air Market; ~5 food trucks each Saturday, strong local foot traffic. Apply through market vendor coordinator.",
+      "booked": false
     },
     {
       "date": "2026-10-02",
       "time": "16:00",
       "title": "Four Peaks Brewery — Food Truck Slot (apply)",
       "location": "Four Peaks Brewing, 1340 E 8th St, Tempe, AZ 85281",
-      "note": "[BREWERY] Brewery vendor program with dedicated food truck area; craft-beer crowd pairs well with wok/fried menu. Apply directly to Four Peaks vendor program."
+      "note": "[BREWERY] Brewery vendor program with dedicated food truck area; craft-beer crowd pairs well with wok/fried menu. Apply directly to Four Peaks vendor program.",
+      "booked": false
     },
     {
       "date": "2026-10-02",
       "time": "17:00",
       "title": "First Friday — Roosevelt Row Food Truck Court",
       "location": "Roosevelt Row Arts District, Phoenix, AZ 85004",
-      "note": "[FESTIVAL] Monthly First Friday art walk with a dedicated food truck court; big evening crowd, dessert & late-night friendly (good for funnel cake). Apply to RoRo food truck court."
+      "note": "[FESTIVAL] Monthly First Friday art walk with a dedicated food truck court; big evening crowd, dessert & late-night friendly (good for funnel cake). Apply to RoRo food truck court.",
+      "booked": false
     },
     {
       "date": "2026-10-02",
       "time": "17:00",
       "title": "Queen Creek Friday Night Food Truck Festival",
       "location": "Downtown Queen Creek, AZ 85142",
-      "note": "[FESTIVAL] Weekly Friday-evening festival, 15-25 trucks, live music, family crowd. Fast-growing east-valley suburb. Apply to organizer for a spot."
+      "note": "[FESTIVAL] Weekly Friday-evening festival, 15-25 trucks, live music, family crowd. Fast-growing east-valley suburb. Apply to organizer for a spot.",
+      "booked": false
     },
     {
       "date": "2026-10-03",
       "time": "08:00",
       "title": "Uptown Farmers Market (apply/vend)",
       "location": "Uptown Plaza, 5757 N Central Ave, Phoenix, AZ 85012",
-      "note": "[MARKET] Weekly Saturday market with rotating food trucks; upscale north-central crowd. Apply to vendor program in advance. Verify weekly attendance before committing."
+      "note": "[MARKET] Weekly Saturday market with rotating food trucks; upscale north-central crowd. Apply to vendor program in advance. Verify weekly attendance before committing.",
+      "booked": false
     },
     {
       "date": "2026-10-03",
       "time": "08:00",
       "title": "Downtown Phoenix Farmers Market (Open Air)",
       "location": "721 N Central Ave, Phoenix, AZ 85004",
-      "note": "[MARKET] Weekend Open Air Market; ~5 food trucks each Saturday, strong local foot traffic. Apply through market vendor coordinator."
+      "note": "[MARKET] Weekend Open Air Market; ~5 food trucks each Saturday, strong local foot traffic. Apply through market vendor coordinator.",
+      "booked": false
     },
     {
       "date": "2026-10-03",
       "time": "11:00",
       "title": "Arizona State Fair — Food Vendor (season)",
       "location": "Arizona State Fairgrounds, 1826 W McDowell Rd, Phoenix, AZ 85007",
-      "note": "[APPLY] State Fair runs early Oct-early Nov (Thu-Sun). Major vendor opportunity; formal application & fees. [CONFIRM DATES]"
+      "note": "[APPLY] State Fair runs early Oct-early Nov (Thu-Sun). Major vendor opportunity; formal application & fees. [CONFIRM DATES]",
+      "booked": false
     },
     {
       "date": "2026-10-09",
       "time": "17:00",
       "title": "Queen Creek Friday Night Food Truck Festival",
       "location": "Downtown Queen Creek, AZ 85142",
-      "note": "[FESTIVAL] Weekly Friday-evening festival, 15-25 trucks, live music, family crowd. Fast-growing east-valley suburb. Apply to organizer for a spot."
+      "note": "[FESTIVAL] Weekly Friday-evening festival, 15-25 trucks, live music, family crowd. Fast-growing east-valley suburb. Apply to organizer for a spot.",
+      "booked": false
     },
     {
       "date": "2026-10-10",
       "time": "08:00",
       "title": "Uptown Farmers Market (apply/vend)",
       "location": "Uptown Plaza, 5757 N Central Ave, Phoenix, AZ 85012",
-      "note": "[MARKET] Weekly Saturday market with rotating food trucks; upscale north-central crowd. Apply to vendor program in advance. Verify weekly attendance before committing."
+      "note": "[MARKET] Weekly Saturday market with rotating food trucks; upscale north-central crowd. Apply to vendor program in advance. Verify weekly attendance before committing.",
+      "booked": false
     },
     {
       "date": "2026-10-10",
       "time": "08:00",
       "title": "Downtown Phoenix Farmers Market (Open Air)",
       "location": "721 N Central Ave, Phoenix, AZ 85004",
-      "note": "[MARKET] Weekend Open Air Market; ~5 food trucks each Saturday, strong local foot traffic. Apply through market vendor coordinator."
+      "note": "[MARKET] Weekend Open Air Market; ~5 food trucks each Saturday, strong local foot traffic. Apply through market vendor coordinator.",
+      "booked": false
     },
     {
       "date": "2026-10-15",
       "time": "09:00",
       "title": "APPLY: holiday & winter market vendor applications",
       "location": "Lou Wok Rice House — planning",
-      "note": "[APPLY] Snowbird season (Nov-Mar) is peak spend — lock in Scottsdale winter markets & festivals now."
+      "note": "[APPLY] Snowbird season (Nov-Mar) is peak spend — lock in Scottsdale winter markets & festivals now.",
+      "booked": false
     },
     {
       "date": "2026-10-16",
       "time": "16:00",
       "title": "Four Peaks Brewery — Food Truck Slot (apply)",
       "location": "Four Peaks Brewing, 1340 E 8th St, Tempe, AZ 85281",
-      "note": "[BREWERY] Brewery vendor program with dedicated food truck area; craft-beer crowd pairs well with wok/fried menu. Apply directly to Four Peaks vendor program."
+      "note": "[BREWERY] Brewery vendor program with dedicated food truck area; craft-beer crowd pairs well with wok/fried menu. Apply directly to Four Peaks vendor program.",
+      "booked": false
     },
     {
       "date": "2026-10-16",
       "time": "17:00",
       "title": "Queen Creek Friday Night Food Truck Festival",
       "location": "Downtown Queen Creek, AZ 85142",
-      "note": "[FESTIVAL] Weekly Friday-evening festival, 15-25 trucks, live music, family crowd. Fast-growing east-valley suburb. Apply to organizer for a spot."
+      "note": "[FESTIVAL] Weekly Friday-evening festival, 15-25 trucks, live music, family crowd. Fast-growing east-valley suburb. Apply to organizer for a spot.",
+      "booked": false
     },
     {
       "date": "2026-10-17",
       "time": "08:00",
       "title": "Uptown Farmers Market (apply/vend)",
       "location": "Uptown Plaza, 5757 N Central Ave, Phoenix, AZ 85012",
-      "note": "[MARKET] Weekly Saturday market with rotating food trucks; upscale north-central crowd. Apply to vendor program in advance. Verify weekly attendance before committing."
+      "note": "[MARKET] Weekly Saturday market with rotating food trucks; upscale north-central crowd. Apply to vendor program in advance. Verify weekly attendance before committing.",
+      "booked": false
     },
     {
       "date": "2026-10-17",
       "time": "08:00",
       "title": "Downtown Phoenix Farmers Market (Open Air)",
       "location": "721 N Central Ave, Phoenix, AZ 85004",
-      "note": "[MARKET] Weekend Open Air Market; ~5 food trucks each Saturday, strong local foot traffic. Apply through market vendor coordinator."
+      "note": "[MARKET] Weekend Open Air Market; ~5 food trucks each Saturday, strong local foot traffic. Apply through market vendor coordinator.",
+      "booked": false
     },
     {
       "date": "2026-10-23",
       "time": "17:00",
       "title": "Queen Creek Friday Night Food Truck Festival",
       "location": "Downtown Queen Creek, AZ 85142",
-      "note": "[FESTIVAL] Weekly Friday-evening festival, 15-25 trucks, live music, family crowd. Fast-growing east-valley suburb. Apply to organizer for a spot."
+      "note": "[FESTIVAL] Weekly Friday-evening festival, 15-25 trucks, live music, family crowd. Fast-growing east-valley suburb. Apply to organizer for a spot.",
+      "booked": false
     },
     {
       "date": "2026-10-24",
       "time": "08:00",
       "title": "Uptown Farmers Market (apply/vend)",
       "location": "Uptown Plaza, 5757 N Central Ave, Phoenix, AZ 85012",
-      "note": "[MARKET] Weekly Saturday market with rotating food trucks; upscale north-central crowd. Apply to vendor program in advance. Verify weekly attendance before committing."
+      "note": "[MARKET] Weekly Saturday market with rotating food trucks; upscale north-central crowd. Apply to vendor program in advance. Verify weekly attendance before committing.",
+      "booked": false
     },
     {
       "date": "2026-10-24",
       "time": "08:00",
       "title": "Downtown Phoenix Farmers Market (Open Air)",
       "location": "721 N Central Ave, Phoenix, AZ 85004",
-      "note": "[MARKET] Weekend Open Air Market; ~5 food trucks each Saturday, strong local foot traffic. Apply through market vendor coordinator."
+      "note": "[MARKET] Weekend Open Air Market; ~5 food trucks each Saturday, strong local foot traffic. Apply through market vendor coordinator.",
+      "booked": false
     },
     {
       "date": "2026-10-30",
       "time": "16:00",
       "title": "Four Peaks Brewery — Food Truck Slot (apply)",
       "location": "Four Peaks Brewing, 1340 E 8th St, Tempe, AZ 85281",
-      "note": "[BREWERY] Brewery vendor program with dedicated food truck area; craft-beer crowd pairs well with wok/fried menu. Apply directly to Four Peaks vendor program."
+      "note": "[BREWERY] Brewery vendor program with dedicated food truck area; craft-beer crowd pairs well with wok/fried menu. Apply directly to Four Peaks vendor program.",
+      "booked": false
     },
     {
       "date": "2026-10-30",
       "time": "17:00",
       "title": "Queen Creek Friday Night Food Truck Festival",
       "location": "Downtown Queen Creek, AZ 85142",
-      "note": "[FESTIVAL] Weekly Friday-evening festival, 15-25 trucks, live music, family crowd. Fast-growing east-valley suburb. Apply to organizer for a spot."
+      "note": "[FESTIVAL] Weekly Friday-evening festival, 15-25 trucks, live music, family crowd. Fast-growing east-valley suburb. Apply to organizer for a spot.",
+      "booked": false
     },
     {
       "date": "2026-10-31",
       "time": "08:00",
       "title": "Uptown Farmers Market (apply/vend)",
       "location": "Uptown Plaza, 5757 N Central Ave, Phoenix, AZ 85012",
-      "note": "[MARKET] Weekly Saturday market with rotating food trucks; upscale north-central crowd. Apply to vendor program in advance. Verify weekly attendance before committing."
+      "note": "[MARKET] Weekly Saturday market with rotating food trucks; upscale north-central crowd. Apply to vendor program in advance. Verify weekly attendance before committing.",
+      "booked": false
     },
     {
       "date": "2026-10-31",
       "time": "08:00",
       "title": "Downtown Phoenix Farmers Market (Open Air)",
       "location": "721 N Central Ave, Phoenix, AZ 85004",
-      "note": "[MARKET] Weekend Open Air Market; ~5 food trucks each Saturday, strong local foot traffic. Apply through market vendor coordinator."
+      "note": "[MARKET] Weekend Open Air Market; ~5 food trucks each Saturday, strong local foot traffic. Apply through market vendor coordinator.",
+      "booked": false
     },
     {
       "date": "2026-11-06",
       "time": "16:00",
       "title": "Canal Convergence — Scottsdale Waterfront",
       "location": "Scottsdale Waterfront, Scottsdale, AZ 85251",
-      "note": "[FESTIVAL] Multi-day art & light festival on the waterfront; affluent Scottsdale + tourist crowd. Apply to vend. [CONFIRM DATE]"
+      "note": "[FESTIVAL] Multi-day art & light festival on the waterfront; affluent Scottsdale + tourist crowd. Apply to vend. [CONFIRM DATE]",
+      "booked": false
     },
     {
       "date": "2026-11-06",
       "time": "17:00",
       "title": "First Friday — Roosevelt Row Food Truck Court",
       "location": "Roosevelt Row Arts District, Phoenix, AZ 85004",
-      "note": "[FESTIVAL] Monthly First Friday art walk with a dedicated food truck court; big evening crowd, dessert & late-night friendly (good for funnel cake). Apply to RoRo food truck court."
+      "note": "[FESTIVAL] Monthly First Friday art walk with a dedicated food truck court; big evening crowd, dessert & late-night friendly (good for funnel cake). Apply to RoRo food truck court.",
+      "booked": false
     },
     {
       "date": "2026-11-06",
       "time": "17:00",
       "title": "Queen Creek Friday Night Food Truck Festival",
       "location": "Downtown Queen Creek, AZ 85142",
-      "note": "[FESTIVAL] Weekly Friday-evening festival, 15-25 trucks, live music, family crowd. Fast-growing east-valley suburb. Apply to organizer for a spot."
+      "note": "[FESTIVAL] Weekly Friday-evening festival, 15-25 trucks, live music, family crowd. Fast-growing east-valley suburb. Apply to organizer for a spot.",
+      "booked": false
     },
     {
       "date": "2026-11-07",
       "time": "08:00",
       "title": "Uptown Farmers Market (apply/vend)",
       "location": "Uptown Plaza, 5757 N Central Ave, Phoenix, AZ 85012",
-      "note": "[MARKET] Weekly Saturday market with rotating food trucks; upscale north-central crowd. Apply to vendor program in advance. Verify weekly attendance before committing."
+      "note": "[MARKET] Weekly Saturday market with rotating food trucks; upscale north-central crowd. Apply to vendor program in advance. Verify weekly attendance before committing.",
+      "booked": false
     },
     {
       "date": "2026-11-07",
       "time": "08:00",
       "title": "Downtown Phoenix Farmers Market (Open Air)",
       "location": "721 N Central Ave, Phoenix, AZ 85004",
-      "note": "[MARKET] Weekend Open Air Market; ~5 food trucks each Saturday, strong local foot traffic. Apply through market vendor coordinator."
+      "note": "[MARKET] Weekend Open Air Market; ~5 food trucks each Saturday, strong local foot traffic. Apply through market vendor coordinator.",
+      "booked": false
     },
     {
       "date": "2026-11-07",
       "time": "17:00",
       "title": "Canal Convergence",
       "location": "Scottsdale Waterfront AZ",
-      "note": "Apply to vend - affluent crowd"
+      "note": "Apply to vend - affluent crowd",
+      "booked": false
     },
     {
       "date": "2026-11-13",
       "time": "16:00",
       "title": "Four Peaks Brewery — Food Truck Slot (apply)",
       "location": "Four Peaks Brewing, 1340 E 8th St, Tempe, AZ 85281",
-      "note": "[BREWERY] Brewery vendor program with dedicated food truck area; craft-beer crowd pairs well with wok/fried menu. Apply directly to Four Peaks vendor program."
+      "note": "[BREWERY] Brewery vendor program with dedicated food truck area; craft-beer crowd pairs well with wok/fried menu. Apply directly to Four Peaks vendor program.",
+      "booked": false
     },
     {
       "date": "2026-11-13",
       "time": "17:00",
       "title": "Queen Creek Friday Night Food Truck Festival",
       "location": "Downtown Queen Creek, AZ 85142",
-      "note": "[FESTIVAL] Weekly Friday-evening festival, 15-25 trucks, live music, family crowd. Fast-growing east-valley suburb. Apply to organizer for a spot."
+      "note": "[FESTIVAL] Weekly Friday-evening festival, 15-25 trucks, live music, family crowd. Fast-growing east-valley suburb. Apply to organizer for a spot.",
+      "booked": false
     },
     {
       "date": "2026-11-14",
       "time": "08:00",
       "title": "Uptown Farmers Market (apply/vend)",
       "location": "Uptown Plaza, 5757 N Central Ave, Phoenix, AZ 85012",
-      "note": "[MARKET] Weekly Saturday market with rotating food trucks; upscale north-central crowd. Apply to vendor program in advance. Verify weekly attendance before committing."
+      "note": "[MARKET] Weekly Saturday market with rotating food trucks; upscale north-central crowd. Apply to vendor program in advance. Verify weekly attendance before committing.",
+      "booked": false
     },
     {
       "date": "2026-11-14",
       "time": "08:00",
       "title": "Downtown Phoenix Farmers Market (Open Air)",
       "location": "721 N Central Ave, Phoenix, AZ 85004",
-      "note": "[MARKET] Weekend Open Air Market; ~5 food trucks each Saturday, strong local foot traffic. Apply through market vendor coordinator."
+      "note": "[MARKET] Weekend Open Air Market; ~5 food trucks each Saturday, strong local foot traffic. Apply through market vendor coordinator.",
+      "booked": false
     },
     {
       "date": "2026-11-20",
       "time": "17:00",
       "title": "Queen Creek Friday Night Food Truck Festival",
       "location": "Downtown Queen Creek, AZ 85142",
-      "note": "[FESTIVAL] Weekly Friday-evening festival, 15-25 trucks, live music, family crowd. Fast-growing east-valley suburb. Apply to organizer for a spot."
+      "note": "[FESTIVAL] Weekly Friday-evening festival, 15-25 trucks, live music, family crowd. Fast-growing east-valley suburb. Apply to organizer for a spot.",
+      "booked": false
     },
     {
       "date": "2026-11-21",
       "time": "08:00",
       "title": "Uptown Farmers Market (apply/vend)",
       "location": "Uptown Plaza, 5757 N Central Ave, Phoenix, AZ 85012",
-      "note": "[MARKET] Weekly Saturday market with rotating food trucks; upscale north-central crowd. Apply to vendor program in advance. Verify weekly attendance before committing."
+      "note": "[MARKET] Weekly Saturday market with rotating food trucks; upscale north-central crowd. Apply to vendor program in advance. Verify weekly attendance before committing.",
+      "booked": false
     },
     {
       "date": "2026-11-21",
       "time": "08:00",
       "title": "Downtown Phoenix Farmers Market (Open Air)",
       "location": "721 N Central Ave, Phoenix, AZ 85004",
-      "note": "[MARKET] Weekend Open Air Market; ~5 food trucks each Saturday, strong local foot traffic. Apply through market vendor coordinator."
+      "note": "[MARKET] Weekend Open Air Market; ~5 food trucks each Saturday, strong local foot traffic. Apply through market vendor coordinator.",
+      "booked": false
     },
     {
       "date": "2026-11-27",
       "time": "16:00",
       "title": "Four Peaks Brewery — Food Truck Slot (apply)",
       "location": "Four Peaks Brewing, 1340 E 8th St, Tempe, AZ 85281",
-      "note": "[BREWERY] Brewery vendor program with dedicated food truck area; craft-beer crowd pairs well with wok/fried menu. Apply directly to Four Peaks vendor program."
+      "note": "[BREWERY] Brewery vendor program with dedicated food truck area; craft-beer crowd pairs well with wok/fried menu. Apply directly to Four Peaks vendor program.",
+      "booked": false
     },
     {
       "date": "2026-11-27",
       "time": "17:00",
       "title": "Queen Creek Friday Night Food Truck Festival",
       "location": "Downtown Queen Creek, AZ 85142",
-      "note": "[FESTIVAL] Weekly Friday-evening festival, 15-25 trucks, live music, family crowd. Fast-growing east-valley suburb. Apply to organizer for a spot."
+      "note": "[FESTIVAL] Weekly Friday-evening festival, 15-25 trucks, live music, family crowd. Fast-growing east-valley suburb. Apply to organizer for a spot.",
+      "booked": false
     },
     {
       "date": "2026-11-28",
       "time": "08:00",
       "title": "Uptown Farmers Market (apply/vend)",
       "location": "Uptown Plaza, 5757 N Central Ave, Phoenix, AZ 85012",
-      "note": "[MARKET] Weekly Saturday market with rotating food trucks; upscale north-central crowd. Apply to vendor program in advance. Verify weekly attendance before committing."
+      "note": "[MARKET] Weekly Saturday market with rotating food trucks; upscale north-central crowd. Apply to vendor program in advance. Verify weekly attendance before committing.",
+      "booked": false
     },
     {
       "date": "2026-11-28",
       "time": "08:00",
       "title": "Downtown Phoenix Farmers Market (Open Air)",
       "location": "721 N Central Ave, Phoenix, AZ 85004",
-      "note": "[MARKET] Weekend Open Air Market; ~5 food trucks each Saturday, strong local foot traffic. Apply through market vendor coordinator."
+      "note": "[MARKET] Weekend Open Air Market; ~5 food trucks each Saturday, strong local foot traffic. Apply through market vendor coordinator.",
+      "booked": false
     },
     {
       "date": "2026-12-04",
       "time": "10:00",
       "title": "Fall Tempe Festival of the Arts",
       "location": "Downtown Mill Ave, Tempe, AZ 85281",
-      "note": "[FESTIVAL] Large 3-day arts festival on Mill Ave; heavy foot traffic. Vendor application required. [CONFIRM DATE]"
+      "note": "[FESTIVAL] Large 3-day arts festival on Mill Ave; heavy foot traffic. Vendor application required. [CONFIRM DATE]",
+      "booked": false
     },
     {
       "date": "2026-12-04",
       "time": "17:00",
       "title": "First Friday — Roosevelt Row Food Truck Court",
       "location": "Roosevelt Row Arts District, Phoenix, AZ 85004",
-      "note": "[FESTIVAL] Monthly First Friday art walk with a dedicated food truck court; big evening crowd, dessert & late-night friendly (good for funnel cake). Apply to RoRo food truck court."
+      "note": "[FESTIVAL] Monthly First Friday art walk with a dedicated food truck court; big evening crowd, dessert & late-night friendly (good for funnel cake). Apply to RoRo food truck court.",
+      "booked": false
     },
     {
       "date": "2026-12-04",
       "time": "17:00",
       "title": "Queen Creek Friday Night Food Truck Festival",
       "location": "Downtown Queen Creek, AZ 85142",
-      "note": "[FESTIVAL] Weekly Friday-evening festival, 15-25 trucks, live music, family crowd. Fast-growing east-valley suburb. Apply to organizer for a spot."
+      "note": "[FESTIVAL] Weekly Friday-evening festival, 15-25 trucks, live music, family crowd. Fast-growing east-valley suburb. Apply to organizer for a spot.",
+      "booked": false
     },
     {
       "date": "2026-12-05",
       "time": "08:00",
       "title": "Uptown Farmers Market (apply/vend)",
       "location": "Uptown Plaza, 5757 N Central Ave, Phoenix, AZ 85012",
-      "note": "[MARKET] Weekly Saturday market with rotating food trucks; upscale north-central crowd. Apply to vendor program in advance. Verify weekly attendance before committing."
+      "note": "[MARKET] Weekly Saturday market with rotating food trucks; upscale north-central crowd. Apply to vendor program in advance. Verify weekly attendance before committing.",
+      "booked": false
     },
     {
       "date": "2026-12-05",
       "time": "08:00",
       "title": "Downtown Phoenix Farmers Market (Open Air)",
       "location": "721 N Central Ave, Phoenix, AZ 85004",
-      "note": "[MARKET] Weekend Open Air Market; ~5 food trucks each Saturday, strong local foot traffic. Apply through market vendor coordinator."
+      "note": "[MARKET] Weekend Open Air Market; ~5 food trucks each Saturday, strong local foot traffic. Apply through market vendor coordinator.",
+      "booked": false
     },
     {
       "date": "2026-12-05",
       "time": "10:00",
       "title": "Fall Tempe Festival of the Arts",
       "location": "Downtown Mill Ave Tempe AZ",
-      "note": "3-day arts festival"
+      "note": "3-day arts festival",
+      "booked": false
     },
     {
       "date": "2026-12-11",
       "time": "16:00",
       "title": "Four Peaks Brewery — Food Truck Slot (apply)",
       "location": "Four Peaks Brewing, 1340 E 8th St, Tempe, AZ 85281",
-      "note": "[BREWERY] Brewery vendor program with dedicated food truck area; craft-beer crowd pairs well with wok/fried menu. Apply directly to Four Peaks vendor program."
+      "note": "[BREWERY] Brewery vendor program with dedicated food truck area; craft-beer crowd pairs well with wok/fried menu. Apply directly to Four Peaks vendor program.",
+      "booked": false
     },
     {
       "date": "2026-12-11",
       "time": "17:00",
       "title": "Queen Creek Friday Night Food Truck Festival",
       "location": "Downtown Queen Creek, AZ 85142",
-      "note": "[FESTIVAL] Weekly Friday-evening festival, 15-25 trucks, live music, family crowd. Fast-growing east-valley suburb. Apply to organizer for a spot."
+      "note": "[FESTIVAL] Weekly Friday-evening festival, 15-25 trucks, live music, family crowd. Fast-growing east-valley suburb. Apply to organizer for a spot.",
+      "booked": false
     },
     {
       "date": "2026-12-12",
       "time": "08:00",
       "title": "Uptown Farmers Market (apply/vend)",
       "location": "Uptown Plaza, 5757 N Central Ave, Phoenix, AZ 85012",
-      "note": "[MARKET] Weekly Saturday market with rotating food trucks; upscale north-central crowd. Apply to vendor program in advance. Verify weekly attendance before committing."
+      "note": "[MARKET] Weekly Saturday market with rotating food trucks; upscale north-central crowd. Apply to vendor program in advance. Verify weekly attendance before committing.",
+      "booked": false
     },
     {
       "date": "2026-12-12",
       "time": "08:00",
       "title": "Downtown Phoenix Farmers Market (Open Air)",
       "location": "721 N Central Ave, Phoenix, AZ 85004",
-      "note": "[MARKET] Weekend Open Air Market; ~5 food trucks each Saturday, strong local foot traffic. Apply through market vendor coordinator."
+      "note": "[MARKET] Weekend Open Air Market; ~5 food trucks each Saturday, strong local foot traffic. Apply through market vendor coordinator.",
+      "booked": false
     },
     {
       "date": "2026-12-18",
       "time": "17:00",
       "title": "Queen Creek Friday Night Food Truck Festival",
       "location": "Downtown Queen Creek, AZ 85142",
-      "note": "[FESTIVAL] Weekly Friday-evening festival, 15-25 trucks, live music, family crowd. Fast-growing east-valley suburb. Apply to organizer for a spot."
+      "note": "[FESTIVAL] Weekly Friday-evening festival, 15-25 trucks, live music, family crowd. Fast-growing east-valley suburb. Apply to organizer for a spot.",
+      "booked": false
     },
     {
       "date": "2026-12-19",
       "time": "08:00",
       "title": "Uptown Farmers Market (apply/vend)",
       "location": "Uptown Plaza, 5757 N Central Ave, Phoenix, AZ 85012",
-      "note": "[MARKET] Weekly Saturday market with rotating food trucks; upscale north-central crowd. Apply to vendor program in advance. Verify weekly attendance before committing."
+      "note": "[MARKET] Weekly Saturday market with rotating food trucks; upscale north-central crowd. Apply to vendor program in advance. Verify weekly attendance before committing.",
+      "booked": false
     },
     {
       "date": "2026-12-19",
       "time": "08:00",
       "title": "Downtown Phoenix Farmers Market (Open Air)",
       "location": "721 N Central Ave, Phoenix, AZ 85004",
-      "note": "[MARKET] Weekend Open Air Market; ~5 food trucks each Saturday, strong local foot traffic. Apply through market vendor coordinator."
+      "note": "[MARKET] Weekend Open Air Market; ~5 food trucks each Saturday, strong local foot traffic. Apply through market vendor coordinator.",
+      "booked": false
     },
     {
       "date": "2026-12-25",
       "time": "16:00",
       "title": "Four Peaks Brewery — Food Truck Slot (apply)",
       "location": "Four Peaks Brewing, 1340 E 8th St, Tempe, AZ 85281",
-      "note": "[BREWERY] Brewery vendor program with dedicated food truck area; craft-beer crowd pairs well with wok/fried menu. Apply directly to Four Peaks vendor program."
+      "note": "[BREWERY] Brewery vendor program with dedicated food truck area; craft-beer crowd pairs well with wok/fried menu. Apply directly to Four Peaks vendor program.",
+      "booked": false
     },
     {
       "date": "2026-12-25",
       "time": "17:00",
       "title": "Queen Creek Friday Night Food Truck Festival",
       "location": "Downtown Queen Creek, AZ 85142",
-      "note": "[FESTIVAL] Weekly Friday-evening festival, 15-25 trucks, live music, family crowd. Fast-growing east-valley suburb. Apply to organizer for a spot."
+      "note": "[FESTIVAL] Weekly Friday-evening festival, 15-25 trucks, live music, family crowd. Fast-growing east-valley suburb. Apply to organizer for a spot.",
+      "booked": false
     },
     {
       "date": "2026-12-26",
       "time": "08:00",
       "title": "Uptown Farmers Market (apply/vend)",
       "location": "Uptown Plaza, 5757 N Central Ave, Phoenix, AZ 85012",
-      "note": "[MARKET] Weekly Saturday market with rotating food trucks; upscale north-central crowd. Apply to vendor program in advance. Verify weekly attendance before committing."
+      "note": "[MARKET] Weekly Saturday market with rotating food trucks; upscale north-central crowd. Apply to vendor program in advance. Verify weekly attendance before committing.",
+      "booked": false
     },
     {
       "date": "2026-12-26",
       "time": "08:00",
       "title": "Downtown Phoenix Farmers Market (Open Air)",
       "location": "721 N Central Ave, Phoenix, AZ 85004",
-      "note": "[MARKET] Weekend Open Air Market; ~5 food trucks each Saturday, strong local foot traffic. Apply through market vendor coordinator."
+      "note": "[MARKET] Weekend Open Air Market; ~5 food trucks each Saturday, strong local foot traffic. Apply through market vendor coordinator.",
+      "booked": false
     },
     {
       "date": "2027-01-01",
       "time": "17:00",
       "title": "First Friday — Roosevelt Row Food Truck Court",
       "location": "Roosevelt Row Arts District, Phoenix, AZ 85004",
-      "note": "[FESTIVAL] Monthly First Friday art walk with a dedicated food truck court; big evening crowd, dessert & late-night friendly (good for funnel cake). Apply to RoRo food truck court."
+      "note": "[FESTIVAL] Monthly First Friday art walk with a dedicated food truck court; big evening crowd, dessert & late-night friendly (good for funnel cake). Apply to RoRo food truck court.",
+      "booked": false
     },
     {
       "date": "2027-01-01",
       "time": "17:00",
       "title": "Queen Creek Friday Night Food Truck Festival",
       "location": "Downtown Queen Creek, AZ 85142",
-      "note": "[FESTIVAL] Weekly Friday-evening festival, 15-25 trucks, live music, family crowd. Fast-growing east-valley suburb. Apply to organizer for a spot."
+      "note": "[FESTIVAL] Weekly Friday-evening festival, 15-25 trucks, live music, family crowd. Fast-growing east-valley suburb. Apply to organizer for a spot.",
+      "booked": false
     },
     {
       "date": "2027-01-02",
       "time": "08:00",
       "title": "Uptown Farmers Market (apply/vend)",
       "location": "Uptown Plaza, 5757 N Central Ave, Phoenix, AZ 85012",
-      "note": "[MARKET] Weekly Saturday market with rotating food trucks; upscale north-central crowd. Apply to vendor program in advance. Verify weekly attendance before committing."
+      "note": "[MARKET] Weekly Saturday market with rotating food trucks; upscale north-central crowd. Apply to vendor program in advance. Verify weekly attendance before committing.",
+      "booked": false
     },
     {
       "date": "2027-01-02",
       "time": "08:00",
       "title": "Downtown Phoenix Farmers Market (Open Air)",
       "location": "721 N Central Ave, Phoenix, AZ 85004",
-      "note": "[MARKET] Weekend Open Air Market; ~5 food trucks each Saturday, strong local foot traffic. Apply through market vendor coordinator."
+      "note": "[MARKET] Weekend Open Air Market; ~5 food trucks each Saturday, strong local foot traffic. Apply through market vendor coordinator.",
+      "booked": false
     },
     {
       "date": "2027-01-05",
       "time": "09:00",
       "title": "APPLY: WM Phoenix Open week catering push",
       "location": "Lou Wok Rice House — planning",
-      "note": "[APPLY] Reach out for private catering during Open week (late Jan/early Feb) — book 4-6 weeks ahead."
+      "note": "[APPLY] Reach out for private catering during Open week (late Jan/early Feb) — book 4-6 weeks ahead.",
+      "booked": false
     },
     {
       "date": "2027-01-08",
       "time": "16:00",
       "title": "Four Peaks Brewery — Food Truck Slot (apply)",
       "location": "Four Peaks Brewing, 1340 E 8th St, Tempe, AZ 85281",
-      "note": "[BREWERY] Brewery vendor program with dedicated food truck area; craft-beer crowd pairs well with wok/fried menu. Apply directly to Four Peaks vendor program."
+      "note": "[BREWERY] Brewery vendor program with dedicated food truck area; craft-beer crowd pairs well with wok/fried menu. Apply directly to Four Peaks vendor program.",
+      "booked": false
     },
     {
       "date": "2027-01-08",
       "time": "17:00",
       "title": "Queen Creek Friday Night Food Truck Festival",
       "location": "Downtown Queen Creek, AZ 85142",
-      "note": "[FESTIVAL] Weekly Friday-evening festival, 15-25 trucks, live music, family crowd. Fast-growing east-valley suburb. Apply to organizer for a spot."
+      "note": "[FESTIVAL] Weekly Friday-evening festival, 15-25 trucks, live music, family crowd. Fast-growing east-valley suburb. Apply to organizer for a spot.",
+      "booked": false
     },
     {
       "date": "2027-01-09",
       "time": "08:00",
       "title": "Uptown Farmers Market (apply/vend)",
       "location": "Uptown Plaza, 5757 N Central Ave, Phoenix, AZ 85012",
-      "note": "[MARKET] Weekly Saturday market with rotating food trucks; upscale north-central crowd. Apply to vendor program in advance. Verify weekly attendance before committing."
+      "note": "[MARKET] Weekly Saturday market with rotating food trucks; upscale north-central crowd. Apply to vendor program in advance. Verify weekly attendance before committing.",
+      "booked": false
     },
     {
       "date": "2027-01-09",
       "time": "08:00",
       "title": "Downtown Phoenix Farmers Market (Open Air)",
       "location": "721 N Central Ave, Phoenix, AZ 85004",
-      "note": "[MARKET] Weekend Open Air Market; ~5 food trucks each Saturday, strong local foot traffic. Apply through market vendor coordinator."
+      "note": "[MARKET] Weekend Open Air Market; ~5 food trucks each Saturday, strong local foot traffic. Apply through market vendor coordinator.",
+      "booked": false
     },
     {
       "date": "2027-01-15",
       "time": "17:00",
       "title": "Queen Creek Friday Night Food Truck Festival",
       "location": "Downtown Queen Creek, AZ 85142",
-      "note": "[FESTIVAL] Weekly Friday-evening festival, 15-25 trucks, live music, family crowd. Fast-growing east-valley suburb. Apply to organizer for a spot."
+      "note": "[FESTIVAL] Weekly Friday-evening festival, 15-25 trucks, live music, family crowd. Fast-growing east-valley suburb. Apply to organizer for a spot.",
+      "booked": false
     },
     {
       "date": "2027-01-16",
       "time": "08:00",
       "title": "Uptown Farmers Market (apply/vend)",
       "location": "Uptown Plaza, 5757 N Central Ave, Phoenix, AZ 85012",
-      "note": "[MARKET] Weekly Saturday market with rotating food trucks; upscale north-central crowd. Apply to vendor program in advance. Verify weekly attendance before committing."
+      "note": "[MARKET] Weekly Saturday market with rotating food trucks; upscale north-central crowd. Apply to vendor program in advance. Verify weekly attendance before committing.",
+      "booked": false
     },
     {
       "date": "2027-01-16",
       "time": "08:00",
       "title": "Downtown Phoenix Farmers Market (Open Air)",
       "location": "721 N Central Ave, Phoenix, AZ 85004",
-      "note": "[MARKET] Weekend Open Air Market; ~5 food trucks each Saturday, strong local foot traffic. Apply through market vendor coordinator."
+      "note": "[MARKET] Weekend Open Air Market; ~5 food trucks each Saturday, strong local foot traffic. Apply through market vendor coordinator.",
+      "booked": false
     },
     {
       "date": "2027-01-22",
       "time": "16:00",
       "title": "Four Peaks Brewery — Food Truck Slot (apply)",
       "location": "Four Peaks Brewing, 1340 E 8th St, Tempe, AZ 85281",
-      "note": "[BREWERY] Brewery vendor program with dedicated food truck area; craft-beer crowd pairs well with wok/fried menu. Apply directly to Four Peaks vendor program."
+      "note": "[BREWERY] Brewery vendor program with dedicated food truck area; craft-beer crowd pairs well with wok/fried menu. Apply directly to Four Peaks vendor program.",
+      "booked": false
     },
     {
       "date": "2027-01-22",
       "time": "17:00",
       "title": "Queen Creek Friday Night Food Truck Festival",
       "location": "Downtown Queen Creek, AZ 85142",
-      "note": "[FESTIVAL] Weekly Friday-evening festival, 15-25 trucks, live music, family crowd. Fast-growing east-valley suburb. Apply to organizer for a spot."
+      "note": "[FESTIVAL] Weekly Friday-evening festival, 15-25 trucks, live music, family crowd. Fast-growing east-valley suburb. Apply to organizer for a spot.",
+      "booked": false
     },
     {
       "date": "2027-01-23",
       "time": "08:00",
       "title": "Uptown Farmers Market (apply/vend)",
       "location": "Uptown Plaza, 5757 N Central Ave, Phoenix, AZ 85012",
-      "note": "[MARKET] Weekly Saturday market with rotating food trucks; upscale north-central crowd. Apply to vendor program in advance. Verify weekly attendance before committing."
+      "note": "[MARKET] Weekly Saturday market with rotating food trucks; upscale north-central crowd. Apply to vendor program in advance. Verify weekly attendance before committing.",
+      "booked": false
     },
     {
       "date": "2027-01-23",
       "time": "08:00",
       "title": "Downtown Phoenix Farmers Market (Open Air)",
       "location": "721 N Central Ave, Phoenix, AZ 85004",
-      "note": "[MARKET] Weekend Open Air Market; ~5 food trucks each Saturday, strong local foot traffic. Apply through market vendor coordinator."
+      "note": "[MARKET] Weekend Open Air Market; ~5 food trucks each Saturday, strong local foot traffic. Apply through market vendor coordinator.",
+      "booked": false
     },
     {
       "date": "2027-01-29",
       "time": "17:00",
       "title": "Queen Creek Friday Night Food Truck Festival",
       "location": "Downtown Queen Creek, AZ 85142",
-      "note": "[FESTIVAL] Weekly Friday-evening festival, 15-25 trucks, live music, family crowd. Fast-growing east-valley suburb. Apply to organizer for a spot."
+      "note": "[FESTIVAL] Weekly Friday-evening festival, 15-25 trucks, live music, family crowd. Fast-growing east-valley suburb. Apply to organizer for a spot.",
+      "booked": false
     },
     {
       "date": "2027-01-30",
       "time": "08:00",
       "title": "Uptown Farmers Market (apply/vend)",
       "location": "Uptown Plaza, 5757 N Central Ave, Phoenix, AZ 85012",
-      "note": "[MARKET] Weekly Saturday market with rotating food trucks; upscale north-central crowd. Apply to vendor program in advance. Verify weekly attendance before committing."
+      "note": "[MARKET] Weekly Saturday market with rotating food trucks; upscale north-central crowd. Apply to vendor program in advance. Verify weekly attendance before committing.",
+      "booked": false
     },
     {
       "date": "2027-01-30",
       "time": "08:00",
       "title": "Downtown Phoenix Farmers Market (Open Air)",
       "location": "721 N Central Ave, Phoenix, AZ 85004",
-      "note": "[MARKET] Weekend Open Air Market; ~5 food trucks each Saturday, strong local foot traffic. Apply through market vendor coordinator."
+      "note": "[MARKET] Weekend Open Air Market; ~5 food trucks each Saturday, strong local foot traffic. Apply through market vendor coordinator.",
+      "booked": false
     },
     {
       "date": "2027-01-30",
       "time": "10:00",
       "title": "WM Phoenix Open week — catering/vend demand",
       "location": "TPC Scottsdale, 17020 N Hayden Rd, Scottsdale, AZ 85255",
-      "note": "[APPLY] Peak snowbird + event week; huge private-catering and event demand valley-wide. Book catering 4-6 wks ahead. [CONFIRM WEEK]"
+      "note": "[APPLY] Peak snowbird + event week; huge private-catering and event demand valley-wide. Book catering 4-6 wks ahead. [CONFIRM WEEK]",
+      "booked": false
     },
     {
       "date": "2027-02-05",
       "time": "16:00",
       "title": "Four Peaks Brewery — Food Truck Slot (apply)",
       "location": "Four Peaks Brewing, 1340 E 8th St, Tempe, AZ 85281",
-      "note": "[BREWERY] Brewery vendor program with dedicated food truck area; craft-beer crowd pairs well with wok/fried menu. Apply directly to Four Peaks vendor program."
+      "note": "[BREWERY] Brewery vendor program with dedicated food truck area; craft-beer crowd pairs well with wok/fried menu. Apply directly to Four Peaks vendor program.",
+      "booked": false
     },
     {
       "date": "2027-02-05",
       "time": "17:00",
       "title": "First Friday — Roosevelt Row Food Truck Court",
       "location": "Roosevelt Row Arts District, Phoenix, AZ 85004",
-      "note": "[FESTIVAL] Monthly First Friday art walk with a dedicated food truck court; big evening crowd, dessert & late-night friendly (good for funnel cake). Apply to RoRo food truck court."
+      "note": "[FESTIVAL] Monthly First Friday art walk with a dedicated food truck court; big evening crowd, dessert & late-night friendly (good for funnel cake). Apply to RoRo food truck court.",
+      "booked": false
     },
     {
       "date": "2027-02-05",
       "time": "17:00",
       "title": "Queen Creek Friday Night Food Truck Festival",
       "location": "Downtown Queen Creek, AZ 85142",
-      "note": "[FESTIVAL] Weekly Friday-evening festival, 15-25 trucks, live music, family crowd. Fast-growing east-valley suburb. Apply to organizer for a spot."
+      "note": "[FESTIVAL] Weekly Friday-evening festival, 15-25 trucks, live music, family crowd. Fast-growing east-valley suburb. Apply to organizer for a spot.",
+      "booked": false
     },
     {
       "date": "2027-02-06",
       "time": "08:00",
       "title": "Uptown Farmers Market (apply/vend)",
       "location": "Uptown Plaza, 5757 N Central Ave, Phoenix, AZ 85012",
-      "note": "[MARKET] Weekly Saturday market with rotating food trucks; upscale north-central crowd. Apply to vendor program in advance. Verify weekly attendance before committing."
+      "note": "[MARKET] Weekly Saturday market with rotating food trucks; upscale north-central crowd. Apply to vendor program in advance. Verify weekly attendance before committing.",
+      "booked": false
     },
     {
       "date": "2027-02-06",
       "time": "08:00",
       "title": "Downtown Phoenix Farmers Market (Open Air)",
       "location": "721 N Central Ave, Phoenix, AZ 85004",
-      "note": "[MARKET] Weekend Open Air Market; ~5 food trucks each Saturday, strong local foot traffic. Apply through market vendor coordinator."
+      "note": "[MARKET] Weekend Open Air Market; ~5 food trucks each Saturday, strong local foot traffic. Apply through market vendor coordinator.",
+      "booked": false
     },
     {
       "date": "2027-02-12",
       "time": "17:00",
       "title": "Queen Creek Friday Night Food Truck Festival",
       "location": "Downtown Queen Creek, AZ 85142",
-      "note": "[FESTIVAL] Weekly Friday-evening festival, 15-25 trucks, live music, family crowd. Fast-growing east-valley suburb. Apply to organizer for a spot."
+      "note": "[FESTIVAL] Weekly Friday-evening festival, 15-25 trucks, live music, family crowd. Fast-growing east-valley suburb. Apply to organizer for a spot.",
+      "booked": false
     },
     {
       "date": "2027-02-13",
       "time": "08:00",
       "title": "Uptown Farmers Market (apply/vend)",
       "location": "Uptown Plaza, 5757 N Central Ave, Phoenix, AZ 85012",
-      "note": "[MARKET] Weekly Saturday market with rotating food trucks; upscale north-central crowd. Apply to vendor program in advance. Verify weekly attendance before committing."
+      "note": "[MARKET] Weekly Saturday market with rotating food trucks; upscale north-central crowd. Apply to vendor program in advance. Verify weekly attendance before committing.",
+      "booked": false
     },
     {
       "date": "2027-02-13",
       "time": "08:00",
       "title": "Downtown Phoenix Farmers Market (Open Air)",
       "location": "721 N Central Ave, Phoenix, AZ 85004",
-      "note": "[MARKET] Weekend Open Air Market; ~5 food trucks each Saturday, strong local foot traffic. Apply through market vendor coordinator."
+      "note": "[MARKET] Weekend Open Air Market; ~5 food trucks each Saturday, strong local foot traffic. Apply through market vendor coordinator.",
+      "booked": false
     },
     {
       "date": "2027-02-13",
       "time": "09:00",
       "title": "Scottsdale Farmers Market",
       "location": "Old Town Scottsdale AZ",
-      "note": "High-income Old Town crowd"
+      "note": "High-income Old Town crowd",
+      "booked": false
     },
     {
       "date": "2027-02-13",
       "time": "09:00",
       "title": "Scottsdale Farmers Market & Artisan Craft Show",
       "location": "Old Town Scottsdale, AZ 85251",
-      "note": "[MARKET] High-income Old Town crowd; specialty/gourmet concepts do well. Apply to vendor coordinator. [CONFIRM DATE]"
+      "note": "[MARKET] High-income Old Town crowd; specialty/gourmet concepts do well. Apply to vendor coordinator. [CONFIRM DATE]",
+      "booked": false
     },
     {
       "date": "2027-02-15",
       "time": "09:00",
       "title": "APPLY: spring neighborhood & brewery bookings",
       "location": "Lou Wok Rice House — planning",
-      "note": "[APPLY] March-April is the last strong stretch before summer — fill the weekend calendar now."
+      "note": "[APPLY] March-April is the last strong stretch before summer — fill the weekend calendar now.",
+      "booked": false
     },
     {
       "date": "2027-02-19",
       "time": "16:00",
       "title": "Four Peaks Brewery — Food Truck Slot (apply)",
       "location": "Four Peaks Brewing, 1340 E 8th St, Tempe, AZ 85281",
-      "note": "[BREWERY] Brewery vendor program with dedicated food truck area; craft-beer crowd pairs well with wok/fried menu. Apply directly to Four Peaks vendor program."
+      "note": "[BREWERY] Brewery vendor program with dedicated food truck area; craft-beer crowd pairs well with wok/fried menu. Apply directly to Four Peaks vendor program.",
+      "booked": false
     },
     {
       "date": "2027-02-19",
       "time": "17:00",
       "title": "Queen Creek Friday Night Food Truck Festival",
       "location": "Downtown Queen Creek, AZ 85142",
-      "note": "[FESTIVAL] Weekly Friday-evening festival, 15-25 trucks, live music, family crowd. Fast-growing east-valley suburb. Apply to organizer for a spot."
+      "note": "[FESTIVAL] Weekly Friday-evening festival, 15-25 trucks, live music, family crowd. Fast-growing east-valley suburb. Apply to organizer for a spot.",
+      "booked": false
     },
     {
       "date": "2027-02-20",
       "time": "08:00",
       "title": "Uptown Farmers Market (apply/vend)",
       "location": "Uptown Plaza, 5757 N Central Ave, Phoenix, AZ 85012",
-      "note": "[MARKET] Weekly Saturday market with rotating food trucks; upscale north-central crowd. Apply to vendor program in advance. Verify weekly attendance before committing."
+      "note": "[MARKET] Weekly Saturday market with rotating food trucks; upscale north-central crowd. Apply to vendor program in advance. Verify weekly attendance before committing.",
+      "booked": false
     },
     {
       "date": "2027-02-20",
       "time": "08:00",
       "title": "Downtown Phoenix Farmers Market (Open Air)",
       "location": "721 N Central Ave, Phoenix, AZ 85004",
-      "note": "[MARKET] Weekend Open Air Market; ~5 food trucks each Saturday, strong local foot traffic. Apply through market vendor coordinator."
+      "note": "[MARKET] Weekend Open Air Market; ~5 food trucks each Saturday, strong local foot traffic. Apply through market vendor coordinator.",
+      "booked": false
     },
     {
       "date": "2027-02-26",
       "time": "17:00",
       "title": "Queen Creek Friday Night Food Truck Festival",
       "location": "Downtown Queen Creek, AZ 85142",
-      "note": "[FESTIVAL] Weekly Friday-evening festival, 15-25 trucks, live music, family crowd. Fast-growing east-valley suburb. Apply to organizer for a spot."
+      "note": "[FESTIVAL] Weekly Friday-evening festival, 15-25 trucks, live music, family crowd. Fast-growing east-valley suburb. Apply to organizer for a spot.",
+      "booked": false
     },
     {
       "date": "2027-02-27",
       "time": "08:00",
       "title": "Uptown Farmers Market (apply/vend)",
       "location": "Uptown Plaza, 5757 N Central Ave, Phoenix, AZ 85012",
-      "note": "[MARKET] Weekly Saturday market with rotating food trucks; upscale north-central crowd. Apply to vendor program in advance. Verify weekly attendance before committing."
+      "note": "[MARKET] Weekly Saturday market with rotating food trucks; upscale north-central crowd. Apply to vendor program in advance. Verify weekly attendance before committing.",
+      "booked": false
     },
     {
       "date": "2027-02-27",
       "time": "08:00",
       "title": "Downtown Phoenix Farmers Market (Open Air)",
       "location": "721 N Central Ave, Phoenix, AZ 85004",
-      "note": "[MARKET] Weekend Open Air Market; ~5 food trucks each Saturday, strong local foot traffic. Apply through market vendor coordinator."
+      "note": "[MARKET] Weekend Open Air Market; ~5 food trucks each Saturday, strong local foot traffic. Apply through market vendor coordinator.",
+      "booked": false
     },
     {
       "date": "2027-03-05",
       "time": "16:00",
       "title": "Four Peaks Brewery — Food Truck Slot (apply)",
       "location": "Four Peaks Brewing, 1340 E 8th St, Tempe, AZ 85281",
-      "note": "[BREWERY] Brewery vendor program with dedicated food truck area; craft-beer crowd pairs well with wok/fried menu. Apply directly to Four Peaks vendor program."
+      "note": "[BREWERY] Brewery vendor program with dedicated food truck area; craft-beer crowd pairs well with wok/fried menu. Apply directly to Four Peaks vendor program.",
+      "booked": false
     },
     {
       "date": "2027-03-05",
       "time": "17:00",
       "title": "First Friday — Roosevelt Row Food Truck Court",
       "location": "Roosevelt Row Arts District, Phoenix, AZ 85004",
-      "note": "[FESTIVAL] Monthly First Friday art walk with a dedicated food truck court; big evening crowd, dessert & late-night friendly (good for funnel cake). Apply to RoRo food truck court."
+      "note": "[FESTIVAL] Monthly First Friday art walk with a dedicated food truck court; big evening crowd, dessert & late-night friendly (good for funnel cake). Apply to RoRo food truck court.",
+      "booked": false
     },
     {
       "date": "2027-03-05",
       "time": "17:00",
       "title": "Queen Creek Friday Night Food Truck Festival",
       "location": "Downtown Queen Creek, AZ 85142",
-      "note": "[FESTIVAL] Weekly Friday-evening festival, 15-25 trucks, live music, family crowd. Fast-growing east-valley suburb. Apply to organizer for a spot."
+      "note": "[FESTIVAL] Weekly Friday-evening festival, 15-25 trucks, live music, family crowd. Fast-growing east-valley suburb. Apply to organizer for a spot.",
+      "booked": false
     },
     {
       "date": "2027-03-06",
       "time": "08:00",
       "title": "Uptown Farmers Market (apply/vend)",
       "location": "Uptown Plaza, 5757 N Central Ave, Phoenix, AZ 85012",
-      "note": "[MARKET] Weekly Saturday market with rotating food trucks; upscale north-central crowd. Apply to vendor program in advance. Verify weekly attendance before committing."
+      "note": "[MARKET] Weekly Saturday market with rotating food trucks; upscale north-central crowd. Apply to vendor program in advance. Verify weekly attendance before committing.",
+      "booked": false
     },
     {
       "date": "2027-03-06",
       "time": "08:00",
       "title": "Downtown Phoenix Farmers Market (Open Air)",
       "location": "721 N Central Ave, Phoenix, AZ 85004",
-      "note": "[MARKET] Weekend Open Air Market; ~5 food trucks each Saturday, strong local foot traffic. Apply through market vendor coordinator."
+      "note": "[MARKET] Weekend Open Air Market; ~5 food trucks each Saturday, strong local foot traffic. Apply through market vendor coordinator.",
+      "booked": false
     },
     {
       "date": "2027-03-06",
       "time": "17:00",
       "title": "Neighborhood/HOA Food Truck Night season (Mar)",
       "location": "Various HOAs — Phoenix / Tempe / Scottsdale",
-      "note": "[COMMUNITY] March restarts recurring neighborhood truck nights (comfortable evenings). Book through Food Truck Feeds / direct HOA outreach."
+      "note": "[COMMUNITY] March restarts recurring neighborhood truck nights (comfortable evenings). Book through Food Truck Feeds / direct HOA outreach.",
+      "booked": false
     },
     {
       "date": "2027-03-12",
       "time": "17:00",
       "title": "Queen Creek Friday Night Food Truck Festival",
       "location": "Downtown Queen Creek, AZ 85142",
-      "note": "[FESTIVAL] Weekly Friday-evening festival, 15-25 trucks, live music, family crowd. Fast-growing east-valley suburb. Apply to organizer for a spot."
+      "note": "[FESTIVAL] Weekly Friday-evening festival, 15-25 trucks, live music, family crowd. Fast-growing east-valley suburb. Apply to organizer for a spot.",
+      "booked": false
     },
     {
       "date": "2027-03-13",
       "time": "08:00",
       "title": "Uptown Farmers Market (apply/vend)",
       "location": "Uptown Plaza, 5757 N Central Ave, Phoenix, AZ 85012",
-      "note": "[MARKET] Weekly Saturday market with rotating food trucks; upscale north-central crowd. Apply to vendor program in advance. Verify weekly attendance before committing."
+      "note": "[MARKET] Weekly Saturday market with rotating food trucks; upscale north-central crowd. Apply to vendor program in advance. Verify weekly attendance before committing.",
+      "booked": false
     },
     {
       "date": "2027-03-13",
       "time": "08:00",
       "title": "Downtown Phoenix Farmers Market (Open Air)",
       "location": "721 N Central Ave, Phoenix, AZ 85004",
-      "note": "[MARKET] Weekend Open Air Market; ~5 food trucks each Saturday, strong local foot traffic. Apply through market vendor coordinator."
+      "note": "[MARKET] Weekend Open Air Market; ~5 food trucks each Saturday, strong local foot traffic. Apply through market vendor coordinator.",
+      "booked": false
     },
     {
       "date": "2027-03-19",
       "time": "16:00",
       "title": "Four Peaks Brewery — Food Truck Slot (apply)",
       "location": "Four Peaks Brewing, 1340 E 8th St, Tempe, AZ 85281",
-      "note": "[BREWERY] Brewery vendor program with dedicated food truck area; craft-beer crowd pairs well with wok/fried menu. Apply directly to Four Peaks vendor program."
+      "note": "[BREWERY] Brewery vendor program with dedicated food truck area; craft-beer crowd pairs well with wok/fried menu. Apply directly to Four Peaks vendor program.",
+      "booked": false
     },
     {
       "date": "2027-03-19",
       "time": "17:00",
       "title": "Queen Creek Friday Night Food Truck Festival",
       "location": "Downtown Queen Creek, AZ 85142",
-      "note": "[FESTIVAL] Weekly Friday-evening festival, 15-25 trucks, live music, family crowd. Fast-growing east-valley suburb. Apply to organizer for a spot."
+      "note": "[FESTIVAL] Weekly Friday-evening festival, 15-25 trucks, live music, family crowd. Fast-growing east-valley suburb. Apply to organizer for a spot.",
+      "booked": false
     },
     {
       "date": "2027-03-20",
       "time": "08:00",
       "title": "Uptown Farmers Market (apply/vend)",
       "location": "Uptown Plaza, 5757 N Central Ave, Phoenix, AZ 85012",
-      "note": "[MARKET] Weekly Saturday market with rotating food trucks; upscale north-central crowd. Apply to vendor program in advance. Verify weekly attendance before committing."
+      "note": "[MARKET] Weekly Saturday market with rotating food trucks; upscale north-central crowd. Apply to vendor program in advance. Verify weekly attendance before committing.",
+      "booked": false
     },
     {
       "date": "2027-03-20",
       "time": "08:00",
       "title": "Downtown Phoenix Farmers Market (Open Air)",
       "location": "721 N Central Ave, Phoenix, AZ 85004",
-      "note": "[MARKET] Weekend Open Air Market; ~5 food trucks each Saturday, strong local foot traffic. Apply through market vendor coordinator."
+      "note": "[MARKET] Weekend Open Air Market; ~5 food trucks each Saturday, strong local foot traffic. Apply through market vendor coordinator.",
+      "booked": false
     },
     {
       "date": "2027-03-26",
       "time": "17:00",
       "title": "Queen Creek Friday Night Food Truck Festival",
       "location": "Downtown Queen Creek, AZ 85142",
-      "note": "[FESTIVAL] Weekly Friday-evening festival, 15-25 trucks, live music, family crowd. Fast-growing east-valley suburb. Apply to organizer for a spot."
+      "note": "[FESTIVAL] Weekly Friday-evening festival, 15-25 trucks, live music, family crowd. Fast-growing east-valley suburb. Apply to organizer for a spot.",
+      "booked": false
     },
     {
       "date": "2027-03-27",
       "time": "08:00",
       "title": "Uptown Farmers Market (apply/vend)",
       "location": "Uptown Plaza, 5757 N Central Ave, Phoenix, AZ 85012",
-      "note": "[MARKET] Weekly Saturday market with rotating food trucks; upscale north-central crowd. Apply to vendor program in advance. Verify weekly attendance before committing."
+      "note": "[MARKET] Weekly Saturday market with rotating food trucks; upscale north-central crowd. Apply to vendor program in advance. Verify weekly attendance before committing.",
+      "booked": false
     },
     {
       "date": "2027-03-27",
       "time": "08:00",
       "title": "Downtown Phoenix Farmers Market (Open Air)",
       "location": "721 N Central Ave, Phoenix, AZ 85004",
-      "note": "[MARKET] Weekend Open Air Market; ~5 food trucks each Saturday, strong local foot traffic. Apply through market vendor coordinator."
+      "note": "[MARKET] Weekend Open Air Market; ~5 food trucks each Saturday, strong local foot traffic. Apply through market vendor coordinator.",
+      "booked": false
     },
     {
       "date": "2027-04-02",
       "time": "16:00",
       "title": "Four Peaks Brewery — Food Truck Slot (apply)",
       "location": "Four Peaks Brewing, 1340 E 8th St, Tempe, AZ 85281",
-      "note": "[BREWERY] Brewery vendor program with dedicated food truck area; craft-beer crowd pairs well with wok/fried menu. Apply directly to Four Peaks vendor program."
+      "note": "[BREWERY] Brewery vendor program with dedicated food truck area; craft-beer crowd pairs well with wok/fried menu. Apply directly to Four Peaks vendor program.",
+      "booked": false
     },
     {
       "date": "2027-04-02",
       "time": "17:00",
       "title": "First Friday — Roosevelt Row Food Truck Court",
       "location": "Roosevelt Row Arts District, Phoenix, AZ 85004",
-      "note": "[FESTIVAL] Monthly First Friday art walk with a dedicated food truck court; big evening crowd, dessert & late-night friendly (good for funnel cake). Apply to RoRo food truck court."
+      "note": "[FESTIVAL] Monthly First Friday art walk with a dedicated food truck court; big evening crowd, dessert & late-night friendly (good for funnel cake). Apply to RoRo food truck court.",
+      "booked": false
     },
     {
       "date": "2027-04-02",
       "time": "17:00",
       "title": "Queen Creek Friday Night Food Truck Festival",
       "location": "Downtown Queen Creek, AZ 85142",
-      "note": "[FESTIVAL] Weekly Friday-evening festival, 15-25 trucks, live music, family crowd. Fast-growing east-valley suburb. Apply to organizer for a spot."
+      "note": "[FESTIVAL] Weekly Friday-evening festival, 15-25 trucks, live music, family crowd. Fast-growing east-valley suburb. Apply to organizer for a spot.",
+      "booked": false
     },
     {
       "date": "2027-04-03",
       "time": "08:00",
       "title": "Uptown Farmers Market (apply/vend)",
       "location": "Uptown Plaza, 5757 N Central Ave, Phoenix, AZ 85012",
-      "note": "[MARKET] Weekly Saturday market with rotating food trucks; upscale north-central crowd. Apply to vendor program in advance. Verify weekly attendance before committing."
+      "note": "[MARKET] Weekly Saturday market with rotating food trucks; upscale north-central crowd. Apply to vendor program in advance. Verify weekly attendance before committing.",
+      "booked": false
     },
     {
       "date": "2027-04-03",
       "time": "08:00",
       "title": "Downtown Phoenix Farmers Market (Open Air)",
       "location": "721 N Central Ave, Phoenix, AZ 85004",
-      "note": "[MARKET] Weekend Open Air Market; ~5 food trucks each Saturday, strong local foot traffic. Apply through market vendor coordinator."
+      "note": "[MARKET] Weekend Open Air Market; ~5 food trucks each Saturday, strong local foot traffic. Apply through market vendor coordinator.",
+      "booked": false
     },
     {
       "date": "2027-04-09",
       "time": "17:00",
       "title": "Queen Creek Friday Night Food Truck Festival",
       "location": "Downtown Queen Creek, AZ 85142",
-      "note": "[FESTIVAL] Weekly Friday-evening festival, 15-25 trucks, live music, family crowd. Fast-growing east-valley suburb. Apply to organizer for a spot."
+      "note": "[FESTIVAL] Weekly Friday-evening festival, 15-25 trucks, live music, family crowd. Fast-growing east-valley suburb. Apply to organizer for a spot.",
+      "booked": false
     },
     {
       "date": "2027-04-10",
       "time": "08:00",
       "title": "Uptown Farmers Market (apply/vend)",
       "location": "Uptown Plaza, 5757 N Central Ave, Phoenix, AZ 85012",
-      "note": "[MARKET] Weekly Saturday market with rotating food trucks; upscale north-central crowd. Apply to vendor program in advance. Verify weekly attendance before committing."
+      "note": "[MARKET] Weekly Saturday market with rotating food trucks; upscale north-central crowd. Apply to vendor program in advance. Verify weekly attendance before committing.",
+      "booked": false
     },
     {
       "date": "2027-04-10",
       "time": "08:00",
       "title": "Downtown Phoenix Farmers Market (Open Air)",
       "location": "721 N Central Ave, Phoenix, AZ 85004",
-      "note": "[MARKET] Weekend Open Air Market; ~5 food trucks each Saturday, strong local foot traffic. Apply through market vendor coordinator."
+      "note": "[MARKET] Weekend Open Air Market; ~5 food trucks each Saturday, strong local foot traffic. Apply through market vendor coordinator.",
+      "booked": false
     },
     {
       "date": "2027-04-10",
       "time": "16:00",
       "title": "Spring brewery & park events (Apr)",
       "location": "Valley-wide breweries & parks",
-      "note": "[COMMUNITY] Last stretch of peak season before summer heat; maximize weekend brewery + park bookings. Confirm individual dates."
+      "note": "[COMMUNITY] Last stretch of peak season before summer heat; maximize weekend brewery + park bookings. Confirm individual dates.",
+      "booked": false
     },
     {
       "date": "2027-04-16",
       "time": "16:00",
       "title": "Four Peaks Brewery — Food Truck Slot (apply)",
       "location": "Four Peaks Brewing, 1340 E 8th St, Tempe, AZ 85281",
-      "note": "[BREWERY] Brewery vendor program with dedicated food truck area; craft-beer crowd pairs well with wok/fried menu. Apply directly to Four Peaks vendor program."
+      "note": "[BREWERY] Brewery vendor program with dedicated food truck area; craft-beer crowd pairs well with wok/fried menu. Apply directly to Four Peaks vendor program.",
+      "booked": false
     },
     {
       "date": "2027-04-16",
       "time": "17:00",
       "title": "Queen Creek Friday Night Food Truck Festival",
       "location": "Downtown Queen Creek, AZ 85142",
-      "note": "[FESTIVAL] Weekly Friday-evening festival, 15-25 trucks, live music, family crowd. Fast-growing east-valley suburb. Apply to organizer for a spot."
+      "note": "[FESTIVAL] Weekly Friday-evening festival, 15-25 trucks, live music, family crowd. Fast-growing east-valley suburb. Apply to organizer for a spot.",
+      "booked": false
     },
     {
       "date": "2027-04-17",
       "time": "08:00",
       "title": "Uptown Farmers Market (apply/vend)",
       "location": "Uptown Plaza, 5757 N Central Ave, Phoenix, AZ 85012",
-      "note": "[MARKET] Weekly Saturday market with rotating food trucks; upscale north-central crowd. Apply to vendor program in advance. Verify weekly attendance before committing."
+      "note": "[MARKET] Weekly Saturday market with rotating food trucks; upscale north-central crowd. Apply to vendor program in advance. Verify weekly attendance before committing.",
+      "booked": false
     },
     {
       "date": "2027-04-17",
       "time": "08:00",
       "title": "Downtown Phoenix Farmers Market (Open Air)",
       "location": "721 N Central Ave, Phoenix, AZ 85004",
-      "note": "[MARKET] Weekend Open Air Market; ~5 food trucks each Saturday, strong local foot traffic. Apply through market vendor coordinator."
+      "note": "[MARKET] Weekend Open Air Market; ~5 food trucks each Saturday, strong local foot traffic. Apply through market vendor coordinator.",
+      "booked": false
     },
     {
       "date": "2027-04-23",
       "time": "17:00",
       "title": "Queen Creek Friday Night Food Truck Festival",
       "location": "Downtown Queen Creek, AZ 85142",
-      "note": "[FESTIVAL] Weekly Friday-evening festival, 15-25 trucks, live music, family crowd. Fast-growing east-valley suburb. Apply to organizer for a spot."
+      "note": "[FESTIVAL] Weekly Friday-evening festival, 15-25 trucks, live music, family crowd. Fast-growing east-valley suburb. Apply to organizer for a spot.",
+      "booked": false
     },
     {
       "date": "2027-04-24",
       "time": "08:00",
       "title": "Uptown Farmers Market (apply/vend)",
       "location": "Uptown Plaza, 5757 N Central Ave, Phoenix, AZ 85012",
-      "note": "[MARKET] Weekly Saturday market with rotating food trucks; upscale north-central crowd. Apply to vendor program in advance. Verify weekly attendance before committing."
+      "note": "[MARKET] Weekly Saturday market with rotating food trucks; upscale north-central crowd. Apply to vendor program in advance. Verify weekly attendance before committing.",
+      "booked": false
     },
     {
       "date": "2027-04-24",
       "time": "08:00",
       "title": "Downtown Phoenix Farmers Market (Open Air)",
       "location": "721 N Central Ave, Phoenix, AZ 85004",
-      "note": "[MARKET] Weekend Open Air Market; ~5 food trucks each Saturday, strong local foot traffic. Apply through market vendor coordinator."
+      "note": "[MARKET] Weekend Open Air Market; ~5 food trucks each Saturday, strong local foot traffic. Apply through market vendor coordinator.",
+      "booked": false
     },
     {
       "date": "2027-04-30",
       "time": "16:00",
       "title": "Four Peaks Brewery — Food Truck Slot (apply)",
       "location": "Four Peaks Brewing, 1340 E 8th St, Tempe, AZ 85281",
-      "note": "[BREWERY] Brewery vendor program with dedicated food truck area; craft-beer crowd pairs well with wok/fried menu. Apply directly to Four Peaks vendor program."
+      "note": "[BREWERY] Brewery vendor program with dedicated food truck area; craft-beer crowd pairs well with wok/fried menu. Apply directly to Four Peaks vendor program.",
+      "booked": false
     },
     {
       "date": "2027-04-30",
       "time": "17:00",
       "title": "Queen Creek Friday Night Food Truck Festival",
       "location": "Downtown Queen Creek, AZ 85142",
-      "note": "[FESTIVAL] Weekly Friday-evening festival, 15-25 trucks, live music, family crowd. Fast-growing east-valley suburb. Apply to organizer for a spot."
+      "note": "[FESTIVAL] Weekly Friday-evening festival, 15-25 trucks, live music, family crowd. Fast-growing east-valley suburb. Apply to organizer for a spot.",
+      "booked": false
     }
   ],
   "branding": {
@@ -1806,7 +1950,7 @@
         "barcode": ""
       }
     ],
-    "updated": "2026-07-12T05:24:42.315Z"
+    "updated": "2026-07-12T23:19:59.621Z"
   },
   "printing": {
     "enabled": false,
@@ -1888,7 +2032,7 @@
       "restaurantName": "Lou Wok Rice House",
       "voiceUrl": "https://louwok.com/api/voice-incoming",
       "smsUrl": "https://louwok.com/api/sms-incoming",
-      "orderSmsTemplate": "Lou Wok Rice House{restaurant}: Order #LW-260710-4821{orderNo} is in the wok!\n\nTotal: $24.50{total}. Your order will be freshly prepared and ready for pickup in approximately 15–20 minutes. We'll text you when it's ready. Reply STOP to opt out."
+      "orderSmsTemplate": "Lou Wok Rice House{restaurant}: Order #LW-260710-4821{orderNo} is in the wok!\nTotal: $24.50{total}. \n\nYour order will be freshly prepared and ready for pickup in approximately 15–20 minutes. We'll text you when it's ready. Reply STOP to opt out."
     }
   },
   "users": [
