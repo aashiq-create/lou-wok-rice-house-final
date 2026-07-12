@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- LOU-WOK-ADMIN vINV-SAVEFIX2 | FIX: inventory load was dropping the supplies array (items saved to GitHub but vanished on reload); now preserved. On top of vINV-SAVEFIX -->
+<!-- LOU-WOK-ADMIN vEVENTS-BOOKED | events: delete now saves (setUnsaved) + Booked/Public toggle + Nominatim geocode; only booked+geocoded events go public | 2026-07-09 -->
 
 <html lang="en">
 <head>
@@ -2531,13 +2531,26 @@
     const today = new Date().toISOString().slice(0,10);
     wrap.innerHTML = eventsData.map((e,i)=>{
       const past = (e.date||'') < today;
-      return '<div class="lk-row" data-ev-i="'+i+'" style="display:flex;gap:0.4rem;align-items:center;margin-bottom:0.45rem;padding:0.45rem 0.55rem;border-radius:2px;background:'+(past?'rgba(138,132,117,0.08)':'var(--smoke)')+';border:1px solid var(--border);flex-wrap:wrap;opacity:'+(past?'0.6':'1')+';">' +
+      const booked = !!e.booked;
+      const hasCoords = (e.lat!=null && e.lng!=null);
+      const bg = past ? 'rgba(138,132,117,0.08)' : (booked ? 'rgba(232,160,32,0.10)' : 'var(--smoke)');
+      const bd = booked ? 'var(--gold)' : 'var(--border)';
+      return '<div class="lk-row" data-ev-i="'+i+'" style="display:flex;gap:0.4rem;align-items:center;margin-bottom:0.45rem;padding:0.45rem 0.55rem;border-radius:2px;background:'+bg+';border:1px solid '+bd+';flex-wrap:wrap;opacity:'+(past?'0.6':'1')+';">' +
+        '<label title="Booked — show on louwok.com Find-the-Truck map" style="display:flex;align-items:center;gap:4px;font-size:0.66rem;letter-spacing:0.06em;text-transform:uppercase;color:'+(booked?'var(--gold)':'var(--muted)')+';font-weight:700;cursor:pointer;white-space:nowrap;">' +
+          '<input type="checkbox" id="ev-booked-'+i+'" '+(booked?'checked':'')+' onchange="evToggleBooked('+i+')" style="width:15px;height:15px;accent-color:var(--gold);cursor:pointer;" />Booked</label>' +
         '<input class="field-input" type="date" id="ev-date-'+i+'" value="'+esc(e.date)+'" style="width:140px;" />' +
         '<input class="field-input" type="time" id="ev-time-'+i+'" value="'+esc(e.time||'')+'" style="width:104px;" />' +
         '<input class="field-input" id="ev-title-'+i+'" value="'+esc(e.title)+'" placeholder="Event title" style="flex:1;min-width:120px;" />' +
         '<input class="field-input" id="ev-loc-'+i+'" value="'+esc(e.location||'')+'" placeholder="Location / address" style="flex:1;min-width:120px;" />' +
         '<input class="field-input" id="ev-note-'+i+'" value="'+esc(e.note||'')+'" placeholder="Note (optional)" style="flex:1;min-width:100px;" />' +
-        '<button class="btn btn-ghost btn-sm" title="Remove" onclick="evRemove('+i+')" style="border:1px solid var(--border);">✕</button>' +
+        (booked
+          ? '<span style="display:flex;gap:0.3rem;align-items:center;">' +
+              '<input class="field-input" id="ev-lat-'+i+'" value="'+(e.lat!=null?esc(e.lat):'')+'" placeholder="lat" style="width:82px;font-size:0.7rem;" />' +
+              '<input class="field-input" id="ev-lng-'+i+'" value="'+(e.lng!=null?esc(e.lng):'')+'" placeholder="lng" style="width:82px;font-size:0.7rem;" />' +
+              '<button class="btn btn-ghost btn-sm" title="Look up coordinates from the address" onclick="evGeocode('+i+')" style="border:1px solid '+(hasCoords?'var(--border)':'var(--wok)')+';font-size:0.65rem;white-space:nowrap;">'+(hasCoords?'&#10003; Pin':'&#128205; Find')+'</button>' +
+            '</span>'
+          : '') +
+        '<button class="btn btn-ghost btn-sm" title="Delete this event" onclick="evRemove('+i+')" style="border:1px solid var(--border);">&#10005;</button>' +
       '</div>';
     }).join('');
   }
@@ -2548,21 +2561,69 @@
       const d=g('ev-date-'+i), t=g('ev-time-'+i), ti=g('ev-title-'+i), lo=g('ev-loc-'+i), no=g('ev-note-'+i);
       if(d!==undefined) e.date=d; if(t!==undefined) e.time=t; if(ti!==undefined) e.title=ti;
       if(lo!==undefined) e.location=lo; if(no!==undefined) e.note=no;
+      const bk=document.getElementById('ev-booked-'+i);
+      if(bk) e.booked = !!bk.checked;
+      const la=g('ev-lat-'+i), ln=g('ev-lng-'+i);
+      if(la!==undefined) e.lat = la==='' ? null : (isNaN(parseFloat(la)) ? null : parseFloat(la));
+      if(ln!==undefined) e.lng = ln==='' ? null : (isNaN(parseFloat(ln)) ? null : parseFloat(ln));
     });
+  }
+
+  // Toggle an event's public/booked state. Only booked events with coordinates
+  // appear on louwok.com's Find-the-Truck map.
+  function evToggleBooked(i) {
+    _readEvents();
+    const e = eventsData[i];
+    if (!e) return;
+    e.booked = !e.booked;
+    _populateEvents();
+    setUnsaved();
+    if (e.booked && (e.lat==null || e.lng==null)) {
+      showToast('Marked booked — tap 📍 Find to add map coordinates.', 'success');
+    }
+  }
+
+  // Look up lat/lng from the event's address using OpenStreetMap Nominatim
+  // (free, no API key — matches the Leaflet/OSM map already on the site).
+  async function evGeocode(i) {
+    _readEvents();
+    const e = eventsData[i];
+    if (!e) return;
+    const q = (e.location || '').trim();
+    if (!q) { showToast('Add a location/address first.', 'error'); return; }
+    showToast('Looking up coordinates…');
+    try {
+      const url = 'https://nominatim.openstreetmap.org/search?format=json&limit=1&q=' + encodeURIComponent(q);
+      const r = await fetch(url, { headers: { 'Accept': 'application/json' } });
+      const data = await r.json();
+      if (Array.isArray(data) && data.length && data[0].lat && data[0].lon) {
+        e.lat = parseFloat(data[0].lat);
+        e.lng = parseFloat(data[0].lon);
+        _populateEvents();
+        setUnsaved();
+        showToast('Found: ' + e.lat.toFixed(4) + ', ' + e.lng.toFixed(4), 'success');
+      } else {
+        showToast('No match. Enter lat/lng manually.', 'error');
+      }
+    } catch (err) {
+      showToast('Lookup failed — enter lat/lng manually.', 'error');
+    }
   }
   function evAddManual() {
     _readEvents();
     const today = new Date().toISOString().slice(0,10);
-    eventsData.push({ date: today, time:'', title:'', location:'', note:'' });
+    eventsData.push({ date: today, time:'', title:'', location:'', note:'', booked:false, lat:null, lng:null });
     _populateEvents();
+    setUnsaved();
   }
-  function evRemove(i){ _readEvents(); eventsData.splice(i,1); _populateEvents(); }
+  function evRemove(i){ _readEvents(); eventsData.splice(i,1); _populateEvents(); setUnsaved(); }
   function evClearPast(){
     _readEvents();
     const today = new Date().toISOString().slice(0,10);
     const before = eventsData.length;
     eventsData = eventsData.filter(e => (e.date||'') >= today);
     _populateEvents();
+    setUnsaved();
     showToast('Removed '+(before-eventsData.length)+' past event(s)','success');
   }
   function saveEvents(){ _readEvents(); setUnsaved(); showToast('Events saved','success'); }
