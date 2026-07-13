@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- LOU-WOK-INDEX vMENUINTRO-WHITE | EAT GOOD section description solid white | 2026-07-09 -->
+<!-- LOU-WOK-INDEX vSQUARE-PAY | Square Web Payments card form + paid PICKUP order -> KDS (dormant until squareAppId/LocationId set) | 2026-07-11 -->
 
 <html lang="en">
 <head>
@@ -3215,6 +3215,15 @@
           <span>I agree to receive order &amp; pickup texts from Lou Wok Rice House. Msg &amp; data rates may apply. Reply STOP to opt out. <a href="/terms.html" style="color:var(--gold);">Terms</a> &amp; <a href="/privacy.html" style="color:var(--gold);">Privacy</a>.</span>
         </label>
       </div>
+      <!-- Square card form — only shown when Square is configured in settings
+           (squareAppId + squareLocationId). Until you fill those in, the site
+           behaves exactly as today: order-ahead, no online payment. -->
+      <div id="sqPayWrap" style="display:none;margin:0 0 0.75rem;">
+        <div style="font-size:0.66rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold);font-weight:700;margin-bottom:0.4rem;">Pay Now</div>
+        <div id="sqCard" style="background:#fff;border-radius:6px;padding:0.5rem;min-height:52px;"></div>
+        <div id="sqPayErr" style="display:none;color:#ff6a3d;font-size:0.72rem;margin-top:0.4rem;line-height:1.4;"></div>
+        <div id="sqSandboxTag" style="display:none;font-size:0.62rem;color:var(--gold);margin-top:0.35rem;text-align:center;">SANDBOX — test cards only, no real charge</div>
+      </div>
       <button class="cart-place-btn" id="cartPlaceBtn" onclick="placeOrder()">Place Order — $0.00</button>
       <p class="cart-fine-print">Pickup in-store · Est. ready 10–15 min</p>
     </div>
@@ -3821,6 +3830,74 @@
       document.body.style.overflow = '';
     }
 
+    // ══════════════════════════════════════════════════════════
+    //  SQUARE WEB PAYMENTS  (dormant until configured)
+    //  Reads squareAppId + squareLocationId from CMS settings. If either is
+    //  blank the whole payment layer stays OFF and checkout works exactly as
+    //  it does today (order-ahead, pay at pickup). Once configured, the card
+    //  form appears and the order is CHARGED, then pushed to Square with a
+    //  PICKUP fulfillment — which is what makes it show on the Kitchen Display.
+    // ══════════════════════════════════════════════════════════
+    let _sqPayments = null;   // Square payments instance
+    let _sqCard     = null;   // card element
+    let _sqCfg      = { appId: '', locationId: '' };
+
+    function squareEnabled() {
+      return !!(_sqCfg.appId && _sqCfg.locationId);
+    }
+
+    async function initSquarePayments(cfg) {
+      _sqCfg = {
+        appId      : (cfg && cfg.squareAppId)      || '',
+        locationId : (cfg && cfg.squareLocationId) || '',
+      };
+      const wrap = document.getElementById('sqPayWrap');
+      if (!squareEnabled()) { if (wrap) wrap.style.display = 'none'; return; }
+
+      // Sandbox app IDs start with "sandbox-" — surface that clearly so nobody
+      // thinks a test charge was real (or vice versa).
+      const isSandbox = /^sandbox-/i.test(_sqCfg.appId);
+      const sdkSrc = isSandbox
+        ? 'https://sandbox.web.squarecdn.com/v1/square.js'
+        : 'https://web.squarecdn.com/v1/square.js';
+
+      try {
+        await new Promise((resolve, reject) => {
+          if (window.Square) return resolve();
+          const s = document.createElement('script');
+          s.src = sdkSrc; s.onload = resolve; s.onerror = () => reject(new Error('SDK load failed'));
+          document.head.appendChild(s);
+        });
+        _sqPayments = window.Square.payments(_sqCfg.appId, _sqCfg.locationId);
+        _sqCard = await _sqPayments.card();
+        await _sqCard.attach('#sqCard');
+        if (wrap) wrap.style.display = 'block';
+        const tag = document.getElementById('sqSandboxTag');
+        if (tag && isSandbox) tag.style.display = 'block';
+      } catch (err) {
+        console.error('[Square] init failed:', err);
+        if (wrap) wrap.style.display = 'none';   // fail safe: fall back to order-ahead
+      }
+    }
+
+    // Turns the card into a one-time payment token. Returns null on failure.
+    async function tokenizeCard() {
+      const errEl = document.getElementById('sqPayErr');
+      if (errEl) { errEl.style.display = 'none'; errEl.textContent = ''; }
+      if (!_sqCard) return null;
+      try {
+        const result = await _sqCard.tokenize();
+        if (result.status === 'OK') return result.token;
+        const msg = (result.errors && result.errors[0] && result.errors[0].message)
+                  || 'Card was declined. Please check the details.';
+        if (errEl) { errEl.textContent = msg; errEl.style.display = 'block'; }
+        return null;
+      } catch (err) {
+        if (errEl) { errEl.textContent = 'Payment error — please try again.'; errEl.style.display = 'block'; }
+        return null;
+      }
+    }
+
     function placeOrder() {
       if (cartItems.length === 0) return;
 
@@ -3869,6 +3946,49 @@
       const placeBtn = document.getElementById('cartPlaceBtn');
       if (placeBtn) { placeBtn.disabled = true; placeBtn.textContent = 'Sending…'; }
 
+      // ── PAYMENT GATE ─────────────────────────────────────────
+      // When Square is configured, the card must clear BEFORE the kitchen is
+      // notified. A PAID order carrying a PICKUP fulfillment is exactly what
+      // makes the ticket surface on the Kitchen Display System.
+      // squarePay() resolves true when it's safe to continue (paid, or Square
+      // isn't configured at all), false when the charge failed.
+      const squarePay = async () => {
+        if (!squareEnabled()) return true;            // order-ahead, unchanged
+        if (placeBtn) placeBtn.textContent = 'Processing payment…';
+        const token = await tokenizeCard();
+        if (!token) return false;                     // card declined/invalid
+        try {
+          const r = await fetch('/api/square-order', {
+            method : 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body   : JSON.stringify({
+              sourceId    : token,
+              orderNumber : orderNumber,
+              items       : cartItems.map(i => ({ name:i.name, qty:i.qty, price:i.price, sizeMeta:i.sizeMeta || '' })),
+              customer    : { name: custName, phone: phoneE164, email: custEmail || null },
+              notes       : notes,
+              pickupEtaMin: 15,
+            }),
+          });
+          const data = await r.json().catch(()=> ({}));
+          if (!r.ok || !data.ok) {
+            const errEl = document.getElementById('sqPayErr');
+            const msg = (data.detail && data.detail[0] && data.detail[0].detail)
+                      || data.error || 'Payment could not be processed.';
+            if (errEl) { errEl.textContent = msg; errEl.style.display = 'block'; }
+            return false;
+          }
+          payload.square_order_id   = data.orderId;
+          payload.square_payment_id = data.paymentId;
+          payload.paid              = true;
+          return true;
+        } catch (err) {
+          const errEl = document.getElementById('sqPayErr');
+          if (errEl) { errEl.textContent = 'Network error — payment not completed.'; errEl.style.display = 'block'; }
+          return false;
+        }
+      };
+
       // Show success; reflect whether the confirmation text actually sent so we
       // don't promise a text that Twilio silently dropped.
       const finish = (resp) => {
@@ -3889,6 +4009,7 @@
       };
 
       // ── Primary path: Vercel serverless function (real email + SMS) ──
+      const sendNotify = () => {
       fetch(NOTIFY_ENDPOINT, {
         method  : 'POST',
         headers : { 'Content-Type': 'application/json' },
@@ -3917,6 +4038,16 @@
             finish();
           }
         });
+      };
+
+      // Charge first (no-op when Square isn't configured), then notify.
+      squarePay().then(okToSend => {
+        if (!okToSend) {
+          if (placeBtn) { placeBtn.disabled = false; placeBtn.textContent = 'Place Order — $' + total.toFixed(2); }
+          return;
+        }
+        sendNotify();
+      });
     }
 
     // Reveal success state with the order number + confirmation copy.
@@ -5190,6 +5321,9 @@
         // Stash published events so the truck tracker can surface BOOKED ones.
         // (Unbooked leads are ignored — see _bookedEventFor.)
         try { _cmsEvents = Array.isArray(d.events) ? d.events : []; } catch(_) { _cmsEvents = []; }
+        // Bring up the Square card form only if the admin has filled in both
+        // squareAppId and squareLocationId. Blank = payment layer stays off.
+        try { if (typeof initSquarePayments === 'function') initSquarePayments(d.settings || {}); } catch(_) {}
         // Each section renders INDEPENDENTLY: a helper runs one render and
         // swallows its own errors, so a failure in (say) renderMenu can never
         // stop renderTicker from running. Previously all renders shared one
