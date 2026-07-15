@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- LOU-WOK-INDEX vFEAT-WHITE | featured St. Paul description + spec labels solid white | 2026-07-11 -->
+<!-- LOU-WOK-INDEX vCART-CLEAR | cart + floating pill clear immediately on order success | 2026-07-11 -->
 
 <html lang="en">
 <head>
@@ -4074,6 +4074,15 @@
       if (body)    body.style.display    = 'none';
       if (footer)  footer.style.display  = 'none';
       if (success) success.classList.add('show');
+
+      // Order is confirmed — empty the cart now so the floating "N ITEMS" pill
+      // and count clear immediately, rather than lingering until the customer
+      // taps "Submit Another". (resetOrder still runs on that tap for the form.)
+      cartItems = [];
+      const pill = document.getElementById('cartPill');
+      if (pill) pill.classList.remove('visible');
+      const pc = document.getElementById('cartPillCount'); if (pc) pc.textContent = '0';
+      const cl = document.getElementById('cartCountLabel'); if (cl) cl.textContent = '0 items';
     }
 
     function resetOrder() {
