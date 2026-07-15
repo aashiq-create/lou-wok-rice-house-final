@@ -1,6 +1,6 @@
 {
   "_info": "Written by louwok.com/admin. index.html reads this at runtime.",
-  "_updated": "2026-07-15T22:32:52.574Z",
+  "_updated": "2026-07-15T23:27:21.867Z",
   "menu": [
     {
       "id": 1,
@@ -1950,7 +1950,7 @@
         "barcode": ""
       }
     ],
-    "updated": "2026-07-15T22:32:52.571Z"
+    "updated": "2026-07-15T23:27:21.863Z"
   },
   "printing": {
     "enabled": false,
@@ -2032,7 +2032,7 @@
       "restaurantName": "Lou Wok Rice House",
       "voiceUrl": "https://louwok.com/api/voice-incoming",
       "smsUrl": "https://louwok.com/api/sms-incoming",
-      "orderSmsTemplate": "🥡 Hi {name}! Thanks for choosing {restaurant}. Your order #{orderNo} is in the wok and will be ready for pickup in approximately 15–20 minutes. We’ll send you another text as soon as it’s ready.  #LetsWokIt Reply STOP to opt out."
+      "orderSmsTemplate": "🥡 Hi {name}! Thanks for choosing {restaurant}. \n\nYour order #{orderNo} is in the wok and will be ready for pickup in approximately 15–20 minutes. We’ll send you another text as soon as it’s ready.  \n\nReply STOP to opt out."
     }
   },
   "users": [
