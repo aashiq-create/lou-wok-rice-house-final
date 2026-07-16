@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- LOU-WOK-ADMIN vLIGHT | light/white admin theme (token inversion + contrast fixes); on top of vEVENTS-BOOKED | 2026-07-09 -->
+<!-- LOU-WOK-ADMIN vPUBLISH-FIX | saveNotify null-safe + each publish save isolated (one failure cannot abort deploy); on top of vLIGHT | 2026-07-11 -->
 
 <html lang="en">
 <head>
@@ -1993,24 +1993,27 @@
 
     // flush open editors — silence their per-section toasts so the only
     // confirmation the user sees is the single "Published!" message below.
+    // Each save is isolated: a throw in one section must NOT abort the publish
+    // (that was a cause of "deployment fails" with nothing committed).
     _suppressToasts = true;
-    if (selectedItemId) saveMenuItem();
-    saveHours();
-    saveOrderLinks();
-    saveFeatured();
-    saveHero();
-    saveSEO();
-    saveLocation();
-    saveBranding();
-    saveSocials();
-    saveTicker();
-    saveFooter();
-    saveSettings();
-    saveNotify();
-    saveInventory();
-    savePrinting();
-    _readEvents();
-    _readCategories();
+    const _safe = (label, fn) => { try { fn(); } catch (e) { console.error('[publish] save failed:', label, e); } };
+    if (selectedItemId) _safe('menuItem', saveMenuItem);
+    _safe('hours', saveHours);
+    _safe('orderLinks', saveOrderLinks);
+    _safe('featured', saveFeatured);
+    _safe('hero', saveHero);
+    _safe('seo', saveSEO);
+    _safe('location', saveLocation);
+    _safe('branding', saveBranding);
+    _safe('socials', saveSocials);
+    _safe('ticker', saveTicker);
+    _safe('footer', saveFooter);
+    _safe('settings', saveSettings);
+    _safe('notify', saveNotify);
+    _safe('inventory', saveInventory);
+    _safe('printing', savePrinting);
+    _safe('events', _readEvents);
+    _safe('categories', _readCategories);
     _suppressToasts = false; // flush done — real user-facing toasts allowed again
 
     // GUARD: don't silently publish an empty ticker. The ticker bar reads
@@ -3678,25 +3681,28 @@
   function saveNotify() {
     if(!settingsData) settingsData={};
     const n = settingsData.notify || {};
+    // Null-safe field read — a missing element must never throw here, or it
+    // would abort publishSite() mid-flush and cause a "deployment fails".
+    const _v = (id) => { const el = document.getElementById(id); return el ? el.value : ''; };
 
-    const personalRaw = document.getElementById('ntf-personal').value;
+    const personalRaw = _v('ntf-personal');
     const personal = _toE164(personalRaw);
     if (personalRaw.trim() && !personal) { showToast('Forwarding number must be a valid US number','error'); return; }
     n.personalPhone = personal;
 
-    n.screenRequireKey = document.getElementById('ntf-screen').value === 'on';
+    n.screenRequireKey = _v('ntf-screen') === 'on';
 
-    const rawList = document.getElementById('ntf-admin-sms').value.split(',').map(s=>s.trim()).filter(Boolean);
+    const rawList = _v('ntf-admin-sms').split(',').map(s=>s.trim()).filter(Boolean);
     const cleaned = [], bad = [];
     rawList.forEach(r => { const e = _toE164(r); if (e) cleaned.push(e); else bad.push(r); });
     if (bad.length) { showToast('Invalid number(s): ' + bad.join(', '),'error'); return; }
     n.adminSms = cleaned;
 
-    n.pickupEtaMin = document.getElementById('ntf-eta').value.trim() || '10-12';
-    n.restaurantName = document.getElementById('ntf-name').value.trim() || 'Lou Wok Rice House';
-    n.orderSmsTemplate = document.getElementById('ntf-order-sms').value.trim();
-    n.voiceUrl = document.getElementById('ntf-voice-url').value.trim();
-    n.smsUrl   = document.getElementById('ntf-sms-url').value.trim();
+    n.pickupEtaMin = _v('ntf-eta').trim() || '15-20';
+    n.restaurantName = _v('ntf-name').trim() || 'Lou Wok Rice House';
+    n.orderSmsTemplate = _v('ntf-order-sms').trim();
+    n.voiceUrl = _v('ntf-voice-url').trim();
+    n.smsUrl   = _v('ntf-sms-url').trim();
 
     settingsData.notify = n;
     // Reflect cleaned values back into the inputs so the user sees the normalized form.
