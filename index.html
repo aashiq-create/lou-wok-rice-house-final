@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- LOU-WOK-INDEX vCART-CLEAR | cart + floating pill clear immediately on order success | 2026-07-11 -->
+<!-- LOU-WOK-INDEX vCART-CLEAR2 | cart clears at finish() AND showOrderSuccess via updateCartUI (bulletproof) + ETA 15-20 | 2026-07-11 -->
 
 <html lang="en">
 <head>
@@ -3225,13 +3225,13 @@
         <div id="sqSandboxTag" style="display:none;font-size:0.62rem;color:var(--gold);margin-top:0.35rem;text-align:center;">SANDBOX — test cards only, no real charge</div>
       </div>
       <button class="cart-place-btn" id="cartPlaceBtn" onclick="placeOrder()">Place Order — $0.00</button>
-      <p class="cart-fine-print">Pickup in-store · Est. ready 10–15 min</p>
+      <p class="cart-fine-print">Pickup in-store · Est. ready 15–20 min</p>
     </div>
     <div class="order-success" id="orderSuccessState">
       <div class="order-success-icon">&#128293;</div>
       <div class="order-success-title">Order Fired!</div>
       <div class="order-success-num" id="orderSuccessNum"></div>
-      <p class="order-success-sub" id="orderSuccessSub">Your order is in the wok. Come on in — hot and fresh in about 10–12 minutes.</p>
+      <p class="order-success-sub" id="orderSuccessSub">Your order is in the wok. Come on in — hot and fresh in about 15–20 minutes.</p>
       <button class="new-order-btn" onclick="resetOrder()">Start New Order</button>
     </div>
   </div>
@@ -4006,6 +4006,10 @@
           }));
         } catch(_) {}
         showOrderSuccess(orderNumber, custEmail, smsOk);
+        // Belt-and-suspenders: guarantee the cart is emptied and repainted the
+        // moment an order is confirmed, regardless of any later UI event.
+        cartItems = [];
+        if (typeof updateCartUI === 'function') { try { updateCartUI(); } catch(_) {} }
       };
 
       // ── Primary path: Vercel serverless function (real email + SMS) ──
@@ -4059,7 +4063,7 @@
       const subEl   = document.getElementById('orderSuccessSub');
       if (numEl) numEl.textContent = 'Order ' + orderNumber;
       if (subEl) {
-        const eta = 'Come on in — hot and fresh in about 10–12 minutes.';
+        const eta = 'Come on in — hot and fresh in about 15–20 minutes.';
         if (smsOk === false) {
           // SMS didn't go through — don't promise a text that never arrived.
           subEl.textContent = custEmail
@@ -4075,14 +4079,15 @@
       if (footer)  footer.style.display  = 'none';
       if (success) success.classList.add('show');
 
-      // Order is confirmed — empty the cart now so the floating "N ITEMS" pill
-      // and count clear immediately, rather than lingering until the customer
-      // taps "Submit Another". (resetOrder still runs on that tap for the form.)
+      // Order is confirmed — empty the cart now so the floating pill + count
+      // clear immediately. We clear the array AND run updateCartUI() so the
+      // single source of truth repaints every badge/pill from the empty cart,
+      // rather than hand-poking individual elements (which a later
+      // updateCartUI() call could undo).
       cartItems = [];
+      if (typeof updateCartUI === 'function') { try { updateCartUI(); } catch(_) {} }
       const pill = document.getElementById('cartPill');
       if (pill) pill.classList.remove('visible');
-      const pc = document.getElementById('cartPillCount'); if (pc) pc.textContent = '0';
-      const cl = document.getElementById('cartCountLabel'); if (cl) cl.textContent = '0 items';
     }
 
     function resetOrder() {
