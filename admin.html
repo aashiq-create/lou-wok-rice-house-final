@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- LOU-WOK-ADMIN vPUBLISH-FIX | saveNotify null-safe + each publish save isolated (one failure cannot abort deploy); on top of vLIGHT | 2026-07-11 -->
+<!-- LOU-WOK-ADMIN vVERIFY-DEPLOY | added Verify Deployment tool (reads live cms-data.json, shows live text-notif settings + unpublished drift); on top of vPUBLISH-FIX | 2026-07-16 -->
 
 <html lang="en">
 <head>
@@ -1662,7 +1662,9 @@
           <div style="display:flex;flex-direction:column;gap:0.75rem;">
             <button class="btn btn-primary" onclick="publishSite()">🚀 &nbsp;Publish to louwok.com</button>
             <a class="btn btn-ghost" href="index.html" target="_blank">👁 &nbsp;Preview Before Publishing</a>
+            <button class="btn btn-ghost" onclick="verifyDeployment()">🔍 &nbsp;Verify What's Live Now</button>
           </div>
+          <div id="deployVerifyResult" style="display:none;margin-top:1rem;padding:1rem;border-radius:6px;font-size:0.82rem;line-height:1.7;"></div>
           <div style="margin-top:1.5rem;padding-top:1rem;border-top:1px solid var(--border);">
             <div style="font-size:0.68rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted);margin-bottom:0.75rem;">Deployment Checklist</div>
             <div style="display:flex;flex-direction:column;gap:0.5rem;font-size:0.82rem;">
@@ -1964,6 +1966,67 @@
   function _status(msg) {
     const el = document.getElementById('deployStatusText');
     if (el) el.textContent = msg;
+  }
+
+  // Deployment verification: fetch the LIVE cms-data.json from the exact source
+  // the public site and the SMS backend read (raw.githubusercontent.com/main),
+  // and show what's actually live — including Twilio text-notification settings.
+  // This is the source of truth for "did my publish actually go through?"
+  async function verifyDeployment() {
+    const box = document.getElementById('deployVerifyResult');
+    if (box) {
+      box.style.display = 'block';
+      box.style.background = 'var(--smoke)';
+      box.style.border = '1px solid var(--border)';
+      box.innerHTML = '⏳ Checking what is live on louwok.com right now…';
+    }
+    const url = 'https://raw.githubusercontent.com/' + GITHUB_OWNER + '/' + GITHUB_REPO +
+                '/main/' + CMS_FILE + '?_=' + Date.now();
+    try {
+      const r = await fetch(url, { cache: 'no-store' });
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      const live = await r.json();
+      const n = (live.settings && live.settings.notify) || {};
+      const esc2 = s => String(s == null ? '' : s).replace(/[<>&]/g, c => ({'<':'&lt;','>':'&gt;','&':'&amp;'}[c]));
+
+      // Compare a few key fields against the admin's current in-memory state so
+      // the user can see if there are edits they haven't published yet.
+      const memN = (settingsData && settingsData.notify) || {};
+      const drift = [];
+      if ((memN.orderSmsTemplate||'') !== (n.orderSmsTemplate||'')) drift.push('Order SMS template');
+      if ((memN.pickupEtaMin||'') !== (n.pickupEtaMin||'')) drift.push('Pickup ETA');
+      if ((memN.restaurantName||'') !== (n.restaurantName||'')) drift.push('Business name');
+      if (JSON.stringify(memN.adminSms||[]) !== JSON.stringify(n.adminSms||[])) drift.push('Staff alert numbers');
+
+      const updated = live._updated ? new Date(live._updated).toLocaleString() : 'unknown';
+      const tmpl = n.orderSmsTemplate ? esc2(n.orderSmsTemplate) : '(empty — using built-in default message)';
+
+      let html = '<div style="font-weight:700;color:var(--gold);margin-bottom:0.6rem;">✅ Live on louwok.com (published ' + esc2(updated) + ')</div>';
+      html += '<div style="font-family:\'DM Mono\',monospace;font-size:0.76rem;white-space:pre-wrap;background:var(--black);padding:0.7rem;border-radius:4px;border:1px solid var(--border);">';
+      html += '<strong>TEXT NOTIFICATION SETTINGS (live):</strong>\n';
+      html += 'Pickup ETA: ' + esc2(n.pickupEtaMin || '(default)') + '\n';
+      html += 'Business name: ' + esc2(n.restaurantName || '(default)') + '\n';
+      html += 'Staff alert #s: ' + esc2((n.adminSms||[]).join(', ') || '(none)') + '\n';
+      html += 'Order confirmation SMS:\n' + tmpl;
+      html += '</div>';
+
+      if (drift.length) {
+        html += '<div style="margin-top:0.7rem;color:var(--wok);font-weight:700;">⚠️ You have UNPUBLISHED changes in: ' + drift.join(', ') +
+                '<br><span style="font-weight:400;">Click Publish to push them live.</span></div>';
+      } else {
+        html += '<div style="margin-top:0.7rem;color:#2e7d32;font-weight:700;">✓ Admin matches live — everything is deployed.</div>';
+      }
+      html += '<div style="margin-top:0.6rem;font-size:0.72rem;color:var(--muted);">This is the exact file the website and the SMS system read. If your last publish isn\'t reflected above, it did not reach the repo.</div>';
+
+      if (box) { box.innerHTML = html; box.style.background = 'var(--smoke)'; }
+    } catch (err) {
+      if (box) {
+        box.style.background = 'rgba(200,57,10,0.08)';
+        box.style.border = '1px solid var(--wok)';
+        box.innerHTML = '❌ Could not read the live file (' + esc2(err.message) +
+          ').<br>This usually means cms-data.json has never been published, or GitHub is unreachable.';
+      }
+    }
   }
 
   // ══════════════════════════════════════════════════════════════
