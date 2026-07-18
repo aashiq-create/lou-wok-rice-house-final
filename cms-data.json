@@ -1,6 +1,6 @@
 {
   "_info": "Written by louwok.com/admin. index.html reads this at runtime.",
-  "_updated": "2026-07-18T05:10:40.377Z",
+  "_updated": "2026-07-18T05:10:55.897Z",
   "menu": [
     {
       "id": 1,
@@ -88,7 +88,7 @@
       "category": "appetizers",
       "priceHalf": null,
       "priceFull": 7,
-      "tag": "popular",
+      "tag": "",
       "desc": "Crispy, seasoned chicken fried golden brown and served hot and fresh. 8-piece",
       "options": []
     },
@@ -1950,7 +1950,7 @@
         "barcode": ""
       }
     ],
-    "updated": "2026-07-18T05:10:40.375Z"
+    "updated": "2026-07-18T05:10:55.896Z"
   },
   "printing": {
     "enabled": false,
