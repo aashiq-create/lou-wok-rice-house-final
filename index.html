@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- LOU-WOK-INDEX vOVAL-UI2 | nav CTA, package cards, catering continue, delivery buttons all pill-shaped | 2026-07-16 -->
+<!-- LOU-WOK-INDEX vLAYOUT-FIX | St Paul btn fit-width; nav z-index above map; proof chips pill+centered; offer tiles centered | 2026-07-16 -->
 
 <html lang="en">
 <head>
@@ -202,7 +202,7 @@
     nav.desktop-nav {
       position: fixed;
       top: 0; left: 0; right: 0;
-      z-index: 100;
+      z-index: 1200;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -829,6 +829,7 @@
       margin-bottom: 2.5rem;
     }
     .detail-item { border-left: 2px solid var(--wok); padding-left: 1rem; }
+    #featCta { align-self: flex-start; width: auto; padding-left: 2.4rem; padding-right: 2.4rem; }
     .detail-label {
       font-size: 0.65rem;
       font-weight: 700;
@@ -1403,7 +1404,7 @@
       gap: 1.5px;
       margin-bottom: 3rem;
     }
-    .cat-offer-tile { background: var(--smoke); padding: 1.4rem 1.25rem; }
+    .cat-offer-tile { background: var(--smoke); padding: 1.4rem 1.25rem; text-align: center; }
     .cat-offer-icon { font-size: 1.6rem; margin-bottom: 0.5rem; }
     .cat-offer-name { font-size: 0.85rem; font-weight: 600; color: var(--rice); margin-bottom: 2px; }
     .cat-offer-sub { font-size: 0.72rem; color: var(--muted); }
@@ -1597,8 +1598,8 @@
       .cat-offer-sub { font-size: 0.64rem; }
     }
     /* ── SOCIAL PROOF STRIP ── */
-    .cat-proof-row { display: flex; flex-wrap: wrap; gap: 0.6rem; margin: 1.1rem 0 0; }
-    .cat-proof-chip { display: flex; align-items: center; gap: 6px; background: rgba(232,160,32,0.07); border: 1px solid rgba(232,160,32,0.22); padding: 0.4rem 0.8rem; font-size: 0.72rem; color: var(--rice); font-weight: 600; }
+    .cat-proof-row { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.6rem; margin: 1.1rem 0 0; }
+    .cat-proof-chip { display: flex; align-items: center; justify-content: center; text-align: center; gap: 6px; background: rgba(232,160,32,0.07); border: 1px solid rgba(232,160,32,0.22); padding: 0.5rem 1.2rem; font-size: 0.72rem; color: var(--rice); font-weight: 600; border-radius: 999px; }
     .cat-proof-chip b { color: var(--gold); }
     /* ── CHIP-STYLE SELECTS (replace dropdowns for mobile-native feel) ── */
     .cat-chip-group { display: flex; flex-wrap: wrap; gap: 8px; }
