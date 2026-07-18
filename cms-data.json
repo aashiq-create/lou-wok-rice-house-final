@@ -1,6 +1,6 @@
 {
   "_info": "Written by louwok.com/admin. index.html reads this at runtime.",
-  "_updated": "2026-07-18T05:11:14.553Z",
+  "_updated": "2026-07-18T05:11:20.271Z",
   "menu": [
     {
       "id": 1,
@@ -118,7 +118,7 @@
       "category": "sandwiches",
       "priceHalf": null,
       "priceFull": 7,
-      "tag": "fan-fave",
+      "tag": "",
       "desc": "Build your perfect St. Paul Sandwich with any two proteins—chicken, shrimp, or beef—stacked on our signature egg foo young patty with lettuce, tomato, red onion, pickles, and mayo on soft white bread. A St. Louis takeout classic, now served fresh in Phoenix.",
       "options": []
     },
@@ -1950,7 +1950,7 @@
         "barcode": ""
       }
     ],
-    "updated": "2026-07-18T05:11:14.551Z"
+    "updated": "2026-07-18T05:11:20.269Z"
   },
   "printing": {
     "enabled": false,
