@@ -1,6 +1,6 @@
 {
   "_info": "Written by louwok.com/admin. index.html reads this at runtime.",
-  "_updated": "2026-07-18T05:12:30.807Z",
+  "_updated": "2026-07-18T05:12:44.961Z",
   "menu": [
     {
       "id": 1,
@@ -188,7 +188,7 @@
       "category": "combos",
       "priceHalf": null,
       "priceFull": 20,
-      "tag": "fan-fave",
+      "tag": "popular",
       "desc": "A St. Louis rice house favorite featuring a whole order of plain Fried Rice, tender Boneless Hot Braised Chicken, 2 egg rolls, 4 Crab Rangoons, and your choice of beverage—a hearty taste of the Show-Me State, served fresh at Lou Wok.",
       "options": []
     }
@@ -1950,7 +1950,7 @@
         "barcode": ""
       }
     ],
-    "updated": "2026-07-18T05:12:30.805Z"
+    "updated": "2026-07-18T05:12:44.959Z"
   },
   "printing": {
     "enabled": false,
