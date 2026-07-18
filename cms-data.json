@@ -1,6 +1,6 @@
 {
   "_info": "Written by louwok.com/admin. index.html reads this at runtime.",
-  "_updated": "2026-07-18T05:10:55.897Z",
+  "_updated": "2026-07-18T05:11:01.532Z",
   "menu": [
     {
       "id": 1,
@@ -98,7 +98,7 @@
       "category": "beverages",
       "priceHalf": null,
       "priceFull": 2,
-      "tag": "",
+      "tag": "fan-fave",
       "desc": "A St. Louis original and a staple in every rice house across the city. Ice-cold, bold, and nostalgic, Vess Soda has been a Midwest carryout favorite for generations. Black Cherry, Cream Soda, Orange, Grape, Strawberry, & Pineapple..",
       "options": []
     },
@@ -1950,7 +1950,7 @@
         "barcode": ""
       }
     ],
-    "updated": "2026-07-18T05:10:55.896Z"
+    "updated": "2026-07-18T05:11:01.531Z"
   },
   "printing": {
     "enabled": false,
