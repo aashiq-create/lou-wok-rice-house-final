@@ -1,6 +1,6 @@
 {
   "_info": "Written by louwok.com/admin. index.html reads this at runtime.",
-  "_updated": "2026-07-18T05:11:01.532Z",
+  "_updated": "2026-07-18T05:11:14.553Z",
   "menu": [
     {
       "id": 1,
@@ -108,7 +108,7 @@
       "category": "sandwiches",
       "priceHalf": null,
       "priceFull": 5,
-      "tag": "fan-fave",
+      "tag": "popular",
       "desc": "A St. Louis Chinese takeout classic featuring our signature golden egg foo young patty on soft white bread with crisp lettuce, tomato, red onion, pickles, and mayo. A Midwest favorite, served fresh at Lou Wok Rice House in Phoenix.\n\n",
       "options": []
     },
@@ -1950,7 +1950,7 @@
         "barcode": ""
       }
     ],
-    "updated": "2026-07-18T05:11:01.531Z"
+    "updated": "2026-07-18T05:11:14.551Z"
   },
   "printing": {
     "enabled": false,
