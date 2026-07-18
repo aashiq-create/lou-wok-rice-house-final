@@ -1,6 +1,6 @@
 {
   "_info": "Written by louwok.com/admin. index.html reads this at runtime.",
-  "_updated": "2026-07-17T23:13:58.459Z",
+  "_updated": "2026-07-18T05:09:36.900Z",
   "menu": [
     {
       "id": 1,
@@ -28,7 +28,7 @@
       "category": "rice",
       "priceHalf": 5,
       "priceFull": 10,
-      "tag": "classic",
+      "tag": "",
       "desc": "Sliced beef wok-fired with seasoned rice, egg, bean sprouts, and green onion, finished in a savory soy-based blend. A St. Louis rice house staple built on simple, bold ingredients—classic Midwest takeout flavor, cooked fresh to order and served hot in true Lou Wok style.",
       "options": []
     },
@@ -1950,7 +1950,7 @@
         "barcode": ""
       }
     ],
-    "updated": "2026-07-17T23:13:58.456Z"
+    "updated": "2026-07-18T05:09:36.897Z"
   },
   "printing": {
     "enabled": false,
