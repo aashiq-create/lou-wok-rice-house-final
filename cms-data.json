@@ -1,6 +1,6 @@
 {
   "_info": "Written by louwok.com/admin. index.html reads this at runtime.",
-  "_updated": "2026-07-18T05:10:10.185Z",
+  "_updated": "2026-07-18T05:10:20.071Z",
   "menu": [
     {
       "id": 1,
@@ -48,7 +48,7 @@
       "category": "appetizers",
       "priceHalf": 4,
       "priceFull": 6,
-      "tag": "popular",
+      "tag": "fan-fave",
       "desc": "Available in 4 or 8 pieces. Crispy golden crab rangoon filled with a rich, sweet creamy crab blend and fried to perfection. A St. Louis Chinese takeout favorite and the perfect side to our wok-fired fried rice.\n",
       "options": []
     },
@@ -1950,7 +1950,7 @@
         "barcode": ""
       }
     ],
-    "updated": "2026-07-18T05:10:10.183Z"
+    "updated": "2026-07-18T05:10:20.069Z"
   },
   "printing": {
     "enabled": false,
