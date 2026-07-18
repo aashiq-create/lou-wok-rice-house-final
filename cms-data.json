@@ -1,6 +1,6 @@
 {
   "_info": "Written by louwok.com/admin. index.html reads this at runtime.",
-  "_updated": "2026-07-18T05:13:43.316Z",
+  "_updated": "2026-07-18T22:46:53.329Z",
   "menu": [
     {
       "id": 1,
@@ -1950,14 +1950,14 @@
         "barcode": ""
       }
     ],
-    "updated": "2026-07-18T05:13:43.313Z"
+    "updated": "2026-07-18T22:46:53.326Z"
   },
   "printing": {
     "enabled": false,
     "printers": [],
     "header": "LOU WOK RICE HOUSE",
     "subheader": "ONLINE ORDER",
-    "footer": "Let's Wok It!",
+    "footer": "We Wok For You!",
     "showItemsBig": true,
     "showTotal": true,
     "showCustomer": true,
