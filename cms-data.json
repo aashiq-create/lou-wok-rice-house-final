@@ -1,6 +1,6 @@
 {
   "_info": "Written by louwok.com/admin. index.html reads this at runtime.",
-  "_updated": "2026-07-18T05:11:41.228Z",
+  "_updated": "2026-07-18T05:12:11.985Z",
   "menu": [
     {
       "id": 1,
@@ -168,7 +168,7 @@
       "category": "desserts",
       "priceHalf": null,
       "priceFull": 5,
-      "tag": "popular",
+      "tag": "",
       "desc": "Golden, crispy, and made from our signature sweet cream batter, then dusted with powdered sugar. A warm, fresh-fried classic that's the perfect finish to your Lou Wok feast.",
       "options": []
     },
@@ -1950,7 +1950,7 @@
         "barcode": ""
       }
     ],
-    "updated": "2026-07-18T05:11:41.227Z"
+    "updated": "2026-07-18T05:12:11.984Z"
   },
   "printing": {
     "enabled": false,
