@@ -1,6 +1,6 @@
 {
   "_info": "Written by louwok.com/admin. index.html reads this at runtime.",
-  "_updated": "2026-07-18T05:11:28.973Z",
+  "_updated": "2026-07-18T05:11:41.228Z",
   "menu": [
     {
       "id": 1,
@@ -148,7 +148,7 @@
       "category": "combos",
       "priceHalf": null,
       "priceFull": 20,
-      "tag": "fan-fave",
+      "tag": "popular",
       "desc": "The combo that inspired it all. A full order of our signature St. Louis-style fried rice, an Original St. Paul Sandwich, four pieces of golden fried chicken, four crispy crab rangoons, and your choice of Vess Soda or Mystic Carrot Juice. Straight from the St. Louis rice house tradition, brought to Phoenix and cooked fresh to order with Midwest flavor and wok-fired soul.",
       "options": []
     },
@@ -1950,7 +1950,7 @@
         "barcode": ""
       }
     ],
-    "updated": "2026-07-18T05:11:28.971Z"
+    "updated": "2026-07-18T05:11:41.227Z"
   },
   "printing": {
     "enabled": false,
