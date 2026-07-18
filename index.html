@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- LOU-WOK-INDEX vOVAL-UI | hero subtext solid white; hero CTA + catering inputs/chips/date pill-shaped | 2026-07-16 -->
+<!-- LOU-WOK-INDEX vOVAL-UI2 | nav CTA, package cards, catering continue, delivery buttons all pill-shaped | 2026-07-16 -->
 
 <html lang="en">
 <head>
@@ -237,7 +237,7 @@
       color: var(--rice) !important;
       opacity: 1 !important;
       padding: 0.55rem 1.4rem;
-      border-radius: 2px;
+      border-radius: 999px;
     }
     .nav-cta:hover { background: var(--gold) !important; color: var(--black) !important; }
 
@@ -937,7 +937,7 @@
       letter-spacing: 0.15em;
       text-transform: uppercase;
       padding: 1rem 2.5rem;
-      border-radius: 2px;
+      border-radius: 999px;
       transition: background 0.2s, transform 0.15s;
       -webkit-tap-highlight-color: transparent;
       min-height: 48px;
@@ -959,7 +959,7 @@
       letter-spacing: 0.15em;
       text-transform: uppercase;
       padding: 1rem 2.5rem;
-      border-radius: 2px;
+      border-radius: 999px;
       transition: all 0.2s;
       min-height: 48px;
       -webkit-tap-highlight-color: transparent;
@@ -1461,9 +1461,10 @@
     /* PACKAGES */
     .pkg-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 4px; }
     .pkg-card-item {
-      border: 1px solid var(--border); padding: 1rem 1.1rem; cursor: pointer;
+      border: 1px solid var(--border); padding: 1rem 1.4rem; cursor: pointer;
       display: flex; align-items: flex-start; gap: 12px;
       transition: border-color 0.18s, background 0.18s; position: relative;
+      border-radius: 999px;
     }
     .pkg-card-item:hover { border-color: rgba(200,57,10,0.4); }
     .pkg-card-item.selected { border-color: var(--wok); background: rgba(200,57,10,0.07); }
@@ -1508,6 +1509,7 @@
       flex: 1; background: var(--wok); color: var(--rice); border: none; padding: 0.85rem;
       font-size: 0.82rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
       cursor: pointer; font-family: 'DM Sans', sans-serif; transition: background 0.2s;
+      border-radius: 999px;
     }
     .cat-next-btn:hover { background: var(--gold); color: var(--black); }
     /* REVIEW */
