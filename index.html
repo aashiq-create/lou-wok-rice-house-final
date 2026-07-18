@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- LOU-WOK-INDEX vLAYOUT-FIX | St Paul btn fit-width; nav z-index above map; proof chips pill+centered; offer tiles centered | 2026-07-16 -->
+<!-- LOU-WOK-INDEX vMOBILE-PILL | mobile media-query button radius (8px) -> pill 999px to match desktop; menu tabs, truck dir/stop, mobile Order Now all pill; on top of vLAYOUT-FIX | 2026-07-16 -->
 
 <html lang="en">
 <head>
@@ -275,7 +275,7 @@
       letter-spacing: 0.12em;
       text-transform: uppercase;
       padding: 0.5rem 1rem;
-      border-radius: 20px;
+      border-radius: 999px;
       cursor: pointer;
       text-decoration: none;
       display: inline-block;
@@ -683,7 +683,7 @@
       border: 1px solid var(--border);
       color: var(--gold);
       cursor: pointer;
-      border-radius: 2px;
+      border-radius: 999px;
       transition: all 0.2s;
       -webkit-tap-highlight-color: transparent;
       min-height: 44px;
@@ -1258,7 +1258,7 @@
         justify-content: center;
         min-height: 56px;
         font-size: 0.9rem;
-        border-radius: 8px;
+        border-radius: 999px;
       }
 
       .footer-top { grid-template-columns: 1fr 1fr; gap: 2rem; }
@@ -1269,7 +1269,7 @@
       .btn-primary, .btn-ghost {
         min-height: 52px;
         padding: 0.9rem 1.8rem;
-        border-radius: 8px;
+        border-radius: 999px;
         font-size: 0.88rem;
       }
     }
@@ -2089,7 +2089,7 @@
     .truck-map-now .when { color:rgba(245,238,216,0.65); font-weight:600; font-size:0.85rem; }
     .truck-dir-btn {
       margin-left:auto; display:inline-flex; align-items:center; gap:0.4rem;
-      background:var(--wok); color:var(--rice); padding:0.65rem 1.15rem; border-radius:2px;
+      background:var(--wok); color:var(--rice); padding:0.65rem 1.3rem; border-radius:999px;
       font-weight:800; font-size:0.74rem; letter-spacing:0.12em; text-transform:uppercase;
       text-decoration:none; transition:all 0.2s; font-family:'DM Sans',sans-serif; white-space:nowrap;
     }
@@ -2112,7 +2112,7 @@
     .truck-stop {
       display:grid; grid-template-columns:auto 1fr auto; align-items:center; gap:0.85rem;
       width:100%; text-align:left; background:transparent; border:none; cursor:pointer;
-      padding:0.7rem 0.6rem; border-radius:3px; transition:background 0.18s;
+      padding:0.7rem 1rem; border-radius:999px; transition:background 0.18s;
       border-bottom:1px solid var(--border); font-family:'DM Sans',sans-serif;
     }
     .truck-stop:last-child { border-bottom:none; }
