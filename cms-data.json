@@ -1,6 +1,6 @@
 {
   "_info": "Written by louwok.com/admin. index.html reads this at runtime.",
-  "_updated": "2026-07-18T05:12:11.985Z",
+  "_updated": "2026-07-18T05:12:30.807Z",
   "menu": [
     {
       "id": 1,
@@ -178,7 +178,7 @@
       "category": "appetizers",
       "priceHalf": null,
       "priceFull": 7,
-      "tag": "",
+      "tag": "spicy",
       "desc": "Tender boneless chicken simmered in our signature savory brown sauce for a bold St. Louis takeout classic. Served with a half order box of plain white rice. ",
       "options": []
     },
@@ -1950,7 +1950,7 @@
         "barcode": ""
       }
     ],
-    "updated": "2026-07-18T05:12:11.984Z"
+    "updated": "2026-07-18T05:12:30.805Z"
   },
   "printing": {
     "enabled": false,
