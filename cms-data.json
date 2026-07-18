@@ -1,6 +1,6 @@
 {
   "_info": "Written by louwok.com/admin. index.html reads this at runtime.",
-  "_updated": "2026-07-18T05:10:20.071Z",
+  "_updated": "2026-07-18T05:10:40.377Z",
   "menu": [
     {
       "id": 1,
@@ -58,7 +58,7 @@
       "category": "sandwiches",
       "priceHalf": null,
       "priceFull": 6,
-      "tag": "classic",
+      "tag": "best-seller",
       "desc": "Our signature egg foo young patty topped with seasoned chicken, crisp lettuce, tomato, red onion, pickles, and mayo on soft white bread. A legendary St. Louis takeout classic, now served fresh in Phoenix.",
       "options": []
     },
@@ -1950,7 +1950,7 @@
         "barcode": ""
       }
     ],
-    "updated": "2026-07-18T05:10:20.069Z"
+    "updated": "2026-07-18T05:10:40.375Z"
   },
   "printing": {
     "enabled": false,
