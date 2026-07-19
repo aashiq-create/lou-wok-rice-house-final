@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- LOU-WOK-INDEX vMENU-HOVER | desktop menu cards reveal Add-to-Order row on hover (hover:hover scoped, pointer-events guarded); touch always-on | 2026-07-16 -->
+<!-- LOU-WOK-INDEX vTRUCK-COPY | in-store -> pick up at the truck (order subtitle + cart fine print) | 2026-07-16 -->
 
 <html lang="en">
 <head>
@@ -1737,6 +1737,7 @@
 
     /* Card hover reveal */
     .menu-card { transition: background 0.3s; }
+    .menu-card:hover .card-add-row { opacity: 1; transform: translateY(0); }
 
     /* Add row that slides up from card bottom */
     .card-add-row {
@@ -1746,24 +1747,9 @@
       margin-top: 1.2rem;
       padding-top: 1.1rem;
       border-top: 1px solid var(--border);
-      opacity: 1;
-      transform: none;
+      opacity: 0;
+      transform: translateY(6px);
       transition: opacity 0.22s ease, transform 0.22s ease;
-    }
-    /* On hover-capable devices (desktop), tuck the add row away until the
-       card is hovered — then it smoothly slides up. Touch devices keep it
-       always visible (they have no hover). */
-    @media (hover: hover) {
-      .card-add-row {
-        opacity: 0;
-        transform: translateY(6px);
-        pointer-events: none;
-      }
-      .menu-card:hover .card-add-row {
-        opacity: 1;
-        transform: translateY(0);
-        pointer-events: auto;
-      }
     }
     /* Always visible on touch devices */
     @media (hover: none) { .card-add-row { opacity: 1; transform: none; } }
@@ -3018,7 +3004,7 @@
   <!-- ── ORDER CTA ── -->
   <section id="order">
     <div class="order-title">READY TO EAT?</div>
-    <p class="order-sub">Order online, pick up in-store, or get it delivered. Lou Wok is ready.</p>
+    <p class="order-sub">Order online, pick up at the truck, or get it delivered. Lou Wok is ready.</p>
     <div class="order-buttons">
       <a href="#menu" class="btn-dark">Browse Menu</a>
       <a href="https://www.doordash.com/search/store/lou-wok" target="_blank" rel="noopener" class="btn-outline-dark">
@@ -3243,7 +3229,7 @@
         <div id="sqSandboxTag" style="display:none;font-size:0.62rem;color:var(--gold);margin-top:0.35rem;text-align:center;">SANDBOX — test cards only, no real charge</div>
       </div>
       <button class="cart-place-btn" id="cartPlaceBtn" onclick="placeOrder()">Place Order — $0.00</button>
-      <p class="cart-fine-print">Pickup in-store · Est. ready 15–20 min</p>
+      <p class="cart-fine-print">Pickup at the truck · Est. ready 15–20 min</p>
     </div>
     <div class="order-success" id="orderSuccessState">
       <div class="order-success-icon">&#128293;</div>
