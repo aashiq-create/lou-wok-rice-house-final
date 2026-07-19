@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- LOU-WOK-INDEX vMOBILE-PILL | mobile media-query button radius (8px) -> pill 999px to match desktop; menu tabs, truck dir/stop, mobile Order Now all pill; on top of vLAYOUT-FIX | 2026-07-16 -->
+<!-- LOU-WOK-INDEX vMENU-HOVER | desktop menu cards reveal Add-to-Order row on hover (hover:hover scoped, pointer-events guarded); touch always-on | 2026-07-16 -->
 
 <html lang="en">
 <head>
@@ -1737,7 +1737,6 @@
 
     /* Card hover reveal */
     .menu-card { transition: background 0.3s; }
-    .menu-card:hover .card-add-row { opacity: 1; transform: translateY(0); }
 
     /* Add row that slides up from card bottom */
     .card-add-row {
@@ -1747,9 +1746,24 @@
       margin-top: 1.2rem;
       padding-top: 1.1rem;
       border-top: 1px solid var(--border);
-      opacity: 0;
-      transform: translateY(6px);
+      opacity: 1;
+      transform: none;
       transition: opacity 0.22s ease, transform 0.22s ease;
+    }
+    /* On hover-capable devices (desktop), tuck the add row away until the
+       card is hovered — then it smoothly slides up. Touch devices keep it
+       always visible (they have no hover). */
+    @media (hover: hover) {
+      .card-add-row {
+        opacity: 0;
+        transform: translateY(6px);
+        pointer-events: none;
+      }
+      .menu-card:hover .card-add-row {
+        opacity: 1;
+        transform: translateY(0);
+        pointer-events: auto;
+      }
     }
     /* Always visible on touch devices */
     @media (hover: none) { .card-add-row { opacity: 1; transform: none; } }
