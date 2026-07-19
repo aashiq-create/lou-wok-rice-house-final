@@ -1,4 +1,4 @@
-// /api/_config.js — v-SMS-TEMPLATE: reads settings.notify.orderSmsTemplate (admin-editable order confirmation)
+// /api/_config.js — v-CAT-SMS: adds cateringSmsTemplate (admin-editable); on top of v-CAT-EMAIL
 // ────────────────────────────────────────────────────────────────────────────
 // Shared settings loader. Reads the non-secret notification settings the admin
 // dashboard publishes into cms-data.json (under settings.notify), and falls back
@@ -74,6 +74,20 @@ async function loadConfig() {
   const orderSmsTemplate =
     (n.orderSmsTemplate && String(n.orderSmsTemplate).trim()) || '';
 
+  // Admin-editable customer CATERING-confirmation email. Placeholders:
+  //   {name} {date} {guests} {package}
+  // Both optional — notify.js falls back to built-in copy when blank.
+  const cateringEmailSubject =
+    (n.cateringEmailSubject && String(n.cateringEmailSubject).trim()) || '';
+  const cateringEmailIntro =
+    (n.cateringEmailIntro && String(n.cateringEmailIntro).trim()) || '';
+
+  // Admin-editable customer CATERING auto-reply SMS. Placeholders:
+  //   {name} {date} {guests} {package}
+  // The "Reply STOP to opt out." suffix is appended in notify.js (locked).
+  const cateringSmsTemplate =
+    (n.cateringSmsTemplate && String(n.cateringSmsTemplate).trim()) || '';
+
   const screenRequireKey =
     typeof n.screenRequireKey === 'boolean'
       ? n.screenRequireKey
@@ -86,6 +100,9 @@ async function loadConfig() {
     pickupEtaMin,
     restaurantName,
     orderSmsTemplate,
+    cateringEmailSubject,
+    cateringEmailIntro,
+    cateringSmsTemplate,
     screenRequireKey,
     // secrets (env only)
     accountSid: process.env.TWILIO_ACCOUNT_SID || '',
