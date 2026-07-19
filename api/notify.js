@@ -1,4 +1,4 @@
-// v-SMS-TEMPLATE 2026-07-09 — customer order SMS now from admin-editable template (settings.notify.orderSmsTemplate) w/ locked STOP suffix + default fallback; on top of v-CATERING-REF
+// v-CAT-SMS-TMPL — catering customer SMS auto-reply now admin-editable (cfg.cateringSmsTemplate) w/ {name}{date}{guests}{package} + locked STOP; on top of v-CAT-EMAIL-TMPL
 // v-CATERING-FIX 2026-07-09 — FIX: catering admin notify read flat frontend fields (client_name/guest_count/etc) that were coming through blank; themed complete SMS; on top of v-EMAIL-BRAND
 // ────────────────────────────────────────────────────────────────────────────
 // The endpoint index-5.html already POSTs to. Handles two payload types:
@@ -137,6 +137,9 @@ module.exports = async (req, res) => {
   const smsFrom    = cfg.callerId;
   const RESTAURANT_NAME = cfg.restaurantName;
   const PICKUP_ETA      = cfg.pickupEtaMin;
+  const CATERING_EMAIL_SUBJECT = cfg.cateringEmailSubject || '';
+  const CATERING_EMAIL_INTRO   = cfg.cateringEmailIntro || '';
+  const CATERING_SMS_TEMPLATE  = cfg.cateringSmsTemplate || '';
 
   if (!accountSid || !authToken || !smsFrom) {
     return res.status(500).json({ error: 'Twilio not configured' });
@@ -332,28 +335,59 @@ module.exports = async (req, res) => {
       );
 
       // Customer auto-reply — confirms we received the inquiry (STOP required).
+      // Admin-editable template (placeholders: {name} {date} {guests} {package}).
+      // The "Reply STOP to opt out." suffix is appended below and locked.
       if (phone) {
         const firstName = (name || '').trim().split(/\s+/)[0] || 'there';
-        const custBody =
-          `${RESTAURANT_NAME}: Thanks ${firstName}! ` +
+        const DEFAULT_CAT_SMS =
+          `${RESTAURANT_NAME}: Thanks {name}! ` +
           `We received your catering inquiry` +
-          (evDate ? ` for ${evDate}` : '') +
-          (guests ? ` (${guests} guests)` : '') + `. ` +
-          `We'll reach out shortly to plan the details. ` +
-          `Reply STOP to opt out.`;
+          (evDate ? ` for {date}` : '') +
+          (guests ? ` ({guests} guests)` : '') + `. ` +
+          `We'll reach out shortly to plan the details.`;
+        const tpl = (CATERING_SMS_TEMPLATE && CATERING_SMS_TEMPLATE.trim())
+          ? CATERING_SMS_TEMPLATE
+          : DEFAULT_CAT_SMS;
+        let custBody = tpl
+          .replace(/\{restaurant\}/gi, RESTAURANT_NAME)
+          .replace(/\{name\}/gi, firstName)
+          .replace(/\{date\}/gi, evDate || 'your date')
+          .replace(/\{guests\}/gi, guests ? `${guests}` : 'your group')
+          .replace(/\{package\}/gi, pkg || 'your package')
+          .trim();
+        if (!custBody) {
+          custBody = DEFAULT_CAT_SMS
+            .replace(/\{name\}/gi, firstName)
+            .replace(/\{date\}/gi, evDate || 'your date')
+            .replace(/\{guests\}/gi, guests ? `${guests}` : 'your group');
+        }
+        if (!/reply stop/i.test(custBody)) custBody += ' Reply STOP to opt out.';
         results.customer = await sendSMS(client, smsFrom, phone, custBody);
       }
 
       // Customer catering confirmation — branded HTML, if we have their email.
       if (email) {
         const firstName = (name || '').trim().split(/\s+/)[0] || 'there';
+        // Admin-editable subject + intro (placeholders: {name} {date} {guests} {package}).
+        // Fall back to built-in copy when the admin hasn't set them.
+        const _fill = (str) => String(str)
+          .replace(/\{name\}/gi, firstName)
+          .replace(/\{date\}/gi, [evDate, evTime].filter(Boolean).join(' · ') || 'your date')
+          .replace(/\{guests\}/gi, guests ? `${guests}` : 'your group')
+          .replace(/\{package\}/gi, pkg || 'your package');
+        const custSubject = CATERING_EMAIL_SUBJECT
+          ? _fill(CATERING_EMAIL_SUBJECT)
+          : `${RESTAURANT_NAME}: We got your catering inquiry`;
+        const custIntro = CATERING_EMAIL_INTRO
+          ? _fill(CATERING_EMAIL_INTRO)
+          : `Thanks ${firstName}! We got your catering request and we're fired up. Within 48 hours we'll confirm your date and email a secure link to pay your 25% deposit — that's what locks it in.`;
         results.customerEmail = await sendEmail(
           [email],
-          `${RESTAURANT_NAME}: We got your catering inquiry`,
+          custSubject,
           `Thanks ${firstName}! We received your catering inquiry. We'll follow up within 48 hours to confirm your date and finalize details.`,
           emailHTML({
             heading: 'Inquiry Received!',
-            intro: `Thanks ${firstName}! We got your catering request and we're fired up. Within 48 hours we'll confirm your date and email a secure link to pay your 25% deposit — that's what locks it in.`,
+            intro: custIntro,
             rows: [
               ['Event', [evDate, evTime].filter(Boolean).join(' · ')],
               ['Guests', guests ? `${guests} guests` : ''],
