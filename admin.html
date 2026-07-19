@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- LOU-WOK-ADMIN vVERIFY-DEPLOY | added Verify Deployment tool (reads live cms-data.json, shows live text-notif settings + unpublished drift); on top of vPUBLISH-FIX | 2026-07-16 -->
+<!-- LOU-WOK-ADMIN vCAT-SMS | editable catering customer SMS auto-reply (w/ preview + locked STOP); on top of vCAT-EMAIL-DIAG | 2026-07-16 -->
 
 <html lang="en">
 <head>
@@ -1555,7 +1555,45 @@
         </div>
 
         <div style="margin-bottom:1rem;padding:0.85rem 1rem;background:var(--smoke);border-radius:2px;border:1px solid var(--border);">
-          <div style="font-size:0.68rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted);margin-bottom:0.4rem;">🔗 Twilio Webhook URLs</div>
+          <div style="font-size:0.68rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted);margin-bottom:0.6rem;">✉️ Catering Inquiry Email (to customer)</div>
+          <p style="color:var(--muted);font-size:0.72rem;margin:0 0 0.8rem;line-height:1.5;">
+            The confirmation email a customer gets after submitting a catering inquiry. Placeholders:
+            <code style="color:var(--gold);">{name}</code> <code style="color:var(--gold);">{date}</code>
+            <code style="color:var(--gold);">{guests}</code> <code style="color:var(--gold);">{package}</code>. Leave blank to use the built-in copy.
+          </p>
+          <div class="field-group">
+            <label class="field-label">Email subject</label>
+            <input class="field-input" id="ntf-cat-email-subject" placeholder="Lou Wok Rice House: We got your catering inquiry" oninput="updateCatEmailPreview()" />
+          </div>
+          <div class="field-group">
+            <label class="field-label">Intro message</label>
+            <textarea class="field-input" id="ntf-cat-email-intro" rows="4" style="resize:vertical;font-family:inherit;line-height:1.5;" placeholder="Thanks {name}! We got your catering request for {date} and we're fired up. Within 48 hours we'll confirm and send a secure deposit link." oninput="updateCatEmailPreview()"></textarea>
+          </div>
+          <div style="margin-top:0.6rem;padding:0.7rem 0.9rem;background:var(--black);border:1px dashed var(--gold);border-radius:6px;">
+            <div style="font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);font-weight:700;margin-bottom:0.35rem;">Preview</div>
+            <div id="ntf-cat-email-subj-preview" style="font-size:0.75rem;color:var(--gold);font-weight:700;margin-bottom:0.3rem;"></div>
+            <div id="ntf-cat-email-preview" style="font-size:0.8rem;color:var(--rice);line-height:1.5;"></div>
+          </div>
+        </div>
+
+        <div style="margin-bottom:1rem;padding:0.85rem 1rem;background:var(--smoke);border-radius:2px;border:1px solid var(--border);">
+          <div style="font-size:0.68rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted);margin-bottom:0.6rem;">💬 Catering Inquiry Text (to customer)</div>
+          <p style="color:var(--muted);font-size:0.72rem;margin:0 0 0.8rem;line-height:1.5;">
+            The auto-reply text a customer gets after submitting a catering inquiry. Placeholders:
+            <code style="color:var(--gold);">{name}</code> <code style="color:var(--gold);">{date}</code>
+            <code style="color:var(--gold);">{guests}</code> <code style="color:var(--gold);">{package}</code>. Leave blank to use the built-in message.
+          </p>
+          <div class="field-group">
+            <textarea class="field-input" id="ntf-cat-sms" rows="4" style="resize:vertical;font-family:inherit;line-height:1.5;" placeholder="Lou Wok Rice House: Thanks {name}! We received your catering inquiry for {date} ({guests} guests). We'll reach out shortly to plan the details." oninput="updateCatSmsPreview()"></textarea>
+          </div>
+          <div style="margin-top:0.6rem;padding:0.7rem 0.9rem;background:var(--black);border:1px dashed var(--gold);border-radius:6px;">
+            <div style="font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);font-weight:700;margin-bottom:0.35rem;">Preview</div>
+            <div id="ntf-cat-sms-preview" style="font-size:0.8rem;color:var(--rice);line-height:1.5;"></div>
+          </div>
+          <p style="color:var(--muted);font-size:0.68rem;margin:0.5rem 0 0;">
+            &#128274; &ldquo;Reply STOP to opt out.&rdquo; is added automatically and can&rsquo;t be removed &mdash; it&rsquo;s legally required. Leave blank to use the default message.
+          </p>
+        </div>
           <p style="color:var(--muted);font-size:0.72rem;margin:0 0 0.7rem;line-height:1.5;">
             These tell Twilio which URL to call when your number gets a voice call or text. Pointing them at your
             Vercel endpoints below means calls/texts route through this site's serverless functions instead of
@@ -1612,6 +1650,29 @@
 
           <p id="tw-admin-status" style="font-size:0.74rem;color:var(--muted);margin:0.6rem 0 0;"></p>
           <div id="tw-admin-output" style="margin-top:0.6rem;font-family:monospace;font-size:0.72rem;line-height:1.7;color:var(--rice);max-height:260px;overflow-y:auto;"></div>
+        </div>
+
+        <div style="margin-bottom:1rem;padding:0.85rem 1rem;background:var(--smoke);border-radius:2px;border:1px solid var(--border);">
+          <div style="font-size:0.68rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted);margin-bottom:0.4rem;">🧪 Notification Diagnostic</div>
+          <p style="color:var(--muted);font-size:0.72rem;margin:0 0 0.7rem;line-height:1.5;">
+            Fires a <strong style="color:var(--rice);">real test order</strong> through <code style="color:var(--gold);">/api/notify</code> and shows the raw
+            result for every channel — including the exact reason an email or text failed. Use a real
+            address/number you can check. This is the fastest way to see why customer confirmations aren't arriving.
+          </p>
+          <div class="field-group">
+            <label class="field-label">Test email (customer confirmation goes here)</label>
+            <input class="field-input" id="diag-email" type="email" placeholder="you@gmail.com" />
+          </div>
+          <div class="field-group">
+            <label class="field-label">Test phone (optional — for SMS test)</label>
+            <input class="field-input" id="diag-phone" placeholder="e.g. 6025551234" />
+          </div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;">
+            <button type="button" class="btn btn-sm" onclick="runNotifyDiag('order')" style="border:1px solid var(--gold);background:transparent;color:var(--gold);">▶ Test Order Notification</button>
+            <button type="button" class="btn btn-sm" onclick="runNotifyDiag('catering')" style="border:1px solid var(--gold);background:transparent;color:var(--gold);">▶ Test Catering Notification</button>
+          </div>
+          <p id="diag-status" style="font-size:0.74rem;color:var(--muted);margin:0.6rem 0 0;"></p>
+          <div id="diag-output" style="margin-top:0.6rem;font-family:monospace;font-size:0.72rem;line-height:1.6;color:var(--rice);max-height:320px;overflow-y:auto;white-space:pre-wrap;"></div>
         </div>
 
         <div style="padding:0.85rem 1rem;background:rgba(232,160,32,0.07);border-radius:2px;border:1px solid var(--border);">
@@ -1971,6 +2032,81 @@
   // Deployment verification: fetch the LIVE cms-data.json from the exact source
   // the public site and the SMS backend read (raw.githubusercontent.com/main),
   // and show what's actually live — including Twilio text-notification settings.
+  // Fires a real test notification and surfaces the raw per-channel results,
+  // including the exact Resend/Twilio failure reason. The fastest way to see
+  // why customer confirmations aren't arriving.
+  async function runNotifyDiag(kind) {
+    const emailEl = document.getElementById('diag-email');
+    const phoneEl = document.getElementById('diag-phone');
+    const status  = document.getElementById('diag-status');
+    const out     = document.getElementById('diag-output');
+    const email = (emailEl && emailEl.value || '').trim();
+    const phoneRaw = (phoneEl && phoneEl.value || '').trim();
+    if (!email && !phoneRaw) { status.textContent = 'Enter a test email and/or phone first.'; return; }
+    const phone = phoneRaw ? _toE164(phoneRaw) : '';
+    out.textContent = '';
+    status.style.color = 'var(--muted)';
+    status.textContent = 'Firing test ' + kind + ' notification…';
+
+    const recipients = { email: ['aashiq@louwok.com','malika@louwok.com'], sms: phone ? [phone] : [] };
+    let payload;
+    if (kind === 'order') {
+      payload = {
+        type: 'order', recipients,
+        orderNo: 'LW-TEST-' + Math.floor(1000 + Math.random()*9000),
+        customer: { name: 'Diagnostic Test', phone: phone || null, email: email || null },
+        customer_email: email || null,
+        items: '1x Diagnostic Fried Rice', total: '$0.00',
+      };
+    } else {
+      payload = {
+        type: 'catering', recipients,
+        client_email: email || null,
+        customer: { name: 'Diagnostic Test', phone: phone || null, email: email || null },
+        name: 'Diagnostic Test', email: email || null, phone: phone || null,
+        event_date: '2026-08-15', event_time: '12:30 PM',
+        guest_count: '80', package: 'The Classic Spread',
+      };
+    }
+
+    try {
+      const r = await fetch('/api/notify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+      const j = await r.json().catch(() => ({}));
+      if (!r.ok) {
+        status.style.color = 'var(--wok)';
+        status.textContent = 'Server error ' + r.status + (j.error ? (' — ' + j.error) : '');
+        out.textContent = JSON.stringify(j, null, 2);
+        return;
+      }
+      const res = j.results || {};
+      const lines = [];
+      const fmt = (label, obj) => {
+        if (!obj) { lines.push('• ' + label + ': (not attempted — no recipient)'); return; }
+        if (obj.ok) { lines.push('OK  ' + label + ': sent' + (obj.to ? (' -> ' + obj.to) : '')); }
+        else { lines.push('XX  ' + label + ': FAILED — ' + (obj.reason || 'unknown')); }
+      };
+      fmt('Admin email', res.email);
+      fmt('CUSTOMER email', res.customerEmail);
+      if (Array.isArray(res.sms)) res.sms.forEach((s,i)=>fmt('Admin SMS '+(i+1), s));
+      else fmt('Admin SMS', res.sms);
+      fmt('CUSTOMER SMS', res.customer);
+
+      const custOk = res.customerEmail && res.customerEmail.ok;
+      status.style.color = custOk ? 'var(--gold)' : 'var(--wok)';
+      status.textContent = custOk
+        ? 'Customer email sent — check inbox and spam.'
+        : 'Customer email did NOT send — reason below.';
+      out.textContent = lines.join('\n') + '\n\n--- raw results ---\n' + JSON.stringify(res, null, 2);
+    } catch (err) {
+      status.style.color = 'var(--wok)';
+      status.textContent = 'Request failed: ' + err.message;
+    }
+  }
+
   // This is the source of truth for "did my publish actually go through?"
   async function verifyDeployment() {
     const box = document.getElementById('deployVerifyResult');
@@ -3711,6 +3847,51 @@
       '<span style="color:var(--gold);">$1</span>');
   }
 
+  // Live preview for the catering-inquiry customer email (subject + intro).
+  // Live preview for the catering-inquiry customer SMS auto-reply.
+  function updateCatSmsPreview() {
+    const el = document.getElementById('ntf-cat-sms');
+    const out = document.getElementById('ntf-cat-sms-preview');
+    if (!out) return;
+    const nameEl = document.getElementById('ntf-name');
+    const restaurant = (nameEl && nameEl.value.trim()) || 'Lou Wok Rice House';
+    const DEFAULT = restaurant + ': Thanks {name}! We received your catering inquiry for {date} ' +
+      "({guests} guests). We'll reach out shortly to plan the details.";
+    let msg = (el && el.value.trim()) ? el.value : DEFAULT;
+    msg = msg
+      .replace(/\{restaurant\}/gi, restaurant)
+      .replace(/\{name\}/gi, 'Alex')
+      .replace(/\{date\}/gi, '2026-08-15')
+      .replace(/\{guests\}/gi, '80')
+      .replace(/\{package\}/gi, 'The Classic Spread')
+      .trim();
+    if (!/reply stop/i.test(msg)) msg += ' Reply STOP to opt out.';
+    out.innerHTML = msg.replace(/(Reply STOP to opt out\.)/i,
+      '<span style="color:var(--gold);">$1</span>');
+  }
+
+  function updateCatEmailPreview() {
+    const subjEl = document.getElementById('ntf-cat-email-subject');
+    const introEl = document.getElementById('ntf-cat-email-intro');
+    const subjOut = document.getElementById('ntf-cat-email-subj-preview');
+    const introOut = document.getElementById('ntf-cat-email-preview');
+    if (!subjOut || !introOut) return;
+    const nameEl = document.getElementById('ntf-name');
+    const restaurant = (nameEl && nameEl.value.trim()) || 'Lou Wok Rice House';
+    const fill = (str) => String(str)
+      .replace(/\{name\}/gi, 'Alex')
+      .replace(/\{date\}/gi, 'Sat, Aug 15 · 12:30 PM')
+      .replace(/\{guests\}/gi, '80')
+      .replace(/\{package\}/gi, 'The Classic Spread');
+    const DEFAULT_SUBJ = restaurant + ': We got your catering inquiry';
+    const DEFAULT_INTRO = "Thanks Alex! We got your catering request and we're fired up. " +
+      "Within 48 hours we'll confirm your date and email a secure link to pay your 25% deposit — that's what locks it in.";
+    const subj = (subjEl && subjEl.value.trim()) ? fill(subjEl.value) : DEFAULT_SUBJ;
+    const intro = (introEl && introEl.value.trim()) ? fill(introEl.value) : DEFAULT_INTRO;
+    subjOut.textContent = subj;
+    introOut.textContent = intro;
+  }
+
   function _populateNotify() {
     if(!settingsData) settingsData={};
     const n = settingsData.notify || {};
@@ -3726,6 +3907,14 @@
     if (name) name.value = n.restaurantName || '';
     const orderSms = document.getElementById('ntf-order-sms');
     if (orderSms) { orderSms.value = n.orderSmsTemplate || ''; updateSmsPreview(); }
+    const catSubj = document.getElementById('ntf-cat-email-subject');
+    if (catSubj) catSubj.value = n.cateringEmailSubject || '';
+    const catIntro = document.getElementById('ntf-cat-email-intro');
+    if (catIntro) catIntro.value = n.cateringEmailIntro || '';
+    const catSms = document.getElementById('ntf-cat-sms');
+    if (catSms) catSms.value = n.cateringSmsTemplate || '';
+    updateCatEmailPreview();
+    updateCatSmsPreview();
     const voiceUrl = document.getElementById('ntf-voice-url');
     if (voiceUrl) voiceUrl.value = n.voiceUrl || 'https://louwok.com/api/voice-incoming';
     const smsUrl = document.getElementById('ntf-sms-url');
@@ -3764,6 +3953,9 @@
     n.pickupEtaMin = _v('ntf-eta').trim() || '15-20';
     n.restaurantName = _v('ntf-name').trim() || 'Lou Wok Rice House';
     n.orderSmsTemplate = _v('ntf-order-sms').trim();
+    n.cateringEmailSubject = _v('ntf-cat-email-subject').trim();
+    n.cateringEmailIntro = _v('ntf-cat-email-intro').trim();
+    n.cateringSmsTemplate = _v('ntf-cat-sms').trim();
     n.voiceUrl = _v('ntf-voice-url').trim();
     n.smsUrl   = _v('ntf-sms-url').trim();
 
